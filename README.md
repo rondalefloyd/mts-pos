@@ -11,6 +11,23 @@
 * ```pip install pyqt5```
 * ```pip install pywin32```
 * ```pip install py-machineid```
+* ```pip install python-dotenv```
+
+# STANDARDS
+1. Keep the object name of the widgets in camel casing.
+2. Always use horizontal/vertical layout when creating a button box.
+3. Naming conventions:
+* ```variables and functions should start in lowercase and in the form of camel case```
+* ```class should start in uppercase and in the form of camel case```
+* ```Always use the name 'accessCode' for naming variables that are named 'password'```
+4. Do not perform nested if statements (if statements inside for loops are allowed).
+5. Try/except conventions:
+* ```Always add print statements when doing error handling to track errors easier.```
+* ```Only use try/except statements where the errors would likely occur```
+6. Variable conventions:
+* ```Only declare variable when the value will be used multiple times inside the scope```
+* ```Always declare variables with initial values when writing a checker (i.e. null, [], "", 0)```
+
 
 # DIRECTORY STRUCTURE
 ```my_pos_app/
