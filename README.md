@@ -1,7 +1,16 @@
 # mts-pos
 
-
-
+# REQUIREMENTS
+1. Create a virtual environment:
+* ```python -m venv venv```
+2. Activate the virtual environment:
+* ```venv\Scripts\activate```
+3. Install the following libraries:
+* ```pip install pyinstaller```
+* ```pip install pandas```
+* ```pip install pyqt5```
+* ```pip install pywin32```
+* ```pip install py-machineid```
 
 # DIRECTORY STRUCTURE
 ```my_pos_app/
