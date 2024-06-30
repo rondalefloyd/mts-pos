@@ -12,6 +12,8 @@
 * ```pip install pywin32```
 * ```pip install py-machineid```
 * ```pip install python-dotenv```
+* ```pip install sqlalchemy```
+* ```pip install sqlalchemy-libsql```
 
 # STANDARDS
 1. Keep the object name of the widgets in camel casing.
@@ -27,7 +29,12 @@
 6. Variable conventions:
 * ```Only declare variable when the value will be used multiple times inside the scope```
 * ```Always declare variables with initial values when writing a checker (i.e. null, [], "", 0)```
-
+7. 'windowEvent' values:
+* ```NO_EVENT (nothing will happen/breaks loops)```
+* ```START_<CONTROLLER_NAME> (run the window)```
+8. Nesting conventions:
+* ```Do not write nested if statements more than 1```
+9. Create a script for the executable file that displays all the logs
 
 # DIRECTORY STRUCTURE
 ```my_pos_app/
