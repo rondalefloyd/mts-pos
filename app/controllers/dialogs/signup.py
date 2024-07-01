@@ -14,19 +14,20 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.setupUi(self)
 
         self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
-        self.pushButtonCreate.clicked.connect(self.onPushButtonCreate)
+        self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
         pass
 
         self.populateComboBoxOrganizationName()
 
     def populateComboBoxOrganizationName(self):
-        self.comboBoxOrganizationName.addItems([organizationName[0] for organizationName in session.query(Organization.OrganizationName).all()])
+        allOrganizationName = session.query(Organization.OrganizationName).all()
+        self.comboBoxOrganizationName.addItems([organizationName[0] for organizationName in allOrganizationName])
 
     def onPushButtonCancelClicked(self):
         self.windowEvent = 'START_LOGIN'
         self.close()
 
-    def onPushButtonCreate(self):
+    def onPushButtonCreateClicked(self):
         try:
             fullName = f"{self.lineEditFullName.text()}".upper()
             birthDate = f"{self.dateEditBirthDate.text()}"
@@ -35,20 +36,23 @@ class SignUp(Ui_DialogSignUp, QDialog):
             accessCode = f"{self.lineEditAccessCode.text()}"
             accessLevel = f"{self.comboBoxAccessLevel.currentText()}"
             organizationName = f"{self.comboBoxOrganizationName.currentText()}"
-            organizationId = session.query(Organization.OrganizationId).filter(Organization.OrganizationName == organizationName).first()
-
+            
+            selectedOrganization = session.query(Organization)
+            selectedOrganization = selectedOrganization.filter(Organization.OrganizationName == organizationName).first()
+            
+            print('--selectedOrganization.OrganizationId:', selectedOrganization.OrganizationId)
+            
             if any(entry == "" for entry in (fullName, birthDate, mobileNumber, userName, accessCode, accessLevel, organizationName)):
                 QMessageBox.critical(self, 'Invalid', f"Please fill the field with missing entry.")
                 return
 
-            if organizationId == None:
+            if selectedOrganization == None:
                 QMessageBox.critical(self, 'Invalid', f"{organizationName} not found")
                 return
                 
             existingData = session.query(User)
             existingData = existingData.filter(
-                (User.FullName == fullName) | 
-                (User.MobileNumber == mobileNumber) |
+                (User.FullName == fullName) |
                 (User.UserName == userName)
             ).first()
 
@@ -56,15 +60,13 @@ class SignUp(Ui_DialogSignUp, QDialog):
                 if existingData.FullName == fullName:
                     QMessageBox.critical(self, 'Invalid', "Full name already exists")
                     session.rollback()
-                    
-                if existingData.MobileNumber == mobileNumber:
-                    QMessageBox.critical(self, 'Invalid', "Mobile number already exists")
-                    session.rollback()
-                    
+                    return
+      
                 if existingData.UserName == userName:
                     QMessageBox.critical(self, 'Invalid', "Username already exists")
                     session.rollback()
-                    
+                    return
+
             else:
                 user = User()
                 user.FullName = fullName
@@ -73,7 +75,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
                 user.UserName = userName
                 user.AccessCode = accessCode
                 user.AccessLevel = accessLevel
-                user.OrganizationId = organizationId
+                user.OrganizationId = selectedOrganization.OrganizationId
                 
                 session.add(user)
                 session.commit()

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogEditOrganization</class>
- <widget class="QDialog" name="DialogEditOrganization">
+ <class>DialogEditCurrentUser</class>
+ <widget class="QDialog" name="DialogEditCurrentUser">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>486</width>
     <height>300</height>
    </rect>
   </property>
@@ -37,64 +37,67 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>380</width>
+        <width>466</width>
         <height>230</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
        <item row="0" column="0">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Organization Name</string>
+          <string>Full name</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEditOrganizationName"/>
+        <widget class="QLineEdit" name="lineEditFullName"/>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Address</string>
+          <string>Birthdate</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEditAddress"/>
-       </item>
        <item row="2" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Username</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="lineEditUserName"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Password</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="lineEditAccessCode"/>
+       </item>
+       <item row="4" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>Mobile number</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="4" column="1">
         <widget class="QLineEdit" name="lineEditMobileNumber"/>
        </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Tax ID</string>
+       <item row="1" column="1">
+        <widget class="QDateEdit" name="dateEditBirthDate">
+         <property name="displayFormat">
+          <string>yyyy-MM-dd</string>
          </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="lineEditTaxId">
-         <property name="enabled">
+         <property name="calendarPopup">
           <bool>true</bool>
          </property>
         </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Password</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="lineEditAccessCode"/>
        </item>
       </layout>
      </widget>

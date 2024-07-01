@@ -14,14 +14,14 @@ class Setup(Ui_DialogSetup, QDialog):
         self.setupUi(self)
 
         self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
-        self.pushButtonCreate.clicked.connect(self.onPushButtonCreate)
+        self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
         pass
 
     def onPushButtonCancelClicked(self):
         self.windowEvent = 'START_LOGIN'
         self.close()
 
-    def onPushButtonCreate(self):
+    def onPushButtonCreateClicked(self):
         try:
             organizationName = f"{self.lineEditOrganizationName.text()}".upper()
             address = f"{self.lineEditAddress.text()}".upper()
@@ -42,7 +42,8 @@ class Setup(Ui_DialogSetup, QDialog):
             if existingData:
                 QMessageBox.critical(self, 'Invalid', "Organization branch already exists")
                 session.rollback()
-            
+                return
+
             else:
                 organization = Organization()
                 organization.OrganizationName = organizationName

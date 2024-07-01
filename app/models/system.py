@@ -25,6 +25,7 @@ user = Table('User', metadata,
     Column('UserName', String, default=None),
     Column('AccessCode', String, default=None),
     Column('AccessLevel', Integer, default=None),
+    Column('OrganizationId', Integer, default=None),
     Column('UpdateTs', String, server_default=func.now()),
 )
 

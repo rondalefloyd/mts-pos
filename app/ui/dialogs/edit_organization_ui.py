@@ -73,9 +73,9 @@ class Ui_DialogEditOrganization(object):
         self.pushButtonCancel = QtWidgets.QPushButton(DialogEditOrganization)
         self.pushButtonCancel.setObjectName("pushButtonCancel")
         self.horizontalLayout.addWidget(self.pushButtonCancel)
-        self.pushButtonCreate = QtWidgets.QPushButton(DialogEditOrganization)
-        self.pushButtonCreate.setObjectName("pushButtonCreate")
-        self.horizontalLayout.addWidget(self.pushButtonCreate)
+        self.pushButtonSave = QtWidgets.QPushButton(DialogEditOrganization)
+        self.pushButtonSave.setObjectName("pushButtonSave")
+        self.horizontalLayout.addWidget(self.pushButtonSave)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(DialogEditOrganization)
@@ -91,4 +91,4 @@ class Ui_DialogEditOrganization(object):
         self.label_4.setText(_translate("DialogEditOrganization", "Tax ID"))
         self.label_5.setText(_translate("DialogEditOrganization", "Password"))
         self.pushButtonCancel.setText(_translate("DialogEditOrganization", "Cancel"))
-        self.pushButtonCreate.setText(_translate("DialogEditOrganization", "Save"))
+        self.pushButtonSave.setText(_translate("DialogEditOrganization", "Save"))

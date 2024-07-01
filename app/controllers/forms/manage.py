@@ -7,6 +7,7 @@ from app.ui.forms.manage_ui import Ui_MainWindowManage
 from app.models.system import session
 from app.models.association import User, Organization, Configuration
 from app.utils.helpers import getManageTypeByIndex
+from app.controllers.dialogs.edit_current_user import EditCurrentUser
 
 class Manage(Ui_MainWindowManage, QMainWindow):
     def __init__(self, userId):
@@ -34,6 +35,8 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.updateStatusBarInfo()
         
     def onActionUserConfigTriggered(self):
+        editCurrentUser = EditCurrentUser(self.userId)
+        editCurrentUser.exec()
         pass
 
     def onActionOrganizationConfigTriggered(self):

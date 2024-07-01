@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\ui\dialogs\edit_current_userui.ui'
+# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\ui\dialogs\edit_current_user.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -51,9 +51,9 @@ class Ui_DialogEditCurrentUser(object):
         self.label_2 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_2)
-        self.lineEditPassword = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
-        self.lineEditPassword.setObjectName("lineEditPassword")
-        self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lineEditPassword)
+        self.lineEditAccessCode = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditAccessCode.setObjectName("lineEditAccessCode")
+        self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lineEditAccessCode)
         self.label_3 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_3.setObjectName("label_3")
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_3)
