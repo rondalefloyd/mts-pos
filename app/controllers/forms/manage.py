@@ -3,12 +3,10 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.QtCore import QEvent
 
 sys.path.append(os.path.abspath(''))
-from app.ui.forms.manage_ui import Ui_MainWindowManage
-from app.models.system import session
-from app.models.association import User, Organization, Configuration
+from app.ui.forms.Manage_ui import Ui_MainWindowManage
 from app.utils.helpers import getManageTypeByIndex
 
-class Manage(Ui_MainWindowManage, QMainWindow):
+class ManageController(Ui_MainWindowManage, QMainWindow):
     def __init__(self, userId):
         super().__init__()
         self.windowEvent = 'NO_EVENT'
@@ -28,6 +26,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.actionLogout.triggered.connect(self.onActionLogoutTriggered)
            
         self.updateMenuBarInfo(0)
+        self.updateStatusBarInfo()
         
     def onActionLogoutTriggered(self):
         confirmation = QMessageBox.warning(self, 'Logout', "Are you sure you want to logout?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
@@ -52,6 +51,9 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.actionReward.setChecked(index == 5)
         self.actionMember.setChecked(index == 6)
         self.actionUser.setChecked(index == 7)
+        
+    def updateStatusBarInfo(self):
+        self.labelDatabaseSource.setText(f"")
     
     def closeEvent(self, event:QEvent):
         event.accept()

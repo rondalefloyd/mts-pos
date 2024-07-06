@@ -90,9 +90,9 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="labelDatabaseSource">
             <property name="text">
-             <string>Storage</string>
+             <string>&lt;DatabaseSouce&gt;</string>
             </property>
            </widget>
           </item>

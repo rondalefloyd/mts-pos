@@ -3,17 +3,43 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import QEventLoop
 
 sys.path.append(os.path.abspath(''))
-from app.ui.dialogs.signup_ui import Ui_DialogSignUp
-from app.models.system import session
-from app.models.association import User, Organization, Configuration
+from app.ui.dialogs.SignUp_ui import Ui_DialogSignUp
+from app.utils.helpers import (
+    addNewUser, 
+    getAllOrganization
+)
 
-class SignUp(Ui_DialogSignUp, QDialog):
+class SignUpController(Ui_DialogSignUp, QDialog):
     def __init__(self):
         super().__init__()
         self.windowEvent = 'NO_EVENT'
         self.setupUi(self)
         # --
         self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
+        self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
+        
+        self.populateComboBoxOrganizationName()
+
+    def populateComboBoxOrganizationName(self):
+        self.comboBoxOrganizationName.clear()
+        for output in getAllOrganization(self):
+            self.comboBoxOrganizationName.addItem(f"{output['organizationName']}")
+
+    def onPushButtonCreateClicked(self):
+        data = {
+            'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
+            'userName': f"{self.lineEditUserName.text()}",
+            'accessCode': f"{self.lineEditAccessCode.text()}",
+            'fullName': f"{self.lineEditFullName.text()}".upper(),
+            'birthDate': f"{self.dateEditBirthDate.text()}",
+            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
+            'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
+        }
+        
+        addNewUser(self, data)
+        
+        QMessageBox.information(self, 'Success', "New user added.")
+        
 
     def onPushButtonCancelClicked(self):
         self.windowEvent = 'START_LOGIN'

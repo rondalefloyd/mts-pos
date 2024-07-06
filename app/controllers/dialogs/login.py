@@ -5,11 +5,10 @@ from sqlalchemy.sql import func
 from machineid import id
 
 sys.path.append(os.path.abspath(''))
-from app.ui.dialogs.login_ui import Ui_DialogLogin
-from app.models.system import session
-from app.models.association import User, Organization, Configuration
+from app.ui.dialogs.Login_ui import Ui_DialogLogin
+from app.utils.helpers import getOneUserWithUserNameAccessCode
 
-class Login(Ui_DialogLogin, QDialog):
+class LoginController(Ui_DialogLogin, QDialog):
     def __init__(self):
         super().__init__()
         self.windowEvent = 'NO_EVENT'
@@ -19,18 +18,39 @@ class Login(Ui_DialogLogin, QDialog):
         # --
         self.pushButtonAccessCodeVisibility.setText('Show')
 
-        self.pushButtonAccessCodeVisibility.clicked.connect(self.onPushButtonVisibilityIndicator)
+        self.pushButtonAccessCodeVisibility.clicked.connect(self.onPushButtonAccessCodeVisibilityClicked)
         self.pushButtonSignUp.clicked.connect(self.onPushButtonSignUpClicked)
+        self.pushButtonSetup.clicked.connect(self.onPushButtonSetupClicked)
+        self.pushButtonLogin.clicked.connect(self.onPushButtonLoginClicked)
 
-    def onPushButtonVisibilityIndicator(self):
-        accessCodeVisibility = self.pushButtonAccessCodeVisibility.isChecked()
+    def onPushButtonLoginClicked(self):
+        data = {
+            'userName': f"{self.lineEditUserName.text()}",
+            'accessCode': f"{self.lineEditAccessCode.text()}",
+        }
+        existingUser = getOneUserWithUserNameAccessCode(self, data)
         
-        self.lineEditAccessCode.setEchoMode(QLineEdit.Normal if accessCodeVisibility else QLineEdit.Password)
-        self.pushButtonAccessCodeVisibility.setText('Hide' if accessCodeVisibility else 'Show')
+        if existingUser['userId'] == None:
+            QMessageBox.critical(self, 'Error', "User not found.")
+            return
+            
+        self.windowEvent = 'START_MANAGE'
+        self.userId = existingUser['userId']
+        self.close()
+
+    def onPushButtonSetupClicked(self):
+        self.windowEvent = 'START_SETUP'
+        self.close()
 
     def onPushButtonSignUpClicked(self):
         self.windowEvent = 'START_SIGNUP'
         self.close()
+        
+    def onPushButtonAccessCodeVisibilityClicked(self):
+        accessCodeVisibility = self.pushButtonAccessCodeVisibility.isChecked()
+        
+        self.lineEditAccessCode.setEchoMode(QLineEdit.Normal if accessCodeVisibility else QLineEdit.Password)
+        self.pushButtonAccessCodeVisibility.setText('Hide' if accessCodeVisibility else 'Show')
 
     def closeEvent(self, event:QEvent):
         event.accept()

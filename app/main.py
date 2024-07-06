@@ -2,41 +2,43 @@ import os, sys
 from PyQt5.QtWidgets import QApplication
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.controllers.dialogs.login import Login
-from app.controllers.dialogs.signup import SignUp
-from app.controllers.forms.manage import Manage
-from app.controllers.dialogs.setup import Setup
 
 def startApp():
     print('app has started running')
 
     app = QApplication(sys.argv)
+    
+    from app.controllers.dialogs.Login import LoginController
+    from app.controllers.dialogs.SignUp import SignUpController
+    from app.controllers.forms.Manage import ManageController
+    from app.controllers.dialogs.Setup import SetupController
+    
     windowEvent = 'START_LOGIN'
     userId = None
 
     while True:
         if (windowEvent == 'START_LOGIN'):
-            login = Login()
+            login = LoginController()
             login.exec()
             windowEvent = login.windowEvent
             userId = login.userId
 
+        if (windowEvent == 'START_SETUP'):
+            setup = SetupController()
+            setup.exec()
+            windowEvent = setup.windowEvent
+
         if (windowEvent == 'START_SIGNUP'):
-            signup = SignUp()
+            signup = SignUpController()
             signup.exec()
             windowEvent = signup.windowEvent
 
         if (windowEvent == 'START_MANAGE'):
-            manage = Manage(userId)
+            manage = ManageController(userId)
             manage.show()
             app.exec()
             windowEvent = manage.windowEvent
             userId = manage.userId
-
-        if (windowEvent == 'START_SETUP'):
-            setup = Setup()
-            setup.exec()
-            windowEvent = setup.windowEvent
             
         if (windowEvent == 'NO_EVENT'):
             break

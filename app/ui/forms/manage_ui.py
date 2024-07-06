@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\ui\forms\manage.ui'
+# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\ui\forms\Manage.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -77,9 +77,9 @@ class Ui_MainWindowManage(object):
         self.horizontalLayout.addItem(spacerItem)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setObjectName("label_3")
-        self.horizontalLayout_3.addWidget(self.label_3)
+        self.labelDatabaseSource = QtWidgets.QLabel(self.centralwidget)
+        self.labelDatabaseSource.setObjectName("labelDatabaseSource")
+        self.horizontalLayout_3.addWidget(self.labelDatabaseSource)
         self.progressBarStorage = QtWidgets.QProgressBar(self.centralwidget)
         self.progressBarStorage.setProperty("value", 24)
         self.progressBarStorage.setObjectName("progressBarStorage")
@@ -158,7 +158,7 @@ class Ui_MainWindowManage(object):
         self.labelFullName.setText(_translate("MainWindowManage", "<FullName>"))
         self.label.setText(_translate("MainWindowManage", "Mobile number:"))
         self.labelMobileNumber.setText(_translate("MainWindowManage", "<MobileNumber>"))
-        self.label_3.setText(_translate("MainWindowManage", "Storage"))
+        self.labelDatabaseSource.setText(_translate("MainWindowManage", "<DatabaseSouce>"))
         self.menuManage.setTitle(_translate("MainWindowManage", "<PageName>"))
         self.menuSettings.setTitle(_translate("MainWindowManage", "Settings"))
         self.menuHelp.setTitle(_translate("MainWindowManage", "Help"))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\ui\dialogs\login.ui'
+# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\ui\dialogs\Login.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -67,6 +67,9 @@ class Ui_DialogLogin(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
+        self.pushButtonSetup = QtWidgets.QPushButton(DialogLogin)
+        self.pushButtonSetup.setObjectName("pushButtonSetup")
+        self.horizontalLayout_2.addWidget(self.pushButtonSetup)
         self.pushButtonSignUp = QtWidgets.QPushButton(DialogLogin)
         self.pushButtonSignUp.setObjectName("pushButtonSignUp")
         self.horizontalLayout_2.addWidget(self.pushButtonSignUp)
@@ -87,5 +90,6 @@ class Ui_DialogLogin(object):
         self.pushButtonAccessCodeVisibility.setText(_translate("DialogLogin", "<VisibilityIndicator>"))
         self.checkBoxRememberMe.setToolTip(_translate("DialogLogin", "<html><head/><body><p>When checked, the login field will automatically populate with the credentials of the last user who chose to be remembered upon their next login.</p></body></html>"))
         self.checkBoxRememberMe.setText(_translate("DialogLogin", "Remember me"))
+        self.pushButtonSetup.setText(_translate("DialogLogin", "Setup"))
         self.pushButtonSignUp.setText(_translate("DialogLogin", "Sign up"))
         self.pushButtonLogin.setText(_translate("DialogLogin", "Login"))
