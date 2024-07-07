@@ -17,6 +17,7 @@ from app.models.Stock import stockTable
 from app.models.Supplier import supplierTable
 from app.models.User import userTable
 
+# TODO: make the code cleaner or whatever
 engine = None
 status = 'OFFLINE'
 metadata = MetaData()

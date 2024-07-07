@@ -1,7 +1,6 @@
 import os, sys
 from PyQt5.QtWidgets import QDialog, QMessageBox, QLineEdit
 from PyQt5.QtCore import QEvent
-from sqlalchemy.sql import func
 from machineid import id
 
 sys.path.append(os.path.abspath(''))
@@ -22,20 +21,20 @@ class LoginController(Ui_DialogLogin, QDialog):
         self.pushButtonSignUp.clicked.connect(self.onPushButtonSignUpClicked)
         self.pushButtonSetup.clicked.connect(self.onPushButtonSetupClicked)
         self.pushButtonLogin.clicked.connect(self.onPushButtonLoginClicked)
-
+        
     def onPushButtonLoginClicked(self):
-        data = {
+        entry = {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         }
-        existingUser = getOneUserWithUserNameAccessCode(self, data)
+        result = getOneUserWithUserNameAccessCode(self, entry)
         
-        if existingUser['userId'] == None:
+        if result['userId'] == None:
             QMessageBox.critical(self, 'Error', "User not found.")
             return
             
         self.windowEvent = 'START_MANAGE'
-        self.userId = existingUser['userId']
+        self.userId = result['userId']
         self.close()
 
     def onPushButtonSetupClicked(self):

@@ -117,6 +117,7 @@ class Ui_DialogSignUp(object):
         self.label_4.setText(_translate("DialogSignUp", "Password"))
         self.label.setText(_translate("DialogSignUp", "Full name"))
         self.label_5.setText(_translate("DialogSignUp", "Birthdate"))
+        self.dateEditBirthDate.setDisplayFormat(_translate("DialogSignUp", "yyyy-MM-dd"))
         self.label_2.setText(_translate("DialogSignUp", "Mobile number"))
         self.label_7.setText(_translate("DialogSignUp", "Level"))
         self.comboBoxAccessLevel.setItemText(0, _translate("DialogSignUp", "1"))

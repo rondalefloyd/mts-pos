@@ -22,11 +22,11 @@ class SignUpController(Ui_DialogSignUp, QDialog):
 
     def populateComboBoxOrganizationName(self):
         self.comboBoxOrganizationName.clear()
-        for output in getAllOrganization(self):
-            self.comboBoxOrganizationName.addItem(f"{output['organizationName']}")
+        for result in getAllOrganization(self):
+            self.comboBoxOrganizationName.addItem(f"{result['organizationName']}")
 
     def onPushButtonCreateClicked(self):
-        data = {
+        entry = {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -36,10 +36,10 @@ class SignUpController(Ui_DialogSignUp, QDialog):
             'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
         }
         
-        addNewUser(self, data)
+        isSuccess = addNewUser(self, entry)
         
-        QMessageBox.information(self, 'Success', "New user added.")
-        
+        if isSuccess is True:
+            QMessageBox.information(self, 'Success', "New user added.")
 
     def onPushButtonCancelClicked(self):
         self.windowEvent = 'START_LOGIN'

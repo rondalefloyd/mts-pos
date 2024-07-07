@@ -171,5 +171,5 @@ class Ui_MainWindowManage(object):
         self.actionMember.setText(_translate("MainWindowManage", "Member"))
         self.actionLogout.setText(_translate("MainWindowManage", "Logout"))
         self.actionUser.setText(_translate("MainWindowManage", "User"))
-        self.actionOrganizationConfig.setText(_translate("MainWindowManage", "Organization"))
+        self.actionOrganizationConfig.setText(_translate("MainWindowManage", "<OrganizationName>"))
         self.actionUserConfig.setText(_translate("MainWindowManage", "<UserName>"))

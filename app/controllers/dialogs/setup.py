@@ -16,7 +16,7 @@ class SetupController(Ui_DialogSetup, QDialog):
         self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
 
     def onPushButtonCreateClicked(self):
-        data = {
+        entry = {
             'taxId': f"{self.lineEditTaxId.text()}",
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
             'address': f"{self.lineEditAddress.text()}".upper(),
@@ -24,9 +24,10 @@ class SetupController(Ui_DialogSetup, QDialog):
             'accessCode': f"{self.lineEditAccessCode.text()}",
         }
 
-        addNewOrganization(self, data)
+        isSuccess = addNewOrganization(self, entry)
         
-        QMessageBox.information(self, 'Success', "New organization added.")
+        if isSuccess is True:
+            QMessageBox.information(self, 'Success', "New organization added.")
 
     def onPushButtonCancelClicked(self):
         self.windowEvent = 'START_LOGIN'
