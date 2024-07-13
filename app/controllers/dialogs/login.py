@@ -5,7 +5,7 @@ from machineid import id
 
 sys.path.append(os.path.abspath(''))
 from app.ui.dialogs.Login_ui import Ui_DialogLogin
-from app.utils.helpers import getOneUserWithUserNameAccessCode
+from app.utils.helpers import getOneUserByUserNameAccessCode
 
 class LoginController(Ui_DialogLogin, QDialog):
     def __init__(self):
@@ -27,7 +27,7 @@ class LoginController(Ui_DialogLogin, QDialog):
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         }
-        result = getOneUserWithUserNameAccessCode(self, entry)
+        result = getOneUserByUserNameAccessCode(self, entry)
         
         if result['userId'] == None:
             QMessageBox.critical(self, 'Error', "User not found.")

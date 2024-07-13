@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(''))
 from app.ui.dialogs.OrganizationConfig_ui import Ui_DialogOrganizationConfig
 from app.utils.helpers import (
     updateOrganization,
-    getOneOrganizationWithOrganizationId,
+    getOneOrganizationByOrganizationId,
 )
 
 class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
@@ -24,7 +24,7 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
         self.populateEntryFields()
 
     def populateEntryFields(self):
-        result = getOneOrganizationWithOrganizationId(self, {'organizationId': self.organizationId})
+        result = getOneOrganizationByOrganizationId(self, {'organizationId': self.organizationId})
         
         self.lineEditOrganizationName.setText(f"{result['organizationName']}")
         self.lineEditAddress.setText(f"{result['address']}")

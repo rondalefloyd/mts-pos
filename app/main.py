@@ -10,7 +10,7 @@ def startApp():
     
     from app.controllers.dialogs.Login import LoginController
     from app.controllers.dialogs.SignUp import SignUpController
-    from app.controllers.forms.Manage import ManageController
+    from app.controllers.main_window.Manage import ManageController
     from app.controllers.dialogs.Setup import SetupController
     
     windowEvent = 'START_LOGIN'

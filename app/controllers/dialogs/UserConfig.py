@@ -7,8 +7,8 @@ sys.path.append(os.path.abspath(''))
 from app.ui.dialogs.UserConfig_ui import Ui_DialogUserConfig
 from app.utils.helpers import (
     updateUser,
-    getOneUserWithUserId,
-    getOneOrganizationWithOrganizationId,
+    getOneUserByUserId,
+    getOneOrganizationByOrganizationId,
 )
 
 class UserConfigController(Ui_DialogUserConfig, QDialog):
@@ -25,8 +25,8 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
         self.populateEntryFields()
 
     def populateEntryFields(self):
-        resultA = getOneUserWithUserId(self, {'userId': self.userId})
-        resultB = getOneOrganizationWithOrganizationId(self, {'organizationId': resultA['organizationId']})
+        resultA = getOneUserByUserId(self, {'userId': self.userId})
+        resultB = getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
         
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
         self.lineEditUserName.setText(f"{resultA['userName']}")

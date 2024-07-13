@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, math
 from sqlalchemy import desc
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from datetime import datetime
@@ -25,7 +25,7 @@ def getManageTypeByIndex(index:int):
         case 7:
             return 'User'
 
-def getOneUserWithUserId(parent:QWidget, entry:object):
+def getOneUserByUserId(parent:QWidget, entry:object):
     result = {
         'userId': None,
         'organizationId': None,
@@ -64,7 +64,7 @@ def getOneUserWithUserId(parent:QWidget, entry:object):
         print('Session closing...')
         session.close()
 
-def getOneUserWithUserNameAccessCode(parent:QWidget, entry:object):
+def getOneUserByUserNameAccessCode(parent:QWidget, entry:object):
     result = {
         'userId': None,
         'userName': None,
@@ -104,7 +104,7 @@ def getOneUserWithUserNameAccessCode(parent:QWidget, entry:object):
         print('Session closing...')
         session.close()
 
-def getOneOrganizationWithOrganizationId(parent:QWidget, entry:object):
+def getOneOrganizationByOrganizationId(parent:QWidget, entry:object):
     result = {
         'organizationId': None,
         'taxId': None,
@@ -139,7 +139,7 @@ def getOneOrganizationWithOrganizationId(parent:QWidget, entry:object):
         print('Session closing...')
         session.close()
 
-def getOneOrganizationWithOrganizationName(parent:QWidget, entry:object):
+def getOneOrganizationByOrganizationName(parent:QWidget, entry:object):
     result = {
         'organizationId': None,
         'taxId': None,
@@ -161,6 +161,98 @@ def getOneOrganizationWithOrganizationName(parent:QWidget, entry:object):
                 'mobileNumber': existingOrganization.MobileNumber,
                 'accessCode': existingOrganization.AccessCode,
             }
+        
+        return result
+    
+    except Exception as error:
+        print('Error:', error)
+        print('Session rolling back...')
+        session.rollback()
+        return result
+        
+    finally:
+        print('Session closing...')
+        session.close()
+
+def getAllUserWithPaginationByKeyword(parent:QWidget, entry:object):
+    result = {
+        'data': [],
+        'totalPages': 0
+    }
+    
+    try:       
+        existingUser = session.query(User).filter(
+            (User.OrganizationId.like(f"%{entry['keyword']}%")) |
+            (User.UserName.like(f"%{entry['keyword']}%")) |
+            (User.AccessCode.like(f"%{entry['keyword']}%")) |
+            (User.FullName.like(f"%{entry['keyword']}%")) |
+            (User.BirthDate.like(f"%{entry['keyword']}%")) |
+            (User.MobileNumber.like(f"%{entry['keyword']}%")) |
+            (User.AccessLevel.like(f"%{entry['keyword']}%")) |
+            (User.ActiveStatus.like(f"%{entry['keyword']}%")) |
+            (User.LastLoginTs.like(f"%{entry['keyword']}%")) |
+            (User.LastLogoutTs.like(f"%{entry['keyword']}%")) |
+            (User.UpdateTs.like(f"%{entry['keyword']}%"))
+        ).order_by(desc(User.UpdateTs))
+        
+        
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        paginatedExistingUser = existingUser.limit(limit).offset(offset).all()
+        
+        if paginatedExistingUser:
+            for user in paginatedExistingUser:
+                result['data'].append({
+                    'userId': user.Id,
+                    'organizationName': session.query(Organization.OrganizationName).filter(Organization.Id == user.OrganizationId).scalar(),
+                    'userName': user.UserName,
+                    'accessCode': user.AccessCode,
+                    'fullName': user.FullName,
+                    'birthDate': user.BirthDate,
+                    'mobileNumber': user.MobileNumber,
+                    'accessLevel': user.AccessLevel,
+                    'activeStatus': user.ActiveStatus,
+                    'lastLoginTs': user.LastLoginTs,
+                    'lastLogoutTs': user.LastLogoutTs,
+                    'updateTs': user.UpdateTs,
+                })
+               
+            result['totalPages'] = math.ceil(existingUser.count() / limit)
+            
+        return result
+    
+    except Exception as error:
+        print('Error:', error)
+        print('Session rolling back...')
+        session.rollback()
+        return result
+        
+    finally:
+        print('Session closing...')
+        session.close()
+
+def getAllUser(parent:QWidget):
+    result = []
+    
+    try:
+        existingUser = session.query(User).order_by(desc(User.UpdateTs)).all()
+        
+        if existingUser:
+            for user in existingUser:
+                result.append({
+                    'userId': user.Id,
+                    'organizationId': user.OrganizationId,
+                    'userName': user.UserName,
+                    'accessCode': user.AccessCode,
+                    'fullName': user.FullName,
+                    'birthDate': user.BirthDate,
+                    'mobileNumber': user.MobileNumber,
+                    'accessLevel': user.AccessLevel,
+                    'activeStatus': user.ActiveStatus,
+                    'lastLoginTs': user.LastLoginTs,
+                    'lastLogoutTs': user.LastLogoutTs,
+                    'updateTs': user.UpdateTs,
+                })
         
         return result
     
@@ -202,8 +294,25 @@ def getAllOrganization(parent:QWidget):
     finally:
         print('Session closing...')
         session.close()
+
+def deleteUser(parent:QWidget, entry:object):
+    try:
+        existingUser = session.query(User).filter(User.Id == entry['userId']).first()
         
-# TODO: add a checker if the input already exist
+        session.delete(existingUser)
+        session.commit()
+        return True
+        
+    except Exception as error:
+        print('Error:', error)
+        print('Session rolling back...')
+        session.rollback()
+        return False
+        
+    finally:
+        print('Session closing...')
+        session.close()
+
 def updateOrganization(parent:QWidget, entry:object):
     try:
         existingOrganization = session.query(Organization).filter(
@@ -269,14 +378,10 @@ def updateUser(parent:QWidget, entry:object):
     try:
         existingUser = session.query(User).filter(
             (User.Id != entry['userId']) &
-            ((User.FullName == entry['fullName']) |
-            (User.UserName == entry['userName']))
+            (User.UserName == entry['userName'])
         ).first()
         
         if existingUser:
-            if existingUser.FullName == entry['fullName']:
-                QMessageBox.critical(parent, 'Error', f"{entry['fullName']} already exist.")
-                
             if existingUser.UserName == entry['userName']:
                 QMessageBox.critical(parent, 'Error', f"{entry['userName']} already exist.")
                 
@@ -305,21 +410,15 @@ def updateUser(parent:QWidget, entry:object):
 
 def addNewUser(parent:QWidget, entry:object):
     try:
-        existingUser = session.query(User).filter(
-            (User.FullName == entry['fullName']) |
-            (User.UserName == entry['userName'])
-        ).first()
+        existingUser = session.query(User).filter((User.UserName == entry['userName'])).first()
         
-        if existingUser:
-            if existingUser.FullName == entry['fullName']:
-                QMessageBox.critical(parent, 'Error', f"{entry['fullName']} already exist.")
-                
+        if existingUser:        
             if existingUser.UserName == entry['userName']:
                 QMessageBox.critical(parent, 'Error', f"{entry['userName']} already exist.")
                 
             session.rollback()
             return False
-        
+
         user = User()
         user.OrganizationId = session.query(Organization.Id).filter(Organization.OrganizationName == entry['organizationName'])
         user.UserName = entry['userName']

@@ -23,7 +23,7 @@ status = 'OFFLINE'
 metadata = MetaData()
 currentDateTime = datetime.now()
 onlineUrl = f"{os.getenv('ONLINE_SQLALCHEMY_BASE_URL')}://{os.getenv('TURSO_DB_URL')}/?authToken={os.getenv('TURSO_DB_AUTH_TOKEN')}"
-offlineUrl = f"{os.getenv('OFFLINE_SQLALCHEMY_BASE_URL')}:///{os.getenv('OFFLINE_DB_FILE_PATH')}/system.db"
+offlineUrl = f"{os.getenv('OFFLINE_SQLALCHEMY_BASE_URL')}:///{os.getenv('OFFLINE_DB_FILE_PATH')}/pos.db"
 table = {
     'authentication': authenticationTable(metadata),
     'brand': brandTable(metadata),

@@ -3,14 +3,15 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.QtCore import QEvent
 
 sys.path.append(os.path.abspath(''))
-from app.ui.forms.Manage_ui import Ui_MainWindowManage
+from app.ui.main_window.Manage_ui import Ui_MainWindowManage
 from app.controllers.dialogs.UserConfig import UserConfigController
 from app.controllers.dialogs.OrganizationConfig import OrganizationConfigController
+from app.controllers.widget.ManageUser import ManageUserController
 from app.utils.helpers import (
     updateUserActiveStatus,
     getManageTypeByIndex, 
-    getOneUserWithUserId,
-    getOneOrganizationWithOrganizationId,
+    getOneUserByUserId,
+    getOneOrganizationByOrganizationId,
     updateUserActiveStatus,
 )
 from app.models.model_association import status
@@ -28,7 +29,6 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
             'activeStatus': 1,
         }
         isSuccess = updateUserActiveStatus(self, entry)
-        print('--isSuccess:', isSuccess)
         
         self.actionSales.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(0))
         self.actionTransaction.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(1))
@@ -48,7 +48,7 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         self.updateStatusBarInfo()
     
     def onActionOrganizationConfigTriggered(self):
-        result = getOneUserWithUserId(self, {'userId': self.userId})
+        result = getOneUserByUserId(self, {'userId': self.userId})
         dialogOrganizationConfig = OrganizationConfigController(result['organizationId'])
         dialogOrganizationConfig.exec()
     
@@ -85,14 +85,26 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         self.actionMember.setChecked(index == 6)
         self.actionUser.setChecked(index == 7)
         
-        resultA = getOneUserWithUserId(self, {'userId': self.userId})
-        resultB = getOneOrganizationWithOrganizationId(self, {'organizationId': resultA['organizationId']})
+        resultA = getOneUserByUserId(self, {'userId': self.userId})
+        resultB = getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
         
         self.actionOrganizationConfig.setText(f"{resultB['organizationName']}")
         self.actionUserConfig.setText(f"{resultA['userName']}")
         
+        # TODO: fix accessibility base on accessLevel
+        self.actionSales.setVisible(resultA['accessLevel'] >= 1)
+        self.actionTransaction.setVisible(resultA['accessLevel'] >= 1)
+        self.actionItem.setVisible(resultA['accessLevel'] >= 2)
+        self.actionStock.setVisible(resultA['accessLevel'] >= 2)
+        self.actionPromo.setVisible(resultA['accessLevel'] >= 2)
+        self.actionReward.setVisible(resultA['accessLevel'] >= 3)
+        self.actionMember.setVisible(resultA['accessLevel'] >= 3)
+        self.actionUser.setVisible(resultA['accessLevel'] >= 3)
+                
+        self.stackedWidgetManage.insertWidget(7, ManageUserController(self.userId))
+        
     def updateStatusBarInfo(self):
-        result = getOneUserWithUserId(self, {'userId': self.userId})
+        result = getOneUserByUserId(self, {'userId': self.userId})
         
         self.labelFullName.setText(f"{result['fullName']}")
         self.labelMobileNumber.setText(f"{result['mobileNumber']}")
