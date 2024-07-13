@@ -7,7 +7,7 @@ from app.ui.main_window.Manage_ui import Ui_MainWindowManage
 from app.controllers.dialogs.UserConfig import UserConfigController
 from app.controllers.dialogs.OrganizationConfig import OrganizationConfigController
 from app.controllers.widget.ManageUser import ManageUserController
-from app.utils.helpers import (
+from app.utils.function_helpers import (
     updateUserActiveStatus,
     getManageTypeByIndex, 
     getOneUserByUserId,

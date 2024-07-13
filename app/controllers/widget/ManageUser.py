@@ -5,7 +5,7 @@ from PyQt5.QtCore import QEvent
 sys.path.append(os.path.abspath(''))
 from app.ui.widget.ManageUser_ui import Ui_FormMenuUser
 from app.controllers.widget.ManageActionButton import ManageActionButtonController
-from app.utils.helpers import (
+from app.utils.function_helpers import (
     getOneOrganizationByOrganizationId,
     getOneUserByUserId,
     getAllUserWithPaginationByKeyword,
@@ -94,21 +94,14 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def populateTableWidgetData(self):
-        # TODO: add threading       
-        entry = {
+        # TODO: add threading  
+        result = getAllUserWithPaginationByKeyword(self, {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
-        }
-        result = getAllUserWithPaginationByKeyword(self, entry)
+        })
         self.totalPages = result['totalPages']
         
-        updatePaginationInfo({
-            'labelPageIndicator': self.labelPageIndicator,
-            'pushButtonNext': self.pushButtonNext,
-            'pushButtonPrev': self.pushButtonPrev,
-            'currentPage': self.currentPage,
-            'totalPages': self.totalPages,
-        })
+        updatePaginationInfo(self)
         
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(len(result['data']))

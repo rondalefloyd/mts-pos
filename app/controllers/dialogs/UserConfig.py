@@ -5,7 +5,7 @@ from PyQt5.QtCore import QEventLoop
 
 sys.path.append(os.path.abspath(''))
 from app.ui.dialogs.UserConfig_ui import Ui_DialogUserConfig
-from app.utils.helpers import (
+from app.utils.function_helpers import (
     updateUser,
     getOneUserByUserId,
     getOneOrganizationByOrganizationId,

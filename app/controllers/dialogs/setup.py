@@ -4,7 +4,7 @@ from PyQt5.QtCore import QEventLoop
 
 sys.path.append(os.path.abspath(''))
 from app.ui.dialogs.Setup_ui import Ui_DialogSetup
-from app.utils.helpers import addNewOrganization
+from app.utils.function_helpers import addNewOrganization
 
 class SetupController(Ui_DialogSetup, QDialog):
     def __init__(self):

@@ -4,7 +4,7 @@ from PyQt5.QtCore import QEventLoop
 
 sys.path.append(os.path.abspath(''))
 from app.ui.dialogs.SignUp_ui import Ui_DialogSignUp
-from app.utils.helpers import (
+from app.utils.function_helpers import (
     addNewUser, 
     getAllOrganization
 )

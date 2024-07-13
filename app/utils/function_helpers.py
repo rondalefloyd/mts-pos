@@ -6,25 +6,6 @@ from datetime import datetime
 sys.path.append(os.path.abspath(''))
 from app.models.model_association import session, User, Organization, Authentication
 
-def getManageTypeByIndex(index:int):
-    match index:
-        case 0:
-            return 'Sales'
-        case 1:
-            return 'Transaction'
-        case 2:
-            return 'Item'
-        case 3:
-            return 'Stock'
-        case 4:
-            return 'Promo'
-        case 5:
-            return 'Reward'
-        case 6:
-            return 'Member'
-        case 7:
-            return 'User'
-
 def getOneUserByUserId(parent:QWidget, entry:object):
     result = {
         'userId': None,
@@ -63,6 +44,8 @@ def getOneUserByUserId(parent:QWidget, entry:object):
     finally:
         print('Session closing...')
         session.close()
+
+
 
 def getOneUserByUserNameAccessCode(parent:QWidget, entry:object):
     result = {
@@ -474,7 +457,32 @@ def addNewOrganization(parent:QWidget, entry:object):
         print('Session closing...')
         session.close()
 
-def updatePaginationInfo(data):
-    data['labelPageIndicator'].setText(f"{data['currentPage']}/{data['totalPages']}")
-    data['pushButtonNext'].setEnabled(data['currentPage'] < data['totalPages'])
-    data['pushButtonPrev'].setEnabled(data['currentPage'] > 1)
+
+def getManageTypeByIndex(index:int):
+    match index:
+        case 0:
+            return 'Sales'
+        case 1:
+            return 'Transaction'
+        case 2:
+            return 'Item'
+        case 3:
+            return 'Stock'
+        case 4:
+            return 'Promo'
+        case 5:
+            return 'Reward'
+        case 6:
+            return 'Member'
+        case 7:
+            return 'User'
+
+def updatePaginationInfo(parent):
+    # !!! USED ONLY FOR HINTING PURPOSES !!!
+    from app.controllers.widget.ManageUser import ManageUserController
+    parent:ManageUserController = parent
+    # !!! USED ONLY FOR HINTING PURPOSES !!!
+    
+    parent.labelPageIndicator.setText(f"{parent.currentPage}/{parent.totalPages}")
+    parent.pushButtonNext.setEnabled(parent.currentPage < parent.totalPages)
+    parent.pushButtonPrev.setEnabled(parent.currentPage > 1)
