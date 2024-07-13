@@ -45,8 +45,6 @@ def getOneUserByUserId(parent:QWidget, entry:object):
         print('Session closing...')
         session.close()
 
-
-
 def getOneUserByUserNameAccessCode(parent:QWidget, entry:object):
     result = {
         'userId': None,
@@ -477,12 +475,7 @@ def getManageTypeByIndex(index:int):
         case 7:
             return 'User'
 
-def updatePaginationInfo(parent):
-    # !!! USED ONLY FOR HINTING PURPOSES !!!
-    from app.controllers.widget.ManageUser import ManageUserController
-    parent:ManageUserController = parent
-    # !!! USED ONLY FOR HINTING PURPOSES !!!
-    
+def updatePaginationInfo(parent:QWidget):
     parent.labelPageIndicator.setText(f"{parent.currentPage}/{parent.totalPages}")
     parent.pushButtonNext.setEnabled(parent.currentPage < parent.totalPages)
     parent.pushButtonPrev.setEnabled(parent.currentPage > 1)
