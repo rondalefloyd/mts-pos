@@ -91,7 +91,6 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         self.actionOrganizationConfig.setText(f"{resultB['organizationName']}")
         self.actionUserConfig.setText(f"{resultA['userName']}")
         
-        # TODO: fix accessibility base on accessLevel
         self.actionSales.setVisible(resultA['accessLevel'] >= 1)
         self.actionTransaction.setVisible(resultA['accessLevel'] >= 1)
         self.actionItem.setVisible(resultA['accessLevel'] >= 2)

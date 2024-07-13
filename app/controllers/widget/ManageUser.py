@@ -57,8 +57,6 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def populateTableWidgetData(self):
-        # TODO: add an action button for each existing data
-        # TODO: add a dialog when action edit is clicked
         # TODO: add threading
         entry = {
             'keyword': f"{self.lineEditFilter.text()}",
