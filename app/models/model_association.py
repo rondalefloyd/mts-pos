@@ -17,7 +17,6 @@ from app.models.Stock import stockTable
 from app.models.Supplier import supplierTable
 from app.models.User import userTable
 
-# TODO: make the code cleaner or whatever
 engine = None
 status = 'OFFLINE'
 metadata = MetaData()
@@ -39,29 +38,30 @@ table = {
     'user': userTable(metadata),
 }
 
-try:
-    print(onlineUrl)
-    engine = create_engine(
-        url = onlineUrl, 
-        connect_args = {'check_same_thread': False}, 
-        echo = True
-    )
-    
-    metadata.create_all(bind=engine)
-    status = 'ONLINE'
+while status == 'OFFLINE':
+    try:
+        print(onlineUrl)
+        engine = create_engine(
+            url = onlineUrl, 
+            connect_args = {'check_same_thread': False}, 
+            echo = True
+        )
+        
+        metadata.create_all(bind=engine)
+        status = 'ONLINE'
 
-except Exception as error:
-    print('Error:', error)
-    print('Switching to local database...')
-    print(offlineUrl)
+    except Exception as error:
+        print('Error:', error)
+        print('Switching to local database...')
+        print(offlineUrl)
 
-    engine = create_engine(
-        url = offlineUrl, 
-        connect_args = {'check_same_thread': False}, 
-        echo = True
-    )
-    
-    metadata.create_all(bind=engine)
+        engine = create_engine(
+            url = offlineUrl, 
+            connect_args = {'check_same_thread': False}, 
+            echo = True
+        )
+        
+        metadata.create_all(bind=engine)
     
 session = sessionmaker(bind=engine)()
 

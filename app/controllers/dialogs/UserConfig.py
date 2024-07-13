@@ -14,15 +14,34 @@ from app.utils.helpers import (
 class UserConfigController(Ui_DialogUserConfig, QDialog):
     def __init__(self, userId):
         super().__init__()
-        self.windowEvent = 'NO_EVENT'
         self.setupUi(self)
         
+        self.windowEvent = 'NO_EVENT'
         self.userId = userId
-        # --
+
         self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
         
         self.populateEntryFields()
+
+    def onPushButtonCancelClicked(self):
+        self.windowEvent = 'START_LOGIN'
+        self.close()
+
+    def onPushButtonCreateClicked(self):
+        isSuccess = updateUser(self, {
+            'userId': f"{self.userId}",
+            'userName': f"{self.lineEditUserName.text()}",
+            'accessCode': f"{self.lineEditAccessCode.text()}",
+            'fullName': f"{self.lineEditFullName.text()}".upper(),
+            'birthDate': f"{self.dateEditBirthDate.text()}",
+            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
+        })
+        
+        if isSuccess is False:
+            QMessageBox.information(self, 'Error', "Failed to update user.")
+            
+        QMessageBox.information(self, 'Success', "User updated.")
 
     def populateEntryFields(self):
         resultA = getOneUserByUserId(self, {'userId': self.userId})
@@ -36,25 +55,6 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
         self.lineEditMobileNumber.setText(f"{resultA['mobileNumber']}")
         self.comboBoxAccessLevel.setCurrentText(f"{resultA['accessLevel']}")
 
-    def onPushButtonCreateClicked(self):
-        entry = {
-            'userId': f"{self.userId}",
-            'userName': f"{self.lineEditUserName.text()}",
-            'accessCode': f"{self.lineEditAccessCode.text()}",
-            'fullName': f"{self.lineEditFullName.text()}".upper(),
-            'birthDate': f"{self.dateEditBirthDate.text()}",
-            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
-        }
-        
-        isSuccess = updateUser(self, entry)
-        
-        if isSuccess is True:
-            QMessageBox.information(self, 'Success', "User updated.")
-
-    def onPushButtonCancelClicked(self):
-        self.windowEvent = 'START_LOGIN'
-        self.close()
-        
     def closeEvent(self, event):
         event.accept()
         pass

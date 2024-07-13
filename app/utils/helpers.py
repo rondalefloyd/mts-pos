@@ -473,3 +473,8 @@ def addNewOrganization(parent:QWidget, entry:object):
     finally:
         print('Session closing...')
         session.close()
+
+def updatePaginationInfo(data):
+    data['labelPageIndicator'].setText(f"{data['currentPage']}/{data['totalPages']}")
+    data['pushButtonNext'].setEnabled(data['currentPage'] < data['totalPages'])
+    data['pushButtonPrev'].setEnabled(data['currentPage'] > 1)

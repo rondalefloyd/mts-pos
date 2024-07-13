@@ -19,16 +19,15 @@ from app.models.model_association import status
 class ManageController(Ui_MainWindowManage, QMainWindow):
     def __init__(self, userId):
         super().__init__()
-        self.windowEvent = 'NO_EVENT'
         self.setupUi(self)
         
+        self.windowEvent = 'NO_EVENT'
         self.userId = userId
-        # --
-        entry = {
+
+        isSuccess = updateUserActiveStatus(self, {
             'userId': self.userId,
             'activeStatus': 1,
-        }
-        isSuccess = updateUserActiveStatus(self, entry)
+        })
         
         self.actionSales.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(0))
         self.actionTransaction.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(1))
@@ -60,11 +59,10 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         confirmation = QMessageBox.warning(self, 'Logout', "Are you sure you want to logout?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirmation == QMessageBox.StandardButton.Yes:
-            entry = {
+            isSuccess = updateUserActiveStatus(self, {
                 'userId': self.userId,
                 'activeStatus': 0,
-            }
-            isSuccess = updateUserActiveStatus(self, entry)
+            })
             self.close()
             self.windowEvent = 'START_LOGIN'
             self.userId = None

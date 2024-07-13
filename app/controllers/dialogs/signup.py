@@ -12,21 +12,21 @@ from app.utils.helpers import (
 class SignUpController(Ui_DialogSignUp, QDialog):
     def __init__(self):
         super().__init__()
-        self.windowEvent = 'NO_EVENT'
         self.setupUi(self)
-        # --
+        
+        self.windowEvent = 'NO_EVENT'
+
         self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
         
         self.populateComboBoxOrganizationName()
 
-    def populateComboBoxOrganizationName(self):
-        self.comboBoxOrganizationName.clear()
-        for result in getAllOrganization(self):
-            self.comboBoxOrganizationName.addItem(f"{result['organizationName']}")
+    def onPushButtonCancelClicked(self):
+        self.windowEvent = 'START_LOGIN'
+        self.close()
 
     def onPushButtonCreateClicked(self):
-        entry = {
+        isSuccess = addNewUser(self, {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -34,17 +34,18 @@ class SignUpController(Ui_DialogSignUp, QDialog):
             'birthDate': f"{self.dateEditBirthDate.text()}",
             'mobileNumber': f"{self.lineEditMobileNumber.text()}",
             'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
-        }
+        })
         
-        isSuccess = addNewUser(self, entry)
-        
-        if isSuccess is True:
-            QMessageBox.information(self, 'Success', "New user added.")
+        if isSuccess is False:
+            QMessageBox.information(self, 'Error', "Failed to add user.")
+            
+        QMessageBox.information(self, 'Success', "New user added.")
 
-    def onPushButtonCancelClicked(self):
-        self.windowEvent = 'START_LOGIN'
-        self.close()
-        
+    def populateComboBoxOrganizationName(self):
+        self.comboBoxOrganizationName.clear()
+        for result in getAllOrganization(self):
+            self.comboBoxOrganizationName.addItem(f"{result['organizationName']}")
+
     def closeEvent(self, event):
         event.accept()
         pass

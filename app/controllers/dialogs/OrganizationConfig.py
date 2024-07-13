@@ -13,15 +13,34 @@ from app.utils.helpers import (
 class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
     def __init__(self, organizationId):
         super().__init__()
-        self.windowEvent = 'NO_EVENT'
         self.setupUi(self)
         
+        self.windowEvent = 'NO_EVENT'
         self.organizationId = organizationId
-        # --
+
         self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
         
         self.populateEntryFields()
+
+    def onPushButtonCancelClicked(self):
+        self.windowEvent = 'START_LOGIN'
+        self.close()
+
+    def onPushButtonCreateClicked(self):
+        isSuccess = updateOrganization(self, {
+            'organizationId': f"{self.organizationId}",
+            'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
+            'address': f"{self.lineEditAddress.text()}".upper(),
+            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
+            'taxId': f"{self.lineEditTaxId.text()}",
+            'accessCode': f"{self.lineEditAccessCode.text()}",
+        })
+        
+        if isSuccess is False:
+            QMessageBox.information(self, 'Error', "Failed to update organization.")
+            
+        QMessageBox.information(self, 'Success', "Organization updated.")
 
     def populateEntryFields(self):
         result = getOneOrganizationByOrganizationId(self, {'organizationId': self.organizationId})
@@ -31,26 +50,7 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
         self.lineEditMobileNumber.setText(f"{result['mobileNumber']}")
         self.lineEditTaxId.setText(f"{result['taxId']}")
         self.lineEditAccessCode.setText(f"{result['accessCode']}")
-
-    def onPushButtonCreateClicked(self):
-        entry = {
-            'organizationId': f"{self.organizationId}",
-            'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
-            'address': f"{self.lineEditAddress.text()}".upper(),
-            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
-            'taxId': f"{self.lineEditTaxId.text()}",
-            'accessCode': f"{self.lineEditAccessCode.text()}",
-        }
-        
-        isSuccess = updateOrganization(self, entry)
-        
-        if isSuccess is True:
-            QMessageBox.information(self, 'Success', "Organization updated.")
-
-    def onPushButtonCancelClicked(self):
-        self.windowEvent = 'START_LOGIN'
-        self.close()
-        
+    
     def closeEvent(self, event):
         event.accept()
         pass

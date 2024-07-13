@@ -9,29 +9,30 @@ from app.utils.helpers import addNewOrganization
 class SetupController(Ui_DialogSetup, QDialog):
     def __init__(self):
         super().__init__()
-        self.windowEvent = 'NO_EVENT'
         self.setupUi(self)
-        # --
+        
+        self.windowEvent = 'NO_EVENT'
+
         self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
 
+    def onPushButtonCancelClicked(self):
+        self.windowEvent = 'START_LOGIN'
+        self.close()
+        
     def onPushButtonCreateClicked(self):
-        entry = {
+        isSuccess = addNewOrganization(self, {
             'taxId': f"{self.lineEditTaxId.text()}",
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
             'address': f"{self.lineEditAddress.text()}".upper(),
             'mobileNumber': f"{self.lineEditMobileNumber.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
-        }
-
-        isSuccess = addNewOrganization(self, entry)
+        })
         
-        if isSuccess is True:
-            QMessageBox.information(self, 'Success', "New organization added.")
-
-    def onPushButtonCancelClicked(self):
-        self.windowEvent = 'START_LOGIN'
-        self.close()
+        if isSuccess is False:
+            QMessageBox.information(self, 'Error', "Failed to add organization.")
+            
+        QMessageBox.information(self, 'Success', "New organization added.")
 
     def closeEvent(self, event):
         event.accept()
