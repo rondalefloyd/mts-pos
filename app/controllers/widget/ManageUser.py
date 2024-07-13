@@ -94,7 +94,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def populateTableWidgetData(self):
-        # TODO: add threading  
+        # TODO: add threading 
         result = getAllUserWithPaginationByKeyword(self, {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage

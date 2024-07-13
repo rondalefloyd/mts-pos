@@ -20,13 +20,15 @@ from app.utils.function_helpers import (
 )
 
 class DatabaseHandlerThread(QThread):
-    finished = pyqtSignal(dict)
+    finished = pyqtSignal(object)
 
-    def __init__(self, functionName, widget, entry):
+    def __init__(self, widget, functionName, entry):
         super().__init__()
-        self.functionName = functionName
         self.widget = widget
+        self.functionName = functionName
         self.entry = entry
+        
+        self.start()
 
     def run(self):
         match self.functionName:
