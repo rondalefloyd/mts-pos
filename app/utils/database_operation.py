@@ -162,9 +162,7 @@ def getAllUserWithPaginationByKeyword(parent:QWidget, entry:object):
         'totalPages': 0
     }
     
-    try:
-
-        
+    try:       
         existingUser = session.query(User).filter(
             (User.OrganizationId.like(f"%{entry['keyword']}%")) |
             (User.UserName.like(f"%{entry['keyword']}%")) |
@@ -178,7 +176,6 @@ def getAllUserWithPaginationByKeyword(parent:QWidget, entry:object):
             (User.LastLogoutTs.like(f"%{entry['keyword']}%")) |
             (User.UpdateTs.like(f"%{entry['keyword']}%"))
         ).order_by(desc(User.UpdateTs))
-        
         
         limit = 30
         offset = (entry['currentPage'] - 1) * limit
