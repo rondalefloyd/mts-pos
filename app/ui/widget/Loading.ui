@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormLoading</class>
- <widget class="QWidget" name="FormLoading">
-  <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
-  </property>
+ <class>DialogLoading</class>
+ <widget class="QDialog" name="DialogLoading">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>188</width>
-    <height>31</height>
+    <width>314</width>
+    <height>71</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Dialog</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
    </property>

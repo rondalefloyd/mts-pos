@@ -18,6 +18,7 @@ from app.utils.database_operation import (
     addNewUser,
     addNewOrganization
 )
+from app.controllers.widget.Loading import LoadingController
 
 class DatabaseOperationThread(QThread):
     finished = pyqtSignal(object)
@@ -72,4 +73,19 @@ class DatabaseOperationThread(QThread):
 
             
         self.finished.emit(result)
+
+class LoadingThread(QThread):
+    finished = pyqtSignal(object)
+
+    def __init__(self, widget):
+        super().__init__()
+        self.loadingController = widget
+
+
+        self.start()
+        
+    def run(self):
+        self.loadingController.show()
+    
+
 

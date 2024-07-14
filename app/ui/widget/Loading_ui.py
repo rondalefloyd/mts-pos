@@ -11,26 +11,25 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_FormLoading(object):
-    def setupUi(self, FormLoading):
-        FormLoading.setObjectName("FormLoading")
-        FormLoading.setWindowModality(QtCore.Qt.ApplicationModal)
-        FormLoading.resize(188, 31)
-        self.horizontalLayout = QtWidgets.QHBoxLayout(FormLoading)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setSpacing(0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label = QtWidgets.QLabel(FormLoading)
+class Ui_DialogLoading(object):
+    def setupUi(self, DialogLoading):
+        DialogLoading.setObjectName("DialogLoading")
+        DialogLoading.resize(314, 71)
+        self.verticalLayout = QtWidgets.QVBoxLayout(DialogLoading)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label = QtWidgets.QLabel(DialogLoading)
         self.label.setEnabled(True)
         self.label.setFrameShape(QtWidgets.QFrame.Box)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
+        self.verticalLayout.addWidget(self.label)
 
-        self.retranslateUi(FormLoading)
-        QtCore.QMetaObject.connectSlotsByName(FormLoading)
+        self.retranslateUi(DialogLoading)
+        QtCore.QMetaObject.connectSlotsByName(DialogLoading)
 
-    def retranslateUi(self, FormLoading):
+    def retranslateUi(self, DialogLoading):
         _translate = QtCore.QCoreApplication.translate
-        FormLoading.setWindowTitle(_translate("FormLoading", "Form"))
-        self.label.setText(_translate("FormLoading", "Please wait..."))
+        DialogLoading.setWindowTitle(_translate("DialogLoading", "Dialog"))
+        self.label.setText(_translate("DialogLoading", "Please wait..."))
