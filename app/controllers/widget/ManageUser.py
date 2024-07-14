@@ -98,6 +98,9 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def populateTableWidgetData(self):
+        self.tableWidgetData.clearContents()
+        self.tableWidgetData.setRowCount(len(result['data']))
+        
         result = getAllUserWithPaginationByKeyword(self, {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
@@ -105,9 +108,6 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.totalPages = result['totalPages']
         
         updatePaginationInfo(self)
-        
-        self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(result['data']))
         
         for i, data in enumerate(result['data']):
             acitonButtonACellWidget = ManageActionButtonController(delete=True)
@@ -137,6 +137,8 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             self.tableWidgetData.setItem(i, 11, updateTsItem)
     
             acitonButtonACellWidget.pushButtonDelete.clicked.connect(lambda _=i, data=data: self.onPushButtonDeleteClicked(data))
+
+        self.loadingWindow.close()
 
     def closeEvent(self, event:QEvent):
         event.accept()

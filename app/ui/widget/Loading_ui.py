@@ -11,25 +11,26 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_DialogLoading(object):
-    def setupUi(self, DialogLoading):
-        DialogLoading.setObjectName("DialogLoading")
-        DialogLoading.resize(314, 71)
-        self.verticalLayout = QtWidgets.QVBoxLayout(DialogLoading)
+class Ui_FormLoading(object):
+    def setupUi(self, FormLoading):
+        FormLoading.setObjectName("FormLoading")
+        FormLoading.setWindowModality(QtCore.Qt.ApplicationModal)
+        FormLoading.resize(242, 73)
+        self.verticalLayout = QtWidgets.QVBoxLayout(FormLoading)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(DialogLoading)
+        self.label = QtWidgets.QLabel(FormLoading)
         self.label.setEnabled(True)
         self.label.setFrameShape(QtWidgets.QFrame.Box)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
 
-        self.retranslateUi(DialogLoading)
-        QtCore.QMetaObject.connectSlotsByName(DialogLoading)
+        self.retranslateUi(FormLoading)
+        QtCore.QMetaObject.connectSlotsByName(FormLoading)
 
-    def retranslateUi(self, DialogLoading):
+    def retranslateUi(self, FormLoading):
         _translate = QtCore.QCoreApplication.translate
-        DialogLoading.setWindowTitle(_translate("DialogLoading", "Dialog"))
-        self.label.setText(_translate("DialogLoading", "Please wait..."))
+        FormLoading.setWindowTitle(_translate("FormLoading", "Form"))
+        self.label.setText(_translate("FormLoading", "Please wait..."))
