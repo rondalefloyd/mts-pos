@@ -30,7 +30,8 @@ class SetupController(Ui_DialogSetup, QDialog):
         })
         
         if isSuccess is False:
-            QMessageBox.information(self, 'Error', "Failed to add organization.")
+            QMessageBox.critical(self, 'Error', "Failed to add organization.")
+            return
             
         QMessageBox.information(self, 'Success', "New organization added.")
 

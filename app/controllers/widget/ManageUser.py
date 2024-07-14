@@ -57,7 +57,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
                 
             isSuccess = deleteUser(self, data)
             if isSuccess is False:
-                QMessageBox.information(self, 'Error', "Failed to delete user.")
+                QMessageBox.critical(self, 'Error', "Failed to delete user.")
                 
             QMessageBox.information(self, 'Success', f"{data['userName']} deleted.")
             self.populateTableWidgetData()
@@ -85,7 +85,8 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         })
         
         if isSuccess is False:
-            QMessageBox.information(self, 'Error', "Failed to add user.")
+            QMessageBox.critical(self, 'Error', "Failed to add user.")
+            return
             
         QMessageBox.information(self, 'Success', "New user added.")
         self.populateTableWidgetData()

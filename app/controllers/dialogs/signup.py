@@ -37,7 +37,8 @@ class SignUpController(Ui_DialogSignUp, QDialog):
         })
         
         if isSuccess is False:
-            QMessageBox.information(self, 'Error', "Failed to add user.")
+            QMessageBox.critical(self, 'Error', "Failed to add user.")
+            return
             
         QMessageBox.information(self, 'Success', "New user added.")
 

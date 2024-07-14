@@ -38,7 +38,8 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
         })
         
         if isSuccess is False:
-            QMessageBox.information(self, 'Error', "Failed to update organization.")
+            QMessageBox.critical(self, 'Error', "Failed to update organization.")
+            return
             
         QMessageBox.information(self, 'Success', "Organization updated.")
 

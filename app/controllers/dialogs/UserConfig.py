@@ -39,7 +39,8 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
         })
         
         if isSuccess is False:
-            QMessageBox.information(self, 'Error', "Failed to update user.")
+            QMessageBox.critical(self, 'Error', "Failed to update user.")
+            return
             
         QMessageBox.information(self, 'Success', "User updated.")
 
