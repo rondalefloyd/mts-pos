@@ -14,8 +14,6 @@ from app.utils.database_operation import (
     addNewUser,
 )
 from app.utils.common import updatePaginationInfo
-from app.utils.thread import DatabaseOperationThread
-from app.models.model_association import status
 
 class ManageUserController(Ui_FormMenuUser, QWidget):
     def __init__(self, userId):
