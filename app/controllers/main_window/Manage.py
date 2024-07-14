@@ -7,13 +7,13 @@ from app.ui.main_window.Manage_ui import Ui_MainWindowManage
 from app.controllers.dialogs.UserConfig import UserConfigController
 from app.controllers.dialogs.OrganizationConfig import OrganizationConfigController
 from app.controllers.widget.ManageUser import ManageUserController
-from app.utils.function_helpers import (
+from app.utils.database_operation import (
     updateUserActiveStatus,
-    getManageTypeByIndex, 
     getOneUserByUserId,
     getOneOrganizationByOrganizationId,
     updateUserActiveStatus,
 )
+from app.utils.common import getManageTypeByIndex
 from app.models.model_association import status
 
 class ManageController(Ui_MainWindowManage, QMainWindow):

@@ -35,6 +35,7 @@
 8. Nesting conventions:
 * ```Do not write nested if statements more than 1```
 9. Create a script for the executable file that displays all the logs
+10. Apply threading in functions that uses functions with loopings
 
 # DIRECTORY STRUCTURE
 ```my_pos_app/

@@ -5,14 +5,16 @@ from PyQt5.QtCore import QEvent
 sys.path.append(os.path.abspath(''))
 from app.ui.widget.ManageUser_ui import Ui_FormMenuUser
 from app.controllers.widget.ManageActionButton import ManageActionButtonController
-from app.utils.function_helpers import (
+from app.controllers.widget.Loading import LoadingController
+from app.utils.database_operation import (
     getOneOrganizationByOrganizationId,
     getOneUserByUserId,
     getAllUserWithPaginationByKeyword,
     deleteUser,
     addNewUser,
-    updatePaginationInfo,
 )
+from app.utils.common import updatePaginationInfo
+from app.utils.thread import DatabaseOperationThread
 from app.models.model_association import status
 
 class ManageUserController(Ui_FormMenuUser, QWidget):
@@ -20,6 +22,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         super().__init__()
         self.setupUi(self)
         
+        self.loadingWindow = LoadingController(self)
         self.windowEvent = 'NO_EVENT'
         self.userId = userId
         self.currentPage = 1
@@ -94,11 +97,14 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def populateTableWidgetData(self):
-        # TODO: add threading 
-        result = getAllUserWithPaginationByKeyword(self, {
+        self.loadingWindow.show()
+        self.threadWorker = DatabaseOperationThread(self, 'getAllUserWithPaginationByKeyword', {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
         })
+        self.threadWorker.finished.connect(self.onPopulateTableWidgetDataFinished)
+        
+    def onPopulateTableWidgetDataFinished(self, result):
         self.totalPages = result['totalPages']
         
         updatePaginationInfo(self)
@@ -134,6 +140,8 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             self.tableWidgetData.setItem(i, 11, updateTsItem)
     
             acitonButtonACellWidget.pushButtonDelete.clicked.connect(lambda _=i, data=data: self.onPushButtonDeleteClicked(data))
+
+        self.loadingWindow.close()
 
     def closeEvent(self, event:QEvent):
         event.accept()

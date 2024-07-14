@@ -5,7 +5,7 @@ from machineid import id
 
 sys.path.append(os.path.abspath(''))
 from app.ui.dialogs.Login_ui import Ui_DialogLogin
-from app.utils.function_helpers import getOneUserByUserNameAccessCode
+from app.utils.database_operation import getOneUserByUserNameAccessCode
 
 class LoginController(Ui_DialogLogin, QDialog):
     def __init__(self):

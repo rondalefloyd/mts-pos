@@ -5,7 +5,7 @@ from PyQt5.QtCore import QEventLoop
 
 sys.path.append(os.path.abspath(''))
 from app.ui.dialogs.OrganizationConfig_ui import Ui_DialogOrganizationConfig
-from app.utils.function_helpers import (
+from app.utils.database_operation import (
     updateOrganization,
     getOneOrganizationByOrganizationId,
 )
