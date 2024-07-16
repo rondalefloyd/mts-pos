@@ -26,18 +26,18 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.currentPage = 1
         self.totalPages = 1
 
-        self.pushButtonAdd.clicked.connect(self.onPushButtonAddClicked)
-        self.pushButtonFilter.clicked.connect(self.onPushButtonFilterClicked)
-        self.pushButtonNext.clicked.connect(self.onPushButtonNextClicked)
-        self.pushButtonPrev.clicked.connect(self.onPushButtonPrevClicked)
+        self.pushButtonAdd.clicked.connect(self._onPushButtonAddClicked)
+        self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
+        self.pushButtonNext.clicked.connect(self._onPushButtonNextClicked)
+        self.pushButtonPrev.clicked.connect(self._onPushButtonPrevClicked)
         
-        self.populateTableWidgetData()
-        self.populateComboBoxOrganizationName()
+        self._populateTableWidgetData()
+        self._populateComboBoxOrganizationName()
     
-    def onPushButtonFilterClicked(self):
-        self.populateTableWidgetData()
+    def _onPushButtonFilterClicked(self):
+        self._populateTableWidgetData()
 
-    def onPushButtonDeleteClicked(self, data):
+    def _onPushButtonDeleteClicked(self, data):
         confirmA = QMessageBox.warning(self, 'Confirm', f"Are you sure you want to delete {data['userName']}", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirmA != QMessageBox.StandardButton.Yes:
@@ -58,20 +58,20 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
                 QMessageBox.critical(self, 'Error', "Failed to delete user.")
                 
             QMessageBox.information(self, 'Success', f"{data['userName']} deleted.")
-            self.populateTableWidgetData()
+            self._populateTableWidgetData()
             return
 
-    def onPushButtonNextClicked(self):
+    def _onPushButtonNextClicked(self):
         if self.currentPage <= self.totalPages:
             self.currentPage += 1
-            self.populateTableWidgetData()
+            self._populateTableWidgetData()
 
-    def onPushButtonPrevClicked(self):
+    def _onPushButtonPrevClicked(self):
         if self.totalPages > 1:
             self.currentPage -= 1
-            self.populateTableWidgetData()
+            self._populateTableWidgetData()
     
-    def onPushButtonAddClicked(self):
+    def _onPushButtonAddClicked(self):
         isSuccess = addNewUser(self, {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
@@ -87,15 +87,15 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             return
             
         QMessageBox.information(self, 'Success', "New user added.")
-        self.populateTableWidgetData()
+        self._populateTableWidgetData()
 
-    def populateComboBoxOrganizationName(self):
+    def _populateComboBoxOrganizationName(self):
         resultA = getOneUserByUserId(self, {'userId': self.userId})
         resultB = getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
         
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
-    def populateTableWidgetData(self):
+    def _populateTableWidgetData(self):
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(len(result['data']))
         
@@ -134,7 +134,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             self.tableWidgetData.setItem(i, 10, lastLogoutTsItem)
             self.tableWidgetData.setItem(i, 11, updateTsItem)
     
-            acitonButtonACellWidget.pushButtonDelete.clicked.connect(lambda _=i, data=data: self.onPushButtonDeleteClicked(data))
+            acitonButtonACellWidget.pushButtonDelete.clicked.connect(lambda _=i, data=data: self._onPushButtonDeleteClicked(data))
 
         self.loadingWindow.close()
 

@@ -17,26 +17,26 @@ class LoginController(Ui_DialogLogin, QDialog):
         
         self.pushButtonAccessCodeVisibility.setText('Show')
 
-        self.pushButtonAccessCodeVisibility.clicked.connect(self.onPushButtonAccessCodeVisibilityClicked)
-        self.pushButtonSignUp.clicked.connect(self.onPushButtonSignUpClicked)
-        self.pushButtonSetup.clicked.connect(self.onPushButtonSetupClicked)
-        self.pushButtonLogin.clicked.connect(self.onPushButtonLoginClicked)
+        self.pushButtonAccessCodeVisibility.clicked.connect(self._onPushButtonAccessCodeVisibilityClicked)
+        self.pushButtonSignUp.clicked.connect(self._onPushButtonSignUpClicked)
+        self.pushButtonSetup.clicked.connect(self._onPushButtonSetupClicked)
+        self.pushButtonLogin.clicked.connect(self._onPushButtonLoginClicked)
 
-    def onPushButtonAccessCodeVisibilityClicked(self):
+    def _onPushButtonAccessCodeVisibilityClicked(self):
         accessCodeVisibility = self.pushButtonAccessCodeVisibility.isChecked()
         
         self.lineEditAccessCode.setEchoMode(QLineEdit.Normal if accessCodeVisibility else QLineEdit.Password)
         self.pushButtonAccessCodeVisibility.setText('Hide' if accessCodeVisibility else 'Show')
 
-    def onPushButtonSetupClicked(self):
+    def _onPushButtonSetupClicked(self):
         self.windowEvent = 'START_SETUP'
         self.close()
 
-    def onPushButtonSignUpClicked(self):
+    def _onPushButtonSignUpClicked(self):
         self.windowEvent = 'START_SIGNUP'
         self.close()
 
-    def onPushButtonLoginClicked(self):
+    def _onPushButtonLoginClicked(self):
         result = getOneUserByUserNameAccessCode(self, {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",

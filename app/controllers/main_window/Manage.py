@@ -29,33 +29,33 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
             'activeStatus': 1,
         })
         
-        self.actionSales.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(0))
-        self.actionTransaction.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(1))
-        self.actionItem.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(2))
-        self.actionStock.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(3))
-        self.actionPromo.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(4))
-        self.actionReward.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(5))
-        self.actionMember.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(6))
-        self.actionUser.triggered.connect(lambda: self.setStackedWidgetManageCurrentIndex(7))
+        self.actionSales.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(0))
+        self.actionTransaction.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(1))
+        self.actionItem.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(2))
+        self.actionStock.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(3))
+        self.actionPromo.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(4))
+        self.actionReward.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(5))
+        self.actionMember.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(6))
+        self.actionUser.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(7))
         
-        self.actionOrganizationConfig.triggered.connect(self.onActionOrganizationConfigTriggered)
-        self.actionUserConfig.triggered.connect(self.onActionUserConfigTriggered)
+        self.actionOrganizationConfig.triggered.connect(self._onActionOrganizationConfigTriggered)
+        self.actionUserConfig.triggered.connect(self._onActionUserConfigTriggered)
         
-        self.actionLogout.triggered.connect(self.onActionLogoutTriggered)
+        self.actionLogout.triggered.connect(self._onActionLogoutTriggered)
 
-        self.updateMenuBarInfo(0)
-        self.updateStatusBarInfo()
+        self._updateMenuBarInfo(0)
+        self._updateStatusBarInfo()
     
-    def onActionOrganizationConfigTriggered(self):
+    def _onActionOrganizationConfigTriggered(self):
         result = getOneUserByUserId(self, {'userId': self.userId})
         dialogOrganizationConfig = OrganizationConfigController(result['organizationId'])
         dialogOrganizationConfig.exec()
     
-    def onActionUserConfigTriggered(self):
+    def _onActionUserConfigTriggered(self):
         dialogUserConfig = UserConfigController(self.userId)
         dialogUserConfig.exec()
         
-    def onActionLogoutTriggered(self):
+    def _onActionLogoutTriggered(self):
         confirmation = QMessageBox.warning(self, 'Logout', "Are you sure you want to logout?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirmation == QMessageBox.StandardButton.Yes:
@@ -67,11 +67,11 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
             self.windowEvent = 'START_LOGIN'
             self.userId = None
     
-    def setStackedWidgetManageCurrentIndex(self, index):
+    def _setStackedWidgetManageCurrentIndex(self, index):
         self.stackedWidgetManage.setCurrentIndex(index)
-        self.updateMenuBarInfo(index)
+        self._updateMenuBarInfo(index)
 
-    def updateMenuBarInfo(self, index):
+    def _updateMenuBarInfo(self, index):
         self.menuManage.setTitle(getManageTypeByIndex(index))
                         
         self.actionSales.setChecked(index == 0)
@@ -100,7 +100,7 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
                 
         self.stackedWidgetManage.insertWidget(7, ManageUserController(self.userId))
         
-    def updateStatusBarInfo(self):
+    def _updateStatusBarInfo(self):
         result = getOneUserByUserId(self, {'userId': self.userId})
         
         self.labelFullName.setText(f"{result['fullName']}")

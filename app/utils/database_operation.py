@@ -7,6 +7,8 @@ sys.path.append(os.path.abspath(''))
 from app.models.model_association import session, User, Organization, Authentication
 from app.controllers.widget.Loading import LoadingController
 
+# TODO: put all of these functions in a threading (might be in classes)
+
 def getOneUserByUserId(parent:QWidget, entry:object):
     result = {
         'userId': None,

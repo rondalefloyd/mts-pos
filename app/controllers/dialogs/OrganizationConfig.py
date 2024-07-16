@@ -18,16 +18,16 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
         self.windowEvent = 'NO_EVENT'
         self.organizationId = organizationId
 
-        self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
-        self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
+        self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
+        self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
         
-        self.populateEntryFields()
+        self._populateEntryFields()
 
-    def onPushButtonCancelClicked(self):
+    def _onPushButtonCancelClicked(self):
         self.windowEvent = 'START_LOGIN'
         self.close()
 
-    def onPushButtonCreateClicked(self):
+    def _onPushButtonCreateClicked(self):
         isSuccess = updateOrganization(self, {
             'organizationId': f"{self.organizationId}",
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
@@ -43,7 +43,7 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
             
         QMessageBox.information(self, 'Success', "Organization updated.")
 
-    def populateEntryFields(self):
+    def _populateEntryFields(self):
         result = getOneOrganizationByOrganizationId(self, {'organizationId': self.organizationId})
         
         self.lineEditOrganizationName.setText(f"{result['organizationName']}")

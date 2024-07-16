@@ -16,16 +16,16 @@ class SignUpController(Ui_DialogSignUp, QDialog):
         
         self.windowEvent = 'NO_EVENT'
 
-        self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
-        self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
+        self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
+        self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
         
-        self.populateComboBoxOrganizationName()
+        self._populateComboBoxOrganizationName()
 
-    def onPushButtonCancelClicked(self):
+    def _onPushButtonCancelClicked(self):
         self.windowEvent = 'START_LOGIN'
         self.close()
 
-    def onPushButtonCreateClicked(self):
+    def _onPushButtonCreateClicked(self):
         isSuccess = addNewUser(self, {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
@@ -42,7 +42,7 @@ class SignUpController(Ui_DialogSignUp, QDialog):
             
         QMessageBox.information(self, 'Success', "New user added.")
 
-    def populateComboBoxOrganizationName(self):
+    def _populateComboBoxOrganizationName(self):
         self.comboBoxOrganizationName.clear()
         for result in getAllOrganization(self):
             self.comboBoxOrganizationName.addItem(f"{result['organizationName']}")

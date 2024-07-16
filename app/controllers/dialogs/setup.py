@@ -13,14 +13,14 @@ class SetupController(Ui_DialogSetup, QDialog):
         
         self.windowEvent = 'NO_EVENT'
 
-        self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
-        self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
+        self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
+        self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
 
-    def onPushButtonCancelClicked(self):
+    def _onPushButtonCancelClicked(self):
         self.windowEvent = 'START_LOGIN'
         self.close()
         
-    def onPushButtonCreateClicked(self):
+    def _onPushButtonCreateClicked(self):
         isSuccess = addNewOrganization(self, {
             'taxId': f"{self.lineEditTaxId.text()}",
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
