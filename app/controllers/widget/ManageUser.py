@@ -97,13 +97,15 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
     
     def _populateTableWidgetData(self):
         self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(result['data']))
         
         result = getAllUserWithPaginationByKeyword(self, {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
         })
+        
         self.totalPages = result['totalPages']
+        
+        self.tableWidgetData.setRowCount(len(result['data']))
         
         updatePaginationInfo(self)
         
