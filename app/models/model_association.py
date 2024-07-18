@@ -49,6 +49,7 @@ while status == 'OFFLINE':
         
         metadata.create_all(bind=engine)
         status = 'ONLINE'
+        break
 
     except Exception as error:
         print('Error:', error)
@@ -62,6 +63,7 @@ while status == 'OFFLINE':
         )
         
         metadata.create_all(bind=engine)
+        break
     
 session = sessionmaker(bind=engine)()
 

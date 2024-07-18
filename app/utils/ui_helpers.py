@@ -5,7 +5,6 @@ from datetime import datetime
 
 sys.path.append(os.path.abspath(''))
 from app.models.model_association import session, User, Organization, Authentication
-from app.controllers.widget.Loading import LoadingController
 
 def getManageTypeByIndex(index:int):
     match index:
@@ -25,8 +24,3 @@ def getManageTypeByIndex(index:int):
             return 'Member'
         case 7:
             return 'User'
-
-def updatePaginationInfo(parent:QWidget):
-    parent.labelPageIndicator.setText(f"{parent.currentPage}/{parent.totalPages}")
-    parent.pushButtonNext.setEnabled(parent.currentPage < parent.totalPages)
-    parent.pushButtonPrev.setEnabled(parent.currentPage > 1)

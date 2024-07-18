@@ -8,17 +8,25 @@ def startApp():
 
     app = QApplication(sys.argv)
     
-    from app.controllers.dialogs.Login import LoginController
+    from app.controllers.Login import LoginController
+    from app.controllers.Manage import ManageController
     
     windowEvent = 'START_LOGIN'
-    userId = None
+    currentUserData = None
 
     while True:
         if (windowEvent == 'START_LOGIN'):
             login = LoginController()
             login.exec()
             windowEvent = login.windowEvent
-            userId = login.userId
+            currentUserData = login.currentUserData
+            
+        if (windowEvent == 'START_MANAGE'):
+            manage = ManageController(currentUserData)
+            manage.show()
+            app.exec()
+            windowEvent = manage.windowEvent
+            currentUserData = manage.currentUserData
 
         if (windowEvent == 'NO_EVENT'):
             break

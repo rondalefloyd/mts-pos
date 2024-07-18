@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormLoading</class>
- <widget class="QWidget" name="FormLoading">
+ <class>FormLoader</class>
+ <widget class="QWidget" name="FormLoader">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
