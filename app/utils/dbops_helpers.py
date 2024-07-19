@@ -21,9 +21,68 @@ class GetDataThread(QThread):
         self.functionName = functionName
         self.entry = entry
         
+    def _getAllUserWithPaginationByKeyword(self):
+        result = {
+            'data': [],
+            'totalPages': 0
+        }
+        
+        try:       
+            existingUser = session.query(User).filter(
+                (User.OrganizationId.like(f"%{self.entry['keyword']}%")) |
+                (User.UserName.like(f"%{self.entry['keyword']}%")) |
+                (User.AccessCode.like(f"%{self.entry['keyword']}%")) |
+                (User.FullName.like(f"%{self.entry['keyword']}%")) |
+                (User.BirthDate.like(f"%{self.entry['keyword']}%")) |
+                (User.MobileNumber.like(f"%{self.entry['keyword']}%")) |
+                (User.AccessLevel.like(f"%{self.entry['keyword']}%")) |
+                (User.ActiveStatus.like(f"%{self.entry['keyword']}%")) |
+                (User.LastLoginTs.like(f"%{self.entry['keyword']}%")) |
+                (User.LastLogoutTs.like(f"%{self.entry['keyword']}%")) |
+                (User.UpdateTs.like(f"%{self.entry['keyword']}%"))
+            ).order_by(desc(User.UpdateTs))
+            
+            limit = 30
+            offset = (self.entry['currentPage'] - 1) * limit
+            paginatedExistingUser = existingUser.limit(limit).offset(offset).all()
+            
+            if paginatedExistingUser:
+                for user in paginatedExistingUser:
+                    result['data'].append({
+                        'userId': f"{user.Id}",
+                        'organizationId': f"{user.OrganizationId}",
+                        'organizationName': session.query(Organization.OrganizationName).filter(Organization.Id == f"{user.OrganizationId}").scalar(),
+                        'userName': f"{user.UserName}",
+                        'accessCode': f"{user.AccessCode}",
+                        'fullName': f"{user.FullName}",
+                        'birthDate': f"{user.BirthDate}",
+                        'mobileNumber': f"{user.MobileNumber}",
+                        'accessLevel': f"{user.AccessLevel}",
+                        'activeStatus': f"{user.ActiveStatus}",
+                        'lastLoginTs': f"{user.LastLoginTs}",
+                        'lastLogoutTs': f"{user.LastLogoutTs}",
+                        'updateTs': f"{user.UpdateTs}",
+                    })
+                
+                result['totalPages'] = math.ceil(existingUser.count() / limit)
+                
+            return result
+        
+        except Exception as error:
+            QMessageBox.critical(self.parentWidget, 'Error', f"An error occured: {error}")
+            session.rollback()
+            print('session rolled back...')
+            return result
+            
+        finally:
+            session.close()
+            print('session closed...')
+        
     def _getOneUserByUserNameAccessCode(self):
         result = {
             'userId': None,
+            'organizationId': None,
+            'organizationName': None,
             'userName': None,
             'accessCode': None,
             'fullName': None,
@@ -44,13 +103,54 @@ class GetDataThread(QThread):
                 return result
                 
             result = {
-                'userId': existingUser.Id,
-                'userName': existingUser.UserName,
-                'accessCode': existingUser.AccessCode,
-                'fullName': existingUser.FullName,
-                'birthDate': existingUser.BirthDate,
-                'mobileNumber': existingUser.MobileNumber,
-                'accessLevel': existingUser.AccessLevel,
+                'userId': f"{existingUser.Id}",
+                'organizationId': f"{existingUser.OrganizationId}",
+                'organizationName': session.query(Organization.OrganizationName).filter(Organization.Id == f"{existingUser.OrganizationId}").scalar(),
+                'userName': f"{existingUser.UserName}",
+                'accessCode': f"{existingUser.AccessCode}",
+                'fullName': f"{existingUser.FullName}",
+                'birthDate': f"{existingUser.BirthDate}",
+                'mobileNumber': f"{existingUser.MobileNumber}",
+                'accessLevel': f"{existingUser.AccessLevel}",
+            }
+
+            return result
+        
+        except Exception as error:
+            QMessageBox.critical(self.parentWidget, 'Error', f"An error occured: {error}")
+            session.rollback()
+            print('session rolled back...')
+            return result
+            
+        finally:
+            session.close()
+            print('session closed...')
+        
+    def _getOneOrganizationById(self):
+        result = {
+            'organizationId': None,
+            'taxId': None,
+            'organizationName': None,
+            'address': None,
+            'mobileNumber': None,
+            'accessCode': None,
+        }
+        
+        try:
+            existingOrganization = session.query(Organization).filter(Organization.OrganizationName == self.entry['organizationId']).one_or_none()
+            
+            if not existingOrganization:
+                print('Organization not found...')
+                session.rollback()
+                return result
+                
+            result = {
+                'organizationId': existingOrganization.Id,
+                'taxId': existingOrganization.TaxId,
+                'organizationName': existingOrganization.OrganizationName,
+                'address': existingOrganization.Address,
+                'mobileNumber': existingOrganization.MobileNumber,
+                'accessCode': existingOrganization.AccessCode,
             }
 
             return result
@@ -69,8 +169,12 @@ class GetDataThread(QThread):
         result = None
         
         match self.functionName:
+            case '_getAllUserWithPaginationByKeyword':
+                result = self._getAllUserWithPaginationByKeyword()
             case '_getOneUserByUserNameAccessCode':
                 result = self._getOneUserByUserNameAccessCode()
+            case '_getOneOrganizationById':
+                result = self._getOneOrganizationById()
             case _:
                 print('function not found in GetUserThread...')
                 

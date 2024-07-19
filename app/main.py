@@ -33,6 +33,5 @@ def startApp():
 
     print('app has stopped running')    
     
-
 if __name__ == "__main__":
     startApp()

@@ -13,22 +13,21 @@ class LoginController(Ui_DialogLogin, QDialog):
         super().__init__()
         self.setupUi(self)
         self._setupInitialTask()
-        self._setupThreads()
     
     def _setupInitialTask(self):
         self.windowEvent = 'NO_EVENT'
         self.currentUserData = None
-    
+
+        self.pushButtonAccessCodeVisibility.setText('Show')
+
         self.pushButtonAccessCodeVisibility.clicked.connect(self._onPushButtonAccessCodeVisibilityClicked)
         self.pushButtonSetup.clicked.connect(self._onPushButtonSetupClicked)
         self.pushButtonSignUp.clicked.connect(self._onPushButtonSignUpClicked)
         self.pushButtonLogin.clicked.connect(self._onPushButtonLoginClicked)
         
-    def _setupThreads(self):
-        self.getDataThread = GetDataThread()
-        pass
-        
     def _onPushButtonAccessCodeVisibilityClicked(self):
+        self.pushButtonAccessCodeVisibility.setText('Hide' if self.pushButtonAccessCodeVisibility.isChecked() else 'Show')
+        self.lineEditAccessCode.setEchoMode(QLineEdit.Normal if self.pushButtonAccessCodeVisibility.isChecked() else QLineEdit.Password)
         pass
     
     def _onPushButtonSetupClicked(self):
@@ -40,7 +39,9 @@ class LoginController(Ui_DialogLogin, QDialog):
     def _onPushButtonLoginClicked(self):
         self.loaderController = LoaderController()
         self.loaderController.show()
-        self.getDataThread.finished.connect(self._handleLoginResult)
+        
+        self.getDataThread = GetDataThread()
+        self.getDataThread.finished.connect(self._handleOnPushButtonLoginClickedResult)
         self.getDataThread.setRequirements(self, '_getOneUserByUserNameAccessCode', {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -48,10 +49,17 @@ class LoginController(Ui_DialogLogin, QDialog):
         self.getDataThread.start()
         pass
 
-    def _handleLoginResult(self, result):
+    def _handleOnPushButtonLoginClickedResult(self, result):
+        if result['userId'] == None:
+            self.loaderController.close()
+            QMessageBox.critical(self, 'Invalid', f"{self.lineEditUserName.text()} not found")
+            return
+        
         self.currentUserData = result
+        
         self.getDataThread.finished.disconnect()
         self.loaderController.close()
+        
         self.windowEvent = 'START_MANAGE'
         self.close()
     
