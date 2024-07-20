@@ -74,6 +74,7 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.currentUserData = None
+            self.windowEvent = 'START_LOGIN'
             self.close()
             return
         

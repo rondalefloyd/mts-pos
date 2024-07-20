@@ -24,10 +24,10 @@ class GetDataThread(QThread):
     def _getAllUserWithPaginationByKeyword(self):
         result = {
             'data': [],
-            'totalPages': 0
+            'totalPages': 1
         }
         
-        try:       
+        try:
             existingUser = session.query(User).filter(
                 (User.OrganizationId.like(f"%{self.entry['keyword']}%")) |
                 (User.UserName.like(f"%{self.entry['keyword']}%")) |
@@ -168,16 +168,15 @@ class GetDataThread(QThread):
     def run(self):
         result = None
         
-        match self.functionName:
-            case '_getAllUserWithPaginationByKeyword':
-                result = self._getAllUserWithPaginationByKeyword()
-            case '_getOneUserByUserNameAccessCode':
-                result = self._getOneUserByUserNameAccessCode()
-            case '_getOneOrganizationById':
-                result = self._getOneOrganizationById()
-            case _:
-                print('function not found in GetUserThread...')
-                
+        if self.functionName == '_getAllUserWithPaginationByKeyword':
+            result = self._getAllUserWithPaginationByKeyword()
+        elif self.functionName == '_getOneUserByUserNameAccessCode':
+            result = self._getOneUserByUserNameAccessCode()
+        elif self.functionName == '_getOneOrganizationById':
+            result = self._getOneOrganizationById()
+        else:
+            print('Function not found in GetDataThread...')
+
         self.finished.emit(result)
         
 class UpdateDataThread(QThread):
@@ -212,6 +211,7 @@ class UpdateDataThread(QThread):
                 print('function not found in UpdateDataThread...')
                 
         self.finished.emit(result)
+        self.quit()
         
         
 class AddDataThread(QThread):

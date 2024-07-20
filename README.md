@@ -14,6 +14,7 @@
 * ```pip install python-dotenv```
 * ```pip install sqlalchemy```
 * ```pip install sqlalchemy-libsql```
+* ```pip install libsql-experimental```
 
 # STANDARDS
 1. Keep the object name of the widgets in camel casing.

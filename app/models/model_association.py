@@ -38,32 +38,29 @@ table = {
     'user': userTable(metadata),
 }
 
-while status == 'OFFLINE':
-    try:
-        print(onlineUrl)
-        engine = create_engine(
-            url = onlineUrl, 
-            connect_args = {'check_same_thread': False}, 
-            echo = True
-        )
-        
-        metadata.create_all(bind=engine)
-        status = 'ONLINE'
-        break
+try:
+    print(onlineUrl)
+    engine = create_engine(
+        url = onlineUrl, 
+        connect_args = {'check_same_thread': False}, 
+        echo = True
+    )
+    
+    metadata.create_all(bind=engine)
+    status = 'ONLINE'
 
-    except Exception as error:
-        print('Error:', error)
-        print('Switching to local database...')
-        print(offlineUrl)
+except Exception as error:
+    print('Error:', error)
+    print('Switching to local database...')
+    print(offlineUrl)
 
-        engine = create_engine(
-            url = offlineUrl, 
-            connect_args = {'check_same_thread': False}, 
-            echo = True
-        )
-        
-        metadata.create_all(bind=engine)
-        break
+    engine = create_engine(
+        url = offlineUrl, 
+        connect_args = {'check_same_thread': False}, 
+        echo = True
+    )
+    
+    metadata.create_all(bind=engine)
     
 session = sessionmaker(bind=engine)()
 

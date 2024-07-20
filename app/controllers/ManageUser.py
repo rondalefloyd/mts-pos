@@ -2,6 +2,7 @@ import os, sys
 from PyQt5.QtWidgets import QWidget, QMessageBox, QTableWidgetItem
 from PyQt5.QtCore import QEvent
 from machineid import id
+import threading
 
 sys.path.append(os.path.abspath(''))
 from app.ui.ManageUser_ui import Ui_FormManageUser
@@ -20,10 +21,29 @@ class ManageUserController(Ui_FormManageUser, QWidget):
         self.currentUserData = currentUserData
         
         self.currentPage = 1
+        self.totalPages = 1
         
-        # TODO: add filter functionalities
+        self.comboBoxOrganizationName.setCurrentText(f"{self.currentUserData['organizationName']}")
+        self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         
+        self.lineEditFilter.textChanged.connect(self._onLineEditFilterTextChanged)
+        self.pushButtonPrev.clicked.connect(self._onPushButtonPrevClicked)
+        self.pushButtonNext.clicked.connect(self._onPushButtonNextClicked)
+
         self._populateTableWidgetData()
+    
+    def _onLineEditFilterTextChanged(self):
+        self._populateTableWidgetData()
+    
+    def _onPushButtonPrevClicked(self):
+        if self.currentPage > 1:
+            self.currentPage -= 1
+            self._populateTableWidgetData()
+
+    def _onPushButtonNextClicked(self):
+        if self.currentPage < self.totalPages:
+            self.currentPage += 1
+            self._populateTableWidgetData()
         
     def _populateTableWidgetData(self):
         self.loaderController = LoaderController()
@@ -36,10 +56,13 @@ class ManageUserController(Ui_FormManageUser, QWidget):
             'keyword': f"{self.lineEditFilter.text()}",
         })
         self.getDataThread.start()
+        self._printActiveThreads()
         
     def _handlePopulateTableWidgetDataResult(self, result):
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(len(result['data']))
+        
+        self.totalPages = result['totalPages']
         
         for i, data in enumerate(result['data']):
             actionButtonAController = ActionButtonAController(allowDelete=True)
@@ -67,9 +90,18 @@ class ManageUserController(Ui_FormManageUser, QWidget):
             self.tableWidgetData.setItem(i, 9, lastLoginTsItem)
             self.tableWidgetData.setItem(i, 10, lastLogoutTsItem)
             self.tableWidgetData.setItem(i, 11, updateTsItem)
-        
+    
+        self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
+        self.pushButtonPrev.setEnabled(self.currentPage > 1)
+        self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
         self.loaderController.close()
-        
+
+    def _printActiveThreads(self):
+        active_threads = threading.enumerate()
+        print("Current running threads:")
+        for thread in active_threads:
+            print(thread.name)
+            
     def closeEvent(self, event:QEvent):
         self.currentUserData = None
         event.accept()
