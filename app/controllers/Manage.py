@@ -8,8 +8,8 @@ from app.controllers.UserConfig import UserConfigController
 from app.controllers.OrganizationConfig import OrganizationConfigController
 from app.controllers.ManageUser import ManageUserController
 from app.utils.crud import (
-    _updateUserActiveStatus,
-    _updateUserActiveStatus,
+    updateUserActiveStatus,
+    updateUserActiveStatus,
 )
 from app.utils.gui import getManageTypeByIndex
 from app.utils.turso import status
@@ -22,7 +22,7 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         self.windowEvent = 'NO_EVENT'
         self.currentUserData = currentUserData
 
-        result = _updateUserActiveStatus(self, {
+        result = updateUserActiveStatus(self, {
             'userId': self.currentUserData['userId'],
             'activeStatus': 1,
         })
@@ -69,7 +69,7 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         confirmation = QMessageBox.warning(self, 'Logout', "Are you sure you want to logout?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirmation == QMessageBox.StandardButton.Yes:
-            result = _updateUserActiveStatus(self, {
+            result = updateUserActiveStatus(self, {
                 'userId': self.currentUserData['userId'],
                 'activeStatus': 0,
             })

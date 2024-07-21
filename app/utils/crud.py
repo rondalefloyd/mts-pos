@@ -5,10 +5,9 @@ from datetime import datetime
 
 sys.path.append(os.path.abspath(''))
 from app.models.model_association import User, Organization, Authentication
-from app.controllers.Loading import LoadingController
 from app.utils.turso import sessionMaker
 
-def _getOneUserByUserId(parent:QWidget, entry:object):
+def getOneUserByUserId(parentWidget:QWidget, entry:object):
     result = {
         'userId': None,
         'organizationId': None,
@@ -52,7 +51,7 @@ def _getOneUserByUserId(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _getOneUserByUserNameAccessCode(parent:QWidget, entry:object):
+def getOneUserByUserNameAccessCode(parentWidget:QWidget, entry:object):
     result = {
         'userId': None,
         'organizationId': None,
@@ -99,7 +98,7 @@ def _getOneUserByUserNameAccessCode(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _getOneOrganizationByOrganizationId(parent:QWidget, entry:object):
+def getOneOrganizationByOrganizationId(parentWidget:QWidget, entry:object):
     result = {
         'organizationId': None,
         'taxId': None,
@@ -137,7 +136,7 @@ def _getOneOrganizationByOrganizationId(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _getOneOrganizationByOrganizationName(parent:QWidget, entry:object):
+def getOneOrganizationByOrganizationName(parentWidget:QWidget, entry:object):
     result = {
         'organizationId': None,
         'taxId': None,
@@ -175,7 +174,7 @@ def _getOneOrganizationByOrganizationName(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _getAllUserWithPaginationByKeyword(parent:QWidget, entry:object):
+def getAllUserWithPaginationByKeyword(parentWidget:QWidget, entry:object):
     result = {
         'data': [],
         'totalPages': 1
@@ -232,7 +231,7 @@ def _getAllUserWithPaginationByKeyword(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _getAllUser(parent:QWidget):
+def getAllUser(parentWidget:QWidget):
     result = []
     
     try:
@@ -269,7 +268,7 @@ def _getAllUser(parent:QWidget):
         session.close()
         print('session closed...')
 
-def _getAllOrganization(parent:QWidget):
+def getAllOrganization(parentWidget:QWidget):
     result = []
     
     try:
@@ -300,7 +299,7 @@ def _getAllOrganization(parent:QWidget):
         session.close()
         print('session closed...')
 
-def _deleteUser(parent:QWidget, entry:object):
+def deleteUser(parentWidget:QWidget, entry:object):
     try:
         session = sessionMaker()
         existingUser = session.query(User).filter(User.Id == entry['userId']).first()
@@ -319,7 +318,7 @@ def _deleteUser(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _updateOrganization(parent:QWidget, entry:object):
+def updateOrganization(parentWidget:QWidget, entry:object):
     try:
         session = sessionMaker()
         existingOrganization = session.query(Organization).filter(
@@ -329,7 +328,7 @@ def _updateOrganization(parent:QWidget, entry:object):
         
         if existingOrganization:
             if existingOrganization.OrganizationName == entry['organizationName']:
-                QMessageBox.critical(parent, 'Error', f"{entry['organizationName']} already exist.")
+                QMessageBox.critical(parentWidget, 'Error', f"{entry['organizationName']} already exist.")
                 
             session.rollback()
             return False
@@ -355,7 +354,7 @@ def _updateOrganization(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _updateUser(parent:QWidget, entry:object):
+def updateUser(parentWidget:QWidget, entry:object):
     try:
         session = sessionMaker()
         existingUser = session.query(User).filter(
@@ -365,7 +364,7 @@ def _updateUser(parent:QWidget, entry:object):
         
         if existingUser:
             if existingUser.UserName == entry['userName']:
-                QMessageBox.critical(parent, 'Error', f"{entry['userName']} already exist.")
+                QMessageBox.critical(parentWidget, 'Error', f"{entry['userName']} already exist.")
                 
             session.rollback()
             return False
@@ -390,14 +389,14 @@ def _updateUser(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _addNewUser(parent:QWidget, entry:object):
+def addNewUser(parentWidget:QWidget, entry:object):
     try:
         session = sessionMaker()
         existingUser = session.query(User).filter((User.UserName == entry['userName'])).first()
         
         if existingUser:        
             if existingUser.UserName == entry['userName']:
-                QMessageBox.critical(parent, 'Error', f"{entry['userName']} already exist.")
+                QMessageBox.critical(parentWidget, 'Error', f"{entry['userName']} already exist.")
                 
             session.rollback()
             return False
@@ -425,14 +424,14 @@ def _addNewUser(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _addNewOrganization(parent:QWidget, entry:object):
+def addNewOrganization(parentWidget:QWidget, entry:object):
     try:
         session = sessionMaker()
         existingOrganization = session.query(Organization).filter(Organization.OrganizationName == entry['organizationName']).first()
         
         if existingOrganization:
             if existingOrganization.OrganizationName == entry['organizationName']:
-                QMessageBox.critical(parent, 'Error', f"{entry['organizationName']} already exist.")
+                QMessageBox.critical(parentWidget, 'Error', f"{entry['organizationName']} already exist.")
                 
             session.rollback()
             return False
@@ -458,7 +457,7 @@ def _addNewOrganization(parent:QWidget, entry:object):
         session.close()
         print('session closed...')
 
-def _updateUserActiveStatus(parent:QWidget, entry:object):
+def updateUserActiveStatus(parentWidget:QWidget, entry:object):
     try:
         session = sessionMaker()
         user = session.query(User).filter(User.Id == entry['userId']).one_or_none()

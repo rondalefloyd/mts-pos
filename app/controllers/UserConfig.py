@@ -6,9 +6,9 @@ from PyQt5.QtCore import QEventLoop
 sys.path.append(os.path.abspath(''))
 from app.ui.UserConfig_ui import Ui_DialogUserConfig
 from app.utils.crud import (
-    _updateUser,
-    _getOneUserByUserId,
-    _getOneOrganizationByOrganizationId,
+    updateUser,
+    getOneUserByUserId,
+    getOneOrganizationByOrganizationId,
 )
 
 class UserConfigController(Ui_DialogUserConfig, QDialog):
@@ -29,7 +29,7 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
         self.close()
 
     def _onPushButtonCreateClicked(self):
-        result = _updateUser(self, {
+        result = updateUser(self, {
             'userId': f"{self.currentUserData['userId']}",
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -45,8 +45,8 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
         QMessageBox.information(self, 'Success', "User updated.")
 
     def _populateEntryFields(self):
-        resultA = _getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
-        resultB = _getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
+        resultA = getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
+        resultB = getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
         
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
         self.lineEditUserName.setText(f"{resultA['userName']}")

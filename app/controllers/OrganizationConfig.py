@@ -6,8 +6,8 @@ from PyQt5.QtCore import QEventLoop
 sys.path.append(os.path.abspath(''))
 from app.ui.OrganizationConfig_ui import Ui_DialogOrganizationConfig
 from app.utils.crud import (
-    _updateOrganization,
-    _getOneOrganizationByOrganizationId,
+    updateOrganization,
+    getOneOrganizationByOrganizationId,
 )
 
 class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
@@ -28,7 +28,7 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
         self.close()
 
     def _onPushButtonCreateClicked(self):
-        result = _updateOrganization(self, {
+        result = updateOrganization(self, {
             'organizationId': f"{self.organizationId}",
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
             'address': f"{self.lineEditAddress.text()}".upper(),
@@ -44,7 +44,7 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
         QMessageBox.information(self, 'Success', "Organization updated.")
 
     def _populateEntryFields(self):
-        result = _getOneOrganizationByOrganizationId(self, {'organizationId': self.organizationId})
+        result = getOneOrganizationByOrganizationId(self, {'organizationId': self.organizationId})
         
         self.lineEditOrganizationName.setText(f"{result['organizationName']}")
         self.lineEditAddress.setText(f"{result['address']}")

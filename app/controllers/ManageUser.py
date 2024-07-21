@@ -7,11 +7,11 @@ from app.ui.ManageUser_ui import Ui_FormMenuUser
 from app.controllers.ManageActionButton import ManageActionButtonController
 from app.controllers.Loading import LoadingController
 from app.utils.crud import (
-    _getOneOrganizationByOrganizationId,
-    _getOneUserByUserId,
-    _getAllUserWithPaginationByKeyword,
-    _deleteUser,
-    _addNewUser,
+    getOneOrganizationByOrganizationId,
+    getOneUserByUserId,
+    getAllUserWithPaginationByKeyword,
+    deleteUser,
+    addNewUser,
 )
 
 class ManageUserController(Ui_FormMenuUser, QWidget):
@@ -48,11 +48,11 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             if not confirmB:
                 return
             
-            result = _getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
+            result = getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
             if accessCodeEntry != result['accessCode']:
                 QMessageBox.critical(self, 'Error', "Incorrect password. Please try again.")
                 
-            result = _deleteUser(self, data)
+            result = deleteUser(self, data)
             if result is False:
                 QMessageBox.critical(self, 'Error', "Failed to delete user.")
                 
@@ -71,7 +71,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             self._populateTableWidgetData()
     
     def _onPushButtonAddClicked(self):
-        result = _addNewUser(self, {
+        result = addNewUser(self, {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -89,15 +89,15 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self._populateTableWidgetData()
 
     def _populateComboBoxOrganizationName(self):
-        resultA = _getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
-        resultB = _getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
+        resultA = getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
+        resultB = getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
         
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def _populateTableWidgetData(self):
         self.tableWidgetData.clearContents()
         
-        result = _getAllUserWithPaginationByKeyword(self, {
+        result = getAllUserWithPaginationByKeyword(self, {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
         })
