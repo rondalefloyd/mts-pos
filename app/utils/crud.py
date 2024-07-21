@@ -4,91 +4,102 @@ from PyQt5.QtWidgets import QWidget, QMessageBox
 from datetime import datetime
 
 sys.path.append(os.path.abspath(''))
-from app.models.model_association import session, User, Organization, Authentication
-from app.controllers.widget.Loading import LoadingController
+from app.models.model_association import User, Organization, Authentication
+from app.controllers.Loading import LoadingController
+from app.utils.turso import sessionMaker
 
-# TODO: put all of these functions in a threading (might be in classes)
-
-def getOneUserByUserId(parent:QWidget, entry:object):
+def _getOneUserByUserId(parent:QWidget, entry:object):
     result = {
         'userId': None,
         'organizationId': None,
+        'organizationName': None,
         'userName': None,
         'accessCode': None,
         'fullName': None,
         'birthDate': None,
         'mobileNumber': None,
         'accessLevel': None,
+        'updateTs': None,
     }
     
     try:
-        existingUser = session.query(User).filter(User.Id == entry['userId']).one()
+        session = sessionMaker()
+        existingUser = session.query(User).filter(User.Id == entry['userId']).one_or_none()
         
         if existingUser:
             result = {
                 'userId': existingUser.Id,
                 'organizationId': existingUser.OrganizationId,
+                'organizationName': session.query(Organization.OrganizationName).filter(Organization.Id == existingUser.OrganizationId).scalar(),
                 'userName': existingUser.UserName,
                 'accessCode': existingUser.AccessCode,
                 'fullName': existingUser.FullName,
                 'birthDate': existingUser.BirthDate,
                 'mobileNumber': existingUser.MobileNumber,
                 'accessLevel': existingUser.AccessLevel,
+                'updateTs': existingUser.UpdateTs,
             }
         
         return result
     
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _getOneUserByUserId:', error)
         return result
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def getOneUserByUserNameAccessCode(parent:QWidget, entry:object):
+def _getOneUserByUserNameAccessCode(parent:QWidget, entry:object):
     result = {
         'userId': None,
+        'organizationId': None,
+        'organizationName': None,
         'userName': None,
         'accessCode': None,
         'fullName': None,
         'birthDate': None,
         'mobileNumber': None,
         'accessLevel': None,
+        'updateTs': None,
     }
     
     try:
+        session = sessionMaker()
         existingUser = session.query(User).filter(
             (User.UserName == entry['userName']) &
             (User.AccessCode == entry['accessCode'])
-        ).one()
+        ).one_or_none()
         
         if existingUser:
             result = {
                 'userId': existingUser.Id,
+                'organizationId': existingUser.OrganizationId,
+                'organizationName': session.query(Organization.OrganizationName).filter(Organization.Id == existingUser.OrganizationId).scalar(),
                 'userName': existingUser.UserName,
                 'accessCode': existingUser.AccessCode,
                 'fullName': existingUser.FullName,
                 'birthDate': existingUser.BirthDate,
                 'mobileNumber': existingUser.MobileNumber,
                 'accessLevel': existingUser.AccessLevel,
+                'updateTs': existingUser.UpdateTs,
             }
         
         return result
     
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _getOneUserByUserNameAccessCode:', error)
         return result
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def getOneOrganizationByOrganizationId(parent:QWidget, entry:object):
+def _getOneOrganizationByOrganizationId(parent:QWidget, entry:object):
     result = {
         'organizationId': None,
         'taxId': None,
@@ -96,10 +107,12 @@ def getOneOrganizationByOrganizationId(parent:QWidget, entry:object):
         'address': None,
         'mobileNumber': None,
         'accessCode': None,
+        'updateTs': None,
     }
     
     try:
-        existingOrganization = session.query(Organization).filter(Organization.Id == entry['organizationId']).one()
+        session = sessionMaker()
+        existingOrganization = session.query(Organization).filter(Organization.Id == entry['organizationId']).one_or_none()
         
         if existingOrganization:
             result = {
@@ -109,21 +122,22 @@ def getOneOrganizationByOrganizationId(parent:QWidget, entry:object):
                 'address': existingOrganization.Address,
                 'mobileNumber': existingOrganization.MobileNumber,
                 'accessCode': existingOrganization.AccessCode,
+                'updateTs': existingOrganization.UpdateTs,
             }
         
         return result
     
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _getOneOrganizationByOrganizationId:', error)
         return result
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def getOneOrganizationByOrganizationName(parent:QWidget, entry:object):
+def _getOneOrganizationByOrganizationName(parent:QWidget, entry:object):
     result = {
         'organizationId': None,
         'taxId': None,
@@ -131,10 +145,12 @@ def getOneOrganizationByOrganizationName(parent:QWidget, entry:object):
         'address': None,
         'mobileNumber': None,
         'accessCode': None,
+        'updateTs': None,
     }
     
     try:
-        existingOrganization = session.query(Organization).filter(Organization.OrganizationName == entry['organizationName']).one()
+        session = sessionMaker()
+        existingOrganization = session.query(Organization).filter(Organization.OrganizationName == entry['organizationName']).one_or_none()
         
         if existingOrganization:
             result = {
@@ -144,27 +160,29 @@ def getOneOrganizationByOrganizationName(parent:QWidget, entry:object):
                 'address': existingOrganization.Address,
                 'mobileNumber': existingOrganization.MobileNumber,
                 'accessCode': existingOrganization.AccessCode,
+                'updateTs': existingOrganization.UpdateTs,
             }
         
         return result
     
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _getOneOrganizationByOrganizationName:', error)
         return result
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def getAllUserWithPaginationByKeyword(parent:QWidget, entry:object):
+def _getAllUserWithPaginationByKeyword(parent:QWidget, entry:object):
     result = {
         'data': [],
-        'totalPages': 0
+        'totalPages': 1
     }
     
-    try:       
+    try:
+        session = sessionMaker()
         existingUser = session.query(User).filter(
             (User.OrganizationId.like(f"%{entry['keyword']}%")) |
             (User.UserName.like(f"%{entry['keyword']}%")) |
@@ -205,19 +223,20 @@ def getAllUserWithPaginationByKeyword(parent:QWidget, entry:object):
         return result
     
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _getAllUserWithPaginationByKeyword:', error)
         return result
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def getAllUser(parent:QWidget):
+def _getAllUser(parent:QWidget):
     result = []
     
     try:
+        session = sessionMaker()
         existingUser = session.query(User).order_by(desc(User.UpdateTs)).all()
         
         if existingUser:
@@ -225,6 +244,7 @@ def getAllUser(parent:QWidget):
                 result.append({
                     'userId': user.Id,
                     'organizationId': user.OrganizationId,
+                    'organizationName': user.OrganizationName,
                     'userName': user.UserName,
                     'accessCode': user.AccessCode,
                     'fullName': user.FullName,
@@ -240,19 +260,20 @@ def getAllUser(parent:QWidget):
         return result
     
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _getAllUser:', error)
         return result
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def getAllOrganization(parent:QWidget):
+def _getAllOrganization(parent:QWidget):
     result = []
     
     try:
+        session = sessionMaker()
         existingOrganization = session.query(Organization).order_by(desc(Organization.UpdateTs)).all()
         
         if existingOrganization:
@@ -264,22 +285,24 @@ def getAllOrganization(parent:QWidget):
                     'address': organization.Address,
                     'mobileNumber': organization.MobileNumber,
                     'accessCode': organization.AccessCode,
+                    'updateTs': organization.UpdateTs,
                 })
         
         return result
     
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _getAllOrganization:', error)
         return result
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def deleteUser(parent:QWidget, entry:object):
+def _deleteUser(parent:QWidget, entry:object):
     try:
+        session = sessionMaker()
         existingUser = session.query(User).filter(User.Id == entry['userId']).first()
         
         session.delete(existingUser)
@@ -287,17 +310,18 @@ def deleteUser(parent:QWidget, entry:object):
         return True
         
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _deleteUser:', error)
         return False
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def updateOrganization(parent:QWidget, entry:object):
+def _updateOrganization(parent:QWidget, entry:object):
     try:
+        session = sessionMaker()
         existingOrganization = session.query(Organization).filter(
             (Organization.Id != entry['organizationId']) &
             (Organization.OrganizationName == entry['organizationName'])
@@ -310,7 +334,7 @@ def updateOrganization(parent:QWidget, entry:object):
             session.rollback()
             return False
         
-        organization = session.query(Organization).filter(Organization.Id == entry['organizationId']).one()
+        organization = session.query(Organization).filter(Organization.Id == entry['organizationId']).one_or_none()
         organization.TaxId = entry['taxId']
         organization.OrganizationName = entry['organizationName']
         organization.Address = entry['address']
@@ -322,43 +346,18 @@ def updateOrganization(parent:QWidget, entry:object):
         return True
         
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _updateOrganization:', error)
         return False
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def updateUserActiveStatus(parent:QWidget, entry:object):
+def _updateUser(parent:QWidget, entry:object):
     try:
-        user = session.query(User).filter(User.Id == entry['userId']).one()
-        
-        user.ActiveStatus = entry['activeStatus']
-        currentTs = f"{datetime.now()}"
-        
-        if user.ActiveStatus == 0:
-            user.LastLogoutTs = currentTs
-            
-        elif user.ActiveStatus == 1:
-            user.LastLoginTs = currentTs
-        
-        session.commit()
-        return True
-        
-    except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
-        session.rollback()
-        return False
-        
-    finally:
-        print('Session closing...')
-        session.close()
-
-def updateUser(parent:QWidget, entry:object):
-    try:
+        session = sessionMaker()
         existingUser = session.query(User).filter(
             (User.Id != entry['userId']) &
             (User.UserName == entry['userName'])
@@ -371,7 +370,7 @@ def updateUser(parent:QWidget, entry:object):
             session.rollback()
             return False
         
-        user = session.query(User).filter(User.Id == entry['userId']).one()
+        user = session.query(User).filter(User.Id == entry['userId']).one_or_none()
         user.UserName = entry['userName']
         user.AccessCode = entry['accessCode']
         user.FullName = entry['fullName']
@@ -382,17 +381,18 @@ def updateUser(parent:QWidget, entry:object):
         return True
         
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _updateUser:', error)
         return False
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def addNewUser(parent:QWidget, entry:object):
+def _addNewUser(parent:QWidget, entry:object):
     try:
+        session = sessionMaker()
         existingUser = session.query(User).filter((User.UserName == entry['userName'])).first()
         
         if existingUser:        
@@ -416,17 +416,18 @@ def addNewUser(parent:QWidget, entry:object):
         return True
         
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _addNewUser:', error)
         return False
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
 
-def addNewOrganization(parent:QWidget, entry:object):
+def _addNewOrganization(parent:QWidget, entry:object):
     try:
+        session = sessionMaker()
         existingOrganization = session.query(Organization).filter(Organization.OrganizationName == entry['organizationName']).first()
         
         if existingOrganization:
@@ -448,11 +449,39 @@ def addNewOrganization(parent:QWidget, entry:object):
         return True
         
     except Exception as error:
-        print('Error:', error)
-        print('Session rolling back...')
         session.rollback()
+        print('session rolled back...')
+        print('error at _addNewOrganization:', error)
         return False
         
     finally:
-        print('Session closing...')
         session.close()
+        print('session closed...')
+
+def _updateUserActiveStatus(parent:QWidget, entry:object):
+    try:
+        session = sessionMaker()
+        user = session.query(User).filter(User.Id == entry['userId']).one_or_none()
+        
+        user.ActiveStatus = entry['activeStatus']
+        currentTs = f"{datetime.now()}"
+        
+        if user.ActiveStatus == 0:
+            user.LastLogoutTs = currentTs
+            
+        elif user.ActiveStatus == 1:
+            user.LastLoginTs = currentTs
+        
+        session.commit()
+        return True
+        
+    except Exception as error:
+        session.rollback()
+        print('session rolled back...')
+        print('error at _updateUserActiveStatus:', error)
+        return False
+        
+    finally:
+        session.close()
+        print('session closed...')
+

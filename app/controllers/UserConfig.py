@@ -4,20 +4,20 @@ from PyQt5.QtCore import QDate
 from PyQt5.QtCore import QEventLoop
 
 sys.path.append(os.path.abspath(''))
-from app.ui.dialogs.UserConfig_ui import Ui_DialogUserConfig
-from app.utils.database_operation import (
-    updateUser,
-    getOneUserByUserId,
-    getOneOrganizationByOrganizationId,
+from app.ui.UserConfig_ui import Ui_DialogUserConfig
+from app.utils.crud import (
+    _updateUser,
+    _getOneUserByUserId,
+    _getOneOrganizationByOrganizationId,
 )
 
 class UserConfigController(Ui_DialogUserConfig, QDialog):
-    def __init__(self, userId):
+    def __init__(self, currentUserData):
         super().__init__()
         self.setupUi(self)
         
         self.windowEvent = 'NO_EVENT'
-        self.userId = userId
+        self.currentUserData = currentUserData
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
@@ -29,8 +29,8 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
         self.close()
 
     def _onPushButtonCreateClicked(self):
-        isSuccess = updateUser(self, {
-            'userId': f"{self.userId}",
+        isSuccess = _updateUser(self, {
+            'userId': f"{self.currentUserData['userId']}",
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
             'fullName': f"{self.lineEditFullName.text()}".upper(),
@@ -45,8 +45,8 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
         QMessageBox.information(self, 'Success', "User updated.")
 
     def _populateEntryFields(self):
-        resultA = getOneUserByUserId(self, {'userId': self.userId})
-        resultB = getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
+        resultA = _getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
+        resultB = _getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
         
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
         self.lineEditUserName.setText(f"{resultA['userName']}")

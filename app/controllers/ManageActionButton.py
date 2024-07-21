@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QMessageBox, QTableWidgetItem
 from PyQt5.QtCore import QEvent
 
 sys.path.append(os.path.abspath(''))
-from app.ui.widget.ManageActionButton_ui import Ui_FormManageActionButton
+from app.ui.ManageActionButton_ui import Ui_FormManageActionButton
 
 class ManageActionButtonController(Ui_FormManageActionButton, QWidget):
     def __init__(self, add=False, delete=False, discount=False, edit=False, view=False):

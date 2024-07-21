@@ -3,8 +3,8 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import QEventLoop
 
 sys.path.append(os.path.abspath(''))
-from app.ui.dialogs.Setup_ui import Ui_DialogSetup
-from app.utils.database_operation import addNewOrganization
+from app.ui.Setup_ui import Ui_DialogSetup
+from app.utils.crud import _addNewOrganization
 
 class SetupController(Ui_DialogSetup, QDialog):
     def __init__(self):
@@ -21,7 +21,7 @@ class SetupController(Ui_DialogSetup, QDialog):
         self.close()
         
     def _onPushButtonCreateClicked(self):
-        isSuccess = addNewOrganization(self, {
+        isSuccess = _addNewOrganization(self, {
             'taxId': f"{self.lineEditTaxId.text()}",
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
             'address': f"{self.lineEditAddress.text()}".upper(),

@@ -3,10 +3,10 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import QEvent, Qt
 
 sys.path.append(os.path.abspath(''))
-from app.ui.widget.Loading_ui import Ui_FormLoading
+from app.ui.Loading_ui import Ui_FormLoading
 
 class LoadingController(Ui_FormLoading, QWidget):
-    def __init__(self, widget):
+    def __init__(self, parentWidget):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.FramelessWindowHint)

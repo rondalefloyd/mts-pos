@@ -4,8 +4,8 @@ from PyQt5.QtCore import QEvent
 from machineid import id
 
 sys.path.append(os.path.abspath(''))
-from app.ui.dialogs.Login_ui import Ui_DialogLogin
-from app.utils.database_operation import getOneUserByUserNameAccessCode
+from app.ui.Login_ui import Ui_DialogLogin
+from app.utils.crud import _getOneUserByUserNameAccessCode
 
 class LoginController(Ui_DialogLogin, QDialog):
     def __init__(self):
@@ -13,7 +13,7 @@ class LoginController(Ui_DialogLogin, QDialog):
         self.setupUi(self)
         
         self.windowEvent = 'NO_EVENT'
-        self.userId = None
+        self.currentUserData = None
         
         self.pushButtonAccessCodeVisibility.setText('Show')
 
@@ -37,7 +37,7 @@ class LoginController(Ui_DialogLogin, QDialog):
         self.close()
 
     def _onPushButtonLoginClicked(self):
-        result = getOneUserByUserNameAccessCode(self, {
+        result = _getOneUserByUserNameAccessCode(self, {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
@@ -47,7 +47,7 @@ class LoginController(Ui_DialogLogin, QDialog):
             return
             
         self.windowEvent = 'START_MANAGE'
-        self.userId = result['userId']
+        self.currentUserData = result
         self.close()
 
     def closeEvent(self, event:QEvent):

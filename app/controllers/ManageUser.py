@@ -3,26 +3,25 @@ from PyQt5.QtWidgets import QWidget, QMessageBox, QTableWidgetItem, QInputDialog
 from PyQt5.QtCore import QEvent
 
 sys.path.append(os.path.abspath(''))
-from app.ui.widget.ManageUser_ui import Ui_FormMenuUser
-from app.controllers.widget.ManageActionButton import ManageActionButtonController
-from app.controllers.widget.Loading import LoadingController
-from app.utils.database_operation import (
-    getOneOrganizationByOrganizationId,
-    getOneUserByUserId,
-    getAllUserWithPaginationByKeyword,
-    deleteUser,
-    addNewUser,
+from app.ui.ManageUser_ui import Ui_FormMenuUser
+from app.controllers.ManageActionButton import ManageActionButtonController
+from app.controllers.Loading import LoadingController
+from app.utils.crud import (
+    _getOneOrganizationByOrganizationId,
+    _getOneUserByUserId,
+    _getAllUserWithPaginationByKeyword,
+    _deleteUser,
+    _addNewUser,
 )
-from app.utils.common import updatePaginationInfo
 
 class ManageUserController(Ui_FormMenuUser, QWidget):
-    def __init__(self, userId):
+    def __init__(self, currentUserData):
         super().__init__()
         self.setupUi(self)
         
         self.loadingWindow = LoadingController(self)
         self.windowEvent = 'NO_EVENT'
-        self.userId = userId
+        self.currentUserData = currentUserData
         self.currentPage = 1
         self.totalPages = 1
 
@@ -49,11 +48,11 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             if not confirmB:
                 return
             
-            result = getOneUserByUserId(self, {'userId': self.userId})
+            result = _getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
             if accessCodeEntry != result['accessCode']:
                 QMessageBox.critical(self, 'Error', "Incorrect password. Please try again.")
                 
-            isSuccess = deleteUser(self, data)
+            isSuccess = _deleteUser(self, data)
             if isSuccess is False:
                 QMessageBox.critical(self, 'Error', "Failed to delete user.")
                 
@@ -72,7 +71,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             self._populateTableWidgetData()
     
     def _onPushButtonAddClicked(self):
-        isSuccess = addNewUser(self, {
+        isSuccess = _addNewUser(self, {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -90,15 +89,15 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self._populateTableWidgetData()
 
     def _populateComboBoxOrganizationName(self):
-        resultA = getOneUserByUserId(self, {'userId': self.userId})
-        resultB = getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
+        resultA = _getOneUserByUserId(self, {'userId': self.currentUserData['userId']})
+        resultB = _getOneOrganizationByOrganizationId(self, {'organizationId': resultA['organizationId']})
         
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def _populateTableWidgetData(self):
         self.tableWidgetData.clearContents()
         
-        result = getAllUserWithPaginationByKeyword(self, {
+        result = _getAllUserWithPaginationByKeyword(self, {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
         })
@@ -106,8 +105,6 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.totalPages = result['totalPages']
         
         self.tableWidgetData.setRowCount(len(result['data']))
-        
-        updatePaginationInfo(self)
         
         for i, data in enumerate(result['data']):
             acitonButtonACellWidget = ManageActionButtonController(delete=True)
@@ -138,6 +135,10 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
     
             acitonButtonACellWidget.pushButtonDelete.clicked.connect(lambda _=i, data=data: self._onPushButtonDeleteClicked(data))
 
+        self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
+        self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
+        self.pushButtonPrev.setEnabled(self.currentPage > 1)
+        
         self.loadingWindow.close()
 
     def closeEvent(self, event:QEvent):

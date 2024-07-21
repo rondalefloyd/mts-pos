@@ -3,10 +3,10 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import QEventLoop
 
 sys.path.append(os.path.abspath(''))
-from app.ui.dialogs.SignUp_ui import Ui_DialogSignUp
-from app.utils.database_operation import (
-    addNewUser, 
-    getAllOrganization
+from app.ui.SignUp_ui import Ui_DialogSignUp
+from app.utils.crud import (
+    _addNewUser, 
+    _getAllOrganization
 )
 
 class SignUpController(Ui_DialogSignUp, QDialog):
@@ -26,7 +26,7 @@ class SignUpController(Ui_DialogSignUp, QDialog):
         self.close()
 
     def _onPushButtonCreateClicked(self):
-        isSuccess = addNewUser(self, {
+        isSuccess = _addNewUser(self, {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -44,7 +44,7 @@ class SignUpController(Ui_DialogSignUp, QDialog):
 
     def _populateComboBoxOrganizationName(self):
         self.comboBoxOrganizationName.clear()
-        for result in getAllOrganization(self):
+        for result in _getAllOrganization(self):
             self.comboBoxOrganizationName.addItem(f"{result['organizationName']}")
 
     def closeEvent(self, event):
