@@ -20,7 +20,6 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         super().__init__()
         self.setupUi(self)
         
-        self.loadingWindow = LoadingController(self)
         self.windowEvent = 'NO_EVENT'
         self.currentUserData = currentUserData
         self.currentPage = 1
@@ -96,23 +95,12 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def _populateTableWidgetData(self):
-        self.loadingController = LoadingController(self.parentWidget)
-        self.loadingController.show()
-        self.getDataThread = GetDataThread()
-        self.getDataThread.setRequirements(self, 'getAllUserWithPaginationByKeyword', {
+        self.tableWidgetData.clearContents()
+        
+        result = getAllUserWithPaginationByKeyword(self, {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
         })
-        self.getDataThread.finished.connect(self._handlePopulateTableWidgetDataResult)
-        self.getDataThread.start()
-
-    def _handlePopulateTableWidgetDataResult(self, result):
-        self.tableWidgetData.clearContents()
-        
-        # result = getAllUserWithPaginationByKeyword(self, {
-        #     'keyword': f"{self.lineEditFilter.text()}",
-        #     'currentPage': self.currentPage
-        # })
         
         self.totalPages = result['totalPages']
         
@@ -151,7 +139,6 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
         
-        self.loadingWindow.close()
         self.loadingController.close()
 
     def closeEvent(self, event:QEvent):

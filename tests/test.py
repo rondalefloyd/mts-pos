@@ -28,21 +28,15 @@ class WorkerThread(QThread):
         self.stop_event = threading.Event()
 
     def run(self):
-        try:
-            session = sessionMaker()
-            print('--A session.is_active():', session.is_active)
-            results = session.query(User).all()
-            session.close()
-        except Exception as error:
-            print('Error in database query:', error)
-            results = None
-        finally:
-            engine.dispose()
+        session = sessionMaker()
+        print('--A session.is_active():', session.is_active)
+        results = session.query(User).all()
+        session.close()
+
+        engine.dispose()
 
         print('--B session.is_active():', session.is_active)
         self.result_ready.emit(results)
-        self.stop_event.set()  # Set the event to stop the thread
-        print('Thread stopped')
 
 
 

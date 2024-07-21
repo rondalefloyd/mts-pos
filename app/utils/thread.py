@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QWidget, QMessageBox
 from PyQt5.QtCore import QThread, pyqtSignal
 
 sys.path.append(os.path.abspath(''))
-from app.controllers.Loading import LoadingController
 from app.utils.crud import (
     getOneUserByUserId,
     getOneUserByUserNameAccessCode,
@@ -19,7 +18,6 @@ from app.utils.crud import (
     addNewOrganization,
     updateUserActiveStatus,
 )
-from app.utils.turso import engine
 
 class GetDataThread(QThread):
     finished = pyqtSignal(object)
@@ -58,5 +56,4 @@ class GetDataThread(QThread):
             
         print(f"crud function used: {self.functionName}...")
         
-        engine.dispose()
         self.finished.emit(result)

@@ -5,7 +5,7 @@ from datetime import datetime
 
 sys.path.append(os.path.abspath(''))
 from app.models.model_association import User, Organization, Authentication
-from app.utils.turso import sessionMaker
+from app.utils.turso import engine, sessionMaker
 
 def getOneUserByUserId(parentWidget:QWidget, entry:object):
     result = {
@@ -44,7 +44,7 @@ def getOneUserByUserId(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _getOneUserByUserId:', error)
+        print('error at getOneUserByUserId:', error)
         return result
         
     finally:
@@ -91,7 +91,7 @@ def getOneUserByUserNameAccessCode(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _getOneUserByUserNameAccessCode:', error)
+        print('error at getOneUserByUserNameAccessCode:', error)
         return result
         
     finally:
@@ -129,7 +129,7 @@ def getOneOrganizationByOrganizationId(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _getOneOrganizationByOrganizationId:', error)
+        print('error at getOneOrganizationByOrganizationId:', error)
         return result
         
     finally:
@@ -167,7 +167,7 @@ def getOneOrganizationByOrganizationName(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _getOneOrganizationByOrganizationName:', error)
+        print('error at getOneOrganizationByOrganizationName:', error)
         return result
         
     finally:
@@ -224,7 +224,7 @@ def getAllUserWithPaginationByKeyword(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _getAllUserWithPaginationByKeyword:', error)
+        print('error at getAllUserWithPaginationByKeyword:', error)
         return result
         
     finally:
@@ -261,7 +261,7 @@ def getAllUser(parentWidget:QWidget):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _getAllUser:', error)
+        print('error at getAllUser:', error)
         return result
         
     finally:
@@ -292,7 +292,7 @@ def getAllOrganization(parentWidget:QWidget):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _getAllOrganization:', error)
+        print('error at getAllOrganization:', error)
         return result
         
     finally:
@@ -311,7 +311,7 @@ def deleteUser(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _deleteUser:', error)
+        print('error at deleteUser:', error)
         return False
         
     finally:
@@ -347,7 +347,7 @@ def updateOrganization(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _updateOrganization:', error)
+        print('error at updateOrganization:', error)
         return False
         
     finally:
@@ -382,7 +382,7 @@ def updateUser(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _updateUser:', error)
+        print('error at updateUser:', error)
         return False
         
     finally:
@@ -417,7 +417,7 @@ def addNewUser(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _addNewUser:', error)
+        print('error at addNewUser:', error)
         return False
         
     finally:
@@ -450,7 +450,7 @@ def addNewOrganization(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _addNewOrganization:', error)
+        print('error at addNewOrganization:', error)
         return False
         
     finally:
@@ -477,7 +477,7 @@ def updateUserActiveStatus(parentWidget:QWidget, entry:object):
     except Exception as error:
         session.rollback()
         print('session rolled back...')
-        print('error at _updateUserActiveStatus:', error)
+        print('error at updateUserActiveStatus:', error)
         return False
         
     finally:
