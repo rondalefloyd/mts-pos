@@ -13,6 +13,7 @@ from app.utils.crud import (
     deleteUser,
     addNewUser,
 )
+from app.utils.thread import GetDataThread
 
 class ManageUserController(Ui_FormMenuUser, QWidget):
     def __init__(self, currentUserData):
@@ -95,12 +96,23 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def _populateTableWidgetData(self):
-        self.tableWidgetData.clearContents()
-        
-        result = getAllUserWithPaginationByKeyword(self, {
+        self.loadingController = LoadingController(self.parentWidget)
+        self.loadingController.show()
+        self.getDataThread = GetDataThread()
+        self.getDataThread.setRequirements(self, 'getAllUserWithPaginationByKeyword', {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
         })
+        self.getDataThread.finished.connect(self._handlePopulateTableWidgetDataResult)
+        self.getDataThread.start()
+
+    def _handlePopulateTableWidgetDataResult(self, result):
+        self.tableWidgetData.clearContents()
+        
+        # result = getAllUserWithPaginationByKeyword(self, {
+        #     'keyword': f"{self.lineEditFilter.text()}",
+        #     'currentPage': self.currentPage
+        # })
         
         self.totalPages = result['totalPages']
         
@@ -140,6 +152,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
         
         self.loadingWindow.close()
+        self.loadingController.close()
 
     def closeEvent(self, event:QEvent):
         event.accept()
