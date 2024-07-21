@@ -26,7 +26,7 @@ class SignUpController(Ui_DialogSignUp, QDialog):
         self.close()
 
     def _onPushButtonCreateClicked(self):
-        isSuccess = _addNewUser(self, {
+        result = _addNewUser(self, {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -36,7 +36,7 @@ class SignUpController(Ui_DialogSignUp, QDialog):
             'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
         })
         
-        if isSuccess is False:
+        if result is False:
             QMessageBox.critical(self, 'Error', "Failed to add user.")
             return
             

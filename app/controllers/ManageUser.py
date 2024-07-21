@@ -52,8 +52,8 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             if accessCodeEntry != result['accessCode']:
                 QMessageBox.critical(self, 'Error', "Incorrect password. Please try again.")
                 
-            isSuccess = _deleteUser(self, data)
-            if isSuccess is False:
+            result = _deleteUser(self, data)
+            if result is False:
                 QMessageBox.critical(self, 'Error', "Failed to delete user.")
                 
             QMessageBox.information(self, 'Success', f"{data['userName']} deleted.")
@@ -71,7 +71,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             self._populateTableWidgetData()
     
     def _onPushButtonAddClicked(self):
-        isSuccess = _addNewUser(self, {
+        result = _addNewUser(self, {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -81,7 +81,7 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
             'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
         })
         
-        if isSuccess is False:
+        if result is False:
             QMessageBox.critical(self, 'Error', "Failed to add user.")
             return
             

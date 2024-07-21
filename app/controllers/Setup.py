@@ -21,7 +21,7 @@ class SetupController(Ui_DialogSetup, QDialog):
         self.close()
         
     def _onPushButtonCreateClicked(self):
-        isSuccess = _addNewOrganization(self, {
+        result = _addNewOrganization(self, {
             'taxId': f"{self.lineEditTaxId.text()}",
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
             'address': f"{self.lineEditAddress.text()}".upper(),
@@ -29,7 +29,7 @@ class SetupController(Ui_DialogSetup, QDialog):
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
         
-        if isSuccess is False:
+        if result is False:
             QMessageBox.critical(self, 'Error', "Failed to add organization.")
             return
             

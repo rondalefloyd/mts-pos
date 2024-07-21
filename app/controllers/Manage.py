@@ -22,7 +22,7 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         self.windowEvent = 'NO_EVENT'
         self.currentUserData = currentUserData
 
-        isSuccess = _updateUserActiveStatus(self, {
+        result = _updateUserActiveStatus(self, {
             'userId': self.currentUserData['userId'],
             'activeStatus': 1,
         })
@@ -69,7 +69,7 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         confirmation = QMessageBox.warning(self, 'Logout', "Are you sure you want to logout?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirmation == QMessageBox.StandardButton.Yes:
-            isSuccess = _updateUserActiveStatus(self, {
+            result = _updateUserActiveStatus(self, {
                 'userId': self.currentUserData['userId'],
                 'activeStatus': 0,
             })

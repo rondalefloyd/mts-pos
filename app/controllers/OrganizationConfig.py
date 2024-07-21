@@ -28,7 +28,7 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
         self.close()
 
     def _onPushButtonCreateClicked(self):
-        isSuccess = _updateOrganization(self, {
+        result = _updateOrganization(self, {
             'organizationId': f"{self.organizationId}",
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
             'address': f"{self.lineEditAddress.text()}".upper(),
@@ -37,7 +37,7 @@ class OrganizationConfigController(Ui_DialogOrganizationConfig, QDialog):
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
         
-        if isSuccess is False:
+        if result is False:
             QMessageBox.critical(self, 'Error', "Failed to update organization.")
             return
             

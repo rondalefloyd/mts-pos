@@ -29,7 +29,7 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
         self.close()
 
     def _onPushButtonCreateClicked(self):
-        isSuccess = _updateUser(self, {
+        result = _updateUser(self, {
             'userId': f"{self.currentUserData['userId']}",
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -38,7 +38,7 @@ class UserConfigController(Ui_DialogUserConfig, QDialog):
             'mobileNumber': f"{self.lineEditMobileNumber.text()}",
         })
         
-        if isSuccess is False:
+        if result is False:
             QMessageBox.critical(self, 'Error', "Failed to update user.")
             return
             
