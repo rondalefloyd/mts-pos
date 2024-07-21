@@ -139,8 +139,6 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
         
-        self.loadingController.close()
-
     def closeEvent(self, event:QEvent):
         event.accept()
         pass
