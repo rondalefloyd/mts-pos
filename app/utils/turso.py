@@ -10,7 +10,7 @@ localUrl = f"{os.getenv('OFFLINE_SQLALCHEMY_BASE_URL')}:///{os.getenv('OFFLINE_D
 
 try:
     engine = create_engine(url=tursoUrl, echo=False)
-    sessionMaker = sessionmaker(bind=engine)
+    session = sessionmaker(bind=engine)()
     status = 'ONLINE'
     
 except Exception as error:

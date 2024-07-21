@@ -7,13 +7,13 @@ from app.ui.ManageUser_ui import Ui_FormMenuUser
 from app.controllers.ManageActionButton import ManageActionButtonController
 from app.controllers.Loading import LoadingController
 from app.utils.crud import (
+    CRUDThread,
     getOneOrganizationByOrganizationId,
     getOneUserByUserId,
     getAllUserWithPaginationByKeyword,
     deleteUser,
     addNewUser,
 )
-from app.utils.thread import GetDataThread
 
 class ManageUserController(Ui_FormMenuUser, QWidget):
     def __init__(self, currentUserData):
@@ -95,12 +95,17 @@ class ManageUserController(Ui_FormMenuUser, QWidget):
         self.comboBoxOrganizationName.setCurrentText(f"{resultB['organizationName']}")
     
     def _populateTableWidgetData(self):
-        self.tableWidgetData.clearContents()
-        
-        result = getAllUserWithPaginationByKeyword(self, {
+        # TODO: apply threading here
+        self.crudThread = CRUDThread()
+        self.crudThread.setRequirements(self, '_getAllUserWithPaginationByKeyword', {
             'keyword': f"{self.lineEditFilter.text()}",
             'currentPage': self.currentPage
         })
+        self.crudThread.finished.connect(self._onPopulateTableWidgetDataFinished)
+        self.crudThread.start()
+    
+    def _onPopulateTableWidgetDataFinished(self, result):
+        self.tableWidgetData.clearContents()
         
         self.totalPages = result['totalPages']
         

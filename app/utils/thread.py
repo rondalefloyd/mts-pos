@@ -18,7 +18,7 @@ from app.utils.crud import (
     addNewUser,
     addNewOrganization,
 )
-from app.utils.turso import engine, sessionMaker
+from app.utils.turso import engine, scopedSession
 
 class GetDataThread(QThread):
     finished = pyqtSignal(object)
@@ -39,19 +39,19 @@ class GetDataThread(QThread):
         
         match self.functionName:
             case 'getOneUserByUserId':
-                result = getOneUserByUserId(sessionMaker, self.parentWidget, self.entry)
+                result = getOneUserByUserId(scopedSession, self.parentWidget, self.entry)
             case 'getOneUserByUserNameAccessCode':
-                result = getOneUserByUserNameAccessCode(sessionMaker, self.parentWidget, self.entry)
+                result = getOneUserByUserNameAccessCode(scopedSession, self.parentWidget, self.entry)
             case 'getOneOrganizationByOrganizationId':
-                result = getOneOrganizationByOrganizationId(sessionMaker, self.parentWidget, self.entry)
+                result = getOneOrganizationByOrganizationId(scopedSession, self.parentWidget, self.entry)
             case 'getOneOrganizationByOrganizationName':
-                result = getOneOrganizationByOrganizationName(sessionMaker, self.parentWidget, self.entry)
+                result = getOneOrganizationByOrganizationName(scopedSession, self.parentWidget, self.entry)
             case 'getAllUserWithPaginationByKeyword':
-                result = getAllUserWithPaginationByKeyword(sessionMaker, self.parentWidget, self.entry)
+                result = getAllUserWithPaginationByKeyword(scopedSession, self.parentWidget, self.entry)
             case 'getAllUser':
-                result = getAllUser(sessionMaker, self.parentWidget, self.entry)
+                result = getAllUser(scopedSession, self.parentWidget, self.entry)
             case 'getAllOrganization':
-                result = getAllOrganization(sessionMaker, self.parentWidget, self.entry)
+                result = getAllOrganization(scopedSession, self.parentWidget, self.entry)
             case _:
                 print('invalid crud function...')
             
@@ -78,7 +78,7 @@ class DeleteDataThread(QThread):
         
         match self.functionName:
             case 'deleteUser':
-                result = deleteUser(sessionMaker, self.parentWidget, self.entry)
+                result = deleteUser(scopedSession, self.parentWidget, self.entry)
             case _:
                 print('invalid crud function...')
             
@@ -105,11 +105,11 @@ class UpdateDataThread(QThread):
         
         match self.functionName:
             case 'updateOrganization':
-                result = updateOrganization(sessionMaker, self.parentWidget, self.entry)
+                result = updateOrganization(scopedSession, self.parentWidget, self.entry)
             case 'updateUser':
-                result = updateUser(sessionMaker, self.parentWidget, self.entry)
+                result = updateUser(scopedSession, self.parentWidget, self.entry)
             case 'updateUserActiveStatus':
-                result = updateUserActiveStatus(sessionMaker, self.parentWidget, self.entry)
+                result = updateUserActiveStatus(scopedSession, self.parentWidget, self.entry)
             case _:
                 print('invalid crud function...')
             
@@ -136,9 +136,9 @@ class AddDataThread(QThread):
         
         match self.functionName:
             case 'addNewUser':
-                result = addNewUser(sessionMaker, self.parentWidget, self.entry)
+                result = addNewUser(scopedSession, self.parentWidget, self.entry)
             case 'addNewOrganization':
-                result = addNewOrganization(sessionMaker, self.parentWidget, self.entry)
+                result = addNewOrganization(scopedSession, self.parentWidget, self.entry)
             case _:
                 print('invalid crud function...')
             
