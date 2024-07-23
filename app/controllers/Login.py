@@ -5,7 +5,7 @@ from machineid import id
 
 sys.path.append(os.path.abspath(''))
 from app.ui.Login_ui import Ui_DialogLogin
-from app.utils.crud import getOneUserByUserNameAccessCode
+from app.utils.crud import CRUDThread
 
 class LoginController(Ui_DialogLogin, QDialog):
     def __init__(self):
@@ -37,11 +37,13 @@ class LoginController(Ui_DialogLogin, QDialog):
         self.close()
 
     def _onPushButtonLoginClicked(self):
-        result = getOneUserByUserNameAccessCode(self, {
+        self.crudThread = CRUDThread()
+        self.crudThread.setRequirements(self, 'getOneUserByUserNameAccessCode', {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
         
+    def _handleOnPushButtonLoginClickedResult(self, result):
         if result['userId'] == None:
             QMessageBox.critical(self, 'Error', "User not found.")
             return

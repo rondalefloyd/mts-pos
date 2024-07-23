@@ -4,15 +4,9 @@ from PyQt5.QtCore import QEvent
 
 sys.path.append(os.path.abspath(''))
 from app.ui.Manage_ui import Ui_MainWindowManage
-from app.controllers.UserConfig import UserConfigController
-from app.controllers.OrganizationConfig import OrganizationConfigController
 from app.controllers.ManageUser import ManageUserController
-from app.utils.crud import (
-    updateUserActiveStatus,
-    updateUserActiveStatus,
-)
+from app.utils.crud import CRUDThread, status
 from app.utils.gui import getManageTypeByIndex
-from app.utils.turso import status
 
 class ManageController(Ui_MainWindowManage, QMainWindow):
     def __init__(self, currentUserData):
@@ -21,11 +15,6 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         
         self.windowEvent = 'NO_EVENT'
         self.currentUserData = currentUserData
-
-        result = updateUserActiveStatus(self, {
-            'userId': self.currentUserData['userId'],
-            'activeStatus': 1,
-        })
         
         self.actionOrganizationConfig.setText(f"{self.currentUserData['organizationName']}")
         self.actionUserConfig.setText(f"{self.currentUserData['userName']}")
@@ -50,29 +39,15 @@ class ManageController(Ui_MainWindowManage, QMainWindow):
         self.actionMember.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(6))
         self.actionUser.triggered.connect(lambda: self._setStackedWidgetManageCurrentIndex(7))
         
-        self.actionOrganizationConfig.triggered.connect(self._onActionOrganizationConfigTriggered)
-        self.actionUserConfig.triggered.connect(self._onActionUserConfigTriggered)
         self.actionLogout.triggered.connect(self._onActionLogoutTriggered)
 
         self._updateMenuBarInfo(0)
         self._updateStatusBarInfo()
     
-    def _onActionOrganizationConfigTriggered(self):
-        dialogOrganizationConfig = OrganizationConfigController(self.currentUserData['organizationId'])
-        dialogOrganizationConfig.exec()
-    
-    def _onActionUserConfigTriggered(self):
-        dialogUserConfig = UserConfigController(self.currentUserData)
-        dialogUserConfig.exec()
-        
     def _onActionLogoutTriggered(self):
         confirmation = QMessageBox.warning(self, 'Logout', "Are you sure you want to logout?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirmation == QMessageBox.StandardButton.Yes:
-            result = updateUserActiveStatus(self, {
-                'userId': self.currentUserData['userId'],
-                'activeStatus': 0,
-            })
             self.close()
             self.windowEvent = 'START_LOGIN'
             self.currentUserData = None
