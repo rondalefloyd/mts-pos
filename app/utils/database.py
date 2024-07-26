@@ -1,7 +1,12 @@
-from playhouse.postgres_ext import PostgresqlExtDatabase
+import os, sys
+from playhouse.postgres_ext import SqliteDatabase, PostgresqlExtDatabase
+
+sys.path.append(os.path.abspath('')) # required to change the default path
 
 # Database connection details
-db = PostgresqlExtDatabase(
+# sqlite_db = SqliteDatabase('mts-pos.db')
+
+postgres_db = PostgresqlExtDatabase(
     'mts-pos',
     user='mts-pos_owner',
     password='Eha9HrAQ1foV',

@@ -15,7 +15,7 @@ class Tester(Ui_Dialog, QDialog):
         self.pushButtonTest.clicked.connect(self.onPushButtonTestClicked)
         
     def onPushButtonTestClicked(self):
-        self.authenticate = Authenticate()
+        self.authenticate = Authenticate('authenticate/user')
         self.authenticate.finished.connect(self.handleOnPushButtonTestClickedResult)
         self.authenticate.start()
         pass

@@ -3,31 +3,38 @@ from PyQt5.QtWidgets import QApplication
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.components.Tester import Tester
+from app.views.components.Login import Login
 
 def _startApp():
     print('app has started running')
     
     app = QApplication(sys.argv)
-    windowEvent = 'START_LOGIN'
+    windowEvent = 'start/login'
     currentUserData = None
 
     while True:
-        if windowEvent == 'START_SETUP':
-            print('TODO: START_SETUP')
-            pass
-        if windowEvent == 'START_LOGOUT':
-            print('TODO: START_LOGOUT')
-            pass
-        if windowEvent == 'START_LOGIN':
-            print('TODO: START_LOGIN')
-            pass
-        if windowEvent == 'START_MANAGE':
-            print('TODO: START_MANAGE')
-            pass
-        if windowEvent == 'START_TESTER':
-            tester = Tester()
-            tester.exec()
-
+        match windowEvent:
+            case 'start/setup':
+                print('TODO: start/setup')
+                
+            case 'start/sign-up':
+                print('TODO: start/sign-up')
+                
+            case 'start/login':
+                login = Login()
+                login.exec()
+                windowEvent = login.windowEvent
+                
+            case 'start/manage':
+                print('TODO: start/manage')
+                
+            case 'start/tester':
+                tester = Tester()
+                tester.exec()
+                
+            case _:
+                break
+                
     print('app has stopped running')    
     
 if __name__ == "__main__":

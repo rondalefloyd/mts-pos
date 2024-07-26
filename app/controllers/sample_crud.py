@@ -4,10 +4,10 @@ from peewee import *
 # TODO: move this to models
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.model_association import User
-from app.utils.database import db
+from app.utils.database import postgres_db
 
 # Connect to the database
-db.connect()
+postgres_db.connect()
 
 # Query the User table
 users = User.select()
@@ -18,4 +18,4 @@ for user in users:
     print(user.Id, user.UserName, user.FullName)
 
 # Close the database connection
-db.close()
+postgres_db.close()

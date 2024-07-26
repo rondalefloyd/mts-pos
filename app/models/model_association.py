@@ -2,7 +2,7 @@ import os, sys
 from peewee import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.utils.database import db
+from app.utils.database import postgres_db
 
 class User(Model):
     Id = AutoField()
@@ -19,5 +19,5 @@ class User(Model):
     UpdateTs = DateTimeField(null=True)
 
     class Meta:
-        database = db
+        database = postgres_db
         table_name = 'User'
