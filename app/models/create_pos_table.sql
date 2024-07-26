@@ -1,7 +1,8 @@
+-- for sales db
 CREATE TABLE "Brand" (
     "BrandId" SERIAL PRIMARY KEY, 
     "BrandName" VARCHAR(255), 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Item" (
@@ -13,7 +14,7 @@ CREATE TABLE "Item" (
     "BrandId" INTEGER, 
     "SalesGroupId" INTEGER, 
     "SupplierId" INTEGER, 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "ItemPrice" (
@@ -22,15 +23,15 @@ CREATE TABLE "ItemPrice" (
     "Capital" FLOAT, 
     "Price" FLOAT, 
     "PromoId" INTEGER, 
-    "Discount" FLOAT, 
-    "EffectiveDate" DATE, 
-    "UpdateTs" TIMESTAMP
+    "Discount" FLOAT,
+    "EffectiveDate" DATE,  
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "ItemType" (
     "ItemTypeId" SERIAL PRIMARY KEY, 
     "ItemTypeName" VARCHAR(255), 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Member" (
@@ -41,7 +42,7 @@ CREATE TABLE "Member" (
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 
     "Points" FLOAT, 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Organization" (
@@ -51,7 +52,7 @@ CREATE TABLE "Organization" (
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 
     "AccessCode" VARCHAR(255), 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Promo" (
@@ -59,13 +60,13 @@ CREATE TABLE "Promo" (
     "PromoName" VARCHAR(255), 
     "DiscountRate" FLOAT, 
     "Description" VARCHAR(255), 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "SalesGroup" (
     "SalesGroupId" SERIAL PRIMARY KEY, 
     "SalesGroupName" VARCHAR(255), 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Stock" (
@@ -73,13 +74,13 @@ CREATE TABLE "Stock" (
     "ItemId" INTEGER, 
     "OnHand" INTEGER, 
     "Available" INTEGER, 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Supplier" (
     "SupplierId" SERIAL PRIMARY KEY, 
     "SupplierName" VARCHAR(255), 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "User" (
@@ -94,5 +95,20 @@ CREATE TABLE "User" (
     "ActiveStatus" INTEGER, 
     "LastLoginTs" TIMESTAMP, 
     "LastLogoutTs" TIMESTAMP, 
-    "UpdateTs" TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- for transaction db
+CREATE TABLE "ItemSold" (
+    "ItemSoldId" SERIAL PRIMARY KEY, 
+    "UserId" INTEGER, 
+    "CustomerId" INTEGER, 
+    "ItemId" INTEGER, 
+    "Quantity" INTEGER, 
+    "QuantityPrice" FLOAT, 
+    "Reason" TEXT, 
+    "ReferenceId" TEXT, 
+    "Status" INTEGER, 
+    "DateId" TEXT, 
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

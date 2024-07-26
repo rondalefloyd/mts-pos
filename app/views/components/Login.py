@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
-from app.controllers.authenticate import Authenticate
+from app.controllers.authenticate import AuthenticateThread
 
 class Login(Ui_DialogLogin, QDialog):
     def __init__(self):
@@ -17,27 +17,38 @@ class Login(Ui_DialogLogin, QDialog):
         self.windowEvent = 'no-event'
         self.userData = None
         
+        self.pushButtonSetup.clicked.connect(self.onPushButtonSetupClicked)
+        self.pushButtonSignUp.clicked.connect(self.onPushButtonSignUpClicked)
         self.pushButtonLogin.clicked.connect(self.onPushButtonLoginClicked)
+        
+    def onPushButtonSetupClicked(self):
+        self.windowEvent = 'start/setup'
+        self.close()
+        pass
+    
+    def onPushButtonSignUpClicked(self):
+        self.windowEvent = 'start/sign-up'
+        self.close()
+        pass
         
     def onPushButtonLoginClicked(self):
         self.loading.show()
-        self.authenticate = Authenticate('pos/authenticate/user/password', {
+        self.authenticateThread = AuthenticateThread('pos/authenticate/user/password', {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
-        self.authenticate.finished.connect(self.handleOnPushButtonLoginClickedResult)
-        self.authenticate.start()
+        self.authenticateThread.finished.connect(self.handleOnPushButtonLoginClickedResult)
+        self.authenticateThread.start()
     
     def handleOnPushButtonLoginClickedResult(self, result):
+        self.loading.close()
+        
         if result['success'] is False:
-            QMessageBox.critical(self, 'Invalid', "User not found")
-            
-            self.loading.close()
+            QMessageBox.critical(self, 'Invalid', f"{result['message']}")
             return
         
         self.windowEvent = 'start/manage'
         self.userData = result['data']
-        self.loading.close()
         self.close()
         
         return

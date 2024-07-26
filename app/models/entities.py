@@ -148,7 +148,7 @@ class User(BaseModel):
     BirthDate = DateField(null=True)
     MobileNumber = CharField(max_length=20, null=True)
     AccessLevel = IntegerField(null=True)
-    ActiveStatus = BooleanField(default=True)
+    ActiveStatus = IntegerField(null=True)
     LastLoginTs = DateTimeField(null=True)
     LastLogoutTs = DateTimeField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
