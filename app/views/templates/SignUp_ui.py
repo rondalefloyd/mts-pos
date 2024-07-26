@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\ui\SignUp.ui'
+# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\views\templates\SignUp.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
