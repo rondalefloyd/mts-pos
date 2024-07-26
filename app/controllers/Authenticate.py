@@ -19,6 +19,7 @@ class Authenticate(QThread):
     def authenticateUserByPassword(self):
         result = {
             'success': False,
+            'message': 'Authentication failed.',
             'data': {
                 'id': None,
                 'organizationId': None,
@@ -43,6 +44,7 @@ class Authenticate(QThread):
             
             result = {
                 'success': True,
+                'message': 'Authentication successful.',
                 'data': {
                     'id': user.Id,
                     'organizationId': user.OrganizationId,
@@ -62,14 +64,15 @@ class Authenticate(QThread):
             return result
         
         except User.DoesNotExist:
+            result['message'] = 'Authentication failed. User not found.'
+            
             return result
-        
-        
+
     def run(self):
         postgres_db.connect()
 
         match self.function:
-            case 'pos/authenticate/user':
+            case 'pos/authenticate/user/password':
                 result = self.authenticateUserByPassword()
             case _:
                 result = None

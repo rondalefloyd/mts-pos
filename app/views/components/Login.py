@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
-from app.controllers.AuthenticateUser import Authenticate
+from app.controllers.Authenticate import Authenticate
 
 class Login(Ui_DialogLogin, QDialog):
     def __init__(self):
@@ -21,7 +21,7 @@ class Login(Ui_DialogLogin, QDialog):
         
     def onPushButtonLoginClicked(self):
         self.loading.show()
-        self.authenticate = Authenticate('pos/authenticate/user', {
+        self.authenticate = Authenticate('pos/authenticate/user/password', {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
