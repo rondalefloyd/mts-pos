@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.models.model_association import User
+from app.models.entities import User
 from app.utils.database import postgres_db
 
 class Authenticate(QThread):

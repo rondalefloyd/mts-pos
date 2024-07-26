@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 import threading
 
 sys.path.append(os.path.abspath(''))
-from app.models.model_association import User
+from app.models.entities import User
 from app.utils.crud import CRUDThread
 
 # class WorkerThread(QThread):

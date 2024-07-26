@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.Tester_ui import Ui_Dialog
-from app.controllers.Authenticate import Authenticate
+from app.controllers.authenticate import Authenticate
 
 class Tester(Ui_Dialog, QDialog):
     def __init__(self):
