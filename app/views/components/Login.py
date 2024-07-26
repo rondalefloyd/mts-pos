@@ -21,7 +21,7 @@ class Login(Ui_DialogLogin, QDialog):
         
     def onPushButtonLoginClicked(self):
         self.loading.show()
-        self.authenticate = Authenticate('authenticate/user', {
+        self.authenticate = Authenticate('pos/authenticate/user', {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })

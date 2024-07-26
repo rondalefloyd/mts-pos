@@ -69,7 +69,7 @@ class Authenticate(QThread):
         postgres_db.connect()
 
         match self.function:
-            case 'authenticate/user':
+            case 'pos/authenticate/user':
                 result = self.authenticateUserByPassword()
             case _:
                 result = None
