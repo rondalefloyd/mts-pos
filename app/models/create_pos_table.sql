@@ -39,6 +39,15 @@ CREATE TABLE "Promos" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE "Rewards" (
+    "Id" SERIAL PRIMARY KEY, 
+    "RewardName" VARCHAR(255) UNIQUE, 
+    "Points" FLOAT, 
+    "Target" FLOAT, 
+    "Description" VARCHAR(255), 
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE "SalesGroups" (
     "Id" SERIAL PRIMARY KEY, 
     "SalesGroupName" VARCHAR(255) UNIQUE, 
