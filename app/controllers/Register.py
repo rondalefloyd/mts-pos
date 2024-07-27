@@ -1,11 +1,11 @@
-import os
-import sys
+import os, sys
 from peewee import *
+from datetime import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
-from app.models.entities import User, Organization
+from app.models.entities import Users, UserSessionInfos, Organizations
 from app.utils.database import postgres_db
 
 class RegisterThread(QThread):
@@ -21,32 +21,30 @@ class RegisterThread(QThread):
 
         match self.function:
             case 'pos/register/user':
-                result = registerUser(self.entry)
+                result = register_user(self.entry)
             case 'pos/register/organization':
-                result = registerOrganization(self.entry)
+                result = register_organization(self.entry)
             case _:
                 result = None
 
         self.finished.emit(result)
         postgres_db.close()
 
-def registerUser(entry):
+def register_user(entry):
     result = {
         'success': False,
         'message': 'Registration failed.',
     }
     
     try:
-        user = User.get(User.UserName == entry['userName'])
+        users = Users.get(Users.UserName == entry['userName'])
         
-        if user.UserName == entry['userName']:
+        if users.UserName == entry['userName']:
             result['message'] = 'User already exists with the given username.'
         
-        return result
-    
-    except User.DoesNotExist:
-        user = User.create(
-            OrganizationId=Organization.get(Organization.OrganizationName == entry['organizationName']).Id,
+    except Users.DoesNotExist:
+        users = Users.create(
+            OrganizationId=Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id,
             UserName=entry['userName'],
             AccessCode=entry['accessCode'],
             FullName=entry['fullName'],
@@ -55,29 +53,32 @@ def registerUser(entry):
             AccessLevel=entry['accessLevel']
         )
         
-        result = {
-            'success': True,
-            'message': 'User registered successfully.',
-        }
+        UserSessionInfos.create(
+            UserId=users.Id,
+            ActiveStatus=1,
+            LastLoginTs=datetime.now(),
+            UpdateTs=datetime.now()
+        )
         
-        return result
+        result['success'] = True
+        result['message'] = 'User registered successfully.'
+        
+    return result
 
-def registerOrganization(entry):
+def register_organization(entry):
     result = {
         'success': False,
         'message': 'Organization registration failed.',
     }
     
     try:
-        organization = Organization.get(Organization.TaxId == entry['taxId'])
+        organizations = Organizations.get(Organizations.TaxId == entry['taxId'])
         
-        if organization.TaxId == entry['taxId']:
+        if organizations.TaxId == entry['taxId']:
             result['message'] = 'Organization already exists with the given Tax ID.'
         
-        return result
-    
-    except Organization.DoesNotExist:
-        organization = Organization.create(
+    except Organizations.DoesNotExist:
+        organizations = Organizations.create(
             TaxId=entry['taxId'],
             OrganizationName=entry['organizationName'],
             Address=entry['address'],
@@ -85,9 +86,7 @@ def registerOrganization(entry):
             AccessCode=entry['accessCode']
         )
         
-        result = {
-            'success': True,
-            'message': 'Organization registered successfully.',
-        }
+        result['success'] = True
+        result['message'] = 'Organization registered successfully.'
         
-        return result
+    return result

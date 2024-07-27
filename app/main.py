@@ -23,12 +23,10 @@ def _checkDatabaseConnection():
 
 def _startApp():
     print('app has started running')
-    
-    _checkDatabaseConnection()
-    
+        
     app = QApplication(sys.argv)
     windowEvent = 'start/login'
-    currentUserData = None
+    userData = None
 
     while True:
         match windowEvent:
@@ -45,10 +43,15 @@ def _startApp():
             case 'start/login':
                 login = Login()
                 login.exec()
+                userData = login.userData
                 windowEvent = login.windowEvent
                 
             case 'start/manage':
-                print('TODO: start/manage')
+                manage = Manage(userData)
+                manage.show()
+                app.exec()
+                userData = manage.userData
+                windowEvent = manage.windowEvent
                 
             case 'start/tester':
                 tester = Tester()
@@ -60,4 +63,5 @@ def _startApp():
     print('app has stopped running')    
     
 if __name__ == "__main__":
+    _checkDatabaseConnection()
     _startApp()

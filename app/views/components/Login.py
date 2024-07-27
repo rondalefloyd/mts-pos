@@ -17,30 +17,30 @@ class Login(Ui_DialogLogin, QDialog):
         self.windowEvent = 'no-event'
         self.userData = None
         
-        self.pushButtonSetup.clicked.connect(self.onPushButtonSetupClicked)
-        self.pushButtonSignUp.clicked.connect(self.onPushButtonSignUpClicked)
-        self.pushButtonLogin.clicked.connect(self.onPushButtonLoginClicked)
+        self.pushButtonSetup.clicked.connect(self._onPushButtonSetupClicked)
+        self.pushButtonSignUp.clicked.connect(self._onPushButtonSignUpClicked)
+        self.pushButtonLogin.clicked.connect(self._onPushButtonLoginClicked)
         
-    def onPushButtonSetupClicked(self):
+    def _onPushButtonSetupClicked(self):
         self.windowEvent = 'start/setup'
         self.close()
         pass
     
-    def onPushButtonSignUpClicked(self):
+    def _onPushButtonSignUpClicked(self):
         self.windowEvent = 'start/sign-up'
         self.close()
         pass
         
-    def onPushButtonLoginClicked(self):
+    def _onPushButtonLoginClicked(self):
         self.loading.show()
-        self.authenticateThread = AuthenticateThread('pos/authenticate/user/password', {
+        self.authenticateThread = AuthenticateThread('pos/authenticate/user/username/accesscode', {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
-        self.authenticateThread.finished.connect(self.handleOnPushButtonLoginClickedResult)
+        self.authenticateThread.finished.connect(self._handleOnPushButtonLoginClickedResult)
         self.authenticateThread.start()
     
-    def handleOnPushButtonLoginClickedResult(self, result):
+    def _handleOnPushButtonLoginClickedResult(self, result):
         self.loading.close()
         
         if result['success'] is False:

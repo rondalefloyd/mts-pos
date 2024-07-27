@@ -1,10 +1,11 @@
 import os, sys
 from peewee import *
+from datetime import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.models.entities import User
+from app.models.entities import Users, UserSessionInfos
 from app.utils.database import postgres_db
 
 class AuthenticateThread(QThread):
@@ -20,8 +21,10 @@ class AuthenticateThread(QThread):
         postgres_db.connect()
 
         match self.function:
-            case 'pos/authenticate/user/password':
-                result = authenticateUserByPassword(self.entry)
+            case 'pos/authenticate/user/username/accesscode':
+                result = authenticate_user_by_username_accesscode(self.entry)
+            case 'pos/unauthenticate/user/id':
+                result = unauthenticate_user_by_id(self.entry)
             case _:
                 result = None
 
@@ -29,7 +32,7 @@ class AuthenticateThread(QThread):
         postgres_db.close()
         pass
 
-def authenticateUserByPassword(entry):
+def authenticate_user_by_username_accesscode(entry):
     result = {
         'success': False,
         'message': 'Authentication failed.',
@@ -42,41 +45,59 @@ def authenticateUserByPassword(entry):
             'birthDate': None,
             'mobileNumber': None,
             'accessLevel': None,
-            'activeStatus': None,
-            'lastLoginTs': None,
-            'lastLogoutTs': None,
             'updateTs': None,
         },
     }
     
     try:
-        user = User.get(
-            (User.UserName == entry['userName']) &
-            (User.AccessCode == entry['accessCode'])
+        
+        users = Users.get(
+            (Users.UserName == entry['userName']) &
+            (Users.AccessCode == entry['accessCode'])
         )
         
-        result = {
-            'success': True,
-            'message': 'Authentication successful.',
-            'data': {
-                'id': user.Id,
-                'organizationId': user.OrganizationId,
-                'userName': user.UserName,
-                'accessCode': user.AccessCode,
-                'fullName': user.FullName,
-                'birthDate': user.BirthDate,
-                'mobileNumber': user.MobileNumber,
-                'accessLevel': user.AccessLevel,
-                'activeStatus': user.ActiveStatus,
-                'lastLoginTs': user.LastLoginTs,
-                'lastLogoutTs': user.LastLogoutTs,
-                'updateTs': user.UpdateTs,
-            }
+        userSessionInfos = UserSessionInfos.get(UserSessionInfos.UserId == users.Id)
+        userSessionInfos.ActiveStatus = 1
+        userSessionInfos.LastLoginTs = datetime.now()
+        userSessionInfos.save()
+        
+        result['success'] = True
+        result['message'] = 'Authentication successful.'
+        result['data'] = {
+            'id': users.Id,
+            'organizationId': users.OrganizationId,
+            'userName': users.UserName,
+            'accessCode': users.AccessCode,
+            'fullName': users.FullName,
+            'birthDate': users.BirthDate,
+            'mobileNumber': users.MobileNumber,
+            'accessLevel': users.AccessLevel,
+            'updateTs': users.UpdateTs,
         }
         
-        return result
-    
-    except User.DoesNotExist:
+    except Users.DoesNotExist:
+        result['success'] = False
         result['message'] = 'Authentication failed. User not found.'
         
-        return result
+    return result
+
+def unauthenticate_user_by_id(entry):
+    result = {
+        'success': False,
+        'message': 'Unauthentication failed.',
+    }
+    
+    try:
+        userSessionInfos = UserSessionInfos.get(UserSessionInfos.UserId == entry['userId'])
+        
+        userSessionInfos.ActiveStatus = 0
+        userSessionInfos.LastLogoutTs = datetime.now()
+        userSessionInfos.save()
+        
+        result['success'] = True
+        result['message'] = 'Unauthentication successful.'
+        
+    except UserSessionInfos.DoesNotExist:
+        result['message'] = 'Authentication failed. User not found.'
+        
+    return result

@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.SignUp_ui import Ui_DialogSignUp
 from app.views.components.Loading import Loading
 from app.controllers.register import RegisterThread
+from app.controllers.fetch import FetchThread
 
 class SignUp(Ui_DialogSignUp, QDialog):
     def __init__(self):
@@ -17,29 +18,45 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.windowEvent = 'no-event'
         self.userData = None
         
-        self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
-        self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
+        self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
+        self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
         # TODO: add function to populate combobox org name
+        self._populateComboBoxOrganizationName()
+    
+    def _populateComboBoxOrganizationName(self):
+        self.loading.show()
+        self.fetchThread = FetchThread('pos/fetch/organization/all')
+        self.fetchThread.finished.connect(self._handlePopulateComboBoxOrganizationNameResult)
+        self.fetchThread.start()
         
-    def onPushButtonCancelClicked(self):
+    def _handlePopulateComboBoxOrganizationNameResult(self, result):
+        self.loading.close()
+        
+        for data in result['data']:
+            self.comboBoxOrganizationName.addItem(f"{data['organizationName']}")
+            
+        print('--orgs:', result)
+        
+    def _onPushButtonCancelClicked(self):
+        self.windowEvent = 'start/login'
         self.close()
         pass
     
-    def onPushButtonCreateClicked(self):
+    def _onPushButtonCreateClicked(self):
         self.loading.show()
         self.registerThread = RegisterThread('pos/register/user', {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
-            'userName': f"{self.lineEditUserName.text()}".upper(),
+            'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
             'fullName': f"{self.lineEditFullName.text()}".upper(),
             'birthDate': f"{self.dateEditBirthDate.text()}",
             'mobileNumber': f"{self.lineEditMobileNumber.text()}",
             'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
         })
-        self.registerThread.finished.connect(self.handleOnPushButtonCreateClickedResult)
+        self.registerThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
         self.registerThread.start()
         
-    def handleOnPushButtonCreateClickedResult(self, result):
+    def _handleOnPushButtonCreateClickedResult(self, result):
         self.loading.close()
         
         if result['success'] is False:

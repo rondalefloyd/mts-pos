@@ -17,14 +17,15 @@ class Setup(Ui_DialogSetup, QDialog):
         self.windowEvent = 'no-event'
         self.userData = None
 
-        self.pushButtonCancel.clicked.connect(self.onPushButtonCancelClicked)
-        self.pushButtonCreate.clicked.connect(self.onPushButtonCreateClicked)
+        self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
+        self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
         
-    def onPushButtonCancelClicked(self):
+    def _onPushButtonCancelClicked(self):
+        self.windowEvent = 'start/login'
         self.close()
         pass
 
-    def onPushButtonCreateClicked(self):
+    def _onPushButtonCreateClicked(self):
         self.loading.show()
         self.registerThread = RegisterThread('pos/register/organization', {
             'taxId': f"{self.lineEditTaxId.text()}".upper(),
@@ -33,10 +34,10 @@ class Setup(Ui_DialogSetup, QDialog):
             'mobileNumber': f"{self.lineEditMobileNumber.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
-        self.registerThread.finished.connect(self.handleOnPushButtonCreateClickedResult)
+        self.registerThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
         self.registerThread.start()
         
-    def handleOnPushButtonCreateClickedResult(self, result):
+    def _handleOnPushButtonCreateClickedResult(self, result):
         self.loading.close()
         
         if result['success'] is False:
