@@ -24,12 +24,10 @@ class Login(Ui_DialogLogin, QDialog):
     def _onPushButtonSetupClicked(self):
         self.windowEvent = 'start/setup'
         self.close()
-        pass
     
     def _onPushButtonSignUpClicked(self):
         self.windowEvent = 'start/sign-up'
         self.close()
-        pass
         
     def _onPushButtonLoginClicked(self):
         self.loading.show()
@@ -50,7 +48,6 @@ class Login(Ui_DialogLogin, QDialog):
         self.windowEvent = 'start/manage'
         self.userData = result['data']
         self.close()
-        
         return
     
     def closeEvent(self, event):

@@ -27,7 +27,6 @@ class Manage(Ui_MainWindowManage, QMainWindow):
             self.authenticateThread = AuthenticateThread('pos/unauthenticate/user/id', {'userId': self.userData['id']})
             self.authenticateThread.finished.connect(self._handleOnActionLogoutTriggeredResult)
             self.authenticateThread.start()
-        pass
         
     def _handleOnActionLogoutTriggeredResult(self, result):
         self.loading.close()
@@ -39,7 +38,6 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.windowEvent = 'start/login'
         self.userData = None
         self.close()
-        pass
         
     def closeEvent(self, event):
         event.accept()

@@ -23,7 +23,6 @@ class Setup(Ui_DialogSetup, QDialog):
     def _onPushButtonCancelClicked(self):
         self.windowEvent = 'start/login'
         self.close()
-        pass
 
     def _onPushButtonCreateClicked(self):
         self.loading.show()

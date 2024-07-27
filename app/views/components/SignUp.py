@@ -20,7 +20,6 @@ class SignUp(Ui_DialogSignUp, QDialog):
         
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
-        # TODO: add function to populate combobox org name
         self._populateComboBoxOrganizationName()
     
     def _populateComboBoxOrganizationName(self):
@@ -35,12 +34,9 @@ class SignUp(Ui_DialogSignUp, QDialog):
         for data in result['data']:
             self.comboBoxOrganizationName.addItem(f"{data['organizationName']}")
             
-        print('--orgs:', result)
-        
     def _onPushButtonCancelClicked(self):
         self.windowEvent = 'start/login'
         self.close()
-        pass
     
     def _onPushButtonCreateClicked(self):
         self.loading.show()

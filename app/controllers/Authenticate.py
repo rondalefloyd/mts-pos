@@ -15,7 +15,6 @@ class AuthenticateThread(QThread):
         super().__init__()
         self.function = function
         self.entry = entry
-        pass
     
     def run(self):
         postgres_db.connect()
@@ -30,7 +29,6 @@ class AuthenticateThread(QThread):
 
         self.finished.emit(result)
         postgres_db.close()
-        pass
 
 def authenticate_user_by_username_accesscode(entry):
     result = {

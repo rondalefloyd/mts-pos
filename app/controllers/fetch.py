@@ -14,7 +14,6 @@ class FetchThread(QThread):
         super().__init__()
         self.function = function
         self.entry = entry
-        pass
     
     def run(self):
         postgres_db.connect()
@@ -29,7 +28,6 @@ class FetchThread(QThread):
 
         self.finished.emit(result)
         postgres_db.close()
-        pass
 
 def fetch_user():
     result = {
