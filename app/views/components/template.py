@@ -1,3 +1,4 @@
+"""Imports"""
 import os, sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -7,7 +8,9 @@ from app.views.templates.ManageUser_ui import Ui_FormManageUser
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.register import RegisterThread
 
+"""Class Definition"""
 class ManageUser(Ui_FormManageUser, QWidget):
+    """Initialization Method (__init__)"""
     def __init__(self, userData):
         super().__init__()
         self.setupUi(self)
@@ -18,6 +21,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.currentThread = None
         self.activeThreads = []
     
+    """Private Methods (helper functions)"""
     def _cleanupThread(self):
         sender = self.sender()
         if sender in self.activeThreads:
@@ -25,6 +29,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.currentThread = None
         print('active threads:', self.activeThreads)
     
+    """Overridden Methods"""
     def closeEvent(self, event):
         for thread in self.activeThreads:
             if thread.isRunning():

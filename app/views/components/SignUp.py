@@ -1,4 +1,4 @@
-
+# import
 import os, sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -9,7 +9,9 @@ from app.views.components.Loading import Loading
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.fetch import FetchThread
 
+# class definition
 class SignUp(Ui_DialogSignUp, QDialog):
+    # initialization method (__init__)
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -24,6 +26,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
         self._populateComboBoxOrganizationName()
     
+    # private methods
     def _populateComboBoxOrganizationName(self):
         self.loading.show()
         self.fetchThread = FetchThread('pos/fetch/organization/all')
@@ -36,9 +39,11 @@ class SignUp(Ui_DialogSignUp, QDialog):
         for data in result['data']:
             self.comboBoxOrganizationName.addItem(f"{data['organizationName']}")
             
+            
     def _onPushButtonCancelClicked(self):
         self.windowEvent = 'start/login'
         self.close()
+    
     
     def _onPushButtonCreateClicked(self):
         self.loading.show()
@@ -67,6 +72,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.close()
         return
 
+
     def _cleanupThread(self):
         sender = self.sender()
         if sender in self.activeThreads:
@@ -74,6 +80,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.currentThread = None
         print('active threads:', self.activeThreads)
 
+    # overridden methods
     def closeEvent(self, event):
         for thread in self.activeThreads:
             if thread.isRunning():

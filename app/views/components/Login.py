@@ -1,4 +1,4 @@
-
+# import
 import os, sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -8,7 +8,9 @@ from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
+# class definition
 class Login(Ui_DialogLogin, QDialog):
+    # initialization method (__init__)
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -25,7 +27,8 @@ class Login(Ui_DialogLogin, QDialog):
         self.pushButtonSignUp.clicked.connect(self._onPushButtonSignUpClicked)
         self.pushButtonLogin.clicked.connect(self._onPushButtonLoginClicked)
         self.pushButtonAccessCodeVisibility.clicked.connect(self._onPushButtonAccessCodeVisibilityClicked)
-        
+    
+    # private methods
     def _onPushButtonAccessCodeVisibilityClicked(self):
         pushButtonAccessCodeVisibilityIsChecked = self.pushButtonAccessCodeVisibility.isChecked() is True
         self.pushButtonAccessCodeVisibility.setText('Hide' if pushButtonAccessCodeVisibilityIsChecked else 'Show')
@@ -38,6 +41,7 @@ class Login(Ui_DialogLogin, QDialog):
     def _onPushButtonSignUpClicked(self):
         self.windowEvent = 'start/sign-up'
         self.close()
+        
         
     def _onPushButtonLoginClicked(self):
         self.loading.show()
@@ -62,6 +66,7 @@ class Login(Ui_DialogLogin, QDialog):
         self.close()
         return
 
+
     def _cleanupThread(self):
         sender = self.sender()
         if sender in self.activeThreads:
@@ -69,6 +74,7 @@ class Login(Ui_DialogLogin, QDialog):
         self.currentThread = None
         print('active threads:', self.activeThreads)
 
+    # overridden methods
     def closeEvent(self, event):
         for thread in self.activeThreads:
             if thread.isRunning():

@@ -25,6 +25,13 @@
 * ```Do not write nested if statements more than 1```
 9. Create a script for the executable file that displays all the logs
 10. Apply threading in functions that uses functions with loopings
+11. Code structure ordering:
+* ```Imports```
+* ```Class Definition```
+* ```Initialization Method (__init__)```
+* ```Public Methods (event handlers)```
+* ```Private Methods (helper functions)```
+* ```Overridden Methods (like closeEvent)```
 
 # DIRECTORY STRUCTURE
 ```

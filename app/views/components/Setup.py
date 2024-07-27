@@ -1,4 +1,4 @@
-
+# import
 import os, sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -8,7 +8,9 @@ from app.views.templates.Setup_ui import Ui_DialogSetup
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.register import RegisterThread
 
+# class definition
 class Setup(Ui_DialogSetup, QDialog):
+    # initialization method (__init__)
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -22,9 +24,11 @@ class Setup(Ui_DialogSetup, QDialog):
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
         
+    # private methods
     def _onPushButtonCancelClicked(self):
         self.windowEvent = 'start/login'
         self.close()
+
 
     def _onPushButtonCreateClicked(self):
         self.loading.show()
@@ -51,6 +55,7 @@ class Setup(Ui_DialogSetup, QDialog):
         self.close()
         return
 
+
     def _cleanupThread(self):
         sender = self.sender()
         if sender in self.activeThreads:
@@ -58,6 +63,7 @@ class Setup(Ui_DialogSetup, QDialog):
         self.currentThread = None
         print('active threads:', self.activeThreads)
 
+    # overridden methods
     def closeEvent(self, event):
         for thread in self.activeThreads:
             if thread.isRunning():

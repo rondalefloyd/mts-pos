@@ -1,4 +1,4 @@
-
+# import
 import os, sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -9,7 +9,9 @@ from app.views.components.Loading import Loading
 from app.views.components.ManageUser import ManageUser
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
+# class definition
 class Manage(Ui_MainWindowManage, QMainWindow):
+    # initialization method (__init__)
     def __init__(self, userData):
         super().__init__()
         self.setupUi(self)
@@ -39,6 +41,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
 
         self._onStackedWidgetManageSetCurrentIndex(0)
 
+    # private methods
     def _onStackedWidgetManageSetCurrentIndex(self, index):
         self.stackedWidgetManage.setCurrentIndex(index)
         
@@ -76,6 +79,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         # self.stackedWidgetManage.insertWidget(7, ManageUser(self.userData))
         self.menuManage.setTitle(menuManageTitle)
 
+
     def _onActionLogoutTriggered(self):
         confirm = QMessageBox.warning(self, 'Confirm', f"Logout {self.userData['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
@@ -98,6 +102,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.userData = None
         self.close()
 
+
     def _cleanupThread(self):
         sender = self.sender()
         if sender in self.activeThreads:
@@ -105,6 +110,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.currentThread = None
         print('active threads:', self.activeThreads)
 
+    # overridden methods
     def closeEvent(self, event):
         for thread in self.activeThreads:
             if thread.isRunning():
