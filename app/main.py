@@ -16,8 +16,9 @@ def _checkDatabaseConnection():
             print("Database is open.")
         else:
             print("Database is closed.")
-    except Exception as e:
-        print(f"Failed to connect to the database: {e}")
+            
+    except Exception as error:
+        print(f"Failed to connect to the database: {error}")
     finally:
         postgres_db.close()
 

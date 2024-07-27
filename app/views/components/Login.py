@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
-from app.controllers.authenticate import AuthenticateThread
+from app.controllers.dedicated.authenticate import AuthenticateThread
 
 class Login(Ui_DialogLogin, QDialog):
     def __init__(self):
@@ -16,10 +16,20 @@ class Login(Ui_DialogLogin, QDialog):
         self.loading = Loading()
         self.windowEvent = 'no-event'
         self.userData = None
+        self.currentThread = None
+        self.activeThreads = []
+        
+        self.pushButtonAccessCodeVisibility.setText('Show')
         
         self.pushButtonSetup.clicked.connect(self._onPushButtonSetupClicked)
         self.pushButtonSignUp.clicked.connect(self._onPushButtonSignUpClicked)
         self.pushButtonLogin.clicked.connect(self._onPushButtonLoginClicked)
+        self.pushButtonAccessCodeVisibility.clicked.connect(self._onPushButtonAccessCodeVisibilityClicked)
+        
+    def _onPushButtonAccessCodeVisibilityClicked(self):
+        pushButtonAccessCodeVisibilityIsChecked = self.pushButtonAccessCodeVisibility.isChecked() is True
+        self.pushButtonAccessCodeVisibility.setText('Hide' if pushButtonAccessCodeVisibilityIsChecked else 'Show')
+        self.lineEditAccessCode.setEchoMode(QLineEdit.Normal if pushButtonAccessCodeVisibilityIsChecked else QLineEdit.Password)
         
     def _onPushButtonSetupClicked(self):
         self.windowEvent = 'start/setup'
@@ -31,12 +41,14 @@ class Login(Ui_DialogLogin, QDialog):
         
     def _onPushButtonLoginClicked(self):
         self.loading.show()
-        self.authenticateThread = AuthenticateThread('pos/authenticate/user/username/accesscode', {
+        self.currentThread = AuthenticateThread('pos/authenticate/user/username/accesscode', {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
-        self.authenticateThread.finished.connect(self._handleOnPushButtonLoginClickedResult)
-        self.authenticateThread.start()
+        self.currentThread.finished.connect(self._handleOnPushButtonLoginClickedResult)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
     
     def _handleOnPushButtonLoginClickedResult(self, result):
         self.loading.close()
@@ -49,7 +61,22 @@ class Login(Ui_DialogLogin, QDialog):
         self.userData = result['data']
         self.close()
         return
-    
+
+    def _cleanupThread(self):
+        sender = self.sender()
+        if sender in self.activeThreads:
+            self.activeThreads.remove(sender)
+        self.currentThread = None
+        print('active threads:', self.activeThreads)
+
     def closeEvent(self, event):
+        for thread in self.activeThreads:
+            if thread.isRunning():
+                thread.quit()
+                thread.wait()
+        
+        self.activeThreads.clear()
+        
         event.accept()
+        
         print('closed...')

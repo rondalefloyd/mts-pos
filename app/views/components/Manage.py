@@ -6,7 +6,8 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.Manage_ui import Ui_MainWindowManage
 from app.views.components.Loading import Loading
-from app.controllers.authenticate import AuthenticateThread
+from app.views.components.ManageUser import ManageUser
+from app.controllers.dedicated.authenticate import AuthenticateThread
 
 class Manage(Ui_MainWindowManage, QMainWindow):
     def __init__(self, userData):
@@ -16,17 +17,75 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.loading = Loading()
         self.windowEvent = 'no-event'
         self.userData = userData
+        self.currentThread = None
+        self.activeThreads = []
+        
+        self.stackedWidgetManage.insertWidget(7, ManageUser(self.userData))
+        
+        self.labelFullName.setText(f"{self.userData['fullName']}")
+        self.labelMobileNumber.setText(f"{self.userData['mobileNumber']}")
+        self.labelDatabaseSource.setText(f"test")
+        
+        self.actionSales.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(0))
+        self.actionTransaction.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(1))
+        self.actionItem.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(2))
+        self.actionStock.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(3))
+        self.actionPromo.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(4))
+        self.actionReward.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(5))
+        self.actionMember.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(6))
+        self.actionUser.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(7))
         
         self.actionLogout.triggered.connect(self._onActionLogoutTriggered)
+
+        self._onStackedWidgetManageSetCurrentIndex(0)
+
+    def _onStackedWidgetManageSetCurrentIndex(self, index):
+        self.stackedWidgetManage.setCurrentIndex(index)
         
+        self.actionSales.setChecked(self.stackedWidgetManage.currentIndex() == 0)
+        self.actionTransaction.setChecked(self.stackedWidgetManage.currentIndex() == 1)
+        self.actionItem.setChecked(self.stackedWidgetManage.currentIndex() == 2)
+        self.actionStock.setChecked(self.stackedWidgetManage.currentIndex() == 3)
+        self.actionPromo.setChecked(self.stackedWidgetManage.currentIndex() == 4)
+        self.actionReward.setChecked(self.stackedWidgetManage.currentIndex() == 5)
+        self.actionMember.setChecked(self.stackedWidgetManage.currentIndex() == 6)
+        self.actionUser.setChecked(self.stackedWidgetManage.currentIndex() == 7)
+
+        menuManageTitle = 'Unavailable'
+        
+        match index:
+            case 0:
+                menuManageTitle = 'Sales'
+            case 1:
+                menuManageTitle = 'Transaction'
+            case 2:
+                menuManageTitle = 'Item'
+            case 3:
+                menuManageTitle = 'Stock'
+            case 4:
+                menuManageTitle = 'Promo'
+            case 5:
+                menuManageTitle = 'Reward'
+            case 6:
+                menuManageTitle = 'Member'
+            case 7:
+                menuManageTitle = 'User'
+                self.stackedWidgetManage.insertWidget(7, ManageUser(self.userData))
+                
+                
+        # self.stackedWidgetManage.insertWidget(7, ManageUser(self.userData))
+        self.menuManage.setTitle(menuManageTitle)
+
     def _onActionLogoutTriggered(self):
         confirm = QMessageBox.warning(self, 'Confirm', f"Logout {self.userData['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.authenticateThread = AuthenticateThread('pos/unauthenticate/user/id', {'userId': self.userData['id']})
-            self.authenticateThread.finished.connect(self._handleOnActionLogoutTriggeredResult)
-            self.authenticateThread.start()
+            self.currentThread = AuthenticateThread('pos/unauthenticate/user/id', {'userId': self.userData['id']})
+            self.currentThread.finished.connect(self._handleOnActionLogoutTriggeredResult)
+            self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
         
     def _handleOnActionLogoutTriggeredResult(self, result):
         self.loading.close()
@@ -38,8 +97,25 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.windowEvent = 'start/login'
         self.userData = None
         self.close()
-        
+
+    def _cleanupThread(self):
+        sender = self.sender()
+        if sender in self.activeThreads:
+            self.activeThreads.remove(sender)
+        self.currentThread = None
+        print('active threads:', self.activeThreads)
+
     def closeEvent(self, event):
-        event.accept()
+        for thread in self.activeThreads:
+            if thread.isRunning():
+                thread.quit()
+                thread.wait()
+        
+        self.activeThreads.clear()
+        
+        # Set the window event state to 'start/login'
         self.windowEvent = 'start/login'
+        
+        event.accept()
+        
         print('closed...')

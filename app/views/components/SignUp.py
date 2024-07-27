@@ -6,8 +6,8 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.SignUp_ui import Ui_DialogSignUp
 from app.views.components.Loading import Loading
-from app.controllers.register import RegisterThread
-from app.controllers.fetch import FetchThread
+from app.controllers.dedicated.register import RegisterThread
+from app.controllers.dedicated.fetch import FetchThread
 
 class SignUp(Ui_DialogSignUp, QDialog):
     def __init__(self):
@@ -17,6 +17,8 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.loading = Loading()
         self.windowEvent = 'no-event'
         self.userData = None
+        self.currentThread = None
+        self.activeThreads = []
         
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
@@ -40,7 +42,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
     
     def _onPushButtonCreateClicked(self):
         self.loading.show()
-        self.registerThread = RegisterThread('pos/register/user', {
+        self.currentThread = RegisterThread('pos/register/user', {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -49,9 +51,11 @@ class SignUp(Ui_DialogSignUp, QDialog):
             'mobileNumber': f"{self.lineEditMobileNumber.text()}",
             'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
         })
-        self.registerThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
-        self.registerThread.start()
-        
+        self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+
     def _handleOnPushButtonCreateClickedResult(self, result):
         self.loading.close()
         
@@ -62,8 +66,25 @@ class SignUp(Ui_DialogSignUp, QDialog):
         QMessageBox.information(self, 'Success', f"{result['message']}")
         self.close()
         return
-        
+
+    def _cleanupThread(self):
+        sender = self.sender()
+        if sender in self.activeThreads:
+            self.activeThreads.remove(sender)
+        self.currentThread = None
+        print('active threads:', self.activeThreads)
+
     def closeEvent(self, event):
-        event.accept()
+        for thread in self.activeThreads:
+            if thread.isRunning():
+                thread.quit()
+                thread.wait()
+        
+        self.activeThreads.clear()
+        
+        # Set the window event state to 'start/login'
         self.windowEvent = 'start/login'
+        
+        event.accept()
+        
         print('closed...')

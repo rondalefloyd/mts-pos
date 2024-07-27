@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, math
 from peewee import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -23,6 +23,8 @@ class FetchThread(QThread):
                 result = fetch_user()
             case 'pos/fetch/organization/all':
                 result = fetch_organization()
+            case 'pos/fetch/user/all/keyword/paginated':
+                result = fetch_user_with_pagination_by_keyword(self.entry)
             case _:
                 result = None
 
@@ -84,5 +86,54 @@ def fetch_organization():
         
     except Organizations.DoesNotExist:
         result['message'] = 'Fetch failed. Organizations not found.'
+        
+    return result
+
+def fetch_user_with_pagination_by_keyword(entry):
+    result = {
+        'success': False,
+        'message': 'Fetch failed.',
+        'data': [],
+        'totalPages': 1,
+    }
+    
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        query = Users.select().where(
+            (Users.UserName.cast('TEXT').like(keyword)) |
+            (Users.AccessCode.cast('TEXT').like(keyword)) |
+            (Users.FullName.cast('TEXT').like(keyword)) |
+            (Users.BirthDate.cast('TEXT').like(keyword)) |
+            (Users.MobileNumber.cast('TEXT').like(keyword)) |
+            (Users.AccessLevel.cast('TEXT').like(keyword)) |
+            (Users.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(Users.UpdateTs.desc())
+        
+        total_count = query.count()
+        
+        paginated_users = query.limit(limit).offset(offset)
+        
+        for user in paginated_users:
+            result['data'].append({
+                'id': user.Id,
+                'userName': user.UserName,
+                'accessCode': user.AccessCode,
+                'fullName': user.FullName,
+                'birthDate': user.BirthDate,
+                'mobileNumber': user.MobileNumber,
+                'accessLevel': user.AccessLevel,
+                'updateTs': user.UpdateTs,
+            })
+        
+        result['totalPages'] = math.ceil(total_count / limit)
+        
+        result['success'] = True
+        result['message'] = 'Fetch successful.'
+        
+    except Users.DoesNotExist:
+        result['message'] = 'Fetch failed. Users not found.'
         
     return result

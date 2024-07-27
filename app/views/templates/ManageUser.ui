@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormMenuUser</class>
- <widget class="QWidget" name="FormMenuUser">
+ <class>FormManageUser</class>
+ <widget class="QWidget" name="FormManageUser">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -78,11 +78,6 @@
        </column>
        <column>
         <property name="text">
-         <string>OrganizationName</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
          <string>UserName</string>
         </property>
        </column>
@@ -109,21 +104,6 @@
        <column>
         <property name="text">
          <string>AccessLevel</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>ActiveStatus</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>LastLoginTs</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>LastLogoutTs</string>
         </property>
        </column>
        <column>

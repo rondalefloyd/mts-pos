@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.Setup_ui import Ui_DialogSetup
 from app.views.components.Loading import Loading
-from app.controllers.register import RegisterThread
+from app.controllers.dedicated.register import RegisterThread
 
 class Setup(Ui_DialogSetup, QDialog):
     def __init__(self):
@@ -16,6 +16,8 @@ class Setup(Ui_DialogSetup, QDialog):
         self.loading = Loading()
         self.windowEvent = 'no-event'
         self.userData = None
+        self.currentThread = None
+        self.activeThreads = []
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
@@ -26,15 +28,17 @@ class Setup(Ui_DialogSetup, QDialog):
 
     def _onPushButtonCreateClicked(self):
         self.loading.show()
-        self.registerThread = RegisterThread('pos/register/organization', {
+        self.currentThread = RegisterThread('pos/register/organization', {
             'taxId': f"{self.lineEditTaxId.text()}".upper(),
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
             'address': f"{self.lineEditAddress.text()}".upper(),
             'mobileNumber': f"{self.lineEditMobileNumber.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
         })
-        self.registerThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
-        self.registerThread.start()
+        self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
         
     def _handleOnPushButtonCreateClickedResult(self, result):
         self.loading.close()
@@ -47,7 +51,24 @@ class Setup(Ui_DialogSetup, QDialog):
         self.close()
         return
 
+    def _cleanupThread(self):
+        sender = self.sender()
+        if sender in self.activeThreads:
+            self.activeThreads.remove(sender)
+        self.currentThread = None
+        print('active threads:', self.activeThreads)
+
     def closeEvent(self, event):
-        event.accept()
+        for thread in self.activeThreads:
+            if thread.isRunning():
+                thread.quit()
+                thread.wait()
+        
+        self.activeThreads.clear()
+        
+        # Set the window event state to 'start/login'
         self.windowEvent = 'start/login'
+        
+        event.accept()
+
         print('closed...')

@@ -17,18 +17,27 @@ class AuthenticateThread(QThread):
         self.entry = entry
     
     def run(self):
-        postgres_db.connect()
+        try:
+            postgres_db.connect()
 
-        match self.function:
-            case 'pos/authenticate/user/username/accesscode':
-                result = authenticate_user_by_username_accesscode(self.entry)
-            case 'pos/unauthenticate/user/id':
-                result = unauthenticate_user_by_id(self.entry)
-            case _:
-                result = None
+            match self.function:
+                case 'pos/authenticate/user/username/accesscode':
+                    result = authenticate_user_by_username_accesscode(self.entry)
+                case 'pos/unauthenticate/user/id':
+                    result = unauthenticate_user_by_id(self.entry)
+                case _:
+                    result = None
 
-        self.finished.emit(result)
-        postgres_db.close()
+            self.finished.emit(result)
+            
+        except Exception as error:
+            postgres_db.rollback()
+            print('error: ', error)
+            print('database rolled back...')
+            
+        finally:
+            postgres_db.close()
+            print('database closed...')
 
 def authenticate_user_by_username_accesscode(entry):
     result = {
