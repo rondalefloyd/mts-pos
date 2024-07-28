@@ -101,7 +101,7 @@ def authenticate_user_by_username_accesscode(entry):
         result['data'] = {
             'id': users.Id,
             'organizationId': users.OrganizationId,
-            'organizationName': Organizations.select().where(Organizations.Id == users.OrganizationId),
+            'organizationName': Organizations.select().where(Organizations.Id == users.OrganizationId).first(),
             'userName': users.UserName,
             'accessCode': users.AccessCode,
             'fullName': users.FullName,
