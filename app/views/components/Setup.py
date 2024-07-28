@@ -31,7 +31,6 @@ class Setup(Ui_DialogSetup, QDialog):
 
 
     def _onPushButtonCreateClicked(self):
-        self.loading.show()
         self.currentThread = RegisterThread('pos/register/organization', {
             'taxId': f"{self.lineEditTaxId.text()}".upper(),
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
@@ -45,10 +44,8 @@ class Setup(Ui_DialogSetup, QDialog):
         self.activeThreads.append(self.currentThread)
         
     def _handleOnPushButtonCreateClickedResult(self, result):
-        self.loading.close()
-        
         if result['success'] is False:
-            QMessageBox.critical(self, 'Invalid', f"{result['message']}")
+            QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
         QMessageBox.information(self, 'Success', f"{result['message']}")

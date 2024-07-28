@@ -28,14 +28,11 @@ class SignUp(Ui_DialogSignUp, QDialog):
     
     # private methods
     def _populateComboBoxOrganizationName(self):
-        self.loading.show()
         self.fetchThread = FetchThread('pos/fetch/organization/all')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxOrganizationNameResult)
         self.fetchThread.start()
         
     def _handlePopulateComboBoxOrganizationNameResult(self, result):
-        self.loading.close()
-        
         for data in result['data']:
             self.comboBoxOrganizationName.addItem(f"{data['organizationName']}")
             
@@ -46,7 +43,6 @@ class SignUp(Ui_DialogSignUp, QDialog):
     
     
     def _onPushButtonCreateClicked(self):
-        self.loading.show()
         self.currentThread = RegisterThread('pos/register/user', {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
@@ -62,10 +58,8 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.activeThreads.append(self.currentThread)
 
     def _handleOnPushButtonCreateClickedResult(self, result):
-        self.loading.close()
-        
         if result['success'] is False:
-            QMessageBox.critical(self, 'Invalid', f"{result['message']}")
+            QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
         QMessageBox.information(self, 'Success', f"{result['message']}")

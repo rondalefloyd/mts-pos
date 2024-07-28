@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, logging
 from peewee import *
 from datetime import *
 from PyQt5.QtWidgets import *
@@ -6,29 +6,51 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.models.entities import Users, UserSessionInfos, Organizations
+from app.controllers.common.messages import (
+    class_error_message, 
+    function_route_error_message,
+    function_route_not_exist,
+)
 from app.utils.database import postgres_db
+
+logging.basicConfig(level=logging.INFO)
 
 class RegisterThread(QThread):
     finished = pyqtSignal(object)
     
-    def __init__(self, function, entry=None):
+    def __init__(self, function_route, entry=None):
         super().__init__()
-        self.function = function
+        self.function_route = function_route
         self.entry = entry
     
     def run(self):
-        postgres_db.connect()
+        result = {
+            'success': False,
+            'message': class_error_message(self.__class__.__name__),
+        }
+        try:
+            with postgres_db:
+                match self.function_route:
+                    case 'pos/register/user':
+                        result = register_user(self.entry)
+                    case 'pos/register/organization':
+                        result = register_organization(self.entry)
+                    case _:
+                        result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
-        match self.function:
-            case 'pos/register/user':
-                result = register_user(self.entry)
-            case 'pos/register/organization':
-                result = register_organization(self.entry)
-            case _:
-                result = None
 
-        self.finished.emit(result)
-        postgres_db.close()
+            self.finished.emit(result)
+
+        except Exception as error:
+            result['message'] = f"An error occured in {self.function_route}: {error}\nPlease contact customer support."
+            postgres_db.rollback()
+            self.finished.emit(result)
+            logging.error('error: ', error)
+            logging.info('database rolled back...')
+            
+        finally:
+            postgres_db.close()
+            logging.info('database closed...')
 
 def register_user(entry):
     result = {

@@ -92,10 +92,8 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.activeThreads.append(self.currentThread)
         
     def _handleOnActionLogoutTriggeredResult(self, result):
-        self.loading.close()
-        
         if result['success'] is False:
-            QMessageBox.critical(self, 'Invalid', f"{result['message']}")
+            QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
         
         self.windowEvent = 'start/login'

@@ -44,7 +44,6 @@ class Login(Ui_DialogLogin, QDialog):
         
         
     def _onPushButtonLoginClicked(self):
-        self.loading.show()
         self.currentThread = AuthenticateThread('pos/authenticate/user/username/accesscode', {
             'userName': f"{self.lineEditUserName.text()}",
             'accessCode': f"{self.lineEditAccessCode.text()}",
@@ -55,10 +54,8 @@ class Login(Ui_DialogLogin, QDialog):
         self.activeThreads.append(self.currentThread)
     
     def _handleOnPushButtonLoginClickedResult(self, result):
-        self.loading.close()
-        
         if result['success'] is False:
-            QMessageBox.critical(self, 'Invalid', f"{result['message']}")
+            QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
         
         self.windowEvent = 'start/manage'

@@ -60,7 +60,6 @@ class ManageUser(Ui_FormManageUser, QWidget):
         
         
     def _onPushButtonAddClicked(self):
-        self.loading.show()
         self.currentThread = RegisterThread('pos/register/user', {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'userName': f"{self.lineEditUserName.text()}",
@@ -76,10 +75,8 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.activeThreads.append(self.currentThread)
         
     def _handleOnPushButtonAddClickedResult(self, result):
-        self.loading.close()
-        
         if result['success'] is False:
-            QMessageBox.critical(self, 'Invalid', f"{result['message']}")
+            QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
         QMessageBox.information(self, 'Success', f"{result['message']}")
@@ -88,7 +85,6 @@ class ManageUser(Ui_FormManageUser, QWidget):
         
         
     def _populateComboBoxOrganizationName(self):
-        self.loading.show()
         self.currentThread = FetchThread('pos/fetch/organization/all')
         self.currentThread.finished.connect(self._handlePopulateComboBoxOrganizationNameResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -96,14 +92,11 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.activeThreads.append(self.currentThread)
 
     def _handlePopulateComboBoxOrganizationNameResult(self, result):
-        self.loading.close()
-        
         for data in result['data']:
             self.comboBoxOrganizationName.addItem(f"{data['organizationName']}")
         
         
     def _populateTableWidgetData(self):
-        self.loading.show()
         self.currentThread = FetchThread('pos/fetch/user/all/keyword/paginated', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
@@ -114,7 +107,6 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.activeThreads.append(self.currentThread)
 
     def _handlePopulateTableWidgetDataResult(self, result):
-        self.loading.close()
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(len(result['data']))
         
@@ -160,11 +152,9 @@ class ManageUser(Ui_FormManageUser, QWidget):
             self.activeThreads.append(self.currentThread)
 
     def _handleOnPushButtonDeleteClickedResult(self, result):
-        self.loading.close()
         QMessageBox.information(self, 'Success', f"{result['message']}")
         self.currentPage = 1
         self._populateTableWidgetData()
-
 
     def _cleanupThread(self):
         sender = self.sender()
