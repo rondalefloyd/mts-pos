@@ -42,7 +42,7 @@ class RegisterThread(QThread):
             self.finished.emit(result)
 
         except Exception as error:
-            result['message'] = f"An error occured in {self.function_route}: {error}\nPlease contact customer support."
+            result['message'] = function_route_error_message(self.function_route, error)
             postgres_db.rollback()
             self.finished.emit(result)
             logging.error('error: ', error)
@@ -65,25 +65,29 @@ def register_user(entry):
             result['message'] = 'User already exists with the given username.'
         
     except Users.DoesNotExist:
-        users = Users.create(
-            OrganizationId=Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id,
-            UserName=entry['userName'],
-            AccessCode=entry['accessCode'],
-            FullName=entry['fullName'],
-            BirthDate=entry['birthDate'],
-            MobileNumber=entry['mobileNumber'],
-            AccessLevel=entry['accessLevel']
-        )
+        try:
+            users = Users.create(
+                OrganizationId=f"{Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id}",
+                UserName=entry['userName'],
+                AccessCode=entry['accessCode'],
+                FullName=entry['fullName'],
+                BirthDate=entry['birthDate'],
+                MobileNumber=entry['mobileNumber'],
+                AccessLevel=entry['accessLevel']
+            )
+            
+            UserSessionInfos.create(
+                UserId=users.Id,
+                ActiveStatus=0,
+            )
+            
+            result['success'] = True
+            result['message'] = 'User registered successfully.'
+            
+        except Organizations.DoesNotExist:
+            result['message'] = 'Organization does not exists.'
         
-        UserSessionInfos.create(
-            UserId=users.Id,
-            ActiveStatus=1,
-            LastLoginTs=datetime.now(),
-            UpdateTs=datetime.now()
-        )
         
-        result['success'] = True
-        result['message'] = 'User registered successfully.'
         
     return result
 

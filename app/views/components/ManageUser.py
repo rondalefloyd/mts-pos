@@ -98,6 +98,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('pos/fetch/user/all/keyword/paginated', {
+            'organizationId': self.userData['organizationId'],
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })
@@ -144,7 +145,6 @@ class ManageUser(Ui_FormManageUser, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.loading.show()
             self.currentThread = RemoveThread('pos/remove/user/id', {'id': f"{data['id']}"})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)

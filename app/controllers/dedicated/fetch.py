@@ -32,7 +32,7 @@ class FetchThread(QThread):
             with postgres_db:
                 match self.function_route:
                     case 'pos/fetch/user/all':
-                        result = fetch_user()
+                        result = fetch_user(self.entry)
                     case 'pos/fetch/organization/all':
                         result = fetch_organization()
                     case 'pos/fetch/user/all/keyword/paginated':
@@ -54,7 +54,7 @@ class FetchThread(QThread):
             postgres_db.close()
             logging.info('database closed...')
 
-def fetch_user():
+def fetch_user(entry):
     result = {
         'success': False,
         'message': 'Fetch failed.',
@@ -62,7 +62,10 @@ def fetch_user():
     }
     
     try:
-        users = Users.select().order_by(Users.UpdateTs.desc())
+        users = Users.select().order_by(
+            (Users.OrganizationId == entry['organizationId']) &
+            (Users.UpdateTs.desc())
+        )
         
         for user in users:
             result['success'] = True
@@ -126,13 +129,14 @@ def fetch_user_with_pagination_by_keyword(entry):
         keyword = f"%{entry['keyword']}%"
         
         query = Users.select().where(
-            (Users.UserName.cast('TEXT').like(keyword)) |
+            (Users.OrganizationId == entry['organizationId']) &
+            ((Users.UserName.cast('TEXT').like(keyword)) |
             (Users.AccessCode.cast('TEXT').like(keyword)) |
             (Users.FullName.cast('TEXT').like(keyword)) |
             (Users.BirthDate.cast('TEXT').like(keyword)) |
             (Users.MobileNumber.cast('TEXT').like(keyword)) |
             (Users.AccessLevel.cast('TEXT').like(keyword)) |
-            (Users.UpdateTs.cast('TEXT').like(keyword))
+            (Users.UpdateTs.cast('TEXT').like(keyword)))
         ).order_by(Users.UpdateTs.desc())
         
         total_count = query.count()
