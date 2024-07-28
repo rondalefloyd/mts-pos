@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath('')) # required to change the default path
 from app.views.templates.EditMember_ui import Ui_DialogEditMember
 from app.views.components.Loading import Loading
 from app.views.components.ManageActionButton import ManageActionButton
-from app.controllers.dedicated.register import RegisterThread
+from app.controllers.dedicated.edit import EditThread
 
 # class definition
 class EditMember(Ui_DialogEditMember, QDialog):
@@ -26,16 +26,21 @@ class EditMember(Ui_DialogEditMember, QDialog):
         self.comboBoxOrganizationName.setCurrentText(f"{self.userData['organizationName']}")
 
         self.lineEditMemberName.setText(f"{self.selectedData['memberName']}")
-        self.dateEditBirthDate.setDate(f"{self.selectedData['birthDate']}")
+        self.dateEditBirthDate.setDate(QDate.fromString(f"{self.selectedData['birthDate']}", 'yyyy-MM-dd'))
         self.lineEditAddress.setText(f"{self.selectedData['address']}")
         self.lineEditMobileNumber.setText(f"{self.selectedData['mobileNumber']}")
         self.lineEditPoints.setText(f"{self.selectedData['points']}")
 
+        self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)
 
     # private methods
+    def _onPushButtonCancelClicked(self):
+        self.close()
+        
     def _onPushButtonSaveClicked(self):
-        self.currentThread = RegisterThread('pos/edit/member', {
+        self.currentThread = EditThread('pos/edit/member', {
+            'id': f"{self.selectedData['id']}",
             'memberName': f"{self.lineEditMemberName.text()}".upper(),
             'birthDate': f"{self.dateEditBirthDate.text()}",
             'address': f"{self.lineEditAddress.text()}".upper(),
@@ -50,7 +55,6 @@ class EditMember(Ui_DialogEditMember, QDialog):
     def _handleOnPushButtonAddClickedResult(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
-            self.close()
             return
             
         QMessageBox.information(self, 'Success', f"{result['message']}")

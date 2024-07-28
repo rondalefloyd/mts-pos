@@ -59,24 +59,26 @@ def edit_member(entry):
     }
     
     try:
-        member = Members.get(Members.MemberName == entry['memberName'])
+        try:
+            member = Members.get(Members.MemberName == entry['memberName'])
+            if member.MemberName == entry['memberName']:
+                result['message'] = 'Member already exists with the given name.'
+                return result
         
-        if member.MemberName == entry['memberName']:
-            result['message'] = 'Member already exists with the given name.'
-            return result
+        except Members.DoesNotExist:
+            # Check if the member exists
+            member = Members.get(Members.MemberName == entry['id'])
             
-        # Check if the member exists
-        member = Members.get(Members.MemberName == entry['memberName'])
-        
-        # Update member details
-        member.BirthDate = entry['birthDate']
-        member.Address = entry['address']
-        member.MobileNumber = entry['mobileNumber']
-        member.Points = entry['points']
-        member.save()  # Save the changes to the database
-        
-        result['success'] = True
-        result['message'] = 'Member updated successfully.'
+            # Update member details
+            member.MemberName = entry['memberName']
+            member.BirthDate = entry['birthDate']
+            member.Address = entry['address']
+            member.MobileNumber = entry['mobileNumber']
+            member.Points = entry['points']
+            member.save()  # Save the changes to the database
+            
+            result['success'] = True
+            result['message'] = 'Member updated successfully.'
         
     except Members.DoesNotExist:
         result['message'] = 'Member does not exist.'
