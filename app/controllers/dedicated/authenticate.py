@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.models.entities import Users, UserSessionInfos
+from app.models.entities import Users, Organizations, UserSessionInfos
 from app.controllers.common.messages import (
     class_error_message, 
     function_route_error_message,
@@ -59,6 +59,7 @@ def authenticate_user_by_username_accesscode(entry):
         'data': {
             'id': None,
             'organizationId': None,
+            'organizationName': None,
             'userName': None,
             'accessCode': None,
             'fullName': None,
@@ -85,6 +86,7 @@ def authenticate_user_by_username_accesscode(entry):
         result['data'] = {
             'id': users.Id,
             'organizationId': users.OrganizationId,
+            'organizationName': Organizations.get(Organizations.Id == users.OrganizationId).OrganizationName,
             'userName': users.UserName,
             'accessCode': users.AccessCode,
             'fullName': users.FullName,
@@ -97,6 +99,9 @@ def authenticate_user_by_username_accesscode(entry):
     except Users.DoesNotExist:
         result['success'] = False
         result['message'] = 'Authentication failed. User not found.'
+        
+    except Exception as error:
+        result['message'] = f'Update failed due to: {error}'
         
     return result
 
@@ -118,5 +123,8 @@ def unauthenticate_user_by_id(entry):
         
     except UserSessionInfos.DoesNotExist:
         result['message'] = 'Authentication failed. User not found.'
+        
+    except Exception as error:
+        result['message'] = f'Update failed due to: {error}'
         
     return result

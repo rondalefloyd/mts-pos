@@ -4,15 +4,16 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.views.templates.ManageUser_ui import Ui_FormManageUser
+from app.views.templates.ManageMember_ui import Ui_FormManageMember
 from app.views.components.Loading import Loading
+from app.views.components.EditMember import EditMember
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
 # class definition
-class ManageUser(Ui_FormManageUser, QWidget):
+class ManageMember(Ui_FormManageMember, QWidget):
     # initialization method (__init__)
     def __init__(self, userData):
         super().__init__()
@@ -64,14 +65,13 @@ class ManageUser(Ui_FormManageUser, QWidget):
         
         
     def _onPushButtonAddClicked(self):
-        self.currentThread = RegisterThread('pos/register/user', {
+        self.currentThread = RegisterThread('pos/register/member', {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
-            'userName': f"{self.lineEditUserName.text()}",
-            'accessCode': f"{self.lineEditAccessCode.text()}",
-            'fullName': f"{self.lineEditFullName.text()}".upper(),
+            'memberName': f"{self.lineEditMemberName.text()}".upper(),
             'birthDate': f"{self.dateEditBirthDate.text()}",
+            'address': f"{self.lineEditAddress.text()}".upper(),
             'mobileNumber': f"{self.lineEditMobileNumber.text()}",
-            'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
+            'points': 0,  # Assuming new members start with 0 points
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -89,7 +89,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         
         
     def _populateTableWidgetData(self):
-        self.currentThread = FetchThread('pos/fetch/user/all/keyword/paginated', {
+        self.currentThread = FetchThread('pos/fetch/members/all/keyword/paginated', {
             'organizationId': self.userData['organizationId'],
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
@@ -106,14 +106,13 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.totalPages = result['totalPages']
         
         for i, data in enumerate(result['data']):
-            manageActionButton = ManageActionButton(delete=True)
+            manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
-                QTableWidgetItem(f"{data['userName']}"),
-                QTableWidgetItem(f"{data['accessCode']}"),
-                QTableWidgetItem(f"{data['fullName']}"),
+                QTableWidgetItem(f"{data['memberName']}"),
                 QTableWidgetItem(f"{data['birthDate']}"),
+                QTableWidgetItem(f"{data['address']}"),
                 QTableWidgetItem(f"{data['mobileNumber']}"),
-                QTableWidgetItem(f"{data['accessLevel']}"),
+                QTableWidgetItem(f"{data['points']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             
@@ -124,14 +123,18 @@ class ManageUser(Ui_FormManageUser, QWidget):
             self.tableWidgetData.setItem(i, 4, tableItems[3])
             self.tableWidgetData.setItem(i, 5, tableItems[4])
             self.tableWidgetData.setItem(i, 6, tableItems[5])
-            self.tableWidgetData.setItem(i, 7, tableItems[6])
         
+            manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _=i, data=data: self._onPushButtonDeleteClicked(data))
             
         self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
-        pass
+
+    def _onPushButtonEditClicked(self, data):
+        self.editMember = EditMember(self.userData, data)
+        self.editMember.exec()
+        self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)

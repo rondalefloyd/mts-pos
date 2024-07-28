@@ -71,6 +71,20 @@ class Promos(BaseModel):
     def __str__(self):
         return self.PromoName
 
+class Rewards(BaseModel):
+    Id = AutoField()
+    RewardName = CharField(max_length=255, unique=True, null=True)
+    Points = FloatField(null=True)
+    Target = FloatField(null=True)
+    Description = CharField(max_length=255, null=True)
+    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
+
+    class Meta:
+        table_name = 'Rewards'
+
+    def __str__(self):
+        return self.RewardName
+
 class SalesGroups(BaseModel):
     Id = AutoField()
     SalesGroupName = CharField(max_length=255, unique=True, null=True)

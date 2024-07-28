@@ -3,10 +3,11 @@ import os, sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-sys.path.append(os.path.abspath('')) # required to change the default path
+sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.views.templates.Manage_ui import Ui_MainWindowManage
 from app.views.components.Loading import Loading
 from app.views.components.ManageUser import ManageUser
+from app.views.components.ManageMember import ManageMember
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
 # class definition
@@ -22,7 +23,13 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.currentThread = None
         self.activeThreads = []
         
-        self.stackedWidgetManage.insertWidget(7, ManageUser(self.userData))
+        # Initialize widgets only once
+        self.manageMember = ManageMember(self.userData)
+        self.manageUser = ManageUser(self.userData)
+        
+        # Add widgets to the stacked widget
+        self.stackedWidgetManage.insertWidget(6, self.manageMember)
+        self.stackedWidgetManage.insertWidget(7, self.manageUser)
         
         self.labelFullName.setText(f"{self.userData['fullName']}")
         self.labelMobileNumber.setText(f"{self.userData['mobileNumber']}")
@@ -71,14 +78,12 @@ class Manage(Ui_MainWindowManage, QMainWindow):
                 menuManageTitle = 'Reward'
             case 6:
                 menuManageTitle = 'Member'
+                self.manageMember.refresh()
             case 7:
                 menuManageTitle = 'User'
-                self.stackedWidgetManage.insertWidget(7, ManageUser(self.userData))
+                self.manageUser.refresh()
                 
-                
-        # self.stackedWidgetManage.insertWidget(7, ManageUser(self.userData))
         self.menuManage.setTitle(menuManageTitle)
-
 
     def _onActionLogoutTriggered(self):
         confirm = QMessageBox.warning(self, 'Confirm', f"Logout {self.userData['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
@@ -98,7 +103,6 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.windowEvent = 'start/login'
         self.userData = None
         self.close()
-
 
     def _cleanupThread(self):
         sender = self.sender()

@@ -4,7 +4,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.models.entities import Users, Organizations
+from app.models.entities import (
+    Users, 
+    Organizations,
+    Members,
+    Promos,
+    Rewards,
+)
 from app.controllers.common.messages import (
     class_error_message, 
     function_route_error_message,
@@ -37,6 +43,12 @@ class FetchThread(QThread):
                         result = fetch_organization()
                     case 'pos/fetch/user/all/keyword/paginated':
                         result = fetch_user_with_pagination_by_keyword(self.entry)
+                    case 'pos/fetch/members/all/keyword/paginated':
+                        result = fetch_members_with_pagination_by_keyword(self.entry)
+                    case 'pos/fetch/promos/all/keyword/paginated':
+                        result = fetch_promos_with_pagination_by_keyword(self.entry)
+                    case 'pos/fetch/rewards/all/keyword/paginated':
+                        result = fetch_rewards_with_pagination_by_keyword(self.entry)
                     case _:
                         result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
@@ -164,3 +176,145 @@ def fetch_user_with_pagination_by_keyword(entry):
         result['message'] = 'Fetch failed. Users not found.'
         
     return result
+
+def fetch_members_with_pagination_by_keyword(entry):
+    result = {
+        'success': False,
+        'message': 'Fetch failed.',
+        'data': [],
+        'totalPages': 1,
+    }
+    
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        query = Members.select().where(
+            (Members.OrganizationId == entry['organizationId']) &
+            ((Members.MemberName.cast('TEXT').like(keyword)) |
+            (Members.BirthDate.cast('TEXT').like(keyword)) |
+            (Members.Address.cast('TEXT').like(keyword)) |
+            (Members.MobileNumber.cast('TEXT').like(keyword)) |
+            (Members.Points.cast('TEXT').like(keyword)) |
+            (Members.UpdateTs.cast('TEXT').like(keyword)))
+        ).order_by(Members.UpdateTs.desc())
+        
+        total_count = query.count()
+        
+        paginated_members = query.limit(limit).offset(offset)
+        
+        for member in paginated_members:
+            result['data'].append({
+                'id': member.Id,
+                'organizationId': member.OrganizationId,
+                'memberName': member.MemberName,
+                'birthDate': member.BirthDate,
+                'address': member.Address,
+                'mobileNumber': member.MobileNumber,
+                'points': member.Points,
+                'updateTs': member.UpdateTs,
+            })
+        
+        result['totalPages'] = math.ceil(total_count / limit)
+        
+        result['success'] = True
+        result['message'] = 'Fetch successful.'
+        
+    except Members.DoesNotExist:
+        result['message'] = 'Fetch failed. Members not found.'
+        
+    return result
+
+def fetch_promos_with_pagination_by_keyword(entry):
+    result = {
+        'success': False,
+        'message': 'Fetch failed.',
+        'data': [],
+        'totalPages': 1,
+    }
+    
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        query = Promos.select().where(
+            (Promos.PromoName.cast('TEXT').like(keyword)) |
+            (Promos.DiscountRate.cast('TEXT').like(keyword)) |
+            (Promos.Description.cast('TEXT').like(keyword)) |
+            (Promos.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(Promos.UpdateTs.desc())
+        
+        total_count = query.count()
+        
+        paginated_promos = query.limit(limit).offset(offset)
+        
+        for promo in paginated_promos:
+            result['data'].append({
+                'id': promo.Id,
+                'promoName': promo.PromoName,
+                'discountRate': promo.DiscountRate,
+                'description': promo.Description,
+                'updateTs': promo.UpdateTs,
+            })
+        
+        result['totalPages'] = math.ceil(total_count / limit)
+        
+        result['success'] = True
+        result['message'] = 'Fetch successful.'
+        
+    except Promos.DoesNotExist:
+        result['message'] = 'Fetch failed. Promos not found.'
+        
+    return result
+
+def fetch_rewards_with_pagination_by_keyword(entry):
+    result = {
+        'success': False,
+        'message': 'Fetch failed.',
+        'data': [],
+        'totalPages': 1,
+    }
+    
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        query = Rewards.select().where(
+            (Rewards.RewardName.cast('TEXT').like(keyword)) |
+            (Rewards.Points.cast('TEXT').like(keyword)) |
+            (Rewards.Target.cast('TEXT').like(keyword)) |
+            (Rewards.Description.cast('TEXT').like(keyword)) |
+            (Rewards.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(Rewards.UpdateTs.desc())
+        
+        total_count = query.count()
+        
+        paginated_rewards = query.limit(limit).offset(offset)
+        
+        for reward in paginated_rewards:
+            result['data'].append({
+                'id': reward.Id,
+                'rewardName': reward.RewardName,
+                'points': reward.Points,
+                'target': reward.Target,
+                'description': reward.Description,
+                'updateTs': reward.UpdateTs,
+            })
+        
+        result['totalPages'] = math.ceil(total_count / limit)
+        
+        result['success'] = True
+        result['message'] = 'Fetch successful.'
+        
+    except Rewards.DoesNotExist:
+        result['message'] = 'Fetch failed. Rewards not found.'
+        
+    except Exception as error:
+        result['message'] = f'Update failed due to: {error}'
+        
+    return result
+
+

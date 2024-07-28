@@ -5,7 +5,14 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
-from app.models.entities import Users, UserSessionInfos, Organizations
+from app.models.entities import (
+    Users, 
+    UserSessionInfos, 
+    Organizations,
+    Members,
+    Promos,
+    Rewards,
+)
 from app.controllers.common.messages import (
     class_error_message, 
     function_route_error_message,
@@ -35,6 +42,12 @@ class RegisterThread(QThread):
                         result = register_user(self.entry)
                     case 'pos/register/organization':
                         result = register_organization(self.entry)
+                    case 'pos/register/member':
+                        result = register_member(self.entry)
+                    case 'pos/register/promo':
+                        result = register_promo(self.entry)
+                    case 'pos/register/reward':
+                        result = register_reward(self.entry)
                     case _:
                         result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
@@ -86,8 +99,12 @@ def register_user(entry):
             
         except Organizations.DoesNotExist:
             result['message'] = 'Organization does not exists.'
+            
+        except Exception as error:
+            result['message'] = f'Update failed due to: {error}'
         
-        
+    except Exception as error:
+        result['message'] = f'Update failed due to: {error}'
         
     return result
 
@@ -115,4 +132,100 @@ def register_organization(entry):
         result['success'] = True
         result['message'] = 'Organization registered successfully.'
         
+    except Exception as error:
+        result['message'] = f'Update failed due to: {error}'
+        
     return result
+
+def register_member(entry):
+    result = {
+        'success': False,
+        'message': 'Registration failed.',
+    }
+    
+    try:
+        member = Members.get(Members.MemberName == entry['memberName'])
+        
+        if member.MemberName == entry['memberName']:
+            result['message'] = 'Member already exists with the given name.'
+        
+    except Members.DoesNotExist:
+        try:
+            member = Members.create(
+                OrganizationId=f"{Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id}",
+                MemberName=entry['memberName'],
+                BirthDate=entry['birthDate'],
+                Address=entry['address'],
+                MobileNumber=entry['mobileNumber'],
+                Points=entry['points'],
+            )
+            
+            result['success'] = True
+            result['message'] = 'Member registered successfully.'
+            
+        except Organizations.DoesNotExist:
+            result['message'] = 'Organization does not exist.'
+            
+        except Exception as error:
+            result['message'] = f'Update failed due to: {error}'
+            
+    except Exception as error:
+        result['message'] = f'Update failed due to: {error}'
+        
+    return result
+
+def register_promo(entry):
+    result = {
+        'success': False,
+        'message': 'Registration failed.',
+    }
+    
+    try:
+        promo = Promos.get(Promos.PromoName == entry['promoName'])
+        
+        if promo.PromoName == entry['promoName']:
+            result['message'] = 'Promo already exists with the given name.'
+        
+    except Promos.DoesNotExist:
+        promo = Promos.create(
+            PromoName=entry['promoName'],
+            DiscountRate=entry['discountRate'],
+            Description=entry['description'],
+        )
+        
+        result['success'] = True
+        result['message'] = 'Promo registered successfully.'
+            
+    except Exception as error:
+        result['message'] = f'Update failed due to: {error}'
+        
+    return result
+
+def register_reward(entry):
+    result = {
+        'success': False,
+        'message': 'Registration failed.',
+    }
+    
+    try:
+        reward = Rewards.get(Rewards.RewardName == entry['rewardName'])
+        
+        if reward.RewardName == entry['rewardName']:
+            result['message'] = 'Reward already exists with the given name.'
+        
+    except Rewards.DoesNotExist:
+        reward = Rewards.create(
+            RewardName=entry['rewardName'],
+            Points=entry['points'],
+            Target=entry['target'],
+            Description=entry['description'],
+        )
+        
+        result['success'] = True
+        result['message'] = 'Reward registered successfully.'
+        
+    except Exception as error:
+        result['message'] = f'Update failed due to: {error}'
+        
+    return result
+

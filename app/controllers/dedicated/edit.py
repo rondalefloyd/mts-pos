@@ -4,8 +4,10 @@ from datetime import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-sys.path.append(os.path.abspath('')) # required to change the default path
-from app.models.entities import Users, UserSessionInfos
+sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.models.entities import (
+    Members,
+)
 from app.controllers.common.messages import (
     class_error_message, 
     function_route_error_message,
@@ -13,7 +15,9 @@ from app.controllers.common.messages import (
 )
 from app.utils.database import postgres_db
 
-class RemoveThread(QThread):
+logging.basicConfig(level=logging.INFO)
+
+class EditThread(QThread):
     finished = pyqtSignal(object)
     
     def __init__(self, function_route, entry=None):
@@ -29,14 +33,14 @@ class RemoveThread(QThread):
         try:
             with postgres_db:
                 match self.function_route:
-                    case 'pos/remove/user/id':
-                        result = remove_user_by_id(self.entry)
+                    case 'pos/edit/member':
+                        result = edit_member(self.entry)
                     case _:
                         result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
 
             self.finished.emit(result)
-            
+
         except Exception as error:
             result['message'] = function_route_error_message(self.function_route, error)
             postgres_db.rollback()
@@ -48,25 +52,34 @@ class RemoveThread(QThread):
             postgres_db.close()
             logging.info('database closed...')
 
-def remove_user_by_id(entry):
+def edit_member(entry):
     result = {
         'success': False,
-        'message': 'Remove failed.',
+        'message': 'Update failed.',
     }
     
     try:
-        users = Users.delete().where(Users.Id == entry['id'])
-        users.execute()
+        member = Members.get(Members.MemberName == entry['memberName'])
         
-        userSessionInfos = UserSessionInfos.delete().where(UserSessionInfos.UserId == entry['id'])
-        userSessionInfos.execute()
+        if member.MemberName == entry['memberName']:
+            result['message'] = 'Member already exists with the given name.'
+            return result
+            
+        # Check if the member exists
+        member = Members.get(Members.MemberName == entry['memberName'])
+        
+        # Update member details
+        member.BirthDate = entry['birthDate']
+        member.Address = entry['address']
+        member.MobileNumber = entry['mobileNumber']
+        member.Points = entry['points']
+        member.save()  # Save the changes to the database
         
         result['success'] = True
-        result['message'] = 'Remove successful.'
+        result['message'] = 'Member updated successfully.'
         
-    except Users.DoesNotExist:
-        result['success'] = False
-        result['message'] = 'Remove failed. User not found.'
+    except Members.DoesNotExist:
+        result['message'] = 'Member does not exist.'
         
     except Exception as error:
         result['message'] = f'Update failed due to: {error}'
