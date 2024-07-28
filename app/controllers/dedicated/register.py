@@ -13,7 +13,7 @@ from app.models.entities import (
     Promos,
     Rewards,
 )
-from app.controllers.common.validator import is_entry_valid
+from app.controllers.common.validator import entry_has_value
 from app.controllers.common.messages import (
     exception_error_message,
     integrity_error_message,
@@ -72,7 +72,7 @@ def register_organization(entry):
         'message': 'Organization registration failed.',
     }
     
-    if is_entry_valid(['taxId', 'organizationName', 'address', 'mobileNumber', 'accessCode'], entry) is False:
+    if entry_has_value(alpha_entry=['taxId', 'organizationName', 'address', 'mobileNumber', 'accessCode'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
@@ -104,7 +104,7 @@ def register_user(entry):
         'message': 'Registration failed.',
     }
     
-    if is_entry_valid(['organizationName', 'userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry) is False:
+    if entry_has_value(alpha_entry=['organizationName', 'userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
@@ -144,7 +144,7 @@ def register_member(entry):
         'message': 'Registration failed.',
     }
     
-    if is_entry_valid(['organizationName', 'memberName', 'birthDate', 'address', 'mobileNumber'], entry) is False:
+    if entry_has_value(alpha_entry=['organizationName', 'memberName', 'birthDate', 'address', 'mobileNumber'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
@@ -177,7 +177,7 @@ def register_promo(entry):
         'message': 'Registration failed.',
     }
     
-    if is_entry_valid(['promoName', 'discountRate', 'description'], entry) is False:
+    if entry_has_value(alpha_entry=['promoName', 'description'], numeric_entry=['discountRate'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
@@ -207,8 +207,8 @@ def register_reward(entry):
         'message': 'Registration failed.',
     }
     
-    if is_entry_valid(['rewardName', 'points', 'target', 'description'], entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+    if entry_has_value(alpha_entry=['rewardName', 'description'], numeric_entry=['points', 'target'], entry=entry) is False:
+        result['message'] = 'Invalid entry.'
         return result
     
     try:

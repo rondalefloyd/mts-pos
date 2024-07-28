@@ -11,7 +11,7 @@ from app.models.entities import (
     Promos,
     Rewards,
 )
-from app.controllers.common.validator import is_entry_valid
+from app.controllers.common.validator import entry_has_value
 from app.controllers.common.messages import (
     exception_error_message,
     integrity_error_message,

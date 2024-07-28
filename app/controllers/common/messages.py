@@ -14,3 +14,7 @@ def integrity_error_message(error):
     if match:
         field_name = match.group(1).replace('"', '')
         return f"<b>{field_name}</b> already exists."
+    
+def value_error_message(error):
+    return 'test'
+    pass

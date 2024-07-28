@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import Users, Organizations, UserSessionInfos
-from app.controllers.common.validator import is_entry_valid
+from app.controllers.common.validator import entry_has_value
 from app.controllers.common.messages import (
     exception_error_message,
     integrity_error_message,
@@ -71,7 +71,7 @@ def authenticate_user_by_username_accesscode(entry):
         },
     }
     
-    if is_entry_valid(['userName', 'accessCode'], entry) is False:
+    if entry_has_value(alpha_entry=['userName', 'accessCode'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     

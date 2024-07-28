@@ -11,7 +11,7 @@ from app.models.entities import (
     Rewards,
     Promos,
 )
-from app.controllers.common.validator import is_entry_valid
+from app.controllers.common.validator import entry_has_value
 from app.controllers.common.messages import (
     exception_error_message,
     integrity_error_message,
@@ -68,7 +68,7 @@ def edit_user_by_id(entry):
         'message': 'Update failed.',
     }
     
-    if is_entry_valid(['organizationId', 'userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry) is False:
+    if entry_has_value(alpha_entry=['organizationId', 'userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
@@ -111,7 +111,7 @@ def edit_member_by_id(entry):
         'message': 'Update failed.',
     }
     
-    if is_entry_valid(['memberName', 'birthDate', 'address', 'mobileNumber', 'points'], entry) is False:
+    if entry_has_value(alpha_entry=['memberName', 'birthDate', 'address', 'mobileNumber', 'points'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
@@ -151,7 +151,7 @@ def edit_promo_by_id(entry):
         'message': 'Update failed.',
     }
     
-    if is_entry_valid(['promoName', 'discountRate', 'description'], entry) is False:
+    if entry_has_value(alpha_entry=['promoName', 'discountRate', 'description'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
@@ -190,7 +190,7 @@ def edit_reward_by_id(entry):
         'message': 'Update failed.',
     }
     
-    if is_entry_valid(['rewardName', 'points', 'target', 'description'], entry) is False:
+    if entry_has_value(alpha_entry=['rewardName', 'points', 'target', 'description'], entry=entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
