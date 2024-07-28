@@ -137,10 +137,10 @@ class ManageMember(Ui_FormManageMember, QWidget):
         self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):
-        confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['memberName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('pos/remove/user/id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('pos/remove/member/id', {'id': f"{data['id']}"})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
