@@ -66,3 +66,6 @@ def _startApp():
 if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
+    
+    
+# TODO: continue doing the Sales (Items, Stock), Transaction (Sales)
