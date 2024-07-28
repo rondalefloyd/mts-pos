@@ -10,6 +10,7 @@ from app.views.components.ManageUser import ManageUser
 from app.views.components.ManageMember import ManageMember
 from app.views.components.ManagePromo import ManagePromo
 from app.views.components.ManageReward import ManageReward
+from app.views.components.ManageItem import ManageItem
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
 # class definition
@@ -26,12 +27,14 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.activeThreads = []
         
         # Initialize widgets only once
+        self.manageItem = ManageItem(self.userData)
         self.managePromo = ManagePromo(self.userData)
         self.manageReward = ManageReward(self.userData)
         self.manageMember = ManageMember(self.userData)
         self.manageUser = ManageUser(self.userData)
         
         # Add widgets to the stacked widget
+        self.stackedWidgetManage.insertWidget(3, self.manageItem)
         self.stackedWidgetManage.insertWidget(4, self.managePromo)
         self.stackedWidgetManage.insertWidget(5, self.manageReward)
         self.stackedWidgetManage.insertWidget(6, self.manageMember)
@@ -76,6 +79,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
                 menuManageTitle = 'Transaction'
             case 2:
                 menuManageTitle = 'Item'
+                self.manageItem.refresh()
             case 3:
                 menuManageTitle = 'Stock'
             case 4:

@@ -12,6 +12,13 @@ from app.models.entities import (
     Members,
     Promos,
     Rewards,
+    ItemTypes,
+    Brands,
+    Suppliers,
+    SalesGroups,
+    Items,
+    ItemPrices,
+    Stocks,
 )
 from app.controllers.common.validator import entry_has_value
 from app.controllers.common.messages import (
@@ -73,7 +80,7 @@ def register_organization(entry):
     }
     
     if entry_has_value(alpha_entry=['taxId', 'organizationName', 'address', 'mobileNumber', 'accessCode'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:
@@ -105,7 +112,7 @@ def register_user(entry):
     }
     
     if entry_has_value(alpha_entry=['organizationName', 'userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:
@@ -145,7 +152,7 @@ def register_member(entry):
     }
     
     if entry_has_value(alpha_entry=['organizationName', 'memberName', 'birthDate', 'address', 'mobileNumber'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:
@@ -178,7 +185,7 @@ def register_promo(entry):
     }
     
     if entry_has_value(alpha_entry=['promoName', 'description'], numeric_entry=['discountRate'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:
@@ -232,4 +239,59 @@ def register_reward(entry):
         
     return result
 
+def register_item(entry):
+    result = {
+        'success': False,
+        'message': 'Registration failed.',
+    }
+    
+    if entry_has_value(alpha_entry=['itemName', 'barcode', 'itemType', 'brand', 'supplier'], numeric_entry=['capital', 'retailPrice', 'wholesalePrice'], entry=entry) is False:
+        result['message'] = 'Invalid entry.'
+        return result
+    
+    try:
+        # Create new promo
+        itemTypes = ItemTypes.create(ItemTypeName=entry['itemTypeName'])
+        brands = Brands.create(BrandName=entry['brandName'])
+        suppliers = Suppliers.create(SupplierName=entry['supplierName'])
+        salesGroups = [
+            {'name': 'retail', 'price': entry['retailPrice']},
+            {'name': 'wholesale', 'price': entry['wholesalePrice']},
+        ]
+
+        for salesGroup in salesGroups:
+            items = Items.create(
+                ItemName=entry['itemName'],
+                Barcode=entry['barcode'],
+                ExpireDate=entry['expireDate'],
+                ItemTypeId=itemTypes.Id,
+                BrandId=brands.Id,
+                SupplierId=suppliers.Id,
+                SalesGroupId=SalesGroups.select(SalesGroups.Id).where(SalesGroups.SalesGroupName == salesGroup['name']).first(),
+            )
+            itemPrices = ItemPrices.create(
+                ItemId=items.Id,
+                Capital=entry['capital'],
+                Price=salesGroup['price'],
+                EffectiveDate=entry['effectiveDate'],
+            )
+        
+        if entry['trackInventory'] is True:
+            stocks = Stocks.create(
+                ItemId=items.Id,
+                OnHand="0",
+                Available="0",
+            )
+        
+        result['success'] = True
+        result['message'] = 'Item registered successfully.'
+        
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
+        
+    except Exception as error:
+        result['message'] = exception_error_message(error)
+        
+    return result
 

@@ -72,7 +72,7 @@ def authenticate_user_by_username_accesscode(entry):
     }
     
     if entry_has_value(alpha_entry=['userName', 'accessCode'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:

@@ -69,7 +69,7 @@ def edit_user_by_id(entry):
     }
     
     if entry_has_value(alpha_entry=['organizationId', 'userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:
@@ -112,7 +112,7 @@ def edit_member_by_id(entry):
     }
     
     if entry_has_value(alpha_entry=['memberName', 'birthDate', 'address', 'mobileNumber', 'points'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:
@@ -152,7 +152,7 @@ def edit_promo_by_id(entry):
     }
     
     if entry_has_value(alpha_entry=['promoName', 'discountRate', 'description'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:
@@ -191,7 +191,7 @@ def edit_reward_by_id(entry):
     }
     
     if entry_has_value(alpha_entry=['rewardName', 'points', 'target', 'description'], entry=entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
+        result['message'] = 'Invalid entry.'
         return result
     
     try:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormManageStock</class>
- <widget class="QWidget" name="FormManageStock">
+ <class>FormManageItem</class>
+ <widget class="QWidget" name="FormManageItem">
   <property name="geometry">
    <rect>
     <x>0</x>
