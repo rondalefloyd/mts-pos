@@ -39,10 +39,10 @@ class RegisterThread(QThread):
         try:
             with postgres_db:
                 match self.function_route:
-                    case 'pos/register/user':
-                        result = register_user(self.entry)
                     case 'pos/register/organization':
                         result = register_organization(self.entry)
+                    case 'pos/register/user':
+                        result = register_user(self.entry)
                     case 'pos/register/member':
                         result = register_member(self.entry)
                     case 'pos/register/promo':
@@ -65,6 +65,38 @@ class RegisterThread(QThread):
         finally:
             postgres_db.close()
             logging.info('database closed...')
+
+def register_organization(entry):
+    result = {
+        'success': False,
+        'message': 'Organization registration failed.',
+    }
+    
+    if is_entry_valid(['taxId', 'organizationName', 'address', 'mobileNumber', 'accessCode'], entry) is False:
+        result['message'] = 'Fields cannot be empty or blank.'
+        return result
+    
+    try:
+        # Create new organization
+        organizations = Organizations.create(
+            TaxId=entry['taxId'],
+            OrganizationName=entry['organizationName'],
+            Address=entry['address'],
+            MobileNumber=entry['mobileNumber'],
+            AccessCode=entry['accessCode']
+        )
+        
+        result['success'] = True
+        result['message'] = 'Organization registered successfully.'
+        
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
+        
+    except Exception as error:
+        result['message'] = exception_error_message(error)
+        
+    return result
 
 def register_user(entry):
     result = {
@@ -96,38 +128,6 @@ def register_user(entry):
         
         result['success'] = True
         result['message'] = 'User registered successfully.'
-        
-    except IntegrityError as error:
-        result['message'] = integrity_error_message(error)
-        logging.error(error)
-        
-    except Exception as error:
-        result['message'] = exception_error_message(error)
-        
-    return result
-
-def register_organization(entry):
-    result = {
-        'success': False,
-        'message': 'Organization registration failed.',
-    }
-    
-    if is_entry_valid(['taxId', 'organizationName', 'address', 'mobileNumber', 'accessCode'], entry) is False:
-        result['message'] = 'Fields cannot be empty or blank.'
-        return result
-    
-    try:
-        # Create new organization
-        organizations = Organizations.create(
-            TaxId=entry['taxId'],
-            OrganizationName=entry['organizationName'],
-            Address=entry['address'],
-            MobileNumber=entry['mobileNumber'],
-            AccessCode=entry['accessCode']
-        )
-        
-        result['success'] = True
-        result['message'] = 'Organization registered successfully.'
         
     except IntegrityError as error:
         result['message'] = integrity_error_message(error)
@@ -170,7 +170,6 @@ def register_member(entry):
         result['message'] = exception_error_message(error)
         
     return result
-
 
 def register_promo(entry):
     result = {
