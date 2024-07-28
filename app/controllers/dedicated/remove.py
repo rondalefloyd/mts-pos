@@ -7,8 +7,7 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import Users, UserSessionInfos
 from app.controllers.common.messages import (
-    class_error_message, 
-    function_route_error_message,
+    exception_error_message,
     function_route_not_exist,
 )
 from app.utils.database import postgres_db
@@ -24,7 +23,7 @@ class RemoveThread(QThread):
     def run(self):
         result = {
             'success': False,
-            'message': class_error_message(self.__class__.__name__),
+            'message': 'N/A',
         }
         try:
             with postgres_db:
@@ -38,7 +37,7 @@ class RemoveThread(QThread):
             self.finished.emit(result)
             
         except Exception as error:
-            result['message'] = function_route_error_message(self.function_route, error)
+            result['message'] = exception_error_message(error)
             postgres_db.rollback()
             self.finished.emit(result)
             logging.error('error: ', error)
@@ -64,12 +63,8 @@ def remove_user_by_id(entry):
         result['success'] = True
         result['message'] = 'Remove successful.'
         
-    except Users.DoesNotExist:
-        result['success'] = False
-        result['message'] = 'Remove failed. User not found.'
-        
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result
 

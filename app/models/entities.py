@@ -29,7 +29,7 @@ class ItemTypes(BaseModel):
 
 class Organizations(BaseModel):
     Id = AutoField()
-    TaxId = CharField(max_length=255, null=True)
+    TaxId = CharField(max_length=255, unique=True, null=True)
     OrganizationName = CharField(max_length=255, unique=True, null=True)
     Address = CharField(max_length=255, null=True)
     MobileNumber = CharField(max_length=20, null=True)

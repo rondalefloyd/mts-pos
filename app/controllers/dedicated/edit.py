@@ -8,9 +8,10 @@ sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.models.entities import (
     Members,
 )
+from app.controllers.common.validator import is_entry_valid
 from app.controllers.common.messages import (
-    class_error_message, 
-    function_route_error_message,
+    exception_error_message,
+    integrity_error_message,
     function_route_not_exist,
 )
 from app.utils.database import postgres_db
@@ -28,7 +29,7 @@ class EditThread(QThread):
     def run(self):
         result = {
             'success': False,
-            'message': class_error_message(self.__class__.__name__),
+            'message': 'N/A',
         }
         try:
             with postgres_db:
@@ -42,7 +43,7 @@ class EditThread(QThread):
             self.finished.emit(result)
 
         except Exception as error:
-            result['message'] = function_route_error_message(self.function_route, error)
+            result['message'] = exception_error_message(error)
             postgres_db.rollback()
             self.finished.emit(result)
             logging.error('error: ', error)
@@ -58,35 +59,47 @@ def edit_member(entry):
         'message': 'Update failed.',
     }
     
+    if is_entry_valid(['memberName', 'birthDate', 'address', 'mobileNumber', 'points'], entry) is False:
+        result['message'] = 'Fields cannot be empty or blank.'
+        return result
+    
     try:
         # Check if the member to update exists by ID
-        member = Members.get(Members.Id == entry['id'])
+        members = Members.select().where(Members.Id == entry['id'])
+        
+        if not members.exists():
+            result['message'] = 'Member does not exist.'
+            return result
+        
+        members = members.first()
         
         # Check if another member with the same name exists
-        try:
-            existing_member = Members.get(Members.MemberName == entry['memberName'])
-            if existing_member.Id != member.Id:
+        existingMembers = Members.select().where(Members.MemberName == entry['memberName'])
+        
+        if existingMembers.exists():
+            existingMembers = existingMembers.first()
+            if existingMembers.Id != members.Id:
                 result['message'] = 'Member already exists with the given name.'
                 return result
-        except Members.DoesNotExist:
-            pass  # No other member with the same name exists, so we can proceed
         
         # Update member details
-        member.MemberName = entry['memberName']
-        member.BirthDate = entry['birthDate']
-        member.Address = entry['address']
-        member.MobileNumber = entry['mobileNumber']
-        member.Points = entry['points']
-        member.save()  # Save the changes to the database
+        members.MemberName = entry['memberName']
+        members.BirthDate = entry['birthDate']
+        members.Address = entry['address']
+        members.MobileNumber = entry['mobileNumber']
+        members.Points = entry['points']
+        members.save()  # Save the changes to the database
         
         result['success'] = True
         result['message'] = 'Member updated successfully.'
         
-    except Members.DoesNotExist:
-        result['message'] = 'Member does not exist.'
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
         
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
-        
+        result['message'] = exception_error_message(error)
+         
     return result
+
 

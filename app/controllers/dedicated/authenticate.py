@@ -6,9 +6,10 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import Users, Organizations, UserSessionInfos
+from app.controllers.common.validator import is_entry_valid
 from app.controllers.common.messages import (
-    class_error_message, 
-    function_route_error_message,
+    exception_error_message,
+    integrity_error_message,
     function_route_not_exist,
 )
 from app.utils.database import postgres_db
@@ -26,7 +27,7 @@ class AuthenticateThread(QThread):
     def run(self):
         result = {
             'success': False,
-            'message': class_error_message(self.__class__.__name__),
+            'message': 'N/A',
             'data': [],
         }
         try:
@@ -42,7 +43,7 @@ class AuthenticateThread(QThread):
             self.finished.emit(result)
             
         except Exception as error:
-            result['message'] = function_route_error_message(self.function_route, error)
+            result['message'] = exception_error_message(error)
             postgres_db.rollback()
             self.finished.emit(result)
             logging.error('error: ', error)
@@ -55,7 +56,7 @@ class AuthenticateThread(QThread):
 def authenticate_user_by_username_accesscode(entry):
     result = {
         'success': False,
-        'message': 'Authentication failed.',
+        'message': 'Authenticate failed.',
         'data': {
             'id': None,
             'organizationId': None,
@@ -70,23 +71,37 @@ def authenticate_user_by_username_accesscode(entry):
         },
     }
     
+    if is_entry_valid(['userName', 'accessCode'], entry) is False:
+        result['message'] = 'Fields cannot be empty or blank.'
+        return result
+    
     try:
-        users = Users.get(
+        users = Users.select().where(
             (Users.UserName == entry['userName']) &
             (Users.AccessCode == entry['accessCode'])
         )
+        if not users.exists():
+            result['message'] = 'Authenticate failed. User not found.'
+            return result
         
-        userSessionInfos = UserSessionInfos.get(UserSessionInfos.UserId == users.Id)
+        users = users.first()
+        
+        userSessionInfos = UserSessionInfos.select().where(UserSessionInfos.UserId == users.Id)        
+        if not userSessionInfos.exists():
+            result['message'] = 'User session information not found.'
+            return result
+        
+        userSessionInfos = userSessionInfos.first()
         userSessionInfos.ActiveStatus = 1
         userSessionInfos.LastLoginTs = datetime.now()
         userSessionInfos.save()
         
         result['success'] = True
-        result['message'] = 'Authentication successful.'
+        result['message'] = 'Authenticate successful.'
         result['data'] = {
             'id': users.Id,
             'organizationId': users.OrganizationId,
-            'organizationName': Organizations.get(Organizations.Id == users.OrganizationId).OrganizationName,
+            'organizationName': Organizations.select().where(Organizations.Id == users.OrganizationId),
             'userName': users.UserName,
             'accessCode': users.AccessCode,
             'fullName': users.FullName,
@@ -96,12 +111,8 @@ def authenticate_user_by_username_accesscode(entry):
             'updateTs': users.UpdateTs,
         }
         
-    except Users.DoesNotExist:
-        result['success'] = False
-        result['message'] = 'Authentication failed. User not found.'
-        
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -112,8 +123,12 @@ def unauthenticate_user_by_id(entry):
     }
     
     try:
-        userSessionInfos = UserSessionInfos.get(UserSessionInfos.UserId == entry['userId'])
+        userSessionInfos = UserSessionInfos.select().where(UserSessionInfos.UserId == entry['userId'])        
+        if not userSessionInfos.exists():
+            result['message'] = 'User session information not found.'
+            return result
         
+        userSessionInfos = userSessionInfos.first()
         userSessionInfos.ActiveStatus = 0
         userSessionInfos.LastLogoutTs = datetime.now()
         userSessionInfos.save()
@@ -121,10 +136,7 @@ def unauthenticate_user_by_id(entry):
         result['success'] = True
         result['message'] = 'Unauthentication successful.'
         
-    except UserSessionInfos.DoesNotExist:
-        result['message'] = 'Authentication failed. User not found.'
-        
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result

@@ -12,7 +12,7 @@ CREATE TABLE "ItemTypes" (
 
 CREATE TABLE "Organizations" (
     "Id" SERIAL PRIMARY KEY, 
-    "TaxId" VARCHAR(255), 
+    "TaxId" VARCHAR(255) UNIQUE, 
     "OrganizationName" VARCHAR(255) UNIQUE, 
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 

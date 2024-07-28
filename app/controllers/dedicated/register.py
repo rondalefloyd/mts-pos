@@ -1,4 +1,4 @@
-import os, sys, logging
+import os, sys, logging, re
 from peewee import *
 from datetime import *
 from PyQt5.QtWidgets import *
@@ -13,9 +13,10 @@ from app.models.entities import (
     Promos,
     Rewards,
 )
+from app.controllers.common.validator import is_entry_valid
 from app.controllers.common.messages import (
-    class_error_message, 
-    function_route_error_message,
+    exception_error_message,
+    integrity_error_message,
     function_route_not_exist,
 )
 from app.utils.database import postgres_db
@@ -33,7 +34,7 @@ class RegisterThread(QThread):
     def run(self):
         result = {
             'success': False,
-            'message': class_error_message(self.__class__.__name__),
+            'message': 'N/A',
         }
         try:
             with postgres_db:
@@ -55,7 +56,7 @@ class RegisterThread(QThread):
             self.finished.emit(result)
 
         except Exception as error:
-            result['message'] = function_route_error_message(self.function_route, error)
+            result['message'] = exception_error_message(error)
             postgres_db.rollback()
             self.finished.emit(result)
             logging.error('error: ', error)
@@ -71,40 +72,53 @@ def register_user(entry):
         'message': 'Registration failed.',
     }
     
+    if is_entry_valid(['userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry) is False:
+        result['message'] = 'Fields cannot be empty or blank.'
+        return result
+    
     try:
-        users = Users.get(Users.UserName == entry['userName'])
+        # Check if user already exists with the given username
+        users = Users.select().where(Users.UserName == entry['userName'])
         
-        if users.UserName == entry['userName']:
+        if users.exists():
             result['message'] = 'User already exists with the given username.'
+            return result
         
-    except Users.DoesNotExist:
-        try:
-            users = Users.create(
-                OrganizationId=f"{Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id}",
-                UserName=entry['userName'],
-                AccessCode=entry['accessCode'],
-                FullName=entry['fullName'],
-                BirthDate=entry['birthDate'],
-                MobileNumber=entry['mobileNumber'],
-                AccessLevel=entry['accessLevel']
-            )
-            
-            UserSessionInfos.create(
-                UserId=users.Id,
-                ActiveStatus=0,
-            )
-            
-            result['success'] = True
-            result['message'] = 'User registered successfully.'
-            
-        except Organizations.DoesNotExist:
-            result['message'] = 'Organization does not exists.'
-            
-        except Exception as error:
-            result['message'] = f'Update failed due to: {error}'
+        # Check if organization exists
+        organizations = Organizations.select().where(Organizations.OrganizationName == entry['organizationName'])
+        
+        if not organizations.exists():
+            result['message'] = 'Organization does not exist.'
+            return result
+        
+        organizations = organizations.first()
+        
+        # Create new user
+        users = Users.create(
+            OrganizationId=organizations.Id,
+            UserName=entry['userName'],
+            AccessCode=entry['accessCode'],
+            FullName=entry['fullName'],
+            BirthDate=entry['birthDate'],
+            MobileNumber=entry['mobileNumber'],
+            AccessLevel=entry['accessLevel']
+        )
+        
+        # Create user session info
+        UserSessionInfos.create(
+            UserId=users.Id,
+            ActiveStatus=0,
+        )
+        
+        result['success'] = True
+        result['message'] = 'User registered successfully.'
+        
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
         
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -114,13 +128,12 @@ def register_organization(entry):
         'message': 'Organization registration failed.',
     }
     
+    if is_entry_valid(['taxId', 'organizationName', 'address', 'mobileNumber', 'accessCode'], entry) is False:
+        result['message'] = 'Fields cannot be empty or blank.'
+        return result
+    
     try:
-        organizations = Organizations.get(Organizations.TaxId == entry['taxId'])
-        
-        if organizations.TaxId == entry['taxId']:
-            result['message'] = 'Organization already exists with the given Tax ID.'
-        
-    except Organizations.DoesNotExist:
+        # Create new organization
         organizations = Organizations.create(
             TaxId=entry['taxId'],
             OrganizationName=entry['organizationName'],
@@ -132,8 +145,12 @@ def register_organization(entry):
         result['success'] = True
         result['message'] = 'Organization registered successfully.'
         
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
+        
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -143,36 +160,49 @@ def register_member(entry):
         'message': 'Registration failed.',
     }
     
+    if is_entry_valid(['memberName', 'birthDate', 'address', 'mobileNumber', 'points'], entry) is False:
+        result['message'] = 'Fields cannot be empty or blank.'
+        return result
+    
     try:
-        member = Members.get(Members.MemberName == entry['memberName'])
+        # Check if member already exists with the given name
+        members = Members.select().where(Members.MemberName == entry['memberName'])
         
-        if member.MemberName == entry['memberName']:
+        if members.exists():
             result['message'] = 'Member already exists with the given name.'
+            return result
         
-    except Members.DoesNotExist:
-        try:
-            member = Members.create(
-                OrganizationId=f"{Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id}",
-                MemberName=entry['memberName'],
-                BirthDate=entry['birthDate'],
-                Address=entry['address'],
-                MobileNumber=entry['mobileNumber'],
-                Points=entry['points'],
-            )
-            
-            result['success'] = True
-            result['message'] = 'Member registered successfully.'
-            
-        except Organizations.DoesNotExist:
+        # Check if organization exists
+        organizations = Organizations.select().where(Organizations.OrganizationName == entry['organizationName'])
+        
+        if not organizations.exists():
             result['message'] = 'Organization does not exist.'
-            
-        except Exception as error:
-            result['message'] = f'Update failed due to: {error}'
-            
+            return result
+        
+        organizations = organizations.first()
+        
+        # Create new member
+        members = Members.create(
+            OrganizationId=organizations.Id,
+            MemberName=entry['memberName'],
+            BirthDate=entry['birthDate'],
+            Address=entry['address'],
+            MobileNumber=entry['mobileNumber'],
+            Points=entry['points'],
+        )
+        
+        result['success'] = True
+        result['message'] = 'Member registered successfully.'
+        
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
+        
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result
+
 
 def register_promo(entry):
     result = {
@@ -180,13 +210,19 @@ def register_promo(entry):
         'message': 'Registration failed.',
     }
     
+    if is_entry_valid(['promoName', 'discountRate', 'description'], entry) is False:
+        result['message'] = 'Fields cannot be empty or blank.'
+        return result
+    
     try:
-        promo = Promos.get(Promos.PromoName == entry['promoName'])
+        # Check if promo already exists with the given name
+        promos = Promos.select().where(Promos.PromoName == entry['promoName'])
         
-        if promo.PromoName == entry['promoName']:
+        if promos.exists():
             result['message'] = 'Promo already exists with the given name.'
+            return result
         
-    except Promos.DoesNotExist:
+        # Create new promo
         promo = Promos.create(
             PromoName=entry['promoName'],
             DiscountRate=entry['discountRate'],
@@ -195,9 +231,13 @@ def register_promo(entry):
         
         result['success'] = True
         result['message'] = 'Promo registered successfully.'
-            
+        
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
+        
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -207,13 +247,19 @@ def register_reward(entry):
         'message': 'Registration failed.',
     }
     
+    if is_entry_valid(['rewardName', 'points', 'target', 'description'], entry) is False:
+        result['message'] = 'Fields cannot be empty or blank.'
+        return result
+    
     try:
-        reward = Rewards.get(Rewards.RewardName == entry['rewardName'])
+        # Check if reward already exists with the given name
+        rewards = Rewards.select().where(Rewards.RewardName == entry['rewardName'])
         
-        if reward.RewardName == entry['rewardName']:
+        if rewards.exists():
             result['message'] = 'Reward already exists with the given name.'
+            return result
         
-    except Rewards.DoesNotExist:
+        # Create new reward
         reward = Rewards.create(
             RewardName=entry['rewardName'],
             Points=entry['points'],
@@ -224,8 +270,13 @@ def register_reward(entry):
         result['success'] = True
         result['message'] = 'Reward registered successfully.'
         
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
+        
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result
+
 

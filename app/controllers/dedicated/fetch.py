@@ -11,9 +11,10 @@ from app.models.entities import (
     Promos,
     Rewards,
 )
+from app.controllers.common.validator import is_entry_valid
 from app.controllers.common.messages import (
-    class_error_message, 
-    function_route_error_message,
+    exception_error_message,
+    integrity_error_message,
     function_route_not_exist,
 )
 from app.utils.database import postgres_db
@@ -31,7 +32,7 @@ class FetchThread(QThread):
     def run(self):
         result = {
             'success': False,
-            'message': class_error_message(self.__class__.__name__),
+            'message': 'N/A',
             'data': [],
         }
         try:
@@ -56,7 +57,7 @@ class FetchThread(QThread):
             self.finished.emit(result)
             
         except Exception as error:
-            result['message'] = function_route_error_message(self.function_route, error)
+            result['message'] = exception_error_message(error)
             postgres_db.rollback()
             self.finished.emit(result)
             logging.error('error: ', error)
@@ -94,8 +95,8 @@ def fetch_user(entry):
                 'updateTs': user.UpdateTs,
             })
         
-    except Users.DoesNotExist:
-        result['message'] = 'Fetch failed. Users not found.'
+    except Exception as error:
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -122,8 +123,8 @@ def fetch_organization():
                 'updateTs': organization.UpdateTs,
             })
         
-    except Organizations.DoesNotExist:
-        result['message'] = 'Fetch failed. Organizations not found.'
+    except Exception as error:
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -172,8 +173,8 @@ def fetch_user_with_pagination_by_keyword(entry):
         result['success'] = True
         result['message'] = 'Fetch successful.'
         
-    except Users.DoesNotExist:
-        result['message'] = 'Fetch failed. Users not found.'
+    except Exception as error:
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -221,8 +222,8 @@ def fetch_members_with_pagination_by_keyword(entry):
         result['success'] = True
         result['message'] = 'Fetch successful.'
         
-    except Members.DoesNotExist:
-        result['message'] = 'Fetch failed. Members not found.'
+    except Exception as error:
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -264,8 +265,8 @@ def fetch_promos_with_pagination_by_keyword(entry):
         result['success'] = True
         result['message'] = 'Fetch successful.'
         
-    except Promos.DoesNotExist:
-        result['message'] = 'Fetch failed. Promos not found.'
+    except Exception as error:
+        result['message'] = exception_error_message(error)
         
     return result
 
@@ -309,11 +310,8 @@ def fetch_rewards_with_pagination_by_keyword(entry):
         result['success'] = True
         result['message'] = 'Fetch successful.'
         
-    except Rewards.DoesNotExist:
-        result['message'] = 'Fetch failed. Rewards not found.'
-        
     except Exception as error:
-        result['message'] = f'Update failed due to: {error}'
+        result['message'] = exception_error_message(error)
         
     return result
 
