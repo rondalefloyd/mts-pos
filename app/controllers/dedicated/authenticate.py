@@ -6,7 +6,11 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import Users, UserSessionInfos
-from app.controllers.common.messages import class_error_message, function_route_error_message
+from app.controllers.common.messages import (
+    class_error_message, 
+    function_route_error_message,
+    function_route_not_exist,
+)
 from app.utils.database import postgres_db
 
 logging.basicConfig(level=logging.INFO)
@@ -33,7 +37,7 @@ class AuthenticateThread(QThread):
                     case 'pos/unauthenticate/user/id':
                         result = unauthenticate_user_by_id(self.entry)
                     case _:
-                        result['message'] = f"{self.function_route} does not exist..."
+                        result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
             self.finished.emit(result)
             
@@ -66,7 +70,6 @@ def authenticate_user_by_username_accesscode(entry):
     }
     
     try:
-        
         users = Users.get(
             (Users.UserName == entry['userName']) &
             (Users.AccessCode == entry['accessCode'])
