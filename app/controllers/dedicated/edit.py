@@ -73,15 +73,6 @@ def edit_member(entry):
         
         members = members.first()
         
-        # Check if another member with the same name exists
-        existingMembers = Members.select().where(Members.MemberName == entry['memberName'])
-        
-        if existingMembers.exists():
-            existingMembers = existingMembers.first()
-            if existingMembers.Id != members.Id:
-                result['message'] = 'Member already exists with the given name.'
-                return result
-        
         # Update member details
         members.MemberName = entry['memberName']
         members.BirthDate = entry['birthDate']

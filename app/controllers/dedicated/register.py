@@ -72,30 +72,14 @@ def register_user(entry):
         'message': 'Registration failed.',
     }
     
-    if is_entry_valid(['userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry) is False:
+    if is_entry_valid(['organizationName', 'userName', 'accessCode', 'fullName', 'birthDate', 'mobileNumber', 'accessLevel'], entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
     try:
-        # Check if user already exists with the given username
-        users = Users.select().where(Users.UserName == entry['userName'])
-        
-        if users.exists():
-            result['message'] = 'User already exists with the given username.'
-            return result
-        
-        # Check if organization exists
-        organizations = Organizations.select().where(Organizations.OrganizationName == entry['organizationName'])
-        
-        if not organizations.exists():
-            result['message'] = 'Organization does not exist.'
-            return result
-        
-        organizations = organizations.first()
-        
         # Create new user
         users = Users.create(
-            OrganizationId=organizations.Id,
+            OrganizationId=Organizations.select(Organizations.Id).where(Organizations.OrganizationName == entry['organizationName']).first(),
             UserName=entry['userName'],
             AccessCode=entry['accessCode'],
             FullName=entry['fullName'],
@@ -160,30 +144,14 @@ def register_member(entry):
         'message': 'Registration failed.',
     }
     
-    if is_entry_valid(['memberName', 'birthDate', 'address', 'mobileNumber', 'points'], entry) is False:
+    if is_entry_valid(['organizationName', 'memberName', 'birthDate', 'address', 'mobileNumber'], entry) is False:
         result['message'] = 'Fields cannot be empty or blank.'
         return result
     
     try:
-        # Check if member already exists with the given name
-        members = Members.select().where(Members.MemberName == entry['memberName'])
-        
-        if members.exists():
-            result['message'] = 'Member already exists with the given name.'
-            return result
-        
-        # Check if organization exists
-        organizations = Organizations.select().where(Organizations.OrganizationName == entry['organizationName'])
-        
-        if not organizations.exists():
-            result['message'] = 'Organization does not exist.'
-            return result
-        
-        organizations = organizations.first()
-        
         # Create new member
         members = Members.create(
-            OrganizationId=organizations.Id,
+            OrganizationId=Organizations.select(Organizations.Id).where(Organizations.OrganizationName == entry['organizationName']).first(),
             MemberName=entry['memberName'],
             BirthDate=entry['birthDate'],
             Address=entry['address'],
@@ -215,13 +183,6 @@ def register_promo(entry):
         return result
     
     try:
-        # Check if promo already exists with the given name
-        promos = Promos.select().where(Promos.PromoName == entry['promoName'])
-        
-        if promos.exists():
-            result['message'] = 'Promo already exists with the given name.'
-            return result
-        
         # Create new promo
         promo = Promos.create(
             PromoName=entry['promoName'],
@@ -252,13 +213,6 @@ def register_reward(entry):
         return result
     
     try:
-        # Check if reward already exists with the given name
-        rewards = Rewards.select().where(Rewards.RewardName == entry['rewardName'])
-        
-        if rewards.exists():
-            result['message'] = 'Reward already exists with the given name.'
-            return result
-        
         # Create new reward
         reward = Rewards.create(
             RewardName=entry['rewardName'],

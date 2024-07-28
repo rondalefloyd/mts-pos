@@ -141,7 +141,7 @@ def fetch_user_with_pagination_by_keyword(entry):
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        query = Users.select().where(
+        users = Users.select().where(
             (Users.OrganizationId == entry['organizationId']) &
             ((Users.UserName.cast('TEXT').like(keyword)) |
             (Users.AccessCode.cast('TEXT').like(keyword)) |
@@ -152,9 +152,9 @@ def fetch_user_with_pagination_by_keyword(entry):
             (Users.UpdateTs.cast('TEXT').like(keyword)))
         ).order_by(Users.UpdateTs.desc())
         
-        total_count = query.count()
+        total_count = users.count()
         
-        paginated_users = query.limit(limit).offset(offset)
+        paginated_users = users.limit(limit).offset(offset)
         
         for user in paginated_users:
             result['data'].append({
@@ -191,7 +191,7 @@ def fetch_members_with_pagination_by_keyword(entry):
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        query = Members.select().where(
+        members = Members.select().where(
             (Members.OrganizationId == entry['organizationId']) &
             ((Members.MemberName.cast('TEXT').like(keyword)) |
             (Members.BirthDate.cast('TEXT').like(keyword)) |
@@ -201,9 +201,9 @@ def fetch_members_with_pagination_by_keyword(entry):
             (Members.UpdateTs.cast('TEXT').like(keyword)))
         ).order_by(Members.UpdateTs.desc())
         
-        total_count = query.count()
+        total_count = members.count()
         
-        paginated_members = query.limit(limit).offset(offset)
+        paginated_members = members.limit(limit).offset(offset)
         
         for member in paginated_members:
             result['data'].append({
@@ -240,16 +240,16 @@ def fetch_promos_with_pagination_by_keyword(entry):
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        query = Promos.select().where(
+        promos = Promos.select().where(
             (Promos.PromoName.cast('TEXT').like(keyword)) |
             (Promos.DiscountRate.cast('TEXT').like(keyword)) |
             (Promos.Description.cast('TEXT').like(keyword)) |
             (Promos.UpdateTs.cast('TEXT').like(keyword))
         ).order_by(Promos.UpdateTs.desc())
         
-        total_count = query.count()
+        total_count = promos.count()
         
-        paginated_promos = query.limit(limit).offset(offset)
+        paginated_promos = promos.limit(limit).offset(offset)
         
         for promo in paginated_promos:
             result['data'].append({
@@ -283,7 +283,7 @@ def fetch_rewards_with_pagination_by_keyword(entry):
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        query = Rewards.select().where(
+        rewards = Rewards.select().where(
             (Rewards.RewardName.cast('TEXT').like(keyword)) |
             (Rewards.Points.cast('TEXT').like(keyword)) |
             (Rewards.Target.cast('TEXT').like(keyword)) |
@@ -291,9 +291,9 @@ def fetch_rewards_with_pagination_by_keyword(entry):
             (Rewards.UpdateTs.cast('TEXT').like(keyword))
         ).order_by(Rewards.UpdateTs.desc())
         
-        total_count = query.count()
+        total_count = rewards.count()
         
-        paginated_rewards = query.limit(limit).offset(offset)
+        paginated_rewards = rewards.limit(limit).offset(offset)
         
         for reward in paginated_rewards:
             result['data'].append({
