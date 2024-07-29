@@ -49,9 +49,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEditItemName"/>
-       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
@@ -94,7 +91,14 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QComboBox" name="comboBoxItemType"/>
+        <widget class="QComboBox" name="comboBoxItemTypeName">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::NoInsert</enum>
+         </property>
+        </widget>
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="label_5">
@@ -104,7 +108,14 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QComboBox" name="comboBoxBrand"/>
+        <widget class="QComboBox" name="comboBoxBrandName">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::NoInsert</enum>
+         </property>
+        </widget>
        </item>
        <item row="6" column="0">
         <widget class="QLabel" name="label_9">
@@ -114,7 +125,14 @@
         </widget>
        </item>
        <item row="6" column="1">
-        <widget class="QComboBox" name="comboBoxSupplier"/>
+        <widget class="QComboBox" name="comboBoxSupplierName">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::NoInsert</enum>
+         </property>
+        </widget>
        </item>
        <item row="7" column="0">
         <widget class="QLabel" name="label_12">
@@ -124,7 +142,14 @@
         </widget>
        </item>
        <item row="7" column="1">
-        <widget class="QComboBox" name="comboBoxSalesGroup"/>
+        <widget class="QComboBox" name="comboBoxSalesGroupName">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::NoInsert</enum>
+         </property>
+        </widget>
        </item>
        <item row="8" column="0" colspan="2">
         <widget class="Line" name="line_3">
@@ -185,7 +210,16 @@
         </widget>
        </item>
        <item row="13" column="1">
-        <widget class="QComboBox" name="comboBoxPromoName"/>
+        <widget class="QComboBox" name="comboBoxPromoName">
+         <property name="insertPolicy">
+          <enum>QComboBox::NoInsert</enum>
+         </property>
+         <item>
+          <property name="text">
+           <string>N/A</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item row="14" column="0">
         <widget class="QLabel" name="label_11">
@@ -272,6 +306,20 @@
           <bool>true</bool>
          </property>
         </widget>
+       </item>
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QLineEdit" name="lineEditItemName"/>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxTrackInventory">
+           <property name="text">
+            <string>Track inventory</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

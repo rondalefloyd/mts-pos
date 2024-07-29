@@ -10,6 +10,12 @@ from app.models.entities import (
     Members,
     Rewards,
     Promos,
+    ItemTypes,
+    Brands,
+    Suppliers,
+    SalesGroups,
+    Items,
+    ItemPrices,
 )
 from app.controllers.common.validator import entry_has_value
 from app.controllers.common.messages import (
@@ -45,6 +51,8 @@ class EditThread(QThread):
                         result = edit_promo_by_id(self.entry)
                     case 'pos/edit/reward/id':
                         result = edit_reward_by_id(self.entry)
+                    case 'pos/edit/item/id':
+                        result = edit_item_by_id(self.entry)
                     case _:
                         result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
@@ -210,6 +218,114 @@ def edit_reward_by_id(entry):
         reward.Target = entry['target']
         reward.Description = entry['description']
         reward.save()  # Save the changes to the database
+        
+        result['success'] = True
+        result['message'] = 'Reward updated successfully.'
+        
+    except IntegrityError as error:
+        result['message'] = integrity_error_message(error)
+        logging.error(error)
+        
+    except Exception as error:
+        result['message'] = exception_error_message(error)
+        logging.error(error)
+         
+    return result
+
+def edit_item_by_id(entry):
+    result = {
+        'success': False,
+        'message': 'Update failed.',
+    }
+    
+    if entry_has_value(
+        alpha_entry=['itemName', 'barcode', 'itemTypeName', 'brandName', 'supplierName', 'salesGroupName', 'promoName'], 
+        numeric_entry=['capital', 'price', 'discountRate', 'discount', 'price', 'newPrice'],
+        entry=entry,
+    ) is False:
+        result['message'] = 'Invalid entry.'
+        return result
+    
+    try:
+        # Check if the reward to update exists by ID
+        itemTypes = ItemTypes.select().where(ItemTypes.ItemTypeName == entry['itemTypeName'])
+        brands = Brands.select().where(Brands.BrandName == entry['brandName'])
+        suppliers = Suppliers.select().where(Suppliers.SupplierName == entry['supplierName'])
+        salesGroups = SalesGroups.select().where(SalesGroups.SalesGroupName == entry['salesGroupName'])
+        items = Items.select().where(Items.ItemName == entry['itemId'])
+        itemPrices = ItemPrices.select().where(ItemPrices.ItemPriceId == entry['id'])
+
+        if not itemTypes.exists():
+            result['message'] = 'ItemType does not exist.'
+            return result
+        if not brands.exists():
+            result['message'] = 'Brand does not exist.'
+            return result
+        if not suppliers.exists():
+            result['message'] = 'Supplier does not exist.'
+            return result
+        if not salesGroups.exists():
+            result['message'] = 'SalesGroup does not exist.'
+            return result
+        if not items.exists():
+            result['message'] = 'Item does not exist.'
+            return result
+        if not itemPrices.exists():
+            result['message'] = 'ItemPrice does not exist.'
+            return result
+        
+        itemTypes = itemTypes.first()
+        itemTypes.ItemTypeName = entry['itemTypeName']
+        itemTypes.save()
+        
+        brands = brands.first()
+        brands.BrandName = entry['brandName']
+        brands.save()
+        
+        suppliers = suppliers.first()
+        suppliers.SupplierName = entry['supplierName']
+        suppliers.save()
+        
+        salesGroups = salesGroups.first()
+        salesGroups.SalesGroupName = entry['salesGroupName']
+        salesGroups.save()
+        
+        items = items.first()
+        items.ItemName = entry['itemName']
+        items.Barcode = entry['barcode']
+        items.ExpireDate = entry['expireDate']
+        items.ItemTypeId = ItemTypes.select(ItemTypes.Id).where(ItemTypes.ItemTypeName == entry['itemTypeName']).first()
+        items.BrandId = Brands.select(Brands.Id).where(Brands.BrandName == entry['brandName']).first()
+        items.SupplierId = Suppliers.select(Suppliers.Id).where(Suppliers.SupplierName == entry['supplierName']).first()
+        items.SalesGroupId = SalesGroups.select(SalesGroups.Id).where(SalesGroups.SalesGroupName == entry['salesGroupName']).first()
+        items.save()
+        
+        if entry['promoName'] != 'N/A':
+            itemPrices = ItemPrices.create(
+                ItemId=items.Id,
+                Capital=entry['capital'],
+                Price=entry['newPrice'],
+                PromoId=Promos.select(Promos.Id).where(Promos.PromoName == entry['promoName']).first(),
+                Discount=entry['discount'],
+                EffectiveDate=entry['startDate'],
+            )
+            
+            itemPrices = ItemPrices.create(
+                ItemId=items.Id,
+                Capital=entry['capital'],
+                Price=entry['price'],
+                EffectiveDate=datetime.strptime(entry['endDate'], '%Y-%m-%d').date() + timedelta(days=1),
+            )
+        
+        else:
+            itemPrices = itemPrices.first()
+            itemPrices.ItemId = entry['itemId']
+            itemPrices.Capital = entry['capital']
+            itemPrices.Price = entry['price']
+            itemPrices.PromoId = Promos.select(Promos.Id).where(Promos.PromoName == entry['promoName']).first()
+            itemPrices.Discount = entry['discount']
+            itemPrices.EffectiveDate = entry['effectiveDate']
+            items.save()
         
         result['success'] = True
         result['message'] = 'Reward updated successfully.'

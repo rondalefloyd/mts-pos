@@ -1,27 +1,17 @@
--- Disable foreign key checks temporarily if your database supports it
--- (for example, in MySQL you can use SET FOREIGN_KEY_CHECKS=0; and later SET FOREIGN_KEY_CHECKS=1;)
+-- Drop the tables in reverse order of their dependencies
 
--- Delete from tables that do not have foreign key dependencies first
-DELETE FROM "UserSessionInfos";
-DELETE FROM "ItemPrices";
-DELETE FROM "Stocks";
-DELETE FROM "Members";
-
--- Delete from tables that have foreign key dependencies next
-DELETE FROM "Items";
-DELETE FROM "Users";
-
--- Finally, delete from the remaining tables
-DELETE FROM "Brands";
-DELETE FROM "ItemTypes";
-DELETE FROM "Organizations";
-DELETE FROM "Promos";
-DELETE FROM "SalesGroups";
-DELETE FROM "Suppliers";
-
-
--- Drop the Dates table if it exists
+DROP TABLE IF EXISTS "Sales";
+DROP TABLE IF EXISTS "UserSessionInfos";
+DROP TABLE IF EXISTS "ItemPrices";
+DROP TABLE IF EXISTS "Stocks";
+DROP TABLE IF EXISTS "Items";
+DROP TABLE IF EXISTS "Users";
+DROP TABLE IF EXISTS "Members";
+DROP TABLE IF EXISTS "Suppliers";
+DROP TABLE IF EXISTS "Promos";
+DROP TABLE IF EXISTS "Rewards";
+DROP TABLE IF EXISTS "SalesGroups";
+DROP TABLE IF EXISTS "ItemTypes";
+DROP TABLE IF EXISTS "Brands";
+DROP TABLE IF EXISTS "Organizations";
 DROP TABLE IF EXISTS "Dates";
-
--- Optionally, re-enable foreign key checks if you disabled them earlier
--- (for example, in MySQL you can use SET FOREIGN_KEY_CHECKS=1;)

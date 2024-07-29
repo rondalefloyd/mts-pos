@@ -10,6 +10,12 @@ from app.models.entities import (
     Members,
     Promos,
     Rewards,
+    ItemTypes,
+    Brands,
+    Suppliers,
+    SalesGroups,
+    Items,
+    ItemPrices,
 )
 from app.controllers.common.validator import entry_has_value
 from app.controllers.common.messages import (
@@ -42,6 +48,8 @@ class FetchThread(QThread):
                         result = fetch_user(self.entry)
                     case 'pos/fetch/organization/all':
                         result = fetch_organization()
+                    case 'pos/fetch/itemtype-brand-supplier/all':
+                        result = fetch_itemtype_brand_supplier()
                     case 'pos/fetch/user/all/keyword/paginated':
                         result = fetch_user_with_pagination_by_keyword(self.entry)
                     case 'pos/fetch/members/all/keyword/paginated':
@@ -50,6 +58,8 @@ class FetchThread(QThread):
                         result = fetch_promos_with_pagination_by_keyword(self.entry)
                     case 'pos/fetch/rewards/all/keyword/paginated':
                         result = fetch_rewards_with_pagination_by_keyword(self.entry)
+                    case 'pos/fetch/items/all/keyword/paginated':
+                        result = fetch_items_with_pagination_by_keyword(self.entry)
                     case _:
                         result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
@@ -127,6 +137,53 @@ def fetch_organization():
         result['message'] = exception_error_message(error)
         
     return result
+
+def fetch_itemtype_brand_supplier():
+    result = {
+        'success': False,
+        'message': 'Fetch failed.',
+        'data': {
+            'itemTypes': [],
+            'brands': [],
+            'suppliers': [],
+        }
+    }
+    
+    try:
+        itemTypes = ItemTypes.select().order_by(ItemTypes.UpdateTs.desc())
+        brands = Brands.select().order_by(Brands.UpdateTs.desc())
+        suppliers = Suppliers.select().order_by(Suppliers.UpdateTs.desc())
+        
+        for itemType in itemTypes:
+            result['data']['itemTypes'].append({
+                'id': itemType.Id,
+                'itemTypeName': itemType.ItemTypeName,
+                'updateTs': itemType.UpdateTs,
+            })
+            
+        for brand in brands:
+            result['data']['brands'].append({
+                'id': brand.Id,
+                'brandName': brand.BrandName,
+                'updateTs': brand.UpdateTs,
+            })
+            
+        for supplier in suppliers:
+            result['data']['suppliers'].append({
+                'id': supplier.Id,
+                'supplierName': supplier.SupplierName,
+                'updateTs': supplier.UpdateTs,
+            })
+            
+            
+        result['success'] = True
+        result['message'] = 'Fetch successful.'
+        
+    except Exception as error:
+        result['message'] = exception_error_message(error)
+        
+    return result
+
 
 def fetch_user_with_pagination_by_keyword(entry):
     result = {
@@ -315,4 +372,76 @@ def fetch_rewards_with_pagination_by_keyword(entry):
         
     return result
 
-# TODO: add controller for fetching items
+# TODO: fix something wrong with how the data is being returned or retrieved from the query
+def fetch_items_with_pagination_by_keyword(entry):
+    result = {
+        'success': False,
+        'message': 'Fetch failed.',
+        'data': [],
+        'totalPages': 1,
+    }
+    
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        items = (ItemPrices.select(
+            Items,
+            Promos,
+            ItemTypes,
+            Brands,
+            Suppliers,
+            SalesGroups,
+        ).join(Items, JOIN.LEFT_OUTER, on=(ItemPrices.ItemId == Items.Id)
+        ).join(Promos, JOIN.LEFT_OUTER, on=(ItemPrices.PromoId == Promos.Id)
+        ).join(ItemTypes, JOIN.LEFT_OUTER, on=(Items.ItemTypeId == ItemTypes.Id)
+        ).join(Brands, JOIN.LEFT_OUTER, on=(Items.BrandId == Brands.Id)
+        ).join(Suppliers, JOIN.LEFT_OUTER, on=(Items.SupplierId == Suppliers.Id)
+        ).join(SalesGroups, JOIN.LEFT_OUTER, on=(Items.SalesGroupId == SalesGroups.Id)
+        ).where(
+            (Items.ItemName.cast('TEXT').like(keyword)) |
+            (Items.Barcode.cast('TEXT').like(keyword)) |
+            (Items.ExpireDate.cast('TEXT').like(keyword)) |
+            (ItemTypes.ItemTypeName.cast('TEXT').like(keyword)) |
+            (Brands.BrandName.cast('TEXT').like(keyword)) |
+            (Suppliers.SupplierName.cast('TEXT').like(keyword)) |
+            (SalesGroups.SalesGroupName.cast('TEXT').like(keyword)) |
+            (ItemPrices.EffectiveDate.cast('TEXT').like(keyword)) |
+            (Promos.PromoName.cast('TEXT').like(keyword)) |
+            (ItemPrices.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(ItemPrices.UpdateTs.desc()))
+        
+        
+        total_count = items.count()
+        
+        paginated_items = items.limit(limit).offset(offset)
+        
+        for item in paginated_items:
+            result['data'].append({
+                'id': item.Id,
+                'itemid': item.ItemId,
+                'itemName': item.ItemName,
+                'barcode': item.Barcode,
+                'expireDate': item.ExpireDate,
+                'itemTypeName': item.ItemTypeName,
+                'brandName': item.BrandName,
+                'supplierName': item.SupplierName,
+                'salesGroupName': item.SalesGroupName,
+                'capital': item.Capital,
+                'price': item.Price,
+                'discount': item.Discount,
+                'effectiveDate': item.EffectiveDate,
+                'promoName': item.PromoName,
+                'updateTs': item.UpdateTs,
+            })
+        
+        result['totalPages'] = math.ceil(total_count / limit)
+        
+        result['success'] = True
+        result['message'] = 'Fetch successful.'
+        
+    except Exception as error:
+        result['message'] = exception_error_message(error)
+        
+    return result

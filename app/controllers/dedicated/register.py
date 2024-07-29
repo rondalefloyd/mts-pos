@@ -56,6 +56,8 @@ class RegisterThread(QThread):
                         result = register_promo(self.entry)
                     case 'pos/register/reward':
                         result = register_reward(self.entry)
+                    case 'pos/register/item':
+                        result = register_item(self.entry)
                     case _:
                         result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
@@ -245,7 +247,7 @@ def register_item(entry):
         'message': 'Registration failed.',
     }
     
-    if entry_has_value(alpha_entry=['itemName', 'barcode', 'itemType', 'brand', 'supplier'], numeric_entry=['capital', 'retailPrice', 'wholesalePrice'], entry=entry) is False:
+    if entry_has_value(alpha_entry=['itemName', 'barcode', 'itemTypeName', 'brandName', 'supplierName'], numeric_entry=['capital', 'retailPrice', 'wholesalePrice'], entry=entry) is False:
         result['message'] = 'Invalid entry.'
         return result
     
@@ -255,8 +257,8 @@ def register_item(entry):
         brands = Brands.create(BrandName=entry['brandName'])
         suppliers = Suppliers.create(SupplierName=entry['supplierName'])
         salesGroups = [
-            {'name': 'retail', 'price': entry['retailPrice']},
-            {'name': 'wholesale', 'price': entry['wholesalePrice']},
+            {'name': 'RETAIL', 'price': entry['retailPrice']},
+            {'name': 'WHOLESALE', 'price': entry['wholesalePrice']},
         ]
 
         for salesGroup in salesGroups:

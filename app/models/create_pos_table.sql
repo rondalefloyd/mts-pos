@@ -54,6 +54,10 @@ CREATE TABLE "SalesGroups" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+INSERT INTO "SalesGroups" ("Id", "SalesGroupName") VALUES 
+(1, 'RETAIL'), 
+(2, 'WHOLESALE');
+
 CREATE TABLE "Suppliers" (
     "Id" SERIAL PRIMARY KEY, 
     "SupplierName" VARCHAR(255) UNIQUE, 

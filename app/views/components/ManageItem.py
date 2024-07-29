@@ -39,17 +39,21 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self._populateComboBoxItemTypeBrandSupplier()
 
     def _populateComboBoxItemTypeBrandSupplier(self):
-        self.fetchThread = FetchThread('pos/fetch/itemtype-brand-supplier')
+        self.fetchThread = FetchThread('pos/fetch/itemtype-brand-supplier/all')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierResult)
         self.fetchThread.start()
         
     def _handlePopulateComboBoxItemTypeBrandSupplierResult(self, result):
-        for data in result['data']['itemType']:
-            self.comboBoxItemType.addItem(f"{data['itemType']}")
-        for data in result['data']['brand']:
-            self.comboBoxBrand.addItem(f"{data['brand']}")
-        for data in result['data']['supplier']:
-            self.comboBoxSupplier.addItem(f"{data['supplier']}")
+        self.comboBoxItemTypeName.clear()
+        self.comboBoxBrandName.clear()
+        self.comboBoxSupplierName.clear()
+
+        for itemType in result['data']['itemTypes']:
+            self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
+        for brand in result['data']['brands']:
+            self.comboBoxBrandName.addItem(f"{brand['brandName']}")
+        for supplier in result['data']['suppliers']:
+            self.comboBoxSupplierName.addItem(f"{supplier['supplierName']}")
             
 
     def _onPushButtonFilterClicked(self):
@@ -79,9 +83,9 @@ class ManageItem(Ui_FormManageItem, QWidget):
             'itemName': f"{self.lineEditItemName.text()}".upper(),
             'barcode': f"{self.lineEditBarcode.text()}",
             'expireDate': f"{self.dateEditExpireDate.text()}",
-            'itemType': f"{self.comboBoxItemType.currentData()}".upper(),
-            'brand': f"{self.comboBoxBrand.currentData()}".upper(),
-            'supplier': f"{self.comboBoxSupplier.currentData()}".upper(),
+            'itemTypeName': f"{self.comboBoxItemTypeName.currentText()}".upper(),
+            'brandName': f"{self.comboBoxBrandName.currentText()}".upper(),
+            'supplierName': f"{self.comboBoxSupplierName.currentText()}".upper(),
             'capital': f"{self.lineEditCapital.text()}",
             'retailPrice': f"{self.lineEditRetailPrice.text()}",
             'wholesalePrice': f"{self.lineEditWholesalePrice.text()}",
@@ -130,6 +134,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
                 QTableWidgetItem(f"{data['salesGroup']}"),
                 QTableWidgetItem(f"{data['capital']}"),
                 QTableWidgetItem(f"{data['price']}"),
+                QTableWidgetItem(f"{data['discount']}"),
                 QTableWidgetItem(f"{data['effectiveDate']}"),
                 QTableWidgetItem(f"{data['promo']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
@@ -148,6 +153,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
             self.tableWidgetData.setItem(i, 10, tableItems[9])
             self.tableWidgetData.setItem(i, 11, tableItems[10])
             self.tableWidgetData.setItem(i, 12, tableItems[11])
+            self.tableWidgetData.setItem(i, 13, tableItems[12])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _=i, data=data: self._onPushButtonDeleteClicked(data))
