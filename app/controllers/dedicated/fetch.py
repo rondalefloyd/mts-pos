@@ -46,10 +46,14 @@ class FetchThread(QThread):
                 match self.function_route:
                     case 'pos/fetch/user/all':
                         result = fetch_user(self.entry)
+                    case 'pos/fetch/promo/all':
+                        result = fetch_promo()
+                    case 'pos/fetch/promo/promo-name':
+                        result = fetch_promo_by_promo_name(self.entry)
                     case 'pos/fetch/organization/all':
                         result = fetch_organization()
-                    case 'pos/fetch/itemtype-brand-supplier/all':
-                        result = fetch_itemtype_brand_supplier()
+                    case 'pos/fetch/itemtype-brand-supplier-salesgroup/all':
+                        result = fetch_itemtype_brand_supplier_salesgroup()
                     case 'pos/fetch/user/all/keyword/paginated':
                         result = fetch_user_with_pagination_by_keyword(self.entry)
                     case 'pos/fetch/members/all/keyword/paginated':
@@ -110,6 +114,71 @@ def fetch_user(entry):
         
     return result
 
+def fetch_promo():
+    result = {
+        'success': False,
+        'message': 'Fetch failed.',
+        'data': []
+    }
+    
+    try:
+        promos = Promos.select().order_by(Promos.UpdateTs.desc())
+        
+        for promo in promos:
+            result['success'] = True
+            result['message'] = 'Fetch successful.'
+            result['data'].append({
+                'id': promo.Id,
+                'promoName': promo.PromoName,
+                'discountRate': promo.DiscountRate,
+                'description': promo.Description,
+                'updateTs': promo.UpdateTs,
+            })
+        
+    except Exception as error:
+        result['message'] = exception_error_message(error)
+        
+    return result
+
+def fetch_promo_by_promo_name(entry):
+    result = {
+        'success': False,
+        'message': 'Fetch failed.',
+        'data': {
+            'id': None,
+            'promoName': None,
+            'discountRate': None,
+            'description': None,
+            'updateTs': None,
+        }
+    }
+    
+    try:
+        promos = Promos.select().where(Promos.PromoName == entry['promoName']).order_by(Promos.UpdateTs.desc())
+        
+        if not promos.exists():
+            result['message'] = 'Fetch failed. Promo not found.'
+            return result
+        
+        promos = promos.first()
+        
+        result['success'] = True
+        result['message'] = 'Fetch successful.'
+        result['data'] = {
+            'id': promos.Id,
+            'promoName': promos.PromoName,
+            'discountRate': promos.DiscountRate,
+            'description': promos.Description,
+            'updateTs': promos.UpdateTs,
+        }
+        
+    except Exception as error:
+        result['message'] = exception_error_message(error)
+        
+    print(result)
+    return result
+
+
 def fetch_organization():
     result = {
         'success': False,
@@ -138,7 +207,7 @@ def fetch_organization():
         
     return result
 
-def fetch_itemtype_brand_supplier():
+def fetch_itemtype_brand_supplier_salesgroup():
     result = {
         'success': False,
         'message': 'Fetch failed.',
@@ -146,6 +215,7 @@ def fetch_itemtype_brand_supplier():
             'itemTypes': [],
             'brands': [],
             'suppliers': [],
+            'salesGroups': [],
         }
     }
     
@@ -153,6 +223,7 @@ def fetch_itemtype_brand_supplier():
         itemTypes = ItemTypes.select().order_by(ItemTypes.UpdateTs.desc())
         brands = Brands.select().order_by(Brands.UpdateTs.desc())
         suppliers = Suppliers.select().order_by(Suppliers.UpdateTs.desc())
+        salesGroups = SalesGroups.select().order_by(SalesGroups.UpdateTs.desc())
         
         for itemType in itemTypes:
             result['data']['itemTypes'].append({
@@ -173,6 +244,13 @@ def fetch_itemtype_brand_supplier():
                 'id': supplier.Id,
                 'supplierName': supplier.SupplierName,
                 'updateTs': supplier.UpdateTs,
+            })
+            
+        for salesGroup in salesGroups:
+            result['data']['salesGroups'].append({
+                'id': salesGroup.Id,
+                'salesGroupName': salesGroup.SalesGroupName,
+                'updateTs': salesGroup.UpdateTs,
             })
             
             
@@ -386,7 +464,8 @@ def fetch_items_with_pagination_by_keyword(entry):
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        items = (ItemPrices.select(
+        itemPrices = (ItemPrices.select(
+            ItemPrices,
             Items,
             Promos,
             ItemTypes,
@@ -410,30 +489,34 @@ def fetch_items_with_pagination_by_keyword(entry):
             (ItemPrices.EffectiveDate.cast('TEXT').like(keyword)) |
             (Promos.PromoName.cast('TEXT').like(keyword)) |
             (ItemPrices.UpdateTs.cast('TEXT').like(keyword))
-        ).order_by(ItemPrices.UpdateTs.desc()))
+        ).order_by(ItemPrices.UpdateTs.desc(), ItemPrices.EffectiveDate.desc()))
         
         
-        total_count = items.count()
+        total_count = itemPrices.count()
         
-        paginated_items = items.limit(limit).offset(offset)
+        paginated_itemPrices = itemPrices.limit(limit).offset(offset)
         
-        for item in paginated_items:
+        for itemPrice in paginated_itemPrices:
             result['data'].append({
-                'id': item.Id,
-                'itemid': item.ItemId,
-                'itemName': item.ItemName,
-                'barcode': item.Barcode,
-                'expireDate': item.ExpireDate,
-                'itemTypeName': item.ItemTypeName,
-                'brandName': item.BrandName,
-                'supplierName': item.SupplierName,
-                'salesGroupName': item.SalesGroupName,
-                'capital': item.Capital,
-                'price': item.Price,
-                'discount': item.Discount,
-                'effectiveDate': item.EffectiveDate,
-                'promoName': item.PromoName,
-                'updateTs': item.UpdateTs,
+                'id': itemPrice.Id,
+                'itemid': itemPrice.ItemId.Id,
+                'itemName': itemPrice.ItemId.ItemName,
+                'barcode': itemPrice.ItemId.Barcode,
+                'expireDate': itemPrice.ItemId.ExpireDate,
+                
+                'itemTypeName': itemPrice.ItemId.ItemTypeId.ItemTypeName,
+                'brandName': itemPrice.ItemId.BrandId.BrandName,
+                'supplierName': itemPrice.ItemId.SupplierId.SupplierName,
+                'salesGroupName': itemPrice.ItemId.SalesGroupId.SalesGroupName,
+                
+                'capital': itemPrice.Capital,
+                'price': itemPrice.Price,
+                'discount': itemPrice.Discount,
+                'effectiveDate': itemPrice.EffectiveDate,
+                
+                'promoName': itemPrice.PromoId.PromoName if itemPrice.PromoId else None,
+                
+                'updateTs': itemPrice.UpdateTs,
             })
         
         result['totalPages'] = math.ceil(total_count / limit)
@@ -444,4 +527,5 @@ def fetch_items_with_pagination_by_keyword(entry):
     except Exception as error:
         result['message'] = exception_error_message(error)
         
+    print("result:", result)
     return result

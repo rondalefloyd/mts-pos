@@ -133,12 +133,7 @@
        </column>
        <column>
         <property name="text">
-         <string>HasPromo</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>HasStock</string>
+         <string>PromoName</string>
         </property>
        </column>
        <column>

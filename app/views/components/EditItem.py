@@ -25,53 +25,103 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
         self.lineEditBarcode.setText(f"{self.selectedData['barcode']}")
         self.dateEditExpireDate.setDate(QDate.fromString(f"{self.selectedData['expireDate']}", 'yyyy-MM-dd'))
-        self.comboBoxItemTypeName.setCurrentText(f"{self.selectedData['itemType']}")
-        self.comboBoxBrandName.setCurrentText(f"{self.selectedData['brand']}")
-        self.comboBoxSupplierName.setCurrentText(f"{self.selectedData['supplier']}")
-        self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroup']}")
         self.lineEditCapital.setText(f"{self.selectedData['capital']}")
         self.lineEditPrice.setText(f"{self.selectedData['price']}")
         self.dateEditEffectiveDate.setDate(QDate.fromString(f"{self.selectedData['effectiveDate']}", 'yyyy-MM-dd'))
 
-        self.lineEditPrice.textChanged.connect(self._computeNewPriceByDiscountRate)
-        self.comboBoxPromoName.currentTextChanged.connect(self._computeNewPriceByDiscountRate)
+        self._populateComboBoxItemTypeBrandSupplierSalesGroup()
+        self._populateComboBoxPromoName()
+        self._populateLineEditDiscountRate()
+        
+        self.lineEditPrice.textChanged.connect(self._populateLineEditDiscountRate)
+        self.comboBoxPromoName.currentTextChanged.connect(self._populateLineEditDiscountRate)
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)
 
-        self._populateComboBoxPromoName()
 
     # private methods
-    def _computeNewPriceByDiscountRate(self):
-        try:
-            price = float(self.lineEditPrice.text().strip())
-            discountRate = float(self.lineEditDiscountRate.text()) / 100.0  # Assuming the discount rate is given as a percentage
-
-            discount = price * discountRate
-            newPrice = price - discount
-
-            self.lineEditDiscount.setText(f"{discount:.2f}")
-            self.lineEditNewPrice.setText(f"{newPrice:.2f}")
-            
-        except ValueError:
-            self.lineEditDiscount.setText("")
-            self.lineEditNewPrice.setText("")
-    
-    def _populateComboBoxPromoName(self):
-        self.fetchThread = FetchThread('pos/fetch/promo/all')
-        self.fetchThread.finished.connect(self._handlePopulateComboBoxPromoNameResult)
+    def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
+        self.fetchThread = FetchThread('pos/fetch/itemtype-brand-supplier-salesgroup/all')
+        self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupResult)
         self.fetchThread.start()
         
+    def _handlePopulateComboBoxItemTypeBrandSupplierSalesGroupResult(self, result):
+        self.comboBoxItemTypeName.clear()
+        self.comboBoxBrandName.clear()
+        self.comboBoxSupplierName.clear()
+        self.comboBoxSalesGroupName.clear()
+
+        for itemType in result['data']['itemTypes']:
+            self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
+        for brand in result['data']['brands']:
+            self.comboBoxBrandName.addItem(f"{brand['brandName']}")
+        for supplier in result['data']['suppliers']:
+            self.comboBoxSupplierName.addItem(f"{supplier['supplierName']}")
+        for salesGroup in result['data']['salesGroups']:
+            self.comboBoxSalesGroupName.addItem(f"{salesGroup['salesGroupName']}")
+            
+        self.comboBoxItemTypeName.setCurrentText(f"{self.selectedData['itemTypeName']}")
+        self.comboBoxBrandName.setCurrentText(f"{self.selectedData['brandName']}")
+        self.comboBoxSupplierName.setCurrentText(f"{self.selectedData['supplierName']}")
+        self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
+    
+    def _populateComboBoxPromoName(self):
+        self.currentThread = FetchThread('pos/fetch/promo/all')
+        self.currentThread.finished.connect(self._handlePopulateComboBoxPromoNameResult)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
     def _handlePopulateComboBoxPromoNameResult(self, result):
+        self.comboBoxPromoName.clear()
+        self.comboBoxPromoName.addItem("N/A")
+        
         for data in result['data']:
             self.comboBoxPromoName.addItem(f"{data['promoName']}")
             
-            
+        if data['promoName'] is None:
+            self.comboBoxPromoName.setCurrentText("N/A")
+            return
+        
+        self.comboBoxPromoName.setCurrentText(f"{self.selectedData['promoName']}")        
+    
+    def _populateLineEditDiscountRate(self):
+        self.dateEditEffectiveDate.setDisabled(self.comboBoxPromoName.currentText() != "N/A")
+        self.dateEditStartDate.setEnabled(self.comboBoxPromoName.currentText() != "N/A")
+        self.dateEditEndDate.setEnabled(self.comboBoxPromoName.currentText() != "N/A")
+        
+        if self.comboBoxPromoName.currentText() == "N/A":
+            self.lineEditDiscountRate.setText("0.0")
+            self.lineEditDiscount.setText("0.0")
+            self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
+            return
+        
+        self.currentThread = FetchThread('pos/fetch/promo/promo-name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
+        self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateResult)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    # TODO: fix the formula where the lineEditPrice should have the old value when editing an item with applied promo/ the new price isnt being stored properly. it has still the old price
+    # TODO: instead of fixing it, just add a warning for the users when they're editing an item that has an applied promo
+    def _handlePopulateLineEditDiscountRateResult(self, result):
+        discountRate = result['data']['discountRate']
+        self.lineEditDiscountRate.setText(f"{0.0 if discountRate is None else discountRate}")
+        
+        price = float(self.lineEditPrice.text())
+        discountRate = float(self.lineEditDiscountRate.text()) / 100.0  # Assuming the discount rate is given as a percentage
+
+        discount = price * discountRate
+        newPrice = price - discount
+
+        self.lineEditDiscount.setText(f"{discount:.2f}")
+        self.lineEditNewPrice.setText(f"{newPrice:.2f}")
+        
+        originalPrice = float(self.selectedData['price']) + float(self.lineEditDiscount.text())   
 
     def _onPushButtonCancelClicked(self):
         self.close()
         
     def _onPushButtonSaveClicked(self):
-        self.currentThread = EditThread('pos/edit/item', {
+        self.currentThread = EditThread('pos/edit/item/id', {
             'id': f"{self.selectedData['id']}",
             'itemName': f"{self.lineEditItemName.text()}".upper(),
             'barcode': f"{self.lineEditBarcode.text()}",

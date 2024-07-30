@@ -246,24 +246,24 @@ def edit_item_by_id(entry):
         result['message'] = 'Invalid entry.'
         return result
     
+    # TODO: debug this to update the UpdateTs field for it to go to the top of the list
     try:
         # Check if the reward to update exists by ID
         itemTypes = ItemTypes.select().where(ItemTypes.ItemTypeName == entry['itemTypeName'])
         brands = Brands.select().where(Brands.BrandName == entry['brandName'])
         suppliers = Suppliers.select().where(Suppliers.SupplierName == entry['supplierName'])
         salesGroups = SalesGroups.select().where(SalesGroups.SalesGroupName == entry['salesGroupName'])
-        items = Items.select().where(Items.ItemName == entry['itemId'])
-        itemPrices = ItemPrices.select().where(ItemPrices.ItemPriceId == entry['id'])
+        items = Items.select().where(Items.ItemName == entry['itemName'])
+        itemPrices = ItemPrices.select().where(ItemPrices.Id == entry['id'])
+        promos = Promos.select().where(Promos.PromoName == entry['promoName'])
+        print('---promosa:', promos)
 
         if not itemTypes.exists():
-            result['message'] = 'ItemType does not exist.'
-            return result
+            itemTypes = ItemTypes.create(ItemTypeName=entry['itemTypeName'])
         if not brands.exists():
-            result['message'] = 'Brand does not exist.'
-            return result
+            brands = Brands.create(BrandName=entry['brandName'])
         if not suppliers.exists():
-            result['message'] = 'Supplier does not exist.'
-            return result
+            suppliers = Suppliers.create(SupplierName=entry['supplierName'])
         if not salesGroups.exists():
             result['message'] = 'SalesGroup does not exist.'
             return result
@@ -273,42 +273,39 @@ def edit_item_by_id(entry):
         if not itemPrices.exists():
             result['message'] = 'ItemPrice does not exist.'
             return result
+        if entry['promoName'] != 'N/A' and not promos.exists():
+            result['message'] = 'Promo does not exist.'
+            return result
+        print('---promosb:', promos)
         
         itemTypes = itemTypes.first()
-        itemTypes.ItemTypeName = entry['itemTypeName']
-        itemTypes.save()
-        
         brands = brands.first()
-        brands.BrandName = entry['brandName']
-        brands.save()
-        
         suppliers = suppliers.first()
-        suppliers.SupplierName = entry['supplierName']
-        suppliers.save()
-        
         salesGroups = salesGroups.first()
-        salesGroups.SalesGroupName = entry['salesGroupName']
-        salesGroups.save()
         
         items = items.first()
         items.ItemName = entry['itemName']
         items.Barcode = entry['barcode']
         items.ExpireDate = entry['expireDate']
-        items.ItemTypeId = ItemTypes.select(ItemTypes.Id).where(ItemTypes.ItemTypeName == entry['itemTypeName']).first()
-        items.BrandId = Brands.select(Brands.Id).where(Brands.BrandName == entry['brandName']).first()
-        items.SupplierId = Suppliers.select(Suppliers.Id).where(Suppliers.SupplierName == entry['supplierName']).first()
-        items.SalesGroupId = SalesGroups.select(SalesGroups.Id).where(SalesGroups.SalesGroupName == entry['salesGroupName']).first()
+        items.ItemTypeId = itemTypes.Id
+        items.BrandId = brands.Id
+        items.SupplierId = suppliers.Id
+        items.SalesGroupId = salesGroups.Id
         items.save()
+        print('---promosc:', promos)
         
+        itemPrices = itemPrices.first()
+        itemPrices.ItemId = items.Id
+        itemPrices.Capital = entry['capital']
+        itemPrices.Discount = entry['discount']
+        
+        promos = promos.first()
+        print('---promosd:', promos)
         if entry['promoName'] != 'N/A':
-            itemPrices = ItemPrices.create(
-                ItemId=items.Id,
-                Capital=entry['capital'],
-                Price=entry['newPrice'],
-                PromoId=Promos.select(Promos.Id).where(Promos.PromoName == entry['promoName']).first(),
-                Discount=entry['discount'],
-                EffectiveDate=entry['startDate'],
-            )
+            itemPrices.Price = entry['newPrice']
+            itemPrices.PromoId = promos.Id
+            itemPrices.EffectiveDate = entry['startDate']
+            itemPrices.save()
             
             itemPrices = ItemPrices.create(
                 ItemId=items.Id,
@@ -318,14 +315,10 @@ def edit_item_by_id(entry):
             )
         
         else:
-            itemPrices = itemPrices.first()
-            itemPrices.ItemId = entry['itemId']
-            itemPrices.Capital = entry['capital']
             itemPrices.Price = entry['price']
-            itemPrices.PromoId = Promos.select(Promos.Id).where(Promos.PromoName == entry['promoName']).first()
-            itemPrices.Discount = entry['discount']
+            itemPrices.PromoId = None
             itemPrices.EffectiveDate = entry['effectiveDate']
-            items.save()
+            itemPrices.save()
         
         result['success'] = True
         result['message'] = 'Reward updated successfully.'
@@ -337,6 +330,7 @@ def edit_item_by_id(entry):
     except Exception as error:
         result['message'] = exception_error_message(error)
         logging.error(error)
-         
+        
+    print('--result:', result)
     return result
 

@@ -11,6 +11,7 @@ from app.models.entities import (
     Members,
     Promos,
     Rewards,
+    ItemPrices,
 )
 from app.controllers.common.messages import (
     exception_error_message,
@@ -42,6 +43,8 @@ class RemoveThread(QThread):
                         result = remove_promo_by_id(self.entry)
                     case 'pos/remove/reward/id':
                         result = remove_reward_by_id(self.entry)
+                    case 'pos/remove/item-price/id':
+                        result = remove_item_price_by_id(self.entry)
                     case _:
                         result['message'] = function_route_not_exist(self.function_route, self.__class__.__name__)
 
@@ -125,6 +128,24 @@ def remove_reward_by_id(entry):
     try:
         rewards = Rewards.delete().where(Rewards.Id == entry['id'])
         rewards.execute()
+        
+        result['success'] = True
+        result['message'] = 'Remove successful.'
+        
+    except Exception as error:
+        result['message'] = exception_error_message(error)
+        
+    return result
+
+def remove_item_price_by_id(entry):
+    result = {
+        'success': False,
+        'message': 'Remove failed.',
+    }
+    
+    try:
+        itemPrices = ItemPrices.delete().where(ItemPrices.Id == entry['id'])
+        itemPrices.execute()
         
         result['success'] = True
         result['message'] = 'Remove successful.'

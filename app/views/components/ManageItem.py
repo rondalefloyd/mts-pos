@@ -1,7 +1,6 @@
-import os
-import sys
-import logging
-from PyQt5.QtWidgets import QWidget, QMessageBox, QTableWidgetItem
+import os, sys, logging
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.views.templates.ManageItem_ui import Ui_FormManageItem
@@ -39,7 +38,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self._populateComboBoxItemTypeBrandSupplier()
 
     def _populateComboBoxItemTypeBrandSupplier(self):
-        self.fetchThread = FetchThread('pos/fetch/itemtype-brand-supplier/all')
+        self.fetchThread = FetchThread('pos/fetch/itemtype-brand-supplier-salesgroup/all')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierResult)
         self.fetchThread.start()
         
@@ -47,6 +46,8 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.comboBoxItemTypeName.clear()
         self.comboBoxBrandName.clear()
         self.comboBoxSupplierName.clear()
+
+        print('-thissss-result:', result)
 
         for itemType in result['data']['itemTypes']:
             self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
@@ -128,15 +129,15 @@ class ManageItem(Ui_FormManageItem, QWidget):
                 QTableWidgetItem(f"{data['itemName']}"),
                 QTableWidgetItem(f"{data['barcode']}"),
                 QTableWidgetItem(f"{data['expireDate']}"),
-                QTableWidgetItem(f"{data['itemType']}"),
-                QTableWidgetItem(f"{data['brand']}"),
-                QTableWidgetItem(f"{data['supplier']}"),
-                QTableWidgetItem(f"{data['salesGroup']}"),
+                QTableWidgetItem(f"{data['itemTypeName']}"),
+                QTableWidgetItem(f"{data['brandName']}"),
+                QTableWidgetItem(f"{data['supplierName']}"),
+                QTableWidgetItem(f"{data['salesGroupName']}"),
                 QTableWidgetItem(f"{data['capital']}"),
                 QTableWidgetItem(f"{data['price']}"),
                 QTableWidgetItem(f"{data['discount']}"),
                 QTableWidgetItem(f"{data['effectiveDate']}"),
-                QTableWidgetItem(f"{data['promo']}"),
+                QTableWidgetItem(f"{data['promoName']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             
@@ -154,6 +155,10 @@ class ManageItem(Ui_FormManageItem, QWidget):
             self.tableWidgetData.setItem(i, 11, tableItems[10])
             self.tableWidgetData.setItem(i, 12, tableItems[11])
             self.tableWidgetData.setItem(i, 13, tableItems[12])
+            
+            if data['promoName'] is not None:
+                for j, tableitem in enumerate(tableItems):
+                    tableitem.setForeground(QColor(255, 0, 0))
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _=i, data=data: self._onPushButtonDeleteClicked(data))
@@ -171,7 +176,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['itemName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('pos/remove/item/item-price-id', {'itemPriceId': f"{data['itemPriceId']}"})
+            self.currentThread = RemoveThread('pos/remove/item-price/id', {'id': f"{data['id']}"})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
