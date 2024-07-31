@@ -1,4 +1,4 @@
-import os, sys, logging, math
+import os, sys, logging, math, datetime
 from peewee import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -450,7 +450,7 @@ def fetch_rewards_with_pagination_by_keyword(entry):
         
     return result
 
-# TODO: fix something wrong with how the data is being returned or retrieved from the query
+# TODO: fix by adding ranking 
 def fetch_items_with_pagination_by_keyword(entry):
     result = {
         'success': False,
@@ -527,5 +527,4 @@ def fetch_items_with_pagination_by_keyword(entry):
     except Exception as error:
         result['message'] = exception_error_message(error)
         
-    print("result:", result)
     return result

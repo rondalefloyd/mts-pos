@@ -47,8 +47,6 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.comboBoxBrandName.clear()
         self.comboBoxSupplierName.clear()
 
-        print('-thissss-result:', result)
-
         for itemType in result['data']['itemTypes']:
             self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
         for brand in result['data']['brands']:
@@ -142,22 +140,11 @@ class ManageItem(Ui_FormManageItem, QWidget):
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
-            self.tableWidgetData.setItem(i, 1, tableItems[0])
-            self.tableWidgetData.setItem(i, 2, tableItems[1])
-            self.tableWidgetData.setItem(i, 3, tableItems[2])
-            self.tableWidgetData.setItem(i, 4, tableItems[3])
-            self.tableWidgetData.setItem(i, 5, tableItems[4])
-            self.tableWidgetData.setItem(i, 6, tableItems[5])
-            self.tableWidgetData.setItem(i, 7, tableItems[6])
-            self.tableWidgetData.setItem(i, 8, tableItems[7])
-            self.tableWidgetData.setItem(i, 9, tableItems[8])
-            self.tableWidgetData.setItem(i, 10, tableItems[9])
-            self.tableWidgetData.setItem(i, 11, tableItems[10])
-            self.tableWidgetData.setItem(i, 12, tableItems[11])
-            self.tableWidgetData.setItem(i, 13, tableItems[12])
             
-            if data['promoName'] is not None:
-                for j, tableitem in enumerate(tableItems):
+            for j, tableitem in enumerate(tableItems):
+                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                
+                if data['promoName'] is not None:
                     tableitem.setForeground(QColor(255, 0, 0))
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))

@@ -1,7 +1,6 @@
 import os, sys
 from peewee import *
 
-# TODO: move this to models
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import User
 from app.utils.database import postgres_db

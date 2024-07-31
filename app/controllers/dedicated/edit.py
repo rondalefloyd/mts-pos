@@ -256,7 +256,6 @@ def edit_item_by_id(entry):
         items = Items.select().where(Items.ItemName == entry['itemName'])
         itemPrices = ItemPrices.select().where(ItemPrices.Id == entry['id'])
         promos = Promos.select().where(Promos.PromoName == entry['promoName'])
-        print('---promosa:', promos)
 
         if not itemTypes.exists():
             itemTypes = ItemTypes.create(ItemTypeName=entry['itemTypeName'])
@@ -276,7 +275,6 @@ def edit_item_by_id(entry):
         if entry['promoName'] != 'N/A' and not promos.exists():
             result['message'] = 'Promo does not exist.'
             return result
-        print('---promosb:', promos)
         
         itemTypes = itemTypes.first()
         brands = brands.first()
@@ -291,8 +289,8 @@ def edit_item_by_id(entry):
         items.BrandId = brands.Id
         items.SupplierId = suppliers.Id
         items.SalesGroupId = salesGroups.Id
+        items.UpdateTs = datetime.now()
         items.save()
-        print('---promosc:', promos)
         
         itemPrices = itemPrices.first()
         itemPrices.ItemId = items.Id
@@ -300,11 +298,11 @@ def edit_item_by_id(entry):
         itemPrices.Discount = entry['discount']
         
         promos = promos.first()
-        print('---promosd:', promos)
         if entry['promoName'] != 'N/A':
             itemPrices.Price = entry['newPrice']
             itemPrices.PromoId = promos.Id
             itemPrices.EffectiveDate = entry['startDate']
+            itemPrices.UpdateTs = datetime.now()
             itemPrices.save()
             
             itemPrices = ItemPrices.create(
@@ -318,6 +316,7 @@ def edit_item_by_id(entry):
             itemPrices.Price = entry['price']
             itemPrices.PromoId = None
             itemPrices.EffectiveDate = entry['effectiveDate']
+            itemPrices.UpdateTs = datetime.now()
             itemPrices.save()
         
         result['success'] = True
