@@ -496,28 +496,48 @@ def fetch_items_with_pagination_by_keyword(entry):
         
         paginated_itemPrices = itemPrices.limit(limit).offset(offset)
         
+        existingItemIds = set()
+        
         for itemPrice in paginated_itemPrices:
+            itemPriceId = itemPrice.Id
+            itemId = itemPrice.ItemId.Id
+            itemName = itemPrice.ItemId.ItemName
+            barcode = itemPrice.ItemId.Barcode
+            expireDate = itemPrice.ItemId.ExpireDate
+            itemTypeName = itemPrice.ItemId.ItemTypeId.ItemTypeName
+            brandName = itemPrice.ItemId.BrandId.BrandName
+            supplierName = itemPrice.ItemId.SupplierId.SupplierName
+            salesGroupName = itemPrice.ItemId.SalesGroupId.SalesGroupName
+            capital = itemPrice.Capital
+            price = itemPrice.Price
+            discount = itemPrice.Discount
+            effectiveDate = itemPrice.EffectiveDate
+            promoName = itemPrice.PromoId.PromoName if itemPrice.PromoId else None
+            updateTs = itemPrice.UpdateTs
+
+            # if itemId in existingItemIds:
+            #     continue
+
             result['data'].append({
-                'id': itemPrice.Id,
-                'itemid': itemPrice.ItemId.Id,
-                'itemName': itemPrice.ItemId.ItemName,
-                'barcode': itemPrice.ItemId.Barcode,
-                'expireDate': itemPrice.ItemId.ExpireDate,
-                
-                'itemTypeName': itemPrice.ItemId.ItemTypeId.ItemTypeName,
-                'brandName': itemPrice.ItemId.BrandId.BrandName,
-                'supplierName': itemPrice.ItemId.SupplierId.SupplierName,
-                'salesGroupName': itemPrice.ItemId.SalesGroupId.SalesGroupName,
-                
-                'capital': itemPrice.Capital,
-                'price': itemPrice.Price,
-                'discount': itemPrice.Discount,
-                'effectiveDate': itemPrice.EffectiveDate,
-                
-                'promoName': itemPrice.PromoId.PromoName if itemPrice.PromoId else None,
-                
-                'updateTs': itemPrice.UpdateTs,
+                'id': itemPriceId,
+                'itemid': itemId,
+                'itemName': itemName,
+                'barcode': barcode,
+                'expireDate': expireDate,
+                'itemTypeName': itemTypeName,
+                'brandName': brandName,
+                'supplierName': supplierName,
+                'salesGroupName': salesGroupName,
+                'capital': capital,
+                'price': price,
+                'discount': discount,
+                'effectiveDate': effectiveDate,
+                'promoName': promoName,
+                'updateTs': updateTs,
             })
+
+            existingItemIds.add(itemId)
+            print('--existingItemIds:', existingItemIds)
         
         result['totalPages'] = math.ceil(total_count / limit)
         
@@ -527,4 +547,5 @@ def fetch_items_with_pagination_by_keyword(entry):
     except Exception as error:
         result['message'] = exception_error_message(error)
         
+    print('--result:', result)
     return result

@@ -252,25 +252,39 @@ def register_item(entry):
         return result
     
     try:
-        # Create new promo
-        itemTypes = ItemTypes.create(ItemTypeName=entry['itemTypeName'])
-        brands = Brands.create(BrandName=entry['brandName'])
-        suppliers = Suppliers.create(SupplierName=entry['supplierName'])
+        itemTypes = ItemTypes.select().where(ItemTypes.ItemTypeName == entry['itemTypeName'])
+        brands = Brands.select().where(Brands.BrandName == entry['brandName'])
+        suppliers = Suppliers.select().where(Suppliers.SupplierName == entry['supplierName'])
         salesGroups = [
             {'name': 'RETAIL', 'price': entry['retailPrice']},
             {'name': 'WHOLESALE', 'price': entry['wholesalePrice']},
         ]
+        
+        itemTypes = itemTypes.first() if itemTypes.exists() else ItemTypes.create(ItemTypeName=entry['itemTypeName'])
+        brands = brands.first() if brands.exists() else Brands.create(BrandName=entry['brandName'])
+        suppliers = suppliers.first() if suppliers.exists() else Suppliers.create(SupplierName=entry['supplierName'])
 
         for salesGroup in salesGroups:
-            items = Items.create(
-                ItemName=entry['itemName'],
-                Barcode=entry['barcode'],
-                ExpireDate=entry['expireDate'],
-                ItemTypeId=itemTypes.Id,
-                BrandId=brands.Id,
-                SupplierId=suppliers.Id,
-                SalesGroupId=SalesGroups.select(SalesGroups.Id).where(SalesGroups.SalesGroupName == salesGroup['name']).first(),
+            items = Items.select().where(
+                (Items.ItemName == entry['itemName']) &
+                (Items.SalesGroupId == SalesGroups.select(SalesGroups.Id).where(SalesGroups.SalesGroupName == salesGroup['name']).first().Id)
             )
+            
+            if items.exists():
+                print('herea')
+                items = items.first() 
+            else:
+                print('hereb')
+                items =  Items.create(
+                    ItemName=entry['itemName'],
+                    Barcode=entry['barcode'],
+                    ExpireDate=entry['expireDate'],
+                    ItemTypeId=itemTypes.Id,
+                    BrandId=brands.Id,
+                    SupplierId=suppliers.Id,
+                    SalesGroupId=SalesGroups.select(SalesGroups.Id).where(SalesGroups.SalesGroupName == salesGroup['name']).first().Id,
+                )
+            
             itemPrices = ItemPrices.create(
                 ItemId=items.Id,
                 Capital=entry['capital'],

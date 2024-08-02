@@ -82,6 +82,7 @@ class Ui_DialogEditItem(object):
         self.label_12.setObjectName("label_12")
         self.formLayout.setWidget(7, QtWidgets.QFormLayout.LabelRole, self.label_12)
         self.comboBoxSalesGroupName = QtWidgets.QComboBox(self.scrollAreaWidgetContents)
+        self.comboBoxSalesGroupName.setEnabled(False)
         self.comboBoxSalesGroupName.setEditable(False)
         self.comboBoxSalesGroupName.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBoxSalesGroupName.setObjectName("comboBoxSalesGroupName")

@@ -120,6 +120,9 @@ class Items(BaseModel):
 
     class Meta:
         table_name = 'Items'
+        indexes = (
+            (('ItemName', 'SalesGroupId'), True),  # Composite unique index
+        )
 
     def __str__(self):
         return self.ItemName
@@ -136,6 +139,9 @@ class ItemPrices(BaseModel):
 
     class Meta:
         table_name = 'ItemPrices'
+        indexes = (
+            (('ItemId', 'Capital', 'Price', 'PromoId', 'Discount', 'EffectiveDate'), True),  # Composite unique index
+        )
 
     def __str__(self):
         return f"ItemPrice {self.Id}"

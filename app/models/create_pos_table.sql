@@ -73,7 +73,8 @@ CREATE TABLE "Items" (
     "BrandId" INTEGER REFERENCES "Brands"("Id") ON DELETE CASCADE, 
     "SalesGroupId" INTEGER REFERENCES "SalesGroups"("Id") ON DELETE CASCADE, 
     "SupplierId" INTEGER REFERENCES "Suppliers"("Id") ON DELETE CASCADE, 
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_itemname_salesgroup UNIQUE ("ItemName", "SalesGroupId")
 );
 
 CREATE TABLE "Stocks" (
@@ -92,7 +93,8 @@ CREATE TABLE "ItemPrices" (
     "PromoId" INTEGER REFERENCES "Promos"("Id") ON DELETE CASCADE, 
     "Discount" FLOAT,
     "EffectiveDate" DATE,  
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_itemprice_combination UNIQUE ("ItemId", "Capital", "Price", "PromoId", "Discount", "EffectiveDate")
 );
 
 CREATE TABLE "Users" (

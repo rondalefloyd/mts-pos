@@ -247,6 +247,7 @@ def edit_item_by_id(entry):
         return result
     
     # TODO: debug this to update the UpdateTs field for it to go to the top of the list
+    print('--entry:', entry)
     try:
         # Check if the reward to update exists by ID
         itemTypes = ItemTypes.select().where(ItemTypes.ItemTypeName == entry['itemTypeName'])
@@ -257,54 +258,56 @@ def edit_item_by_id(entry):
         itemPrices = ItemPrices.select().where(ItemPrices.Id == entry['id'])
         promos = Promos.select().where(Promos.PromoName == entry['promoName'])
 
-        if not itemTypes.exists():
-            itemTypes = ItemTypes.create(ItemTypeName=entry['itemTypeName'])
-        if not brands.exists():
-            brands = Brands.create(BrandName=entry['brandName'])
-        if not suppliers.exists():
-            suppliers = Suppliers.create(SupplierName=entry['supplierName'])
-        if not salesGroups.exists():
-            result['message'] = 'SalesGroup does not exist.'
-            return result
-        if not items.exists():
-            result['message'] = 'Item does not exist.'
-            return result
+        itemTypes = itemTypes.first() if itemTypes.exists() else ItemTypes.create(ItemTypeName=entry['itemTypeName'])
+        brands = brands.first() if brands.exists() else Brands.create(BrandName=entry['brandName'])
+        suppliers = suppliers.first() if suppliers.exists() else Suppliers.create(SupplierName=entry['supplierName'])
+        salesGroups = salesGroups.first() if salesGroups.exists() else SalesGroups.create(SalesGroupName=entry['salesGroupName'])
+        
+        if items.exists():
+            print('--exist')
+            items = items.first()
+            items.ItemName = entry['itemName']
+            items.Barcode = entry['barcode']
+            items.ExpireDate = entry['expireDate']
+            items.ItemTypeId = itemTypes.Id
+            items.BrandId = brands.Id
+            items.SupplierId = suppliers.Id
+            items.SalesGroupId=SalesGroups.select(SalesGroups.Id).where(SalesGroups.SalesGroupName == entry['salesGroupName']).first().Id
+            items.UpdateTs = datetime.now()
+            items.save()
+            
+        else: 
+            print('--not exist')
+            Items.create(
+                ItemName=entry['itemName'],
+                Barcode=entry['barcode'],
+                ExpireDate=entry['expireDate'],
+                ItemTypeId=itemTypes.Id,
+                BrandId=brands.Id,
+                SupplierId=suppliers.Id,
+                SalesGroupId=SalesGroups.select(SalesGroups.Id).where(SalesGroups.SalesGroupName == entry['salesGroupName']).first().Id,
+            )
+        
         if not itemPrices.exists():
-            result['message'] = 'ItemPrice does not exist.'
+            result['message'] = 'ItemPrices does not exist.'
             return result
+
         if entry['promoName'] != 'N/A' and not promos.exists():
             result['message'] = 'Promo does not exist.'
             return result
         
-        itemTypes = itemTypes.first()
-        brands = brands.first()
-        suppliers = suppliers.first()
-        salesGroups = salesGroups.first()
-        
-        items = items.first()
-        items.ItemName = entry['itemName']
-        items.Barcode = entry['barcode']
-        items.ExpireDate = entry['expireDate']
-        items.ItemTypeId = itemTypes.Id
-        items.BrandId = brands.Id
-        items.SupplierId = suppliers.Id
-        items.SalesGroupId = salesGroups.Id
-        items.UpdateTs = datetime.now()
-        items.save()
-        
-        itemPrices = itemPrices.first()
-        itemPrices.ItemId = items.Id
-        itemPrices.Capital = entry['capital']
-        itemPrices.Discount = entry['discount']
-        
-        promos = promos.first()
         if entry['promoName'] != 'N/A':
-            itemPrices.Price = entry['newPrice']
-            itemPrices.PromoId = promos.Id
-            itemPrices.EffectiveDate = entry['startDate']
-            itemPrices.UpdateTs = datetime.now()
-            itemPrices.save()
+            # create item price with startdate
+            itemPrices = ItemPrices.create(
+                ItemId=items.Id,
+                PromoId=promos.first().Id,
+                Capital=entry['capital'],
+                Price=entry['newPrice'],
+                Discount=entry['discount'],
+                EffectiveDate=entry['startDate'],
+            )
             
+            # create item price with enddate
             itemPrices = ItemPrices.create(
                 ItemId=items.Id,
                 Capital=entry['capital'],
@@ -312,13 +315,16 @@ def edit_item_by_id(entry):
                 EffectiveDate=datetime.strptime(entry['endDate'], '%Y-%m-%d').date() + timedelta(days=1),
             )
         
-        else:
+        else:           
+            itemPrices = itemPrices.first()
+            itemPrices.ItemId = items.Id
+            itemPrices.Capital = entry['capital']
             itemPrices.Price = entry['price']
-            itemPrices.PromoId = None
             itemPrices.EffectiveDate = entry['effectiveDate']
             itemPrices.UpdateTs = datetime.now()
             itemPrices.save()
-        
+
+            
         result['success'] = True
         result['message'] = 'Reward updated successfully.'
         

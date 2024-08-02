@@ -115,7 +115,9 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.lineEditDiscount.setText(f"{discount:.2f}")
         self.lineEditNewPrice.setText(f"{newPrice:.2f}")
         
-        originalPrice = float(self.selectedData['price']) + float(self.lineEditDiscount.text())   
+        if self.selectedData['promoName'] is not None:
+            originalPrice = float(self.selectedData['price']) + float(self.lineEditDiscount.text())
+            self.lineEditPrice.setText(f"{originalPrice}")
 
     def _onPushButtonCancelClicked(self):
         self.close()
