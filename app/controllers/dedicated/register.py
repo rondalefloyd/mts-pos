@@ -20,7 +20,8 @@ from app.models.entities import (
     ItemPrices,
     Stocks,
 )
-from app.utils.database import postgres_db
+from app.utils.variables import DEFAULT_RESULT_TEMPLATE
+from app.utils.databases import postgres_db
 
 logging.basicConfig(level=logging.INFO)
 
@@ -33,35 +34,31 @@ class RegisterThread(QThread):
         self.entry = entry
     
     def run(self):
-        result = {
-            'success': False,
-            'message': 'N/A',
-        }
-        
+        result = DEFAULT_RESULT_TEMPLATE.copy()
+         
         try:
             with postgres_db:
                 if self.function_route == 'register_items':
-                    message = register_items(self.entry)
+                    result = register_items(self.entry, result)
                 elif self.function_route == 'register_members':
-                    message = register_members(self.entry)
+                    result = register_members(self.entry, result)
                 elif self.function_route == 'register_promos':
-                    message = register_promos(self.entry)
+                    result = register_promos(self.entry, result)
                 elif self.function_route == 'register_rewards':
-                    message = register_rewards(self.entry)
+                    result = register_rewards(self.entry, result)
                 elif self.function_route == 'register_users':
-                    message = register_users(self.entry)
+                    result = register_users(self.entry, result)
                 elif self.function_route == 'register_organizations':
-                    message = register_organizations(self.entry)
+                    result = register_organizations(self.entry, result)
                 else:
-                    message = "INSERT MESSAGE HERE"
+                    result['message'] = f"'{self.function_route}' is an invalid function..."
                         
-            result['message'] = message
             logging.info('database operation done...')
             
         except Exception as exception:
-            result['message'] = exception
+            result['message'] = f"An error occured: {exception}"
             postgres_db.rollback()
-            logging.error('exception: ', exception)
+            logging.error('exception: %s', exception)
             logging.info('database operation rolled back...')
             
         finally:
@@ -72,15 +69,80 @@ class RegisterThread(QThread):
         logging.info('result', json.dumps(result, indent=4))
 
 # add function here
-def register_items(entry=object):
+def register_items(entry=object, result=object):
     pass
-def register_members(entry=object):
+def register_members(entry=object, result=object):
     pass
-def register_promos(entry=object):
+def register_promos(entry=object, result=object):
     pass
-def register_rewards(entry=object):
+def register_rewards(entry=object, result=object):
     pass
-def register_users(entry=object):
-    pass
-def register_organizations(entry=object):
-    pass
+def register_users(entry=object, result=object):
+    try:
+        users = Users.select().where(
+            (Users.OrganizationId == Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id) &
+            (Users.UserName == entry['userName']) &
+            (Users.AccessCode == entry['accessCode']) &
+            (Users.FullName == entry['fullName']) &
+            (Users.BirthDate == entry['birthDate']) &
+            (Users.MobileNumber == entry['mobileNumber']) &
+            (Users.AccessLevel == entry['accessLevel'])
+        )
+        
+        if users.exists():
+            result['message'] = 'User already exists'
+            return result
+        
+        users = Users.create(
+            OrganizationId=entry['organizationName'],
+            UserName=entry['userName'],
+            AccessCode=entry['accessCode'],
+            FullName=entry['fullName'],
+            BirthDate=entry['birthDate'],
+            MobileNumber=entry['mobileNumber'],
+            AccessLevel=entry['accessLevel'],
+        )
+        
+        userSessionInfos = UserSessionInfos.create(
+            UserId=users.Id,
+            ActiveStatus=0,
+            LastLoginTs=entry['lastLoginTs'],
+        )
+        
+        result['success'] = True
+        result['message'] = 'User added'
+        return result
+
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
+    
+def register_organizations(entry=object, result=object):
+    try:
+        organizations = Organizations.select().where(
+            (Organizations.TaxId == entry['taxId']) &
+            (Organizations.OrganizationName == entry['organizationName']) &
+            (Organizations.Address == entry['address']) &
+            (Organizations.MobileNumber == entry['mobileNumber']) &
+            (Organizations.AccessCode == entry['accessCode'])
+        )
+        
+        if organizations.exists():
+            result['message'] = 'Organization already exists'
+        
+        organizations = Organizations.create(
+            TaxId=entry['taxId'],
+            OrganizationName=entry['organizationName'],
+            Address=entry['address'],
+            MobileNumber=entry['mobileNumber'],
+            AccessCode=entry['accessCode'],
+        )
+        
+        result['success'] = True
+        result['message'] = 'Organization added'
+        return result
+
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result

@@ -17,7 +17,8 @@ from app.models.entities import (
     Items,
     ItemPrices,
 )
-from app.utils.database import postgres_db
+from app.utils.variables import DEFAULT_RESULT_TEMPLATE
+from app.utils.databases import postgres_db
 
 logging.basicConfig(level=logging.INFO)
 
@@ -30,25 +31,21 @@ class EditThread(QThread):
         self.entry = entry
     
     def run(self):
-        result = {
-            'success': False,
-            'message': 'N/A',
-        }
+        result = DEFAULT_RESULT_TEMPLATE.copy()
         
         try:
             with postgres_db:
                 if self.function_route == 'edit_items_related_data_by_ids':
-                    message = edit_items_related_data_by_ids(self.entry)
+                    result = edit_items_related_data_by_ids(self.entry, result)
                 elif self.function_route == 'edit_members_data_by_id':
-                    message = edit_members_data_by_id(self.entry)
+                    result = edit_members_data_by_id(self.entry, result)
                 elif self.function_route == 'edit_promos_data_by_id':
-                    message = edit_promos_data_by_id(self.entry)
+                    result = edit_promos_data_by_id(self.entry, result)
                 elif self.function_route == 'edit_rewards_data_by_id':
-                    message = edit_rewards_data_by_id(self.entry)
+                    result = edit_rewards_data_by_id(self.entry, result)
                 else:
-                    message = "INSERT MESSAGE HERE"
+                    result['message'] = f"'{self.function_route}' is an invalid function..."
                         
-            result['message'] = message
             logging.info('database operation done...')
             
         except Exception as exception:
@@ -65,11 +62,11 @@ class EditThread(QThread):
         logging.info('result', json.dumps(result, indent=4))
         
 # add function here
-def edit_items_related_data_by_ids(entry=object):
+def edit_items_related_data_by_ids(entry=object, result=object):
     pass
-def edit_members_data_by_id(entry=object):
+def edit_members_data_by_id(entry=object, result=object):
     pass
-def edit_promos_data_by_id(entry=object):
+def edit_promos_data_by_id(entry=object, result=object):
     pass
-def edit_rewards_data_by_id(entry=object):
+def edit_rewards_data_by_id(entry=object, result=object):
     pass

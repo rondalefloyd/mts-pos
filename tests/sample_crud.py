@@ -3,7 +3,7 @@ from peewee import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import User
-from app.utils.database import postgres_db
+from app.utils.databases import postgres_db
 
 # Connect to the database
 postgres_db.connect()

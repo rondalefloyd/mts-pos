@@ -13,7 +13,8 @@ from app.models.entities import (
     Rewards,
     ItemPrices,
 )
-from app.utils.database import postgres_db
+from app.utils.variables import DEFAULT_RESULT_TEMPLATE
+from app.utils.databases import postgres_db
 
 class RemoveThread(QThread):
     finished = pyqtSignal(object)
@@ -24,27 +25,23 @@ class RemoveThread(QThread):
         self.entry = entry
     
     def run(self):
-        result = {
-            'success': False,
-            'message': 'N/A',
-        }
+        result = DEFAULT_RESULT_TEMPLATE.copy()
         
         try:
             with postgres_db:
                 if self.function_route == 'remove_item_prices_by_id':
-                    message = remove_item_prices_by_id(self.entry)
+                    result = remove_item_prices_by_id(self.entry, result)
                 elif self.function_route == 'remove_members_by_id':
-                    message = remove_members_by_id(self.entry)
+                    result = remove_members_by_id(self.entry, result)
                 elif self.function_route == 'remove_promos_by_id':
-                    message = remove_promos_by_id(self.entry)
+                    result = remove_promos_by_id(self.entry, result)
                 elif self.function_route == 'remove_rewards_by_id':
-                    message = remove_rewards_by_id(self.entry)
+                    result = remove_rewards_by_id(self.entry, result)
                 elif self.function_route == 'remove_users_by_id':
-                    message = remove_users_by_id(self.entry)
+                    result = remove_users_by_id(self.entry, result)
                 else:
-                    message = "INSERT MESSAGE HERE"
+                    result['message'] = f"'{self.function_route}' is an invalid function..."
                         
-            result['message'] = message
             logging.info('database operation done...')
             
         except Exception as exception:
@@ -61,13 +58,13 @@ class RemoveThread(QThread):
         logging.info('result', json.dumps(result, indent=4))
 
 # add function here
-def remove_item_prices_by_id(entry=object):
+def remove_item_prices_by_id(entry=object, result=object):
     pass
-def remove_members_by_id(entry=object):
+def remove_members_by_id(entry=object, result=object):
     pass
-def remove_promos_by_id(entry=object):
+def remove_promos_by_id(entry=object, result=object):
     pass
-def remove_rewards_by_id(entry=object):
+def remove_rewards_by_id(entry=object, result=object):
     pass
-def remove_users_by_id(entry=object):
+def remove_users_by_id(entry=object, result=object):
     pass

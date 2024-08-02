@@ -6,7 +6,8 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import Users, Organizations, UserSessionInfos
-from app.utils.database import postgres_db
+from app.utils.variables import DEFAULT_RESULT_TEMPLATE
+from app.utils.databases import postgres_db
 
 logging.basicConfig(level=logging.INFO)
 
@@ -19,22 +20,17 @@ class AuthenticateThread(QThread):
         self.entry = entry
     
     def run(self):
-        result = {
-            'success': False,
-            'message': 'N/A',
-            'data': [],
-        }
+        result = DEFAULT_RESULT_TEMPLATE.copy()
         
         try:
             with postgres_db:
                 if self.function_route == 'authenticate_user_by_user_name_access_code':
-                    message = authenticate_user_by_user_name_access_code(self.entry)
+                    result = authenticate_user_by_user_name_access_code(self.entry, result)
                 elif self.function_route == 'unauthenticate_users_by_id':
-                    message = unauthenticate_users_by_id(self.entry)
+                    result = unauthenticate_users_by_id(self.entry, result)
                 else:
-                    message = "INSERT MESSAGE HERE"
+                    result['message'] = f"'{self.function_route}' is an invalid function..."
                         
-            result['message'] = message
             logging.info('database operation done...')
             
         except Exception as exception:
@@ -51,7 +47,34 @@ class AuthenticateThread(QThread):
         logging.info('result', json.dumps(result, indent=4))
         
 # add function here
-def authenticate_user_by_user_name_access_code(entry=object):
-    pass
+def authenticate_user_by_user_name_access_code(entry=object, result=object):
+    try:
+        users = Users.select().where(
+            (Users.UserName == entry['userName']) & 
+            (Users.AccessCode == entry['accessCode'])
+        )
+        
+        if not users.exists():
+            result['message'] = 'User does not exists'
+            return result
+        
+        users = users.first()
+        
+        result['success'] = True
+        result['one_data'] = {
+            'organizationName': Organizations.get(Organizations.Id == users.OrganizationId).OrganizationName,
+            'userName': users.UserName,
+            'accessCode': users.AccessCode,
+            'fullName': users.FullName,
+            'birthDate': users.BirthDate,
+            'mobileNumber': users.MobileNumber,
+            'accessLevel': users.AccessLevel,
+        }
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+
 def unauthenticate_users_by_id(entry=object):
     pass

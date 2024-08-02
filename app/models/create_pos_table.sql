@@ -1,19 +1,19 @@
 CREATE TABLE "Brands" (
     "Id" SERIAL PRIMARY KEY, 
-    "BrandName" VARCHAR(255) UNIQUE, 
+    "BrandName" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "ItemTypes" (
     "Id" SERIAL PRIMARY KEY, 
-    "ItemTypeName" VARCHAR(255) UNIQUE, 
+    "ItemTypeName" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Organizations" (
     "Id" SERIAL PRIMARY KEY, 
-    "TaxId" VARCHAR(255) UNIQUE, 
-    "OrganizationName" VARCHAR(255) UNIQUE, 
+    "TaxId" VARCHAR(255), 
+    "OrganizationName" VARCHAR(255), 
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 
     "AccessCode" VARCHAR(255), 
@@ -23,7 +23,7 @@ CREATE TABLE "Organizations" (
 CREATE TABLE "Members" (
     "Id" SERIAL PRIMARY KEY, 
     "OrganizationId" INTEGER REFERENCES "Organizations"("Id") ON DELETE CASCADE, 
-    "MemberName" VARCHAR(255) UNIQUE, 
+    "MemberName" VARCHAR(255), 
     "BirthDate" DATE, 
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 
@@ -33,7 +33,7 @@ CREATE TABLE "Members" (
 
 CREATE TABLE "Promos" (
     "Id" SERIAL PRIMARY KEY, 
-    "PromoName" VARCHAR(255) UNIQUE, 
+    "PromoName" VARCHAR(255), 
     "DiscountRate" FLOAT, 
     "Description" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -41,7 +41,7 @@ CREATE TABLE "Promos" (
 
 CREATE TABLE "Rewards" (
     "Id" SERIAL PRIMARY KEY, 
-    "RewardName" VARCHAR(255) UNIQUE, 
+    "RewardName" VARCHAR(255), 
     "Points" FLOAT, 
     "Target" FLOAT, 
     "Description" VARCHAR(255), 
@@ -50,7 +50,7 @@ CREATE TABLE "Rewards" (
 
 CREATE TABLE "SalesGroups" (
     "Id" SERIAL PRIMARY KEY, 
-    "SalesGroupName" VARCHAR(255) UNIQUE, 
+    "SalesGroupName" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -60,7 +60,7 @@ INSERT INTO "SalesGroups" ("Id", "SalesGroupName") VALUES
 
 CREATE TABLE "Suppliers" (
     "Id" SERIAL PRIMARY KEY, 
-    "SupplierName" VARCHAR(255) UNIQUE, 
+    "SupplierName" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -73,8 +73,7 @@ CREATE TABLE "Items" (
     "BrandId" INTEGER REFERENCES "Brands"("Id") ON DELETE CASCADE, 
     "SalesGroupId" INTEGER REFERENCES "SalesGroups"("Id") ON DELETE CASCADE, 
     "SupplierId" INTEGER REFERENCES "Suppliers"("Id") ON DELETE CASCADE, 
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_itemname_salesgroup UNIQUE ("ItemName", "SalesGroupId")
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Stocks" (
@@ -93,14 +92,13 @@ CREATE TABLE "ItemPrices" (
     "PromoId" INTEGER REFERENCES "Promos"("Id") ON DELETE CASCADE, 
     "Discount" FLOAT,
     "EffectiveDate" DATE,  
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_itemprice_combination UNIQUE ("ItemId", "Capital", "Price", "PromoId", "Discount", "EffectiveDate")
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Users" (
     "Id" SERIAL PRIMARY KEY, 
     "OrganizationId" INTEGER REFERENCES "Organizations"("Id") ON DELETE CASCADE, 
-    "UserName" VARCHAR(255) UNIQUE, 
+    "UserName" VARCHAR(255), 
     "AccessCode" VARCHAR(255), 
     "FullName" VARCHAR(255), 
     "BirthDate" DATE, 
@@ -114,7 +112,6 @@ CREATE TABLE "UserSessionInfos" (
     "UserId" INTEGER REFERENCES "Users"("Id") ON DELETE CASCADE, 
     "ActiveStatus" INTEGER, 
     "LastLoginTs" TIMESTAMP, 
-    "LastLogoutTs" TIMESTAMP, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

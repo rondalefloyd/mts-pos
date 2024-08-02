@@ -1,5 +1,5 @@
 from peewee import *
-from app.utils.database import postgres_db
+from app.utils.databases import postgres_db
 
 class BaseModel(Model):
     class Meta:
@@ -7,7 +7,7 @@ class BaseModel(Model):
 
 class Brands(BaseModel):
     Id = AutoField()
-    BrandName = CharField(max_length=255, unique=True, null=True)
+    BrandName = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -18,7 +18,7 @@ class Brands(BaseModel):
 
 class ItemTypes(BaseModel):
     Id = AutoField()
-    ItemTypeName = CharField(max_length=255, unique=True, null=True)
+    ItemTypeName = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -29,8 +29,8 @@ class ItemTypes(BaseModel):
 
 class Organizations(BaseModel):
     Id = AutoField()
-    TaxId = CharField(max_length=255, unique=True, null=True)
-    OrganizationName = CharField(max_length=255, unique=True, null=True)
+    TaxId = CharField(max_length=255, null=True)
+    OrganizationName = CharField(max_length=255, null=True)
     Address = CharField(max_length=255, null=True)
     MobileNumber = CharField(max_length=20, null=True)
     AccessCode = CharField(max_length=255, null=True)
@@ -45,7 +45,7 @@ class Organizations(BaseModel):
 class Members(BaseModel):
     Id = AutoField()
     OrganizationId = ForeignKeyField(Organizations, backref='members', on_delete='CASCADE', column_name='OrganizationId', null=True)
-    MemberName = CharField(max_length=255, unique=True, null=True)
+    MemberName = CharField(max_length=255, null=True)
     BirthDate = DateField(null=True)
     Address = CharField(max_length=255, null=True)
     MobileNumber = CharField(max_length=20, null=True)
@@ -60,7 +60,7 @@ class Members(BaseModel):
 
 class Promos(BaseModel):
     Id = AutoField()
-    PromoName = CharField(max_length=255, unique=True, null=True)
+    PromoName = CharField(max_length=255, null=True)
     DiscountRate = FloatField(null=True)
     Description = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
@@ -73,7 +73,7 @@ class Promos(BaseModel):
 
 class Rewards(BaseModel):
     Id = AutoField()
-    RewardName = CharField(max_length=255, unique=True, null=True)
+    RewardName = CharField(max_length=255, null=True)
     Points = FloatField(null=True)
     Target = FloatField(null=True)
     Description = CharField(max_length=255, null=True)
@@ -87,7 +87,7 @@ class Rewards(BaseModel):
 
 class SalesGroups(BaseModel):
     Id = AutoField()
-    SalesGroupName = CharField(max_length=255, unique=True, null=True)
+    SalesGroupName = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -98,7 +98,7 @@ class SalesGroups(BaseModel):
 
 class Suppliers(BaseModel):
     Id = AutoField()
-    SupplierName = CharField(max_length=255, unique=True, null=True)
+    SupplierName = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -162,7 +162,7 @@ class Stocks(BaseModel):
 class Users(BaseModel):
     Id = AutoField()
     OrganizationId = ForeignKeyField(Organizations, backref='users', on_delete='CASCADE', column_name='OrganizationId', null=True)
-    UserName = CharField(max_length=255, unique=True, null=False)
+    UserName = CharField(max_length=255, null=False)
     AccessCode = CharField(max_length=255, null=False)
     FullName = CharField(max_length=255, null=True)
     BirthDate = DateField(null=True)
@@ -181,7 +181,6 @@ class UserSessionInfos(BaseModel):
     UserId = ForeignKeyField(Users, backref='user_sessions', on_delete='CASCADE', column_name='UserId', null=True)
     ActiveStatus = IntegerField(null=True)
     LastLoginTs = DateTimeField(null=True)
-    LastLogoutTs = DateTimeField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
