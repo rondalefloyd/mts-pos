@@ -41,7 +41,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
     # private methods
     def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
-        self.fetchThread = FetchThread('pos/fetch/itemtype-brand-supplier-salesgroup/all')
+        self.fetchThread = FetchThread('fetch_all_items_related_data')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupResult)
         self.fetchThread.start()
         
@@ -66,7 +66,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
     
     def _populateComboBoxPromoName(self):
-        self.currentThread = FetchThread('pos/fetch/promo/all')
+        self.currentThread = FetchThread('fetch_all_promos_data')
         self.currentThread.finished.connect(self._handlePopulateComboBoxPromoNameResult)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
@@ -95,7 +95,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
             self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
             return
         
-        self.currentThread = FetchThread('pos/fetch/promo/promo-name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
+        self.currentThread = FetchThread('fetch_promo_name_data', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
         self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateResult)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
@@ -123,7 +123,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.close()
         
     def _onPushButtonSaveClicked(self):
-        self.currentThread = EditThread('pos/edit/item/id', {
+        self.currentThread = EditThread('edit_items_related_data_by_ids', {
             'id': f"{self.selectedData['id']}",
             'itemName': f"{self.lineEditItemName.text()}".upper(),
             'barcode': f"{self.lineEditBarcode.text()}",

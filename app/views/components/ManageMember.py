@@ -65,7 +65,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
         
     def _onPushButtonAddClicked(self):
-        self.currentThread = RegisterThread('pos/register/member', {
+        self.currentThread = RegisterThread('register_members', {
             'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
             'memberName': f"{self.lineEditMemberName.text()}".upper(),
             'birthDate': f"{self.dateEditBirthDate.text()}",
@@ -89,7 +89,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
         
     def _populateTableWidgetData(self):
-        self.currentThread = FetchThread('pos/fetch/members/all/keyword/paginated', {
+        self.currentThread = FetchThread('fetch_all_members_data_by_keyword_in_pagination', {
             'organizationId': self.userData['organizationId'],
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
@@ -140,7 +140,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['memberName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('pos/remove/member/id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('remove_members_by_id', {'id': f"{data['id']}"})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

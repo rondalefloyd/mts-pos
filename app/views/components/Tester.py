@@ -15,7 +15,7 @@ class Tester(Ui_Dialog, QDialog):
         self.pushButtonTest.clicked.connect(self._onPushButtonTestClicked)
         
     def _onPushButtonTestClicked(self):
-        self.authenticate = AuthenticateThread('pos/authenticate/user/username/accesscode')
+        self.authenticate = AuthenticateThread('authenticate_user_by_user_name_access_code')
         self.authenticate.finished.connect(self._handleOnPushButtonTestClickedResult)
         self.authenticate.start()
         pass

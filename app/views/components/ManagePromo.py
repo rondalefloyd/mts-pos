@@ -58,7 +58,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         pass
         
     def _onPushButtonAddClicked(self):
-        self.currentThread = RegisterThread('pos/register/promo', {
+        self.currentThread = RegisterThread('register_promos', {
             'promoName': f"{self.lineEditPromoName.text()}".upper(),
             'discountRate': f"{self.lineEditDiscountRate.text()}",
             'description': f"{self.lineEditDescription.text()}",
@@ -78,7 +78,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         return
         
     def _populateTableWidgetData(self):
-        self.currentThread = FetchThread('pos/fetch/promos/all/keyword/paginated', {
+        self.currentThread = FetchThread('fetch_all_promos_data_by_keyword_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })
@@ -124,7 +124,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['promoName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('pos/remove/promo/id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('remove_promos_by_id', {'id': f"{data['id']}"})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

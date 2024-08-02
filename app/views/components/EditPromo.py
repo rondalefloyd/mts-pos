@@ -32,7 +32,7 @@ class EditPromo(Ui_DialogEditPromo, QDialog):
         self.close()
         
     def _onPushButtonSaveClicked(self):
-        self.currentThread = EditThread('pos/edit/promo', {
+        self.currentThread = EditThread('edit_promos_data_by_id', {
             'id': f"{self.selectedData['id']}",
             'promoName': f"{self.lineEditPromoName.text()}".upper(),
             'discountRate': f"{self.lineEditDiscountRate.text()}",
