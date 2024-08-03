@@ -28,12 +28,12 @@ class SignUp(Ui_DialogSignUp, QDialog):
     
     # private methods
     def _populateComboBoxOrganizationName(self):
-        self.fetchThread = FetchThread('fetch_all_organizations_data_by_keyword_in_pagination')
+        self.fetchThread = FetchThread('fetch_all_organizations_data')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxOrganizationNameResult)
         self.fetchThread.start()
         
     def _handlePopulateComboBoxOrganizationNameResult(self, result):
-        for data in result['data']:
+        for data in result['manyData']:
             self.comboBoxOrganizationName.addItem(f"{data['organizationName']}")
             
             

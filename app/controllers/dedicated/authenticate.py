@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import Users, Organizations, UserSessionInfos
-from app.utils.variables import DEFAULT_RESULT_TEMPLATE
+from app.utils.classes import CustomJSONEncoder
 from app.utils.databases import postgres_db
 
 logging.basicConfig(level=logging.INFO)
@@ -20,7 +20,12 @@ class AuthenticateThread(QThread):
         self.entry = entry
     
     def run(self):
-        result = DEFAULT_RESULT_TEMPLATE.copy()
+        result = {
+            'success': False,
+            'message': 'N/A',
+            'oneData': {},
+            'manyData': [],
+        }
         
         try:
             with postgres_db:
@@ -44,10 +49,10 @@ class AuthenticateThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        logging.info('result', json.dumps(result, indent=4))
+        # print(f'{self.function_route} -> result:', result)
         
 # add function here
-def authenticate_user_by_user_name_access_code(entry=object, result=object):
+def authenticate_user_by_user_name_access_code(entry=None, result=None):
     try:
         users = Users.select().where(
             (Users.UserName == entry['userName']) & 
@@ -61,7 +66,7 @@ def authenticate_user_by_user_name_access_code(entry=object, result=object):
         users = users.first()
         
         result['success'] = True
-        result['one_data'] = {
+        result['oneData'] = {
             'organizationName': Organizations.get(Organizations.Id == users.OrganizationId).OrganizationName,
             'userName': users.UserName,
             'accessCode': users.AccessCode,

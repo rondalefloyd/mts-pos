@@ -17,7 +17,7 @@ from app.models.entities import (
     Items,
     ItemPrices,
 )
-from app.utils.variables import DEFAULT_RESULT_TEMPLATE
+from app.utils.classes import CustomJSONEncoder
 from app.utils.databases import postgres_db
 
 logging.basicConfig(level=logging.INFO)
@@ -31,7 +31,12 @@ class EditThread(QThread):
         self.entry = entry
     
     def run(self):
-        result = DEFAULT_RESULT_TEMPLATE.copy()
+        result = {
+            'success': False,
+            'message': 'N/A',
+            'oneData': {},
+            'manyData': [],
+        }
         
         try:
             with postgres_db:
@@ -59,14 +64,14 @@ class EditThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        logging.info('result', json.dumps(result, indent=4))
+        print(f'{self.function_route} -> result:', result)
         
 # add function here
-def edit_items_related_data_by_ids(entry=object, result=object):
+def edit_items_related_data_by_ids(entry=None, result=None):
     pass
-def edit_members_data_by_id(entry=object, result=object):
+def edit_members_data_by_id(entry=None, result=None):
     pass
-def edit_promos_data_by_id(entry=object, result=object):
+def edit_promos_data_by_id(entry=None, result=None):
     pass
-def edit_rewards_data_by_id(entry=object, result=object):
+def edit_rewards_data_by_id(entry=None, result=None):
     pass

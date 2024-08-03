@@ -88,12 +88,15 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         self.activeThreads.append(self.currentThread)
 
     def _handlePopulateTableWidgetDataResult(self, result):
+        oneData = result['oneData']
+        manyData = result['manyData']
+        
         self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(result['data']))
+        self.tableWidgetData.setRowCount(len(manyData))
         
-        self.totalPages = result['totalPages']
+        self.totalPages = oneData['totalPages'] if 'totalPages' in oneData else 1
         
-        for i, data in enumerate(result['data']):
+        for i, data in enumerate(manyData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['promoName']}"),

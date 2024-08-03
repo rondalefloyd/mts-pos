@@ -59,7 +59,7 @@ class Login(Ui_DialogLogin, QDialog):
             return
         
         self.windowEvent = 'start/manage'
-        self.userData = result['data']
+        self.userData = result['oneData']
         self.close()
         return
 

@@ -90,7 +90,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_members_data_by_keyword_in_pagination', {
-            'organizationId': self.userData['organizationId'],
+            'organizationName': self.userData['organizationName'],
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })
@@ -100,12 +100,15 @@ class ManageMember(Ui_FormManageMember, QWidget):
         self.activeThreads.append(self.currentThread)
 
     def _handlePopulateTableWidgetDataResult(self, result):
+        oneData = result['oneData']
+        manyData = result['manyData']
+        
         self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(result['data']))
+        self.tableWidgetData.setRowCount(len(manyData))
         
-        self.totalPages = result['totalPages']
+        self.totalPages = oneData['totalPages'] if 'totalPages' in oneData else 1
         
-        for i, data in enumerate(result['data']):
+        for i, data in enumerate(manyData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['memberName']}"),

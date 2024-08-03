@@ -27,14 +27,14 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.activeThreads = []
         
         # Initialize widgets only once
-        self.manageItem = ManageItem(self.userData)
+        # self.manageItem = ManageItem(self.userData)
         self.managePromo = ManagePromo(self.userData)
         self.manageReward = ManageReward(self.userData)
         self.manageMember = ManageMember(self.userData)
         self.manageUser = ManageUser(self.userData)
         
         # Add widgets to the stacked widget
-        self.stackedWidgetManage.insertWidget(2, self.manageItem)
+        # self.stackedWidgetManage.insertWidget(2, self.manageItem)
         self.stackedWidgetManage.insertWidget(4, self.managePromo)
         self.stackedWidgetManage.insertWidget(5, self.manageReward)
         self.stackedWidgetManage.insertWidget(6, self.manageMember)

@@ -13,7 +13,7 @@ from app.models.entities import (
     Rewards,
     ItemPrices,
 )
-from app.utils.variables import DEFAULT_RESULT_TEMPLATE
+from app.utils.classes import CustomJSONEncoder
 from app.utils.databases import postgres_db
 
 class RemoveThread(QThread):
@@ -25,7 +25,12 @@ class RemoveThread(QThread):
         self.entry = entry
     
     def run(self):
-        result = DEFAULT_RESULT_TEMPLATE.copy()
+        result = {
+            'success': False,
+            'message': 'N/A',
+            'oneData': {},
+            'manyData': [],
+        }
         
         try:
             with postgres_db:
@@ -55,16 +60,16 @@ class RemoveThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        logging.info('result', json.dumps(result, indent=4))
+        print(f'{self.function_route} -> result:', result)
 
 # add function here
-def remove_item_prices_by_id(entry=object, result=object):
+def remove_item_prices_by_id(entry=None, result=None):
     pass
-def remove_members_by_id(entry=object, result=object):
+def remove_members_by_id(entry=None, result=None):
     pass
-def remove_promos_by_id(entry=object, result=object):
+def remove_promos_by_id(entry=None, result=None):
     pass
-def remove_rewards_by_id(entry=object, result=object):
+def remove_rewards_by_id(entry=None, result=None):
     pass
-def remove_users_by_id(entry=object, result=object):
+def remove_users_by_id(entry=None, result=None):
     pass
