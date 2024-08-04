@@ -13,7 +13,6 @@ from app.models.entities import (
     Rewards,
     ItemPrices,
 )
-from app.utils.classes import CustomJSONEncoder
 from app.utils.databases import postgres_db
 
 class RemoveThread(QThread):
@@ -60,7 +59,7 @@ class RemoveThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        print(f'{self.function_route} -> result:', result)
+        print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
 # add function here
 def remove_item_prices_by_id(entry=None, result=None):

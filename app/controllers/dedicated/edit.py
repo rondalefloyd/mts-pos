@@ -17,7 +17,6 @@ from app.models.entities import (
     Items,
     ItemPrices,
 )
-from app.utils.classes import CustomJSONEncoder
 from app.utils.databases import postgres_db
 
 logging.basicConfig(level=logging.INFO)
@@ -64,7 +63,7 @@ class EditThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        print(f'{self.function_route} -> result:', result)
+        print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
 # add function here
 def edit_items_related_data_by_ids(entry=None, result=None):

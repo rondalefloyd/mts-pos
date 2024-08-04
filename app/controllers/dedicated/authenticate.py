@@ -6,7 +6,6 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import Users, Organizations, UserSessionInfos
-from app.utils.classes import CustomJSONEncoder
 from app.utils.databases import postgres_db
 
 logging.basicConfig(level=logging.INFO)
@@ -49,7 +48,7 @@ class AuthenticateThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        # print(f'{self.function_route} -> result:', result)
+        print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
 # add function here
 def authenticate_user_by_user_name_access_code(entry=None, result=None):

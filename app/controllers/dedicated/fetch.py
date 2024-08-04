@@ -18,7 +18,6 @@ from app.models.entities import (
     Items,
     ItemPrices,
 )
-from app.utils.classes import CustomJSONEncoder
 from app.utils.databases import postgres_db
 
 logging.basicConfig(level=logging.INFO)
@@ -71,9 +70,8 @@ class FetchThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        # TODO: add a result formatter into json format for better print logs
         # TODO: continue working on ITEMS
-        print(f'{self.function_route} -> result:', result)
+        print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
 # add function here
 def fetch_all_organizations_data(entry=None, result=None):
