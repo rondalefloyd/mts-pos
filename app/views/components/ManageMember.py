@@ -100,8 +100,8 @@ class ManageMember(Ui_FormManageMember, QWidget):
         self.activeThreads.append(self.currentThread)
 
     def _handlePopulateTableWidgetDataResult(self, result):
-        oneData = result['oneData']
-        manyData = result['manyData']
+        oneData = result['dictData']
+        manyData = result['listData']
         
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(len(manyData))

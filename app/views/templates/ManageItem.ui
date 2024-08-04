@@ -93,22 +93,22 @@
        </column>
        <column>
         <property name="text">
-         <string>ItemType</string>
+         <string>ItemTypeName</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Brand</string>
+         <string>BrandName</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Supplier</string>
+         <string>SupplierName</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>SalesGroup</string>
+         <string>SalesGroupName</string>
         </property>
        </column>
        <column>
@@ -134,6 +134,11 @@
        <column>
         <property name="text">
          <string>PromoName</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>StockId</string>
         </property>
        </column>
        <column>

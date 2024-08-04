@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
+from app.utils.config import *
 from app.views.templates.Tester_ui import Ui_Dialog
 from app.controllers.dedicated.authenticate import AuthenticateThread
 

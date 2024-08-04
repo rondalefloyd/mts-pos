@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
+from app.utils.config import *
 from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.authenticate import AuthenticateThread
@@ -35,11 +36,11 @@ class Login(Ui_DialogLogin, QDialog):
         self.lineEditAccessCode.setEchoMode(QLineEdit.Normal if pushButtonAccessCodeVisibilityIsChecked else QLineEdit.Password)
         
     def _onPushButtonSetupClicked(self):
-        self.windowEvent = 'start/setup'
+        self.windowEvent = EVENT_START_SETUP
         self.close()
     
     def _onPushButtonSignUpClicked(self):
-        self.windowEvent = 'start/sign-up'
+        self.windowEvent = EVENT_START_SIGNUP
         self.close()
         
         
@@ -58,8 +59,8 @@ class Login(Ui_DialogLogin, QDialog):
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
         
-        self.windowEvent = 'start/manage'
-        self.userData = result['oneData']
+        self.windowEvent = EVENT_START_MANAGE
+        self.userData = result['dictData']
         self.close()
         return
 

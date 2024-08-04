@@ -19,7 +19,6 @@ from app.models.entities import (
 )
 from app.utils.databases import postgres_db
 
-logging.basicConfig(level=logging.INFO)
 
 class EditThread(QThread):
     finished = pyqtSignal(object)
@@ -33,8 +32,8 @@ class EditThread(QThread):
         result = {
             'success': False,
             'message': 'N/A',
-            'oneData': {},
-            'manyData': [],
+            'dictData': {},
+            'listData': [],
         }
         
         try:

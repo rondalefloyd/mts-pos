@@ -22,7 +22,6 @@ from app.models.entities import (
 )
 from app.utils.databases import postgres_db
 
-logging.basicConfig(level=logging.INFO)
 
 class RegisterThread(QThread):
     finished = pyqtSignal(object)
@@ -36,8 +35,8 @@ class RegisterThread(QThread):
         result = {
             'success': False,
             'message': 'N/A',
-            'oneData': {},
-            'manyData': [],
+            'dictData': {},
+            'listData': [],
         }
          
         try:
@@ -74,7 +73,82 @@ class RegisterThread(QThread):
 
 # add function here
 def register_items(entry=None, result=None):
-    pass
+    """This function is a special case. The coding structure might be different from the standard."""
+    try:
+        itemType = ItemTypes.select().where(ItemTypes.ItemTypeName == entry['itemTypeName'])
+        brand = Brands.select().where(Brands.BrandName == entry['brandName'])
+        supplier = Suppliers.select().where(Suppliers.SupplierName == entry['supplierName'])
+        
+        itemType = ItemTypes.create(ItemTypeName=entry['itemTypeName']) if not itemType.exists() else itemType.first()
+        brand = Brands.create(BrandName=entry['brandName']) if not brand.exists() else brand.first()
+        supplier = Suppliers.create(SupplierName=entry['supplierName']) if not supplier.exists() else supplier.first()
+        
+        print('entry:', entry)
+        stockId = None
+        if entry['trackInventory'] is 'True':
+            stock = Stocks.create()
+            stockId = stock.Id
+            print('has tracker')
+        print(f'stockId: {stockId}')
+        
+        salesGroupEntries = [
+            {'salesGroupName': 'retail'.upper(), 'salesGroupPrice': entry['retailPrice']},
+            {'salesGroupName': 'wholesale'.upper(), 'salesGroupPrice': entry['wholesalePrice']},
+        ]
+        
+        for salesGroupEntry in salesGroupEntries:
+            item = Items.select().where(
+                (Items.ItemName == entry['itemName']) &
+                (Items.Barcode == entry['barcode']) &
+                (Items.ExpireDate == entry['expireDate']) &
+                (Items.ItemTypeId == itemType.Id) &
+                (Items.BrandId == brand.Id) &
+                (Items.SupplierId == supplier.Id) &
+                (Items.SalesGroupId == SalesGroups.get(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id) & 
+                (Items.StockId == stockId)
+            )
+            
+            if item.exists():
+                result['message'] = 'Item already exists'
+                return result
+            
+            item = Items.create(
+                ItemName=entry['itemName'],
+                Barcode=entry['barcode'],
+                ExpireDate=entry['expireDate'],
+                ItemTypeId=itemType.Id,
+                BrandId=brand.Id,
+                SupplierId=supplier.Id,
+                SalesGroupId=SalesGroups.get(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id, 
+                StockId=stockId, 
+            )
+            
+            itemPrice = ItemPrices.select().where(
+                (ItemPrices.ItemId == item.Id) &
+                (ItemPrices.Capital == entry['capital']) &
+                (ItemPrices.Price == salesGroupEntry['salesGroupPrice']) & 
+                (ItemPrices.EffectiveDate == entry['effectiveDate']) 
+            )
+        
+            if itemPrice.exists():
+                result['message'] = 'ItemPrice already exists'
+                return result
+            
+            itemPrice = ItemPrices.create(
+                ItemId=item.Id,
+                Capital=entry['capital'],
+                Price=salesGroupEntry['salesGroupPrice'], 
+                EffectiveDate=entry['effectiveDate'],
+            )
+        
+        result['success'] = True
+        result['message'] = 'Item added'
+        return result
+
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+
 def register_members(entry=None, result=None):
     try:
         member = Members.select().where(

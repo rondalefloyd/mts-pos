@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.config import *
 from app.views.templates.Manage_ui import Ui_MainWindowManage
 from app.views.components.Loading import Loading
 from app.views.components.ManageUser import ManageUser
@@ -27,14 +28,14 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.activeThreads = []
         
         # Initialize widgets only once
-        # self.manageItem = ManageItem(self.userData)
+        self.manageItem = ManageItem(self.userData)
         self.managePromo = ManagePromo(self.userData)
         self.manageReward = ManageReward(self.userData)
         self.manageMember = ManageMember(self.userData)
         self.manageUser = ManageUser(self.userData)
         
         # Add widgets to the stacked widget
-        # self.stackedWidgetManage.insertWidget(2, self.manageItem)
+        self.stackedWidgetManage.insertWidget(2, self.manageItem)
         self.stackedWidgetManage.insertWidget(4, self.managePromo)
         self.stackedWidgetManage.insertWidget(5, self.manageReward)
         self.stackedWidgetManage.insertWidget(6, self.manageMember)
@@ -112,7 +113,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
         
-        self.windowEvent = 'start/login'
+        self.windowEvent = EVENT_START_LOGIN
         self.userData = None
         self.close()
 
@@ -132,8 +133,8 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         self.activeThreads.clear()
         
-        # Set the window event state to 'start/login'
-        self.windowEvent = 'start/login'
+        # Set the window event state to EVENT_START_LOGIN
+        self.windowEvent = EVENT_START_LOGIN
         
         event.accept()
         

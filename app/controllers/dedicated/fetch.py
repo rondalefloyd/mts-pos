@@ -15,12 +15,12 @@ from app.models.entities import (
     Brands,
     Suppliers,
     SalesGroups,
+    Stocks,
     Items,
     ItemPrices,
 )
 from app.utils.databases import postgres_db
 
-logging.basicConfig(level=logging.INFO)
 
 class FetchThread(QThread):
     finished = pyqtSignal(object)
@@ -34,8 +34,8 @@ class FetchThread(QThread):
         result = {
             'success': False,
             'message': 'N/A',
-            'oneData': {},
-            'manyData': [],
+            'dictData': {},
+            'listData': [],
         }
         
         try:
@@ -46,6 +46,10 @@ class FetchThread(QThread):
                     result = fetch_all_promos_data(self.entry, result)
                 elif self.function_route == 'fetch_all_items_related_data':
                     result = fetch_all_items_related_data(self.entry, result)
+                elif self.function_route == 'fetch_all_stocks_data_by_keyword_in_pagination':
+                    result = fetch_all_stocks_data_by_keyword_in_pagination(self.entry, result)
+                elif self.function_route == 'fetch_all_items_related_data_by_keyword_in_pagination':
+                    result = fetch_all_items_related_data_by_keyword_in_pagination(self.entry, result)
                 elif self.function_route == 'fetch_all_members_data_by_keyword_in_pagination':
                     result = fetch_all_members_data_by_keyword_in_pagination(self.entry, result)
                 elif self.function_route == 'fetch_all_promos_data_by_keyword_in_pagination':
@@ -83,7 +87,7 @@ def fetch_all_organizations_data(entry=None, result=None):
         
         result['success'] = True
         for organization in organizations:
-            result['manyData'].append({
+            result['listData'].append({
                 'taxId': organization.TaxId,
                 'organizationName': organization.OrganizationName,
                 'address': organization.Address,
@@ -105,7 +109,7 @@ def fetch_all_promos_data(entry=None, result=None):
         
         result['success'] = True
         for promo in promos:
-            result['manyData'].append({
+            result['listData'].append({
                 'id': promo.Id,
                 'promoName': promo.PromoName,
                 'discountRate': promo.DiscountRate,
@@ -119,7 +123,139 @@ def fetch_all_promos_data(entry=None, result=None):
         return result
     
 def fetch_all_items_related_data(entry=None, result=None):
-    pass
+    try:
+        itemTypes = ItemTypes.select().order_by(ItemTypes.UpdateTs.desc())
+        brands = Brands.select().order_by(Brands.UpdateTs.desc())
+        suppliers = Suppliers.select().order_by(Suppliers.UpdateTs.desc())
+        
+        result['success'] = True
+        dictData = result['dictData'] = {
+            'itemTypes': [],
+            'brands': [],
+            'suppliers': [],
+        }
+        for itemType in itemTypes:
+            dictData['itemTypes'].append({
+                'id': itemType.Id,
+                'itemTypeName': itemType.ItemTypeName,
+                'updateTs': itemType.UpdateTs,
+            })
+        for brand in brands:
+            dictData['brands'].append({
+                'id': brand.Id,
+                'brandName': brand.BrandName,
+                'updateTs': brand.UpdateTs,
+            })
+        for supplier in suppliers:
+            dictData['suppliers'].append({
+                'id': supplier.Id,
+                'supplierName': supplier.SupplierName,
+                'updateTs': supplier.UpdateTs,
+            })
+        return result
+
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
+def fetch_all_stocks_data_by_keyword_in_pagination(entry=None, result=None):
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        stocks = Stocks.select().where(
+            (Stocks.OnHand.cast('TEXT').like(keyword)) |
+            (Stocks.Available.cast('TEXT').like(keyword)) |
+            (Stocks.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(Stocks.UpdateTs.desc())
+        
+        total_count = stocks.count()
+        paginated_stocks = stocks.limit(limit).offset(offset)
+        
+        result['success'] = True
+        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
+        for stocks in paginated_stocks:
+            result['listData'].append({
+                'id': stocks.Id,
+                'onHand': stocks.OnHand,
+                'available': stocks.Available,
+                'updateTs': stocks.UpdateTs,
+            })
+        
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
+def fetch_all_items_related_data_by_keyword_in_pagination(entry=None, result=None):
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        item_prices = (ItemPrices.select(
+            ItemPrices,
+            Items,
+            Promos,
+            ItemTypes,
+            Brands,
+            Suppliers,
+            SalesGroups,
+            Stocks,
+        ).join(Items, JOIN.LEFT_OUTER, on=(ItemPrices.ItemId == Items.Id)
+        ).join(Promos, JOIN.LEFT_OUTER, on=(ItemPrices.PromoId == Promos.Id)
+        ).join(ItemTypes, JOIN.LEFT_OUTER, on=(Items.ItemTypeId == ItemTypes.Id)
+        ).join(Brands, JOIN.LEFT_OUTER, on=(Items.BrandId == Brands.Id)
+        ).join(Suppliers, JOIN.LEFT_OUTER, on=(Items.SupplierId == Suppliers.Id)
+        ).join(SalesGroups, JOIN.LEFT_OUTER, on=(Items.SalesGroupId == SalesGroups.Id)
+        ).join(Stocks, JOIN.LEFT_OUTER, on=(Items.SalesGroupId == Stocks.Id)
+        ).where(
+            (Items.ItemName.cast('TEXT').like(keyword)) |
+            (Items.Barcode.cast('TEXT').like(keyword)) |
+            (Items.ExpireDate.cast('TEXT').like(keyword)) |
+            (ItemTypes.ItemTypeName.cast('TEXT').like(keyword)) |
+            (Brands.BrandName.cast('TEXT').like(keyword)) |
+            (Suppliers.SupplierName.cast('TEXT').like(keyword)) |
+            (SalesGroups.SalesGroupName.cast('TEXT').like(keyword)) |
+            (ItemPrices.EffectiveDate.cast('TEXT').like(keyword)) |
+            (Promos.PromoName.cast('TEXT').like(keyword)) |
+            (Items.StockId.cast('TEXT').like(keyword)) |
+            (ItemPrices.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(ItemPrices.UpdateTs.desc(), ItemPrices.EffectiveDate.desc()))
+        
+        total_count = item_prices.count()
+        paginated_item_prices = item_prices.limit(limit).offset(offset)
+        
+        result['success'] = True
+        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
+        for item_price in paginated_item_prices:
+            result['listData'].append({
+                'id': item_price.Id,
+                'itemid': item_price.ItemId.Id,
+                'itemName': item_price.ItemId.ItemName,
+                'barcode': item_price.ItemId.Barcode,
+                'expireDate': item_price.ItemId.ExpireDate,
+                'itemTypeName': item_price.ItemId.ItemTypeId.ItemTypeName,
+                'brandName': item_price.ItemId.BrandId.BrandName,
+                'supplierName': item_price.ItemId.SupplierId.SupplierName,
+                'salesGroupName': item_price.ItemId.SalesGroupId.SalesGroupName,
+                'capital': item_price.Capital,
+                'price': item_price.Price,
+                'discount': item_price.Discount,
+                'effectiveDate': item_price.EffectiveDate,
+                'promoName': item_price.PromoId.PromoName if item_price.PromoId else None,
+                'stockId': item_price.ItemId.StockId.Id if item_price.ItemId.StockId else None,
+                'updateTs': item_price.UpdateTs,
+            })
+            
+        return result
+    
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+
 def fetch_all_members_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 30
@@ -140,9 +276,9 @@ def fetch_all_members_data_by_keyword_in_pagination(entry=None, result=None):
         paginated_members = members.limit(limit).offset(offset)
         
         result['success'] = True
-        result['oneData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
         for member in paginated_members:
-            result['manyData'].append({
+            result['listData'].append({
                 'id': member.Id,
                 'organizationId': member.OrganizationId,
                 'memberName': member.MemberName,
@@ -176,9 +312,9 @@ def fetch_all_promos_data_by_keyword_in_pagination(entry=None, result=None):
         paginated_promos = promos.limit(limit).offset(offset)
         
         result['success'] = True
-        result['oneData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
         for promo in paginated_promos:
-            result['manyData'].append({
+            result['listData'].append({
                 'id': promo.Id,
                 'promoName': promo.PromoName,
                 'discountRate': promo.DiscountRate,
@@ -210,9 +346,9 @@ def fetch_all_rewards_data_by_keyword_in_pagination(entry=None, result=None):
         paginated_rewards = rewards.limit(limit).offset(offset)
         
         result['success'] = True
-        result['oneData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
         for reward in paginated_rewards:
-            result['manyData'].append({
+            result['listData'].append({
                 'id': reward.Id,
                 'rewardName': reward.RewardName,
                 'points': reward.Points,
@@ -248,9 +384,9 @@ def fetch_all_users_data_by_keyword_in_pagination(entry=None, result=None):
         paginated_users = users.limit(limit).offset(offset)
         
         result['success'] = True
-        result['oneData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
         for user in paginated_users:
-            result['manyData'].append({
+            result['listData'].append({
                 'id': user.Id,
                 'userName': user.UserName,
                 'accessCode': user.AccessCode,

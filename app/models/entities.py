@@ -107,6 +107,18 @@ class Suppliers(BaseModel):
     def __str__(self):
         return self.SupplierName
 
+class Stocks(BaseModel):
+    Id = AutoField()
+    OnHand = IntegerField(null=True)
+    Available = IntegerField(null=True)
+    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
+
+    class Meta:
+        table_name = 'Stocks'
+
+    def __str__(self):
+        return f"Stock {self.Id}"
+    
 class Items(BaseModel):
     Id = AutoField()
     ItemName = CharField(max_length=255, null=True)
@@ -116,6 +128,7 @@ class Items(BaseModel):
     BrandId = ForeignKeyField(Brands, backref='items', on_delete='CASCADE', column_name='BrandId', null=True)
     SalesGroupId = ForeignKeyField(SalesGroups, backref='items', on_delete='CASCADE', column_name='SalesGroupId', null=True)
     SupplierId = ForeignKeyField(Suppliers, backref='items', on_delete='CASCADE', column_name='SupplierId', null=True)
+    StockId = ForeignKeyField(Stocks, backref='stocks', on_delete='CASCADE', column_name='StockId', null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -145,19 +158,6 @@ class ItemPrices(BaseModel):
 
     def __str__(self):
         return f"ItemPrice {self.Id}"
-
-class Stocks(BaseModel):
-    Id = AutoField()
-    ItemId = ForeignKeyField(Items, backref='stocks', on_delete='CASCADE', column_name='ItemId', null=True)
-    OnHand = IntegerField(null=True)
-    Available = IntegerField(null=True)
-    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
-
-    class Meta:
-        table_name = 'Stocks'
-
-    def __str__(self):
-        return f"Stock {self.Id}"
 
 class Users(BaseModel):
     Id = AutoField()

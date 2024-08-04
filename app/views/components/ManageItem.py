@@ -46,12 +46,18 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.comboBoxItemTypeName.clear()
         self.comboBoxBrandName.clear()
         self.comboBoxSupplierName.clear()
+        
+        manyData = result['dictData']
+        
+        itemTypes = manyData['itemTypes'] if 'itemTypes' in manyData else []
+        brands = manyData['brands'] if 'brands' in manyData else []
+        suppliers = manyData['suppliers'] if 'suppliers' in manyData else []
 
-        for itemType in result['data']['itemTypes']:
+        for itemType in itemTypes:
             self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
-        for brand in result['data']['brands']:
+        for brand in brands:
             self.comboBoxBrandName.addItem(f"{brand['brandName']}")
-        for supplier in result['data']['suppliers']:
+        for supplier in suppliers:
             self.comboBoxSupplierName.addItem(f"{supplier['supplierName']}")
             
 
@@ -116,12 +122,15 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.activeThreads.append(self.currentThread)
 
     def _handlePopulateTableWidgetDataResult(self, result):
+        oneData = result['dictData']
+        manyData = result['listData']
+        
         self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(result['data']))
+        self.tableWidgetData.setRowCount(len(manyData))
         
-        self.totalPages = result['totalPages']
+        self.totalPages = oneData['totalPages'] if 'totalPages' in oneData else 1
         
-        for i, data in enumerate(result['data']):
+        for i, data in enumerate(manyData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['itemName']}"),
@@ -136,6 +145,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
                 QTableWidgetItem(f"{data['discount']}"),
                 QTableWidgetItem(f"{data['effectiveDate']}"),
                 QTableWidgetItem(f"{data['promoName']}"),
+                QTableWidgetItem(f"{data['stockId']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
+from app.utils.config import *
 from app.views.templates.SignUp_ui import Ui_DialogSignUp
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.register import RegisterThread
@@ -33,12 +34,12 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.fetchThread.start()
         
     def _handlePopulateComboBoxOrganizationNameResult(self, result):
-        for data in result['manyData']:
+        self.comboBoxOrganizationName.clear()
+        for data in result['listData']:
             self.comboBoxOrganizationName.addItem(f"{data['organizationName']}")
             
-            
     def _onPushButtonCancelClicked(self):
-        self.windowEvent = 'start/login'
+        self.windowEvent = EVENT_START_LOGIN
         self.close()
     
     
@@ -83,8 +84,8 @@ class SignUp(Ui_DialogSignUp, QDialog):
         
         self.activeThreads.clear()
         
-        # Set the window event state to 'start/login'
-        self.windowEvent = 'start/login'
+        # Set the window event state to EVENT_START_LOGIN
+        self.windowEvent = EVENT_START_LOGIN
         
         event.accept()
         

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
+from app.utils.config import *
 from app.views.templates.Setup_ui import Ui_DialogSetup
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.register import RegisterThread
@@ -26,7 +27,7 @@ class Setup(Ui_DialogSetup, QDialog):
         
     # private methods
     def _onPushButtonCancelClicked(self):
-        self.windowEvent = 'start/login'
+        self.windowEvent = EVENT_START_LOGIN
         self.close()
 
 
@@ -69,8 +70,8 @@ class Setup(Ui_DialogSetup, QDialog):
         
         self.activeThreads.clear()
         
-        # Set the window event state to 'start/login'
-        self.windowEvent = 'start/login'
+        # Set the window event state to EVENT_START_LOGIN
+        self.windowEvent = EVENT_START_LOGIN
         
         event.accept()
 

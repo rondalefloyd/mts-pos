@@ -8,7 +8,6 @@ sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import Users, Organizations, UserSessionInfos
 from app.utils.databases import postgres_db
 
-logging.basicConfig(level=logging.INFO)
 
 class AuthenticateThread(QThread):
     finished = pyqtSignal(object)
@@ -22,8 +21,8 @@ class AuthenticateThread(QThread):
         result = {
             'success': False,
             'message': 'N/A',
-            'oneData': {},
-            'manyData': [],
+            'dictData': {},
+            'listData': [],
         }
         
         try:
@@ -65,7 +64,7 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
         users = users.first()
         
         result['success'] = True
-        result['oneData'] = {
+        result['dictData'] = {
             'organizationName': Organizations.get(Organizations.Id == users.OrganizationId).OrganizationName,
             'userName': users.UserName,
             'accessCode': users.AccessCode,

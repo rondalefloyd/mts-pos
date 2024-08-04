@@ -27,8 +27,8 @@ class RemoveThread(QThread):
         result = {
             'success': False,
             'message': 'N/A',
-            'oneData': {},
-            'manyData': [],
+            'dictData': {},
+            'listData': [],
         }
         
         try:
