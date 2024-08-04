@@ -1,3 +1,4 @@
+EVENT_NO_EVENT = 'no-event'
 EVENT_START_LOGIN = 'start/login'
 EVENT_START_SETUP = 'start/setup'
 EVENT_START_SIGNUP = 'start/signup'

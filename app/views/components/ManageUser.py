@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
+from app.utils.config import *
 from app.views.templates.ManageUser_ui import Ui_FormManageUser
 from app.views.components.Loading import Loading
 from app.views.components.ManageActionButton import ManageActionButton

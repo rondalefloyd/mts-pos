@@ -164,11 +164,18 @@ def fetch_all_stocks_data_by_keyword_in_pagination(entry=None, result=None):
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        stocks = Stocks.select().where(
+        stocks = (Stocks.select(
+            Stocks,
+            Items,
+        ).join(Items, JOIN.LEFT_OUTER, on=(Stocks.ItemId == Items.Id)
+        ).join(SalesGroups, JOIN.LEFT_OUTER, on=(Items.SalesGroupId == SalesGroups.Id)
+        ).where(
+            (Items.ItemName.cast('TEXT').like(keyword)) |
+            (SalesGroups.SalesGroupName.cast('TEXT').like(keyword)) |
             (Stocks.OnHand.cast('TEXT').like(keyword)) |
             (Stocks.Available.cast('TEXT').like(keyword)) |
             (Stocks.UpdateTs.cast('TEXT').like(keyword))
-        ).order_by(Stocks.UpdateTs.desc())
+        ).order_by(Stocks.UpdateTs.desc()))
         
         total_count = stocks.count()
         paginated_stocks = stocks.limit(limit).offset(offset)
@@ -177,7 +184,8 @@ def fetch_all_stocks_data_by_keyword_in_pagination(entry=None, result=None):
         result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
         for stocks in paginated_stocks:
             result['listData'].append({
-                'id': stocks.Id,
+                'itemName': stocks.ItemId.ItemName,
+                'salesGroup': stocks.ItemId.SalesGroupId.SalesGroupName,
                 'onHand': stocks.OnHand,
                 'available': stocks.Available,
                 'updateTs': stocks.UpdateTs,

@@ -72,7 +72,8 @@ class ManageStock(Ui_FormManageStock, QWidget):
         for i, data in enumerate(manyData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
-                QTableWidgetItem(f"{data['itemId']}"),
+                QTableWidgetItem(f"{data['itemName']}"),
+                QTableWidgetItem(f"{data['salesGroup']}"),
                 QTableWidgetItem(f"{data['onHand']}"),
                 QTableWidgetItem(f"{data['available']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),

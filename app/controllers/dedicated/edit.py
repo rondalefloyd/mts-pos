@@ -46,6 +46,8 @@ class EditThread(QThread):
                     result = edit_promos_data_by_id(self.entry, result)
                 elif self.function_route == 'edit_rewards_data_by_id':
                     result = edit_rewards_data_by_id(self.entry, result)
+                elif self.function_route == 'edit_stocks_data_by_id':
+                    result = edit_stocks_data_by_id(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -72,4 +74,6 @@ def edit_members_data_by_id(entry=None, result=None):
 def edit_promos_data_by_id(entry=None, result=None):
     pass
 def edit_rewards_data_by_id(entry=None, result=None):
+    pass
+def edit_stocks_data_by_id(entry=None, result=None):
     pass
