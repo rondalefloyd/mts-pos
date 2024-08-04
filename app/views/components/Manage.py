@@ -22,7 +22,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.setupUi(self)
         
         self.loading = Loading()
-        self.windowEvent = 'no-event'
+        self.windowEvent = EVENT_NO_EVENT
         self.userData = userData
         self.currentThread = None
         self.activeThreads = []

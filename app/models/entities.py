@@ -44,7 +44,7 @@ class Organizations(BaseModel):
 
 class Members(BaseModel):
     Id = AutoField()
-    OrganizationId = ForeignKeyField(Organizations, backref='members', on_delete='CASCADE', column_name='OrganizationId', null=True)
+    OrganizationId = ForeignKeyField(Organizations, on_delete='CASCADE', column_name='OrganizationId', null=True)
     MemberName = CharField(max_length=255, null=True)
     BirthDate = DateField(null=True)
     Address = CharField(max_length=255, null=True)
@@ -106,9 +106,43 @@ class Suppliers(BaseModel):
 
     def __str__(self):
         return self.SupplierName
+    
+class Items(BaseModel):
+    Id = AutoField()
+    ItemName = CharField(max_length=255, null=True)
+    Barcode = CharField(max_length=255, null=True)
+    ExpireDate = DateField(null=True)
+    ItemTypeId = ForeignKeyField(ItemTypes, on_delete='CASCADE', column_name='ItemTypeId', null=True)
+    BrandId = ForeignKeyField(Brands, on_delete='CASCADE', column_name='BrandId', null=True)
+    SalesGroupId = ForeignKeyField(SalesGroups, on_delete='CASCADE', column_name='SalesGroupId', null=True)
+    SupplierId = ForeignKeyField(Suppliers, on_delete='CASCADE', column_name='SupplierId', null=True)
+    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
+
+    class Meta:
+        table_name = 'Items'
+
+    def __str__(self):
+        return self.ItemName
+
+class ItemPrices(BaseModel):
+    Id = AutoField()
+    ItemId = ForeignKeyField(Items, on_delete='CASCADE', column_name='ItemId', null=True)
+    Capital = FloatField(null=True)
+    Price = FloatField(null=True)
+    PromoId = ForeignKeyField(Promos, on_delete='CASCADE', column_name='PromoId', null=True)
+    Discount = FloatField(null=True)
+    EffectiveDate = DateField(null=True)
+    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
+
+    class Meta:
+        table_name = 'ItemPrices'
+
+    def __str__(self):
+        return f"ItemPrice {self.Id}"
 
 class Stocks(BaseModel):
     Id = AutoField()
+    ItemId = ForeignKeyField(Items, on_delete='CASCADE', column_name='ItemId', null=True)
     OnHand = IntegerField(null=True)
     Available = IntegerField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
@@ -118,50 +152,9 @@ class Stocks(BaseModel):
 
     def __str__(self):
         return f"Stock {self.Id}"
-    
-class Items(BaseModel):
-    Id = AutoField()
-    ItemName = CharField(max_length=255, null=True)
-    Barcode = CharField(max_length=255, null=True)
-    ExpireDate = DateField(null=True)
-    ItemTypeId = ForeignKeyField(ItemTypes, backref='items', on_delete='CASCADE', column_name='ItemTypeId', null=True)
-    BrandId = ForeignKeyField(Brands, backref='items', on_delete='CASCADE', column_name='BrandId', null=True)
-    SalesGroupId = ForeignKeyField(SalesGroups, backref='items', on_delete='CASCADE', column_name='SalesGroupId', null=True)
-    SupplierId = ForeignKeyField(Suppliers, backref='items', on_delete='CASCADE', column_name='SupplierId', null=True)
-    StockId = ForeignKeyField(Stocks, backref='stocks', on_delete='CASCADE', column_name='StockId', null=True)
-    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
-
-    class Meta:
-        table_name = 'Items'
-        indexes = (
-            (('ItemName', 'SalesGroupId'), True),  # Composite unique index
-        )
-
-    def __str__(self):
-        return self.ItemName
-
-class ItemPrices(BaseModel):
-    Id = AutoField()
-    ItemId = ForeignKeyField(Items, backref='item_prices', on_delete='CASCADE', column_name='ItemId', null=True)
-    Capital = FloatField(null=True)
-    Price = FloatField(null=True)
-    PromoId = ForeignKeyField(Promos, backref='item_prices', on_delete='CASCADE', column_name='PromoId', null=True)
-    Discount = FloatField(null=True)
-    EffectiveDate = DateField(null=True)
-    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
-
-    class Meta:
-        table_name = 'ItemPrices'
-        indexes = (
-            (('ItemId', 'Capital', 'Price', 'PromoId', 'Discount', 'EffectiveDate'), True),  # Composite unique index
-        )
-
-    def __str__(self):
-        return f"ItemPrice {self.Id}"
-
 class Users(BaseModel):
     Id = AutoField()
-    OrganizationId = ForeignKeyField(Organizations, backref='users', on_delete='CASCADE', column_name='OrganizationId', null=True)
+    OrganizationId = ForeignKeyField(Organizations, on_delete='CASCADE', column_name='OrganizationId', null=True)
     UserName = CharField(max_length=255, null=False)
     AccessCode = CharField(max_length=255, null=False)
     FullName = CharField(max_length=255, null=True)
@@ -178,7 +171,7 @@ class Users(BaseModel):
 
 class UserSessionInfos(BaseModel):
     Id = AutoField()
-    UserId = ForeignKeyField(Users, backref='user_sessions', on_delete='CASCADE', column_name='UserId', null=True)
+    UserId = ForeignKeyField(Users, on_delete='CASCADE', column_name='UserId', null=True)
     ActiveStatus = IntegerField(null=True)
     LastLoginTs = DateTimeField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
@@ -209,15 +202,15 @@ class Dates(BaseModel):
 
 class Sales(BaseModel):
     Id = AutoField()
-    UserId = ForeignKeyField(Users, backref='sales', on_delete='CASCADE', column_name='UserId', null=True)
-    CustomerId = ForeignKeyField(Members, backref='sales', on_delete='CASCADE', column_name='CustomerId', null=True)
-    ItemId = ForeignKeyField(Items, backref='sales', on_delete='CASCADE', column_name='ItemId', null=True)
+    UserId = ForeignKeyField(Users, on_delete='CASCADE', column_name='UserId', null=True)
+    CustomerId = ForeignKeyField(Members, on_delete='CASCADE', column_name='CustomerId', null=True)
+    ItemId = ForeignKeyField(Items, on_delete='CASCADE', column_name='ItemId', null=True)
     Quantity = IntegerField(null=True)
     QuantityPrice = FloatField(null=True)
     Reason = TextField(null=True)
     ReferenceId = CharField(max_length=255, null=True)
     Status = IntegerField(null=True)
-    DateId = ForeignKeyField(Dates, backref='sales', on_delete='CASCADE', column_name='DateId', null=True)
+    DateId = ForeignKeyField(Dates, on_delete='CASCADE', column_name='DateId', null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:

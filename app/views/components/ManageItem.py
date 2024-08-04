@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.config import *
 from app.views.templates.ManageItem_ui import Ui_FormManageItem
 from app.views.components.Loading import Loading
 from app.views.components.EditItem import EditItem
@@ -17,7 +18,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.setupUi(self)
         
         self.loading = Loading()
-        self.windowEvent = 'no-event'
+        self.windowEvent = EVENT_NO_EVENT
         self.userData = userData
         self.currentThread = None
         self.activeThreads = []
@@ -145,7 +146,6 @@ class ManageItem(Ui_FormManageItem, QWidget):
                 QTableWidgetItem(f"{data['discount']}"),
                 QTableWidgetItem(f"{data['effectiveDate']}"),
                 QTableWidgetItem(f"{data['promoName']}"),
-                QTableWidgetItem(f"{data['stockId']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

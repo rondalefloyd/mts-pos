@@ -83,14 +83,6 @@ def register_items(entry=None, result=None):
         brand = Brands.create(BrandName=entry['brandName']) if not brand.exists() else brand.first()
         supplier = Suppliers.create(SupplierName=entry['supplierName']) if not supplier.exists() else supplier.first()
         
-        print('entry:', entry)
-        stockId = None
-        if entry['trackInventory'] is 'True':
-            stock = Stocks.create()
-            stockId = stock.Id
-            print('has tracker')
-        print(f'stockId: {stockId}')
-        
         salesGroupEntries = [
             {'salesGroupName': 'retail'.upper(), 'salesGroupPrice': entry['retailPrice']},
             {'salesGroupName': 'wholesale'.upper(), 'salesGroupPrice': entry['wholesalePrice']},
@@ -104,8 +96,7 @@ def register_items(entry=None, result=None):
                 (Items.ItemTypeId == itemType.Id) &
                 (Items.BrandId == brand.Id) &
                 (Items.SupplierId == supplier.Id) &
-                (Items.SalesGroupId == SalesGroups.get(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id) & 
-                (Items.StockId == stockId)
+                (Items.SalesGroupId == SalesGroups.get(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id)
             )
             
             if item.exists():
@@ -119,8 +110,7 @@ def register_items(entry=None, result=None):
                 ItemTypeId=itemType.Id,
                 BrandId=brand.Id,
                 SupplierId=supplier.Id,
-                SalesGroupId=SalesGroups.get(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id, 
-                StockId=stockId, 
+                SalesGroupId=SalesGroups.get(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id,
             )
             
             itemPrice = ItemPrices.select().where(
@@ -140,6 +130,9 @@ def register_items(entry=None, result=None):
                 Price=salesGroupEntry['salesGroupPrice'], 
                 EffectiveDate=entry['effectiveDate'],
             )
+        
+            if entry['trackInventory'] is 'True':
+                stock = Stocks.create(ItemId=item.Id)
         
         result['success'] = True
         result['message'] = 'Item added'

@@ -203,7 +203,6 @@ def fetch_all_items_related_data_by_keyword_in_pagination(entry=None, result=Non
             Brands,
             Suppliers,
             SalesGroups,
-            Stocks,
         ).join(Items, JOIN.LEFT_OUTER, on=(ItemPrices.ItemId == Items.Id)
         ).join(Promos, JOIN.LEFT_OUTER, on=(ItemPrices.PromoId == Promos.Id)
         ).join(ItemTypes, JOIN.LEFT_OUTER, on=(Items.ItemTypeId == ItemTypes.Id)
@@ -221,7 +220,6 @@ def fetch_all_items_related_data_by_keyword_in_pagination(entry=None, result=Non
             (SalesGroups.SalesGroupName.cast('TEXT').like(keyword)) |
             (ItemPrices.EffectiveDate.cast('TEXT').like(keyword)) |
             (Promos.PromoName.cast('TEXT').like(keyword)) |
-            (Items.StockId.cast('TEXT').like(keyword)) |
             (ItemPrices.UpdateTs.cast('TEXT').like(keyword))
         ).order_by(ItemPrices.UpdateTs.desc(), ItemPrices.EffectiveDate.desc()))
         
@@ -246,7 +244,6 @@ def fetch_all_items_related_data_by_keyword_in_pagination(entry=None, result=Non
                 'discount': item_price.Discount,
                 'effectiveDate': item_price.EffectiveDate,
                 'promoName': item_price.PromoId.PromoName if item_price.PromoId else None,
-                'stockId': item_price.ItemId.StockId.Id if item_price.ItemId.StockId else None,
                 'updateTs': item_price.UpdateTs,
             })
             

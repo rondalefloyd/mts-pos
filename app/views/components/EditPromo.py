@@ -15,7 +15,7 @@ class EditPromo(Ui_DialogEditPromo, QDialog):
         self.setupUi(self)
         
         self.loading = Loading()
-        self.windowEvent = 'no-event'
+        self.windowEvent = EVENT_NO_EVENT
         self.userData = userData
         self.selectedData = selectedData
         self.currentThread = None

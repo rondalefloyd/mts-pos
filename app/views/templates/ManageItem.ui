@@ -138,11 +138,6 @@
        </column>
        <column>
         <property name="text">
-         <string>StockId</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
          <string>UpdateTs</string>
         </property>
        </column>

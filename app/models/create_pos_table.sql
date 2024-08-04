@@ -64,13 +64,6 @@ CREATE TABLE "Suppliers" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "Stocks" (
-    "Id" SERIAL PRIMARY KEY, 
-    "OnHand" INTEGER DEFAULT 0, 
-    "Available" INTEGER DEFAULT 0, 
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE "Items" (
     "Id" SERIAL PRIMARY KEY, 
     "ItemName" VARCHAR(255), 
@@ -80,7 +73,6 @@ CREATE TABLE "Items" (
     "BrandId" INTEGER REFERENCES "Brands"("Id") ON DELETE CASCADE, 
     "SalesGroupId" INTEGER REFERENCES "SalesGroups"("Id") ON DELETE CASCADE, 
     "SupplierId" INTEGER REFERENCES "Suppliers"("Id") ON DELETE CASCADE, 
-    "StockId" INTEGER REFERENCES "Stocks"("Id") ON DELETE CASCADE, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -92,6 +84,14 @@ CREATE TABLE "ItemPrices" (
     "PromoId" INTEGER REFERENCES "Promos"("Id") ON DELETE CASCADE, 
     "Discount" FLOAT,
     "EffectiveDate" DATE,  
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "Stocks" (
+    "Id" SERIAL PRIMARY KEY, 
+    "ItemId" INTEGER REFERENCES "Items"("Id") ON DELETE CASCADE, 
+    "OnHand" INTEGER DEFAULT 0, 
+    "Available" INTEGER DEFAULT 0, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

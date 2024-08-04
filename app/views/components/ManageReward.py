@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QWidget, QMessageBox, QTableWidgetItem
 from PyQt5.QtGui import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.config import *
 from app.views.templates.ManageReward_ui import Ui_FormManageReward
 from app.views.components.Loading import Loading
 from app.views.components.EditReward import EditReward
@@ -19,7 +20,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
         self.setupUi(self)
         
         self.loading = Loading()
-        self.windowEvent = 'no-event'
+        self.windowEvent = EVENT_NO_EVENT
         self.userData = userData
         self.currentThread = None
         self.activeThreads = []

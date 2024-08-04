@@ -83,6 +83,11 @@
        </column>
        <column>
         <property name="text">
+         <string>SalesGroupName</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
          <string>OnHand</string>
         </property>
        </column>

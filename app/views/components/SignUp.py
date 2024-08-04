@@ -18,7 +18,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.setupUi(self)
         
         self.loading = Loading()
-        self.windowEvent = 'no-event'
+        self.windowEvent = EVENT_NO_EVENT
         self.userData = None
         self.currentThread = None
         self.activeThreads = []
