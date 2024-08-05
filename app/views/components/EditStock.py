@@ -10,7 +10,6 @@ from app.views.templates.EditStock_ui import Ui_DialogEditStock
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.edit import EditThread
 
-# TODO: add populator in the combobox
 class EditStock(Ui_DialogEditStock, QDialog):
     def __init__(self, userData, selectedData):
         super().__init__()
