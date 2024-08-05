@@ -49,6 +49,20 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QLineEdit" name="lineEditItemName"/>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxTrackInventory">
+           <property name="text">
+            <string>Track inventory</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
@@ -147,7 +161,7 @@
           <bool>false</bool>
          </property>
          <property name="editable">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="insertPolicy">
           <enum>QComboBox::NoInsert</enum>
@@ -179,7 +193,18 @@
         </widget>
        </item>
        <item row="10" column="1">
-        <widget class="QLineEdit" name="lineEditPrice"/>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLineEdit" name="lineEditPrice"/>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBoxApplyPromo">
+           <property name="text">
+            <string>Apply promo</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item row="11" column="0">
         <widget class="QLabel" name="label_7">
@@ -214,6 +239,12 @@
        </item>
        <item row="13" column="1">
         <widget class="QComboBox" name="comboBoxPromoName">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
          <property name="insertPolicy">
           <enum>QComboBox::NoInsert</enum>
          </property>
@@ -309,20 +340,6 @@
           <bool>true</bool>
          </property>
         </widget>
-       </item>
-       <item row="0" column="1">
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
-         <item>
-          <widget class="QLineEdit" name="lineEditItemName"/>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBoxTrackInventory">
-           <property name="text">
-            <string>Track inventory</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </item>
       </layout>
      </widget>

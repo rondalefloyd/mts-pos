@@ -66,8 +66,23 @@ class RemoveThread(QThread):
 
 # add function here
 def remove_item_price_by_id(entry=None, result=None):
-    # TODO: finish this
-    return result
+    try:
+        itemPrice = ItemPrice.select().where(ItemPrice.Id == entry['id'])
+        
+        if not itemPrice.exists():
+            result['message'] = 'ItemPrice does not exists'
+            return
+        
+        itemPrice = itemPrice.get_or_none().delete_instance()
+        
+        result['success'] = True
+        result['message'] = 'ItemPrice deleted'
+        return result
+        
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
     
 def remove_stock_by_id(entry=None, result=None):
     try:
@@ -77,7 +92,7 @@ def remove_stock_by_id(entry=None, result=None):
             result['message'] = 'Stock does not exists'
             return
         
-        stock.get_or_none().delete_instance()
+        stock = stock.get_or_none().delete_instance()
         
         result['success'] = True
         result['message'] = 'Stock deleted'
@@ -96,7 +111,7 @@ def remove_member_by_id(entry=None, result=None):
             result['message'] = 'Member does not exists'
             return
         
-        member.get_or_none().delete_instance()
+        member = member.get_or_none().delete_instance()
         
         result['success'] = True
         result['message'] = 'Member deleted'
@@ -115,7 +130,7 @@ def remove_promo_by_id(entry=None, result=None):
             result['message'] = 'Promo does not exists'
             return
         
-        promo.get_or_none().delete_instance()
+        promo = promo.get_or_none().delete_instance()
         
         result['success'] = True
         result['message'] = 'Promo deleted'
@@ -134,7 +149,7 @@ def remove_reward_by_id(entry=None, result=None):
             result['message'] = 'Reward does not exists'
             return
         
-        reward.get_or_none().delete_instance()
+        reward = reward.get_or_none().delete_instance()
         
         result['success'] = True
         result['message'] = 'Reward deleted'
@@ -153,7 +168,7 @@ def remove_user_by_id(entry=None, result=None):
             result['message'] = 'User does not exists'
             return
         
-        user.get_or_none().delete_instance()
+        user = user.get_or_none().delete_instance()
         
         result['success'] = True
         result['message'] = 'User deleted'

@@ -85,6 +85,7 @@ def fetch_all_organization_data(entry=None, result=None):
         
         if not organizations.exists():
             result['message'] = 'Organization does not exists'
+            return result
         
         result['success'] = True
         for organization in organizations:
@@ -109,6 +110,7 @@ def fetch_promo_data_by_promo_name(entry=None, result=None):
         
         if not promo.exists():
             result['message'] = 'Promo does not exists'
+            return result
         
         promo = promo.first()
         
@@ -134,6 +136,7 @@ def fetch_all_promo_data(entry=None, result=None):
         
         if not promos.exists():
             result['message'] = 'Promo does not exists'
+            return result
         
         result['success'] = True
         for promo in promos:

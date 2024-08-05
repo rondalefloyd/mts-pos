@@ -39,8 +39,8 @@ class EditThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'edit_item_related_data_by_ids':
-                    result = edit_item_related_data_by_ids(self.entry, result)
+                if self.function_route == 'edit_item_price_related_data_by_id':
+                    result = edit_item_price_related_data_by_id(self.entry, result)
                 elif self.function_route == 'edit_member_data_by_id':
                     result = edit_member_data_by_id(self.entry, result)
                 elif self.function_route == 'edit_promo_data_by_id':
@@ -68,10 +68,74 @@ class EditThread(QThread):
         print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
 # add function here
-def edit_item_related_data_by_ids(entry=None, result=None):
+def edit_item_price_related_data_by_id(entry=None, result=None):
     # TODO: finish this
-    return result
-    pass
+    try:
+        itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
+        brand = Brand.select().where(Brand.BrandName == entry['brandName'])
+        supplier = Supplier.select().where(Supplier.SupplierName == entry['supplierName'])
+        salesGroup = SalesGroup.select().where(SalesGroup.SalesGroupName == entry['salesGroupName'])
+        
+        itemType = ItemType.create(ItemTypeName=entry['itemTypeName']) if not itemType.exists() else itemType.first()
+        brand = Brand.create(BrandName=entry['brandName']) if not brand.exists() else brand.first()
+        supplier = Supplier.create(SupplierName=entry['supplierName']) if not supplier.exists() else supplier.first()
+        salesGroup = SalesGroup.create(SalesGroupName=entry['salesGroupName']) if not salesGroup.exists() else salesGroup.first()
+        
+        item = Item.select().where(
+            (Item.ItemName == entry['itemName']) &
+            (Item.SalesGroupId == SalesGroup.get(SalesGroup.SalesGroupName == entry['salesGroupName']).Id)
+        )
+        
+        item = Item.create(
+            ItemName=entry['itemName'],
+            Barcode=entry['barcode'],
+            ExpireDate=entry['expireDate'],
+            ItemTypeId=itemType.Id,
+            BrandId=brand.Id,
+            SupplierId=supplier.Id,
+            SalesGroupId=salesGroup.Id,
+        ) if not item.exists() else item.first()
+
+        itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['id'])
+        
+        if entry['applyPromo'] is 'True':
+            itemPrice.ItemId = item.Id
+            itemPrice.Capital = entry['capital']
+            itemPrice.Price = entry['price']
+            itemPrice.EffectiveDate = datetime.strptime(entry['endDate'], '%Y-%m-%d') + timedelta(days=1)
+            itemPrice.UpdateTs = datetime.now()
+            itemPrice.save()
+            
+            itemPrice = ItemPrice.create(
+                ItemId=item.Id,
+                Capital=entry['capital'],
+                Price=entry['newPrice'],
+                PromoId=Promo.get_or_none(Promo.PromoName == entry['promoName']).Id,
+                Discount=entry['discount'],
+                EffectiveDate=entry['startDate'],
+            )
+        else:
+            itemPrice.ItemId = item.Id
+            itemPrice.Capital = entry['capital']
+            itemPrice.Price = entry['price']
+            itemPrice.EffectiveDate = entry['effectiveDate']
+            itemPrice.save()
+            
+        if entry['trackInventory'] is 'True':
+            stock = Stock.create(ItemId=item.Id)
+        # TODO: fix how the stocks are being deleted via checkbox
+        # if entry['trackInventory'] is 'False':
+        #     stock = Stock.get_or_none(Stock.ItemId == item.Id).delete_instance()
+        
+        result['success'] = True
+        result['message'] = 'ItemPrice updated'
+        return result
+        
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
 def edit_member_data_by_id(entry=None, result=None):
     try:
         member = Member.select().where(Member.MemberName == entry['memberName'])

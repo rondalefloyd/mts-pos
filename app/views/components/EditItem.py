@@ -30,10 +30,12 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.lineEditPrice.setText(f"{self.selectedData['price']}")
         self.dateEditEffectiveDate.setDate(QDate.fromString(f"{self.selectedData['effectiveDate']}", 'yyyy-MM-dd'))
 
+
         self._populateComboBoxItemTypeBrandSupplierSalesGroup()
         self._populateComboBoxPromoName()
         self._populateLineEditDiscountRate()
         
+        self.checkBoxApplyPromo.stateChanged.connect(self._onCheckBoxApplyPromoStateChanged)
         self.lineEditPrice.textChanged.connect(self._populateLineEditDiscountRate)
         self.comboBoxPromoName.currentTextChanged.connect(self._populateLineEditDiscountRate)
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
@@ -41,6 +43,11 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
 
     # private methods
+    def _onCheckBoxApplyPromoStateChanged(self):
+        self.comboBoxPromoName.setEnabled(self.checkBoxApplyPromo.isChecked() is True)
+        self.dateEditStartDate.setEnabled(self.checkBoxApplyPromo.isChecked() is True)
+        self.dateEditEndDate.setEnabled(self.checkBoxApplyPromo.isChecked() is True)
+    
     def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
         self.fetchThread = FetchThread('fetch_all_item_related_data')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupResult)
@@ -67,6 +74,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.comboBoxBrandName.setCurrentText(f"{self.selectedData['brandName']}")
         self.comboBoxSupplierName.setCurrentText(f"{self.selectedData['supplierName']}")
         self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
+        print("self.selectedData['salesGroupName']:", self.selectedData['salesGroupName'])
     
     def _populateComboBoxPromoName(self):
         self.currentThread = FetchThread('fetch_all_promo_data')
@@ -76,24 +84,18 @@ class EditItem(Ui_DialogEditItem, QDialog):
         
     def _handlePopulateComboBoxPromoNameResult(self, result):
         self.comboBoxPromoName.clear()
-        self.comboBoxPromoName.addItem("N/A")
         
-        for data in result['listData']:
+        listData = result['listData']
+        
+        self.checkBoxApplyPromo.setDisabled(len(listData) <= 0)
+            
+        for data in listData:
             self.comboBoxPromoName.addItem(f"{data['promoName']}")
             
-        self.comboBoxPromoName.setCurrentText(f"{self.selectedData['promoName']}")        
+        # if self.selectedData['promoName'] is None:
+        #     self.comboBoxPromoName.setCurrentText("N/A")        
     
     def _populateLineEditDiscountRate(self):
-        self.dateEditEffectiveDate.setDisabled(self.comboBoxPromoName.currentText() != "N/A")
-        self.dateEditStartDate.setEnabled(self.comboBoxPromoName.currentText() != "N/A")
-        self.dateEditEndDate.setEnabled(self.comboBoxPromoName.currentText() != "N/A")
-        
-        if self.comboBoxPromoName.currentText() == "N/A":
-            self.lineEditDiscountRate.setText("0.0")
-            self.lineEditDiscount.setText("0.0")
-            self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
-            return
-        
         self.currentThread = FetchThread('fetch_promo_data_by_promo_name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
         self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateResult)
         self.currentThread.start()
@@ -101,6 +103,13 @@ class EditItem(Ui_DialogEditItem, QDialog):
         
     # TODO: instead of fixing it, just add a warning for the users when they're editing an item that has an applied promo
     def _handlePopulateLineEditDiscountRateResult(self, result):
+        if result['success'] is False:
+            self.lineEditDiscountRate.setText("0.0")
+            self.lineEditDiscount.setText("0.0")
+            self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
+            return
+        
+        
         dictData = result['dictData']
         discountRate = dictData['discountRate'] if 'discountRate' in dictData else 0
         
@@ -123,7 +132,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.close()
         
     def _onPushButtonSaveClicked(self):
-        self.currentThread = EditThread('edit_item_related_data_by_ids', {
+        self.currentThread = EditThread('edit_item_price_related_data_by_id', {
             'id': f"{self.selectedData['id']}",
             'itemName': f"{self.lineEditItemName.text()}".upper(),
             'barcode': f"{self.lineEditBarcode.text()}",
@@ -142,6 +151,8 @@ class EditItem(Ui_DialogEditItem, QDialog):
             'newPrice': f"{self.lineEditNewPrice.text()}",
             'startDate': f"{self.dateEditStartDate.text()}",
             'endDate': f"{self.dateEditEndDate.text()}",
+            'applyPromo': f"{self.checkBoxApplyPromo.isChecked()}",
+            'trackInventory': f"{self.checkBoxTrackInventory.isChecked()}",
         })
         self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)
