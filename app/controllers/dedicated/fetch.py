@@ -42,6 +42,8 @@ class FetchThread(QThread):
             with postgres_db:
                 if self.function_route == 'fetch_all_organizations_data':
                     result = fetch_all_organizations_data(self.entry, result)
+                elif self.function_route == 'fetch_promo_data_by_promo_name':
+                    result = fetch_promo_data_by_promo_name(self.entry, result)
                 elif self.function_route == 'fetch_all_promos_data':
                     result = fetch_all_promos_data(self.entry, result)
                 elif self.function_route == 'fetch_all_items_related_data':
@@ -74,7 +76,6 @@ class FetchThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        # TODO: continue working on ITEMS
         print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
 # add function here
@@ -100,12 +101,37 @@ def fetch_all_organizations_data(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
+
+def fetch_promo_data_by_promo_name(entry=None, result=None):
+    try:
+        promo = Promos.select().where(Promos.PromoName == entry['promoName']).order_by(Promos.UpdateTs.desc())
+        
+        if not promo.exists():
+            result['message'] = 'Promo does not exists'
+        
+        promo = promo.first()
+        
+        result['success'] = True
+        result['dictData'] = {
+            'id': promo.Id,
+            'promoName': promo.PromoName,
+            'discountRate': promo.DiscountRate,
+            'description': promo.Description,
+            'updateTs': promo.UpdateTs,
+        }
+
+        return result
+
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+
 def fetch_all_promos_data(entry=None, result=None):
     try:
         promos = Promos.select().order_by(Promos.UpdateTs.desc())
         
         if not promos.exists():
-            result['message'] = 'Organization does not exists'
+            result['message'] = 'Promo does not exists'
         
         result['success'] = True
         for promo in promos:
@@ -127,13 +153,16 @@ def fetch_all_items_related_data(entry=None, result=None):
         itemTypes = ItemTypes.select().order_by(ItemTypes.UpdateTs.desc())
         brands = Brands.select().order_by(Brands.UpdateTs.desc())
         suppliers = Suppliers.select().order_by(Suppliers.UpdateTs.desc())
+        salesGroups = SalesGroups.select().order_by(SalesGroups.UpdateTs.desc())
         
         result['success'] = True
-        dictData = result['dictData'] = {
+        result['dictData'] = {
             'itemTypes': [],
             'brands': [],
             'suppliers': [],
+            'salesGroups': [],
         }
+        dictData = result['dictData']
         for itemType in itemTypes:
             dictData['itemTypes'].append({
                 'id': itemType.Id,
@@ -152,6 +181,13 @@ def fetch_all_items_related_data(entry=None, result=None):
                 'supplierName': supplier.SupplierName,
                 'updateTs': supplier.UpdateTs,
             })
+        for salesGroup in salesGroups:
+            dictData['salesGroups'].append({
+                'id': salesGroup.Id,
+                'salesGroupName': salesGroup.SupplierName,
+                'updateTs': salesGroup.UpdateTs,
+            })
+            
         return result
 
     except Exception as exception:

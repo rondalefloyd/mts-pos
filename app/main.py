@@ -61,3 +61,6 @@ def _startApp():
 if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
+    
+    
+# TODO: add 'edit' and 'remove' functionalities

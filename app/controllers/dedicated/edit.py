@@ -16,6 +16,7 @@ from app.models.entities import (
     SalesGroups,
     Items,
     ItemPrices,
+    Stocks,
 )
 from app.utils.databases import postgres_db
 
@@ -68,12 +69,88 @@ class EditThread(QThread):
         
 # add function here
 def edit_items_related_data_by_ids(entry=None, result=None):
+    return result
     pass
 def edit_members_data_by_id(entry=None, result=None):
-    pass
+    try:
+        member = Members.select().where(Members.MemberName == entry['memberName'])
+        
+        if member.exists():
+            result['message'] = 'Member already exists'
+            return result
+            
+        member = Members.get(Members.Id == entry['id'])
+        member.MemberName = entry['memberName']
+        member.BirthDate = entry['birthDate']
+        member.Address = entry['address']
+        member.MobileNumber = entry['mobileNumber']
+        member.Points = entry['points']
+        member.save()
+        
+        result['success'] = True
+        result['message'] = 'Member updated'
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
 def edit_promos_data_by_id(entry=None, result=None):
-    pass
+    try:
+        promo = Promos.select().where(Promos.PromoName == entry['promoName'])
+        
+        if promo.exists():
+            result['message'] = 'Promo already exists'
+            return result
+            
+        promo = Promos.get(Promos.Id == entry['id'])
+        promo.PromoName = entry['promoName']
+        promo.DiscountRate = entry['discountRate']
+        promo.Description = entry['description']
+        promo.save()
+        
+        result['success'] = True
+        result['message'] = 'Promo updated'
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
 def edit_rewards_data_by_id(entry=None, result=None):
-    pass
+    try:
+        reward = Rewards.select().where(Rewards.RewardName == entry['rewardName'])
+        
+        if reward.exists():
+            result['message'] = 'Reward already exists'
+            return result
+            
+        reward = Rewards.get(Rewards.Id == entry['id'])
+        reward.RewardName = entry['rewardName']
+        reward.Points = entry['points']
+        reward.Target = entry['target']
+        reward.Description = entry['description']
+        reward.save()
+        
+        result['success'] = True
+        result['message'] = 'Reward updated'
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+
 def edit_stocks_data_by_id(entry=None, result=None):
-    pass
+    try:
+        stock = Stocks.get(Stocks.Id == entry['id'])
+        stock.OnHand = entry['onHand']
+        stock.Available = entry['available']
+        stock.save()
+        
+        result['success'] = True
+        result['message'] = 'Stock updated'
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result

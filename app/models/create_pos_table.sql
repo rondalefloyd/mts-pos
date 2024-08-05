@@ -27,7 +27,7 @@ CREATE TABLE "Members" (
     "BirthDate" DATE, 
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 
-    "Points" FLOAT, 
+    "Points" FLOAT DEFAULT 0, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

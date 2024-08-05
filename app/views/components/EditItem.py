@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import QDate
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.config import *
 from app.views.templates.EditItem_ui import Ui_DialogEditItem
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.fetch import FetchThread
@@ -51,13 +52,15 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.comboBoxSupplierName.clear()
         self.comboBoxSalesGroupName.clear()
 
-        for itemType in result['data']['itemTypes']:
+        dictData = result['dictData']
+
+        for itemType in dictData['itemTypes']:
             self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
-        for brand in result['data']['brands']:
+        for brand in dictData['brands']:
             self.comboBoxBrandName.addItem(f"{brand['brandName']}")
-        for supplier in result['data']['suppliers']:
+        for supplier in dictData['suppliers']:
             self.comboBoxSupplierName.addItem(f"{supplier['supplierName']}")
-        for salesGroup in result['data']['salesGroups']:
+        for salesGroup in dictData['salesGroups']:
             self.comboBoxSalesGroupName.addItem(f"{salesGroup['salesGroupName']}")
             
         self.comboBoxItemTypeName.setCurrentText(f"{self.selectedData['itemTypeName']}")
@@ -75,13 +78,9 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.comboBoxPromoName.clear()
         self.comboBoxPromoName.addItem("N/A")
         
-        for data in result['data']:
+        for data in result['listData']:
             self.comboBoxPromoName.addItem(f"{data['promoName']}")
             
-        if data['promoName'] is None:
-            self.comboBoxPromoName.setCurrentText("N/A")
-            return
-        
         self.comboBoxPromoName.setCurrentText(f"{self.selectedData['promoName']}")        
     
     def _populateLineEditDiscountRate(self):
@@ -95,15 +94,16 @@ class EditItem(Ui_DialogEditItem, QDialog):
             self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
             return
         
-        self.currentThread = FetchThread('fetch_promo_name_data', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
+        self.currentThread = FetchThread('fetch_promo_data_by_promo_name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
         self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateResult)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    # TODO: fix the formula where the lineEditPrice should have the old value when editing an item with applied promo/ the new price isnt being stored properly. it has still the old price
     # TODO: instead of fixing it, just add a warning for the users when they're editing an item that has an applied promo
     def _handlePopulateLineEditDiscountRateResult(self, result):
-        discountRate = result['data']['discountRate']
+        dictData = result['dictData']
+        discountRate = dictData['discountRate'] if 'discountRate' in dictData else 0
+        
         self.lineEditDiscountRate.setText(f"{0.0 if discountRate is None else discountRate}")
         
         price = float(self.lineEditPrice.text())

@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import QDate
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.config import *
 from app.views.templates.EditPromo_ui import Ui_DialogEditPromo
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.edit import EditThread
