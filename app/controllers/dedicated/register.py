@@ -96,7 +96,7 @@ def register_items(entry=None, result=None):
                 (Items.ItemTypeId == itemType.Id) &
                 (Items.BrandId == brand.Id) &
                 (Items.SupplierId == supplier.Id) &
-                (Items.SalesGroupId == SalesGroups.get(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id)
+                (Items.SalesGroupId == SalesGroups.get_or_none(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id)
             )
             
             if item.exists():
@@ -110,7 +110,7 @@ def register_items(entry=None, result=None):
                 ItemTypeId=itemType.Id,
                 BrandId=brand.Id,
                 SupplierId=supplier.Id,
-                SalesGroupId=SalesGroups.get(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id,
+                SalesGroupId=SalesGroups.get_or_none(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id,
             )
             
             itemPrice = ItemPrices.select().where(
@@ -145,7 +145,7 @@ def register_items(entry=None, result=None):
 def register_members(entry=None, result=None):
     try:
         member = Members.select().where(
-            (Members.OrganizationId == Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id) &
+            (Members.OrganizationId == Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id) &
             (Members.MemberName == entry['memberName']) &
             (Members.BirthDate == entry['birthDate']) &
             (Members.Address == entry['address']) &
@@ -158,7 +158,7 @@ def register_members(entry=None, result=None):
             return result
         
         member = Members.create(
-            OrganizationId=Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id,
+            OrganizationId=Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id,
             MemberName=entry['memberName'],
             BirthDate=entry['birthDate'],
             Address=entry['address'],
@@ -229,7 +229,7 @@ def register_rewards(entry=None, result=None):
 def register_users(entry=None, result=None):
     try:
         user = Users.select().where(
-            (Users.OrganizationId == Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id) &
+            (Users.OrganizationId == Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id) &
             (Users.UserName == entry['userName']) &
             (Users.AccessCode == entry['accessCode']) &
             (Users.FullName == entry['fullName']) &
@@ -243,7 +243,7 @@ def register_users(entry=None, result=None):
             return result
         
         user = Users.create(
-            OrganizationId=Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id,
+            OrganizationId=Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id,
             UserName=entry['userName'],
             AccessCode=entry['accessCode'],
             FullName=entry['fullName'],

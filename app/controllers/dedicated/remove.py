@@ -74,10 +74,10 @@ def remove_members_by_id(entry=None, result=None):
             result['message'] = 'Member does not exists'
             return
         
-        member.get().delete_instance()
+        member.get_or_none().delete_instance()
         
         result['success'] = True
-        result['message'] = 'Member updated'
+        result['message'] = 'Member deleted'
         return result
         
     except Exception as exception:
@@ -92,10 +92,10 @@ def remove_promos_by_id(entry=None, result=None):
             result['message'] = 'Promo does not exists'
             return
         
-        promo.get().delete_instance()
+        promo.get_or_none().delete_instance()
         
         result['success'] = True
-        result['message'] = 'Promo updated'
+        result['message'] = 'Promo deleted'
         return result
         
     except Exception as exception:
@@ -110,10 +110,10 @@ def remove_rewards_by_id(entry=None, result=None):
             result['message'] = 'Reward does not exists'
             return
         
-        reward.get().delete_instance()
+        reward.get_or_none().delete_instance()
         
         result['success'] = True
-        result['message'] = 'Reward updated'
+        result['message'] = 'Reward deleted'
         return result
         
     except Exception as exception:
@@ -128,10 +128,10 @@ def remove_users_by_id(entry=None, result=None):
             result['message'] = 'User does not exists'
             return
         
-        user.get().delete_instance()
+        user.get_or_none().delete_instance()
         
         result['success'] = True
-        result['message'] = 'User updated'
+        result['message'] = 'User deleted'
         return result
         
     except Exception as exception:

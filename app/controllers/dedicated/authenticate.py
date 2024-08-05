@@ -52,26 +52,34 @@ class AuthenticateThread(QThread):
 # add function here
 def authenticate_user_by_user_name_access_code(entry=None, result=None):
     try:
-        users = Users.select().where(
+        user = Users.select().where(
             (Users.UserName == entry['userName']) & 
             (Users.AccessCode == entry['accessCode'])
         )
-        
-        if not users.exists():
+        if not user.exists():
             result['message'] = 'User does not exists'
             return result
+        user = user.first()
         
-        users = users.first()
+        userSessionInfos = UserSessionInfos.select().where(UserSessionInfos.Id == user.Id)
+        if not userSessionInfos.exists():
+            result['message'] = 'UserSession does not exists'
+            return result
+        userSessionInfos = userSessionInfos.first()
+        userSessionInfos.ActiveStatus = 1
+        userSessionInfos.LastLoginTs = datetime.now()
+        userSessionInfos.save()
         
         result['success'] = True
         result['dictData'] = {
-            'organizationName': Organizations.get(Organizations.Id == users.OrganizationId).OrganizationName,
-            'userName': users.UserName,
-            'accessCode': users.AccessCode,
-            'fullName': users.FullName,
-            'birthDate': users.BirthDate,
-            'mobileNumber': users.MobileNumber,
-            'accessLevel': users.AccessLevel,
+            'userId': user.id,
+            'organizationName': Organizations.get_or_none(Organizations.Id == user.OrganizationId).OrganizationName,
+            'userName': user.UserName,
+            'accessCode': user.AccessCode,
+            'fullName': user.FullName,
+            'birthDate': user.BirthDate,
+            'mobileNumber': user.MobileNumber,
+            'accessLevel': user.AccessLevel,
         }
         return result
         
@@ -79,5 +87,22 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
-def unauthenticate_users_by_id(entry=object):
-    pass
+def unauthenticate_users_by_id(entry=None, result=None):
+    try:
+        userSessionInfos = UserSessionInfos.select().where(UserSessionInfos.Id == entry['id'])
+        
+        if not userSessionInfos.exists():
+            result['message'] = 'UserSession does not exists'
+            return result
+        
+        userSessionInfos = userSessionInfos.first()
+        userSessionInfos.ActiveStatus = 0
+        userSessionInfos.save()
+        
+        result['success'] = True
+        
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result

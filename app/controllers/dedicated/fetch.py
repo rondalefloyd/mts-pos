@@ -304,7 +304,7 @@ def fetch_all_members_data_by_keyword_in_pagination(entry=None, result=None):
         keyword = f"%{entry['keyword']}%"
         
         members = Members.select().where(
-            (Members.OrganizationId == Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id) &
+            (Members.OrganizationId == Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id) &
             ((Members.MemberName.cast('TEXT').like(keyword)) |
             (Members.BirthDate.cast('TEXT').like(keyword)) |
             (Members.Address.cast('TEXT').like(keyword)) |
@@ -411,7 +411,7 @@ def fetch_all_users_data_by_keyword_in_pagination(entry=None, result=None):
         keyword = f"%{entry['keyword']}%"
         
         users = Users.select().where(
-            (Users.OrganizationId == Organizations.get(Organizations.OrganizationName == entry['organizationName']).Id) &
+            (Users.OrganizationId == Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id) &
             ((Users.UserName.cast('TEXT').like(keyword)) |
             (Users.AccessCode.cast('TEXT').like(keyword)) |
             (Users.FullName.cast('TEXT').like(keyword)) |

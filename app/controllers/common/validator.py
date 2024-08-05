@@ -28,13 +28,13 @@ def entry_has_value(alpha_entry: list = [], numeric_entry: list = [], entry: obj
     """
     # Check string fields
     for field in alpha_entry:
-        value = entry.get(field, "").strip()
+        value = entry.get_or_none(field, "").strip()
         if not value:
             return False
 
     # Check numeric fields
     for field in numeric_entry:
-        value = entry.get(field, "").strip()
+        value = entry.get_or_none(field, "").strip()
         float_regex = re.compile(r'^-?\d+(\.\d+)?([eE][-+]?\d+)?$')
         
         if not value or not float_regex.match(value):

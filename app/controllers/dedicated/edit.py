@@ -80,7 +80,7 @@ def edit_members_data_by_id(entry=None, result=None):
             result['message'] = 'Member already exists'
             return result
             
-        member = Members.get(Members.Id == entry['id'])
+        member = Members.get_or_none(Members.Id == entry['id'])
         member.MemberName = entry['memberName']
         member.BirthDate = entry['birthDate']
         member.Address = entry['address']
@@ -104,7 +104,7 @@ def edit_promos_data_by_id(entry=None, result=None):
             result['message'] = 'Promo already exists'
             return result
             
-        promo = Promos.get(Promos.Id == entry['id'])
+        promo = Promos.get_or_none(Promos.Id == entry['id'])
         promo.PromoName = entry['promoName']
         promo.DiscountRate = entry['discountRate']
         promo.Description = entry['description']
@@ -126,7 +126,7 @@ def edit_rewards_data_by_id(entry=None, result=None):
             result['message'] = 'Reward already exists'
             return result
             
-        reward = Rewards.get(Rewards.Id == entry['id'])
+        reward = Rewards.get_or_none(Rewards.Id == entry['id'])
         reward.RewardName = entry['rewardName']
         reward.Points = entry['points']
         reward.Target = entry['target']
@@ -143,7 +143,7 @@ def edit_rewards_data_by_id(entry=None, result=None):
 
 def edit_stocks_data_by_id(entry=None, result=None):
     try:
-        stock = Stocks.get(Stocks.Id == entry['id'])
+        stock = Stocks.get_or_none(Stocks.Id == entry['id'])
         stock.OnHand = entry['onHand']
         stock.Available = entry['available']
         stock.save()
