@@ -203,7 +203,7 @@ class Ui_DialogEditItem(object):
         self.label_4.setText(_translate("DialogEditItem", "Type"))
         self.label_5.setText(_translate("DialogEditItem", "Brand"))
         self.label_9.setText(_translate("DialogEditItem", "Supplier"))
-        self.label_12.setText(_translate("DialogEditItem", "Sales group"))
+        self.label_12.setText(_translate("DialogEditItem", "Sale group"))
         self.label_10.setText(_translate("DialogEditItem", "Capital"))
         self.label_8.setText(_translate("DialogEditItem", "Price"))
         self.label_7.setText(_translate("DialogEditItem", "Effective date"))

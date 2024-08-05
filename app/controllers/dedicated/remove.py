@@ -6,12 +6,13 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import (
-    Users,
-    UserSessionInfos,
-    Members,
-    Promos,
-    Rewards,
-    ItemPrices,
+    User,
+    UserSession,
+    Member,
+    Promo,
+    Reward,
+    ItemPrice,
+    Stock
 )
 from app.utils.databases import postgres_db
 
@@ -33,16 +34,18 @@ class RemoveThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'remove_item_prices_by_id':
-                    result = remove_item_prices_by_id(self.entry, result)
-                elif self.function_route == 'remove_members_by_id':
-                    result = remove_members_by_id(self.entry, result)
-                elif self.function_route == 'remove_promos_by_id':
-                    result = remove_promos_by_id(self.entry, result)
-                elif self.function_route == 'remove_rewards_by_id':
-                    result = remove_rewards_by_id(self.entry, result)
-                elif self.function_route == 'remove_users_by_id':
-                    result = remove_users_by_id(self.entry, result)
+                if self.function_route == 'remove_item_price_by_id':
+                    result = remove_item_price_by_id(self.entry, result)
+                elif self.function_route == 'remove_stock_by_id':
+                    result = remove_stock_by_id(self.entry, result)
+                elif self.function_route == 'remove_stock_by_id':
+                    result = remove_member_by_id(self.entry, result)
+                elif self.function_route == 'remove_promo_by_id':
+                    result = remove_promo_by_id(self.entry, result)
+                elif self.function_route == 'remove_reward_by_id':
+                    result = remove_reward_by_id(self.entry, result)
+                elif self.function_route == 'remove_user_by_id':
+                    result = remove_user_by_id(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -62,13 +65,32 @@ class RemoveThread(QThread):
         print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
 # add function here
-def remove_item_prices_by_id(entry=None, result=None):
+def remove_item_price_by_id(entry=None, result=None):
     # TODO: finish this
     return result
-    pass
-def remove_members_by_id(entry=None, result=None):
+    
+def remove_stock_by_id(entry=None, result=None):
     try:
-        member = Members.select().where(Members.Id == entry['id'])
+        stock = Stock.select().where(Stock.Id == entry['id'])
+        
+        if not stock.exists():
+            result['message'] = 'Stock does not exists'
+            return
+        
+        stock.get_or_none().delete_instance()
+        
+        result['success'] = True
+        result['message'] = 'Stock deleted'
+        return result
+        
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+
+def remove_member_by_id(entry=None, result=None):
+    try:
+        member = Member.select().where(Member.Id == entry['id'])
         
         if not member.exists():
             result['message'] = 'Member does not exists'
@@ -85,9 +107,9 @@ def remove_members_by_id(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def remove_promos_by_id(entry=None, result=None):
+def remove_promo_by_id(entry=None, result=None):
     try:
-        promo = Promos.select().where(Promos.Id == entry['id'])
+        promo = Promo.select().where(Promo.Id == entry['id'])
         
         if not promo.exists():
             result['message'] = 'Promo does not exists'
@@ -104,9 +126,9 @@ def remove_promos_by_id(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def remove_rewards_by_id(entry=None, result=None):
+def remove_reward_by_id(entry=None, result=None):
     try:
-        reward = Rewards.select().where(Rewards.Id == entry['id'])
+        reward = Reward.select().where(Reward.Id == entry['id'])
         
         if not reward.exists():
             result['message'] = 'Reward does not exists'
@@ -123,9 +145,9 @@ def remove_rewards_by_id(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def remove_users_by_id(entry=None, result=None):
+def remove_user_by_id(entry=None, result=None):
     try:
-        user = Users.select().where(Users.Id == entry['id'])
+        user = User.select().where(User.Id == entry['id'])
         
         if not user.exists():
             result['message'] = 'User does not exists'

@@ -42,7 +42,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
     # private methods
     def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
-        self.fetchThread = FetchThread('fetch_all_items_related_data')
+        self.fetchThread = FetchThread('fetch_all_item_related_data')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupResult)
         self.fetchThread.start()
         
@@ -69,7 +69,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
     
     def _populateComboBoxPromoName(self):
-        self.currentThread = FetchThread('fetch_all_promos_data')
+        self.currentThread = FetchThread('fetch_all_promo_data')
         self.currentThread.finished.connect(self._handlePopulateComboBoxPromoNameResult)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
@@ -123,7 +123,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.close()
         
     def _onPushButtonSaveClicked(self):
-        self.currentThread = EditThread('edit_items_related_data_by_ids', {
+        self.currentThread = EditThread('edit_item_related_data_by_ids', {
             'id': f"{self.selectedData['id']}",
             'itemName': f"{self.lineEditItemName.text()}".upper(),
             'barcode': f"{self.lineEditBarcode.text()}",

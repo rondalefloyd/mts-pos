@@ -32,7 +32,7 @@ class Setup(Ui_DialogSetup, QDialog):
 
 
     def _onPushButtonCreateClicked(self):
-        self.currentThread = RegisterThread('register_organizations', {
+        self.currentThread = RegisterThread('register_organization', {
             'taxId': f"{self.lineEditTaxId.text()}".upper(),
             'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
             'address': f"{self.lineEditAddress.text()}".upper(),

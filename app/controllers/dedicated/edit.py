@@ -6,17 +6,17 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.models.entities import (
-    Users,
-    Members,
-    Rewards,
-    Promos,
-    ItemTypes,
-    Brands,
-    Suppliers,
-    SalesGroups,
-    Items,
-    ItemPrices,
-    Stocks,
+    User,
+    Member,
+    Reward,
+    Promo,
+    ItemType,
+    Brand,
+    Supplier,
+    SalesGroup,
+    Item,
+    ItemPrice,
+    Stock,
 )
 from app.utils.databases import postgres_db
 
@@ -39,16 +39,16 @@ class EditThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'edit_items_related_data_by_ids':
-                    result = edit_items_related_data_by_ids(self.entry, result)
-                elif self.function_route == 'edit_members_data_by_id':
-                    result = edit_members_data_by_id(self.entry, result)
-                elif self.function_route == 'edit_promos_data_by_id':
-                    result = edit_promos_data_by_id(self.entry, result)
-                elif self.function_route == 'edit_rewards_data_by_id':
-                    result = edit_rewards_data_by_id(self.entry, result)
-                elif self.function_route == 'edit_stocks_data_by_id':
-                    result = edit_stocks_data_by_id(self.entry, result)
+                if self.function_route == 'edit_item_related_data_by_ids':
+                    result = edit_item_related_data_by_ids(self.entry, result)
+                elif self.function_route == 'edit_member_data_by_id':
+                    result = edit_member_data_by_id(self.entry, result)
+                elif self.function_route == 'edit_promo_data_by_id':
+                    result = edit_promo_data_by_id(self.entry, result)
+                elif self.function_route == 'edit_reward_data_by_id':
+                    result = edit_reward_data_by_id(self.entry, result)
+                elif self.function_route == 'edit_stock_data_by_id':
+                    result = edit_stock_data_by_id(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -68,19 +68,19 @@ class EditThread(QThread):
         print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
 # add function here
-def edit_items_related_data_by_ids(entry=None, result=None):
+def edit_item_related_data_by_ids(entry=None, result=None):
     # TODO: finish this
     return result
     pass
-def edit_members_data_by_id(entry=None, result=None):
+def edit_member_data_by_id(entry=None, result=None):
     try:
-        member = Members.select().where(Members.MemberName == entry['memberName'])
+        member = Member.select().where(Member.MemberName == entry['memberName'])
         
         if member.exists():
             result['message'] = 'Member already exists'
             return result
             
-        member = Members.get_or_none(Members.Id == entry['id'])
+        member = Member.get_or_none(Member.Id == entry['id'])
         member.MemberName = entry['memberName']
         member.BirthDate = entry['birthDate']
         member.Address = entry['address']
@@ -97,15 +97,15 @@ def edit_members_data_by_id(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def edit_promos_data_by_id(entry=None, result=None):
+def edit_promo_data_by_id(entry=None, result=None):
     try:
-        promo = Promos.select().where(Promos.PromoName == entry['promoName'])
+        promo = Promo.select().where(Promo.PromoName == entry['promoName'])
         
         if promo.exists():
             result['message'] = 'Promo already exists'
             return result
             
-        promo = Promos.get_or_none(Promos.Id == entry['id'])
+        promo = Promo.get_or_none(Promo.Id == entry['id'])
         promo.PromoName = entry['promoName']
         promo.DiscountRate = entry['discountRate']
         promo.Description = entry['description']
@@ -120,15 +120,15 @@ def edit_promos_data_by_id(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def edit_rewards_data_by_id(entry=None, result=None):
+def edit_reward_data_by_id(entry=None, result=None):
     try:
-        reward = Rewards.select().where(Rewards.RewardName == entry['rewardName'])
+        reward = Reward.select().where(Reward.RewardName == entry['rewardName'])
         
         if reward.exists():
             result['message'] = 'Reward already exists'
             return result
             
-        reward = Rewards.get_or_none(Rewards.Id == entry['id'])
+        reward = Reward.get_or_none(Reward.Id == entry['id'])
         reward.RewardName = entry['rewardName']
         reward.Points = entry['points']
         reward.Target = entry['target']
@@ -144,9 +144,9 @@ def edit_rewards_data_by_id(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
-def edit_stocks_data_by_id(entry=None, result=None):
+def edit_stock_data_by_id(entry=None, result=None):
     try:
-        stock = Stocks.get_or_none(Stocks.Id == entry['id'])
+        stock = Stock.get_or_none(Stock.Id == entry['id'])
         stock.OnHand = entry['onHand']
         stock.Available = entry['available']
         stock.save()

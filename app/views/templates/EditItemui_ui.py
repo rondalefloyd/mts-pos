@@ -176,7 +176,7 @@ class Ui_DialogEditPromo(object):
         self.label_4.setText(_translate("DialogEditPromo", "Type"))
         self.label_5.setText(_translate("DialogEditPromo", "Brand"))
         self.label_9.setText(_translate("DialogEditPromo", "Supplier"))
-        self.label_12.setText(_translate("DialogEditPromo", "Sales group"))
+        self.label_12.setText(_translate("DialogEditPromo", "Sale group"))
         self.label_10.setText(_translate("DialogEditPromo", "Capital"))
         self.label_8.setText(_translate("DialogEditPromo", "Price"))
         self.label_7.setText(_translate("DialogEditPromo", "Effective date"))

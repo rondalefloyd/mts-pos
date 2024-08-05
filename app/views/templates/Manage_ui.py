@@ -162,7 +162,7 @@ class Ui_MainWindowManage(object):
         self.menuManage.setTitle(_translate("MainWindowManage", "<PageName>"))
         self.menuSettings.setTitle(_translate("MainWindowManage", "Settings"))
         self.menuHelp.setTitle(_translate("MainWindowManage", "Help"))
-        self.actionSales.setText(_translate("MainWindowManage", "Sales"))
+        self.actionSales.setText(_translate("MainWindowManage", "Sale"))
         self.actionTransaction.setText(_translate("MainWindowManage", "Transaction"))
         self.actionItem.setText(_translate("MainWindowManage", "Item"))
         self.actionStock.setText(_translate("MainWindowManage", "Stock"))

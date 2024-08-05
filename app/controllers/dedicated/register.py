@@ -6,19 +6,19 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.models.entities import (
-    Users, 
-    UserSessionInfos, 
-    Organizations,
-    Members,
-    Promos,
-    Rewards,
-    ItemTypes,
-    Brands,
-    Suppliers,
-    SalesGroups,
-    Items,
-    ItemPrices,
-    Stocks,
+    User, 
+    UserSession, 
+    Organization,
+    Member,
+    Promo,
+    Reward,
+    ItemType,
+    Brand,
+    Supplier,
+    SalesGroup,
+    Item,
+    ItemPrice,
+    Stock,
 )
 from app.utils.databases import postgres_db
 
@@ -41,18 +41,18 @@ class RegisterThread(QThread):
          
         try:
             with postgres_db:
-                if self.function_route == 'register_items':
-                    result = register_items(self.entry, result)
-                elif self.function_route == 'register_members':
-                    result = register_members(self.entry, result)
-                elif self.function_route == 'register_promos':
-                    result = register_promos(self.entry, result)
-                elif self.function_route == 'register_rewards':
-                    result = register_rewards(self.entry, result)
-                elif self.function_route == 'register_users':
-                    result = register_users(self.entry, result)
-                elif self.function_route == 'register_organizations':
-                    result = register_organizations(self.entry, result)
+                if self.function_route == 'register_item':
+                    result = register_item(self.entry, result)
+                elif self.function_route == 'register_member':
+                    result = register_member(self.entry, result)
+                elif self.function_route == 'register_promo':
+                    result = register_promo(self.entry, result)
+                elif self.function_route == 'register_reward':
+                    result = register_reward(self.entry, result)
+                elif self.function_route == 'register_user':
+                    result = register_user(self.entry, result)
+                elif self.function_route == 'register_organization':
+                    result = register_organization(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -72,16 +72,16 @@ class RegisterThread(QThread):
         print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
 # add function here
-def register_items(entry=None, result=None):
+def register_item(entry=None, result=None):
     """This function is a special case. The coding structure might be different from the standard."""
     try:
-        itemType = ItemTypes.select().where(ItemTypes.ItemTypeName == entry['itemTypeName'])
-        brand = Brands.select().where(Brands.BrandName == entry['brandName'])
-        supplier = Suppliers.select().where(Suppliers.SupplierName == entry['supplierName'])
+        itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
+        brand = Brand.select().where(Brand.BrandName == entry['brandName'])
+        supplier = Supplier.select().where(Supplier.SupplierName == entry['supplierName'])
         
-        itemType = ItemTypes.create(ItemTypeName=entry['itemTypeName']) if not itemType.exists() else itemType.first()
-        brand = Brands.create(BrandName=entry['brandName']) if not brand.exists() else brand.first()
-        supplier = Suppliers.create(SupplierName=entry['supplierName']) if not supplier.exists() else supplier.first()
+        itemType = ItemType.create(ItemTypeName=entry['itemTypeName']) if not itemType.exists() else itemType.first()
+        brand = Brand.create(BrandName=entry['brandName']) if not brand.exists() else brand.first()
+        supplier = Supplier.create(SupplierName=entry['supplierName']) if not supplier.exists() else supplier.first()
         
         salesGroupEntries = [
             {'salesGroupName': 'retail'.upper(), 'salesGroupPrice': entry['retailPrice']},
@@ -89,42 +89,42 @@ def register_items(entry=None, result=None):
         ]
         
         for salesGroupEntry in salesGroupEntries:
-            item = Items.select().where(
-                (Items.ItemName == entry['itemName']) &
-                (Items.Barcode == entry['barcode']) &
-                (Items.ExpireDate == entry['expireDate']) &
-                (Items.ItemTypeId == itemType.Id) &
-                (Items.BrandId == brand.Id) &
-                (Items.SupplierId == supplier.Id) &
-                (Items.SalesGroupId == SalesGroups.get_or_none(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id)
+            item = Item.select().where(
+                (Item.ItemName == entry['itemName']) &
+                (Item.Barcode == entry['barcode']) &
+                (Item.ExpireDate == entry['expireDate']) &
+                (Item.ItemTypeId == itemType.Id) &
+                (Item.BrandId == brand.Id) &
+                (Item.SupplierId == supplier.Id) &
+                (Item.SalesGroupId == SalesGroup.get_or_none(SalesGroup.SalesGroupName == salesGroupEntry['salesGroupName']).Id)
             )
             
             if item.exists():
                 result['message'] = 'Item already exists'
                 return result
             
-            item = Items.create(
+            item = Item.create(
                 ItemName=entry['itemName'],
                 Barcode=entry['barcode'],
                 ExpireDate=entry['expireDate'],
                 ItemTypeId=itemType.Id,
                 BrandId=brand.Id,
                 SupplierId=supplier.Id,
-                SalesGroupId=SalesGroups.get_or_none(SalesGroups.SalesGroupName == salesGroupEntry['salesGroupName']).Id,
+                SalesGroupId=SalesGroup.get_or_none(SalesGroup.SalesGroupName == salesGroupEntry['salesGroupName']).Id,
             )
             
-            itemPrice = ItemPrices.select().where(
-                (ItemPrices.ItemId == item.Id) &
-                (ItemPrices.Capital == entry['capital']) &
-                (ItemPrices.Price == salesGroupEntry['salesGroupPrice']) & 
-                (ItemPrices.EffectiveDate == entry['effectiveDate']) 
+            itemPrice = ItemPrice.select().where(
+                (ItemPrice.ItemId == item.Id) &
+                (ItemPrice.Capital == entry['capital']) &
+                (ItemPrice.Price == salesGroupEntry['salesGroupPrice']) & 
+                (ItemPrice.EffectiveDate == entry['effectiveDate']) 
             )
         
             if itemPrice.exists():
                 result['message'] = 'ItemPrice already exists'
                 return result
             
-            itemPrice = ItemPrices.create(
+            itemPrice = ItemPrice.create(
                 ItemId=item.Id,
                 Capital=entry['capital'],
                 Price=salesGroupEntry['salesGroupPrice'], 
@@ -132,7 +132,7 @@ def register_items(entry=None, result=None):
             )
         
             if entry['trackInventory'] is 'True':
-                stock = Stocks.create(ItemId=item.Id)
+                stock = Stock.create(ItemId=item.Id)
         
         result['success'] = True
         result['message'] = 'Item added'
@@ -143,23 +143,23 @@ def register_items(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
-def register_members(entry=None, result=None):
+def register_member(entry=None, result=None):
     try:
-        member = Members.select().where(
-            (Members.OrganizationId == Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id) &
-            (Members.MemberName == entry['memberName']) &
-            (Members.BirthDate == entry['birthDate']) &
-            (Members.Address == entry['address']) &
-            (Members.MobileNumber == entry['mobileNumber']) &
-            (Members.Points == entry['points'])
+        member = Member.select().where(
+            (Member.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
+            (Member.MemberName == entry['memberName']) &
+            (Member.BirthDate == entry['birthDate']) &
+            (Member.Address == entry['address']) &
+            (Member.MobileNumber == entry['mobileNumber']) &
+            (Member.Points == entry['points'])
         )
         
         if member.exists():
             result['message'] = 'Member already exists'
             return result
         
-        member = Members.create(
-            OrganizationId=Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id,
+        member = Member.create(
+            OrganizationId=Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id,
             MemberName=entry['memberName'],
             BirthDate=entry['birthDate'],
             Address=entry['address'],
@@ -176,18 +176,18 @@ def register_members(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def register_promos(entry=None, result=None):
+def register_promo(entry=None, result=None):
     try:
-        promo = Promos.select().where(
-            (Promos.PromoName == entry['promoName']) &
-            (Promos.DiscountRate == entry['discountRate']) &
-            (Promos.Description == entry['description'])
+        promo = Promo.select().where(
+            (Promo.PromoName == entry['promoName']) &
+            (Promo.DiscountRate == entry['discountRate']) &
+            (Promo.Description == entry['description'])
         )
         
         if promo.exists():
             result['message'] = 'Promo already exists'
         
-        promo = Promos.create(
+        promo = Promo.create(
             PromoName=entry['promoName'],
             DiscountRate=entry['discountRate'],
             Description=entry['description'],
@@ -202,19 +202,19 @@ def register_promos(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def register_rewards(entry=None, result=None):
+def register_reward(entry=None, result=None):
     try:
-        reward = Rewards.select().where(
-            (Rewards.RewardName == entry['rewardName']) &
-            (Rewards.Points == entry['points']) &
-            (Rewards.Target == entry['target']) &
-            (Rewards.Description == entry['description'])
+        reward = Reward.select().where(
+            (Reward.RewardName == entry['rewardName']) &
+            (Reward.Points == entry['points']) &
+            (Reward.Target == entry['target']) &
+            (Reward.Description == entry['description'])
         )
         
         if reward.exists():
             result['message'] = 'Reward already exists'
         
-        reward = Rewards.create(
+        reward = Reward.create(
             RewardName=entry['rewardName'],
             Points=entry['points'],
             Target=entry['target'],
@@ -230,24 +230,24 @@ def register_rewards(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def register_users(entry=None, result=None):
+def register_user(entry=None, result=None):
     try:
-        user = Users.select().where(
-            (Users.OrganizationId == Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id) &
-            (Users.UserName == entry['userName']) &
-            (Users.AccessCode == entry['accessCode']) &
-            (Users.FullName == entry['fullName']) &
-            (Users.BirthDate == entry['birthDate']) &
-            (Users.MobileNumber == entry['mobileNumber']) &
-            (Users.AccessLevel == entry['accessLevel'])
+        user = User.select().where(
+            (User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
+            (User.UserName == entry['userName']) &
+            (User.AccessCode == entry['accessCode']) &
+            (User.FullName == entry['fullName']) &
+            (User.BirthDate == entry['birthDate']) &
+            (User.MobileNumber == entry['mobileNumber']) &
+            (User.AccessLevel == entry['accessLevel'])
         )
         
         if user.exists():
             result['message'] = 'User already exists'
             return result
         
-        user = Users.create(
-            OrganizationId=Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id,
+        user = User.create(
+            OrganizationId=Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id,
             UserName=entry['userName'],
             AccessCode=entry['accessCode'],
             FullName=entry['fullName'],
@@ -256,7 +256,7 @@ def register_users(entry=None, result=None):
             AccessLevel=entry['accessLevel'],
         )
         
-        userSessionInfo = UserSessionInfos.create(
+        userSessionInfo = UserSession.create(
             UserId=user.Id,
             ActiveStatus=0,
             LastLoginTs=datetime.now(),
@@ -271,20 +271,20 @@ def register_users(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def register_organizations(entry=None, result=None):
+def register_organization(entry=None, result=None):
     try:
-        organization = Organizations.select().where(
-            (Organizations.TaxId == entry['taxId']) &
-            (Organizations.OrganizationName == entry['organizationName']) &
-            (Organizations.Address == entry['address']) &
-            (Organizations.MobileNumber == entry['mobileNumber']) &
-            (Organizations.AccessCode == entry['accessCode'])
+        organization = Organization.select().where(
+            (Organization.TaxId == entry['taxId']) &
+            (Organization.OrganizationName == entry['organizationName']) &
+            (Organization.Address == entry['address']) &
+            (Organization.MobileNumber == entry['mobileNumber']) &
+            (Organization.AccessCode == entry['accessCode'])
         )
         
         if organization.exists():
             result['message'] = 'Organization already exists'
         
-        organization = Organizations.create(
+        organization = Organization.create(
             TaxId=entry['taxId'],
             OrganizationName=entry['organizationName'],
             Address=entry['address'],

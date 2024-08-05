@@ -85,6 +85,6 @@ class Ui_DialogEditStock(object):
         self.label_3.setText(_translate("DialogEditStock", "Item name"))
         self.label_2.setText(_translate("DialogEditStock", "OnHand"))
         self.label_4.setText(_translate("DialogEditStock", "Available"))
-        self.label.setText(_translate("DialogEditStock", "Sales group"))
+        self.label.setText(_translate("DialogEditStock", "Sale group"))
         self.pushButtonCancel.setText(_translate("DialogEditStock", "Cancel"))
         self.pushButtonSave.setText(_translate("DialogEditStock", "Save"))

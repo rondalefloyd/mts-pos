@@ -6,18 +6,18 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import (
-    Users, 
-    Organizations,
-    Members,
-    Promos,
-    Rewards,
-    ItemTypes,
-    Brands,
-    Suppliers,
-    SalesGroups,
-    Stocks,
-    Items,
-    ItemPrices,
+    User, 
+    Organization,
+    Member,
+    Promo,
+    Reward,
+    ItemType,
+    Brand,
+    Supplier,
+    SalesGroup,
+    Stock,
+    Item,
+    ItemPrice,
 )
 from app.utils.databases import postgres_db
 
@@ -40,26 +40,26 @@ class FetchThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'fetch_all_organizations_data':
-                    result = fetch_all_organizations_data(self.entry, result)
+                if self.function_route == 'fetch_all_organization_data':
+                    result = fetch_all_organization_data(self.entry, result)
                 elif self.function_route == 'fetch_promo_data_by_promo_name':
                     result = fetch_promo_data_by_promo_name(self.entry, result)
-                elif self.function_route == 'fetch_all_promos_data':
-                    result = fetch_all_promos_data(self.entry, result)
-                elif self.function_route == 'fetch_all_items_related_data':
-                    result = fetch_all_items_related_data(self.entry, result)
-                elif self.function_route == 'fetch_all_stocks_data_by_keyword_in_pagination':
-                    result = fetch_all_stocks_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_items_related_data_by_keyword_in_pagination':
-                    result = fetch_all_items_related_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_members_data_by_keyword_in_pagination':
-                    result = fetch_all_members_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_promos_data_by_keyword_in_pagination':
-                    result = fetch_all_promos_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_rewards_data_by_keyword_in_pagination':
-                    result = fetch_all_rewards_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_users_data_by_keyword_in_pagination':
-                    result = fetch_all_users_data_by_keyword_in_pagination(self.entry, result)
+                elif self.function_route == 'fetch_all_promo_data':
+                    result = fetch_all_promo_data(self.entry, result)
+                elif self.function_route == 'fetch_all_item_related_data':
+                    result = fetch_all_item_related_data(self.entry, result)
+                elif self.function_route == 'fetch_all_stock_data_by_keyword_in_pagination':
+                    result = fetch_all_stock_data_by_keyword_in_pagination(self.entry, result)
+                elif self.function_route == 'fetch_all_item_price_related_data_by_keyword_in_pagination':
+                    result = fetch_all_item_price_related_data_by_keyword_in_pagination(self.entry, result)
+                elif self.function_route == 'fetch_all_member_data_by_keyword_in_pagination':
+                    result = fetch_all_member_data_by_keyword_in_pagination(self.entry, result)
+                elif self.function_route == 'fetch_all_promo_data_by_keyword_in_pagination':
+                    result = fetch_all_promo_data_by_keyword_in_pagination(self.entry, result)
+                elif self.function_route == 'fetch_all_reward_data_by_keyword_in_pagination':
+                    result = fetch_all_reward_data_by_keyword_in_pagination(self.entry, result)
+                elif self.function_route == 'fetch_all_user_data_by_keyword_in_pagination':
+                    result = fetch_all_user_data_by_keyword_in_pagination(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -79,9 +79,9 @@ class FetchThread(QThread):
         print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
 # add function here
-def fetch_all_organizations_data(entry=None, result=None):
+def fetch_all_organization_data(entry=None, result=None):
     try:
-        organizations = Organizations.select().order_by(Organizations.UpdateTs.desc())
+        organizations = Organization.select().order_by(Organization.UpdateTs.desc())
         
         if not organizations.exists():
             result['message'] = 'Organization does not exists'
@@ -105,7 +105,7 @@ def fetch_all_organizations_data(entry=None, result=None):
 
 def fetch_promo_data_by_promo_name(entry=None, result=None):
     try:
-        promo = Promos.select().where(Promos.PromoName == entry['promoName']).order_by(Promos.UpdateTs.desc())
+        promo = Promo.select().where(Promo.PromoName == entry['promoName']).order_by(Promo.UpdateTs.desc())
         
         if not promo.exists():
             result['message'] = 'Promo does not exists'
@@ -128,9 +128,9 @@ def fetch_promo_data_by_promo_name(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
-def fetch_all_promos_data(entry=None, result=None):
+def fetch_all_promo_data(entry=None, result=None):
     try:
-        promos = Promos.select().order_by(Promos.UpdateTs.desc())
+        promos = Promo.select().order_by(Promo.UpdateTs.desc())
         
         if not promos.exists():
             result['message'] = 'Promo does not exists'
@@ -151,12 +151,12 @@ def fetch_all_promos_data(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def fetch_all_items_related_data(entry=None, result=None):
+def fetch_all_item_related_data(entry=None, result=None):
     try:
-        itemTypes = ItemTypes.select().order_by(ItemTypes.UpdateTs.desc())
-        brands = Brands.select().order_by(Brands.UpdateTs.desc())
-        suppliers = Suppliers.select().order_by(Suppliers.UpdateTs.desc())
-        salesGroups = SalesGroups.select().order_by(SalesGroups.UpdateTs.desc())
+        itemTypes = ItemType.select().order_by(ItemType.UpdateTs.desc())
+        brands = Brand.select().order_by(Brand.UpdateTs.desc())
+        suppliers = Supplier.select().order_by(Supplier.UpdateTs.desc())
+        salesGroups = SalesGroup.select().order_by(SalesGroup.UpdateTs.desc())
         
         result['success'] = True
         result['dictData'] = {
@@ -198,24 +198,24 @@ def fetch_all_items_related_data(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def fetch_all_stocks_data_by_keyword_in_pagination(entry=None, result=None):
+def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 30
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        stocks = (Stocks.select(
-            Stocks,
-            Items,
-        ).join(Items, JOIN.LEFT_OUTER, on=(Stocks.ItemId == Items.Id)
-        ).join(SalesGroups, JOIN.LEFT_OUTER, on=(Items.SalesGroupId == SalesGroups.Id)
+        stocks = (Stock.select(
+            Stock,
+            Item,
+        ).join(Item, JOIN.LEFT_OUTER, on=(Stock.ItemId == Item.Id)
+        ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
         ).where(
-            (Items.ItemName.cast('TEXT').like(keyword)) |
-            (SalesGroups.SalesGroupName.cast('TEXT').like(keyword)) |
-            (Stocks.OnHand.cast('TEXT').like(keyword)) |
-            (Stocks.Available.cast('TEXT').like(keyword)) |
-            (Stocks.UpdateTs.cast('TEXT').like(keyword))
-        ).order_by(Stocks.UpdateTs.desc()))
+            (Item.ItemName.cast('TEXT').like(keyword)) |
+            (SalesGroup.SalesGroupName.cast('TEXT').like(keyword)) |
+            (Stock.OnHand.cast('TEXT').like(keyword)) |
+            (Stock.Available.cast('TEXT').like(keyword)) |
+            (Stock.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(Stock.UpdateTs.desc()))
         
         total_count = stocks.count()
         paginated_stocks = stocks.limit(limit).offset(offset)
@@ -224,6 +224,7 @@ def fetch_all_stocks_data_by_keyword_in_pagination(entry=None, result=None):
         result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
         for stocks in paginated_stocks:
             result['listData'].append({
+                'id': stocks.Id,
                 'itemName': stocks.ItemId.ItemName,
                 'salesGroup': stocks.ItemId.SalesGroupId.SalesGroupName,
                 'onHand': stocks.OnHand,
@@ -238,39 +239,39 @@ def fetch_all_stocks_data_by_keyword_in_pagination(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def fetch_all_items_related_data_by_keyword_in_pagination(entry=None, result=None):
+def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 30
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        item_prices = (ItemPrices.select(
-            ItemPrices,
-            Items,
-            Promos,
-            ItemTypes,
-            Brands,
-            Suppliers,
-            SalesGroups,
-        ).join(Items, JOIN.LEFT_OUTER, on=(ItemPrices.ItemId == Items.Id)
-        ).join(Promos, JOIN.LEFT_OUTER, on=(ItemPrices.PromoId == Promos.Id)
-        ).join(ItemTypes, JOIN.LEFT_OUTER, on=(Items.ItemTypeId == ItemTypes.Id)
-        ).join(Brands, JOIN.LEFT_OUTER, on=(Items.BrandId == Brands.Id)
-        ).join(Suppliers, JOIN.LEFT_OUTER, on=(Items.SupplierId == Suppliers.Id)
-        ).join(SalesGroups, JOIN.LEFT_OUTER, on=(Items.SalesGroupId == SalesGroups.Id)
-        ).join(Stocks, JOIN.LEFT_OUTER, on=(Items.SalesGroupId == Stocks.Id)
+        item_prices = (ItemPrice.select(
+            ItemPrice,
+            Item,
+            Promo,
+            ItemType,
+            Brand,
+            Supplier,
+            SalesGroup,
+        ).join(Item, JOIN.LEFT_OUTER, on=(ItemPrice.ItemId == Item.Id)
+        ).join(Promo, JOIN.LEFT_OUTER, on=(ItemPrice.PromoId == Promo.Id)
+        ).join(ItemType, JOIN.LEFT_OUTER, on=(Item.ItemTypeId == ItemType.Id)
+        ).join(Brand, JOIN.LEFT_OUTER, on=(Item.BrandId == Brand.Id)
+        ).join(Supplier, JOIN.LEFT_OUTER, on=(Item.SupplierId == Supplier.Id)
+        ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
+        ).join(Stock, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == Stock.Id)
         ).where(
-            (Items.ItemName.cast('TEXT').like(keyword)) |
-            (Items.Barcode.cast('TEXT').like(keyword)) |
-            (Items.ExpireDate.cast('TEXT').like(keyword)) |
-            (ItemTypes.ItemTypeName.cast('TEXT').like(keyword)) |
-            (Brands.BrandName.cast('TEXT').like(keyword)) |
-            (Suppliers.SupplierName.cast('TEXT').like(keyword)) |
-            (SalesGroups.SalesGroupName.cast('TEXT').like(keyword)) |
-            (ItemPrices.EffectiveDate.cast('TEXT').like(keyword)) |
-            (Promos.PromoName.cast('TEXT').like(keyword)) |
-            (ItemPrices.UpdateTs.cast('TEXT').like(keyword))
-        ).order_by(ItemPrices.UpdateTs.desc(), ItemPrices.EffectiveDate.desc()))
+            (Item.ItemName.cast('TEXT').like(keyword)) |
+            (Item.Barcode.cast('TEXT').like(keyword)) |
+            (Item.ExpireDate.cast('TEXT').like(keyword)) |
+            (ItemType.ItemTypeName.cast('TEXT').like(keyword)) |
+            (Brand.BrandName.cast('TEXT').like(keyword)) |
+            (Supplier.SupplierName.cast('TEXT').like(keyword)) |
+            (SalesGroup.SalesGroupName.cast('TEXT').like(keyword)) |
+            (ItemPrice.EffectiveDate.cast('TEXT').like(keyword)) |
+            (Promo.PromoName.cast('TEXT').like(keyword)) |
+            (ItemPrice.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(ItemPrice.UpdateTs.desc(), ItemPrice.EffectiveDate.desc()))
         
         total_count = item_prices.count()
         paginated_item_prices = item_prices.limit(limit).offset(offset)
@@ -303,21 +304,21 @@ def fetch_all_items_related_data_by_keyword_in_pagination(entry=None, result=Non
         result['message'] = f"An error occured: {exception}"
         return result
 
-def fetch_all_members_data_by_keyword_in_pagination(entry=None, result=None):
+def fetch_all_member_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 30
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        members = Members.select().where(
-            (Members.OrganizationId == Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id) &
-            ((Members.MemberName.cast('TEXT').like(keyword)) |
-            (Members.BirthDate.cast('TEXT').like(keyword)) |
-            (Members.Address.cast('TEXT').like(keyword)) |
-            (Members.MobileNumber.cast('TEXT').like(keyword)) |
-            (Members.Points.cast('TEXT').like(keyword)) |
-            (Members.UpdateTs.cast('TEXT').like(keyword)))
-        ).order_by(Members.UpdateTs.desc())
+        members = Member.select().where(
+            (Member.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
+            ((Member.MemberName.cast('TEXT').like(keyword)) |
+            (Member.BirthDate.cast('TEXT').like(keyword)) |
+            (Member.Address.cast('TEXT').like(keyword)) |
+            (Member.MobileNumber.cast('TEXT').like(keyword)) |
+            (Member.Points.cast('TEXT').like(keyword)) |
+            (Member.UpdateTs.cast('TEXT').like(keyword)))
+        ).order_by(Member.UpdateTs.desc())
         
         total_count = members.count()
         paginated_members = members.limit(limit).offset(offset)
@@ -343,18 +344,18 @@ def fetch_all_members_data_by_keyword_in_pagination(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def fetch_all_promos_data_by_keyword_in_pagination(entry=None, result=None):
+def fetch_all_promo_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 30
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        promos = Promos.select().where(
-            (Promos.PromoName.cast('TEXT').like(keyword)) |
-            (Promos.DiscountRate.cast('TEXT').like(keyword)) |
-            (Promos.Description.cast('TEXT').like(keyword)) |
-            (Promos.UpdateTs.cast('TEXT').like(keyword))
-        ).order_by(Promos.UpdateTs.desc())
+        promos = Promo.select().where(
+            (Promo.PromoName.cast('TEXT').like(keyword)) |
+            (Promo.DiscountRate.cast('TEXT').like(keyword)) |
+            (Promo.Description.cast('TEXT').like(keyword)) |
+            (Promo.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(Promo.UpdateTs.desc())
         
         total_count = promos.count()
         paginated_promos = promos.limit(limit).offset(offset)
@@ -377,19 +378,19 @@ def fetch_all_promos_data_by_keyword_in_pagination(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def fetch_all_rewards_data_by_keyword_in_pagination(entry=None, result=None):
+def fetch_all_reward_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 30
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        rewards = Rewards.select().where(
-            (Rewards.RewardName.cast('TEXT').like(keyword)) |
-            (Rewards.Points.cast('TEXT').like(keyword)) |
-            (Rewards.Target.cast('TEXT').like(keyword)) |
-            (Rewards.Description.cast('TEXT').like(keyword)) |
-            (Rewards.UpdateTs.cast('TEXT').like(keyword))
-        ).order_by(Rewards.UpdateTs.desc())
+        rewards = Reward.select().where(
+            (Reward.RewardName.cast('TEXT').like(keyword)) |
+            (Reward.Points.cast('TEXT').like(keyword)) |
+            (Reward.Target.cast('TEXT').like(keyword)) |
+            (Reward.Description.cast('TEXT').like(keyword)) |
+            (Reward.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(Reward.UpdateTs.desc())
         
         total_count = rewards.count()
         paginated_rewards = rewards.limit(limit).offset(offset)
@@ -413,22 +414,22 @@ def fetch_all_rewards_data_by_keyword_in_pagination(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
-def fetch_all_users_data_by_keyword_in_pagination(entry=None, result=None):
+def fetch_all_user_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 30
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        users = Users.select().where(
-            (Users.OrganizationId == Organizations.get_or_none(Organizations.OrganizationName == entry['organizationName']).Id) &
-            ((Users.UserName.cast('TEXT').like(keyword)) |
-            (Users.AccessCode.cast('TEXT').like(keyword)) |
-            (Users.FullName.cast('TEXT').like(keyword)) |
-            (Users.BirthDate.cast('TEXT').like(keyword)) |
-            (Users.MobileNumber.cast('TEXT').like(keyword)) |
-            (Users.AccessLevel.cast('TEXT').like(keyword)) |
-            (Users.UpdateTs.cast('TEXT').like(keyword)))
-        ).order_by(Users.UpdateTs.desc())
+        users = User.select().where(
+            (User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
+            ((User.UserName.cast('TEXT').like(keyword)) |
+            (User.AccessCode.cast('TEXT').like(keyword)) |
+            (User.FullName.cast('TEXT').like(keyword)) |
+            (User.BirthDate.cast('TEXT').like(keyword)) |
+            (User.MobileNumber.cast('TEXT').like(keyword)) |
+            (User.AccessLevel.cast('TEXT').like(keyword)) |
+            (User.UpdateTs.cast('TEXT').like(keyword)))
+        ).order_by(User.UpdateTs.desc())
         
         total_count = users.count()
         paginated_users = users.limit(limit).offset(offset)

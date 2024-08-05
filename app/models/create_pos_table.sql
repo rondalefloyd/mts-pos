@@ -1,16 +1,16 @@
-CREATE TABLE "Brands" (
+CREATE TABLE "Brand" (
     "Id" SERIAL PRIMARY KEY, 
     "BrandName" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "ItemTypes" (
+CREATE TABLE "ItemType" (
     "Id" SERIAL PRIMARY KEY, 
     "ItemTypeName" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "Organizations" (
+CREATE TABLE "Organization" (
     "Id" SERIAL PRIMARY KEY, 
     "TaxId" VARCHAR(255), 
     "OrganizationName" VARCHAR(255), 
@@ -20,9 +20,9 @@ CREATE TABLE "Organizations" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "Members" (
+CREATE TABLE "Member" (
     "Id" SERIAL PRIMARY KEY, 
-    "OrganizationId" INTEGER REFERENCES "Organizations"("Id") ON DELETE CASCADE, 
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
     "MemberName" VARCHAR(255), 
     "BirthDate" DATE, 
     "Address" VARCHAR(255), 
@@ -31,7 +31,7 @@ CREATE TABLE "Members" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "Promos" (
+CREATE TABLE "Promo" (
     "Id" SERIAL PRIMARY KEY, 
     "PromoName" VARCHAR(255), 
     "DiscountRate" FLOAT, 
@@ -39,7 +39,7 @@ CREATE TABLE "Promos" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "Rewards" (
+CREATE TABLE "Reward" (
     "Id" SERIAL PRIMARY KEY, 
     "RewardName" VARCHAR(255), 
     "Points" FLOAT, 
@@ -48,56 +48,56 @@ CREATE TABLE "Rewards" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "SalesGroups" (
+CREATE TABLE "SalesGroup" (
     "Id" SERIAL PRIMARY KEY, 
     "SalesGroupName" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO "SalesGroups" ("Id", "SalesGroupName") VALUES 
+INSERT INTO "SalesGroup" ("Id", "SalesGroupName") VALUES 
 (1, 'RETAIL'), 
 (2, 'WHOLESALE');
 
-CREATE TABLE "Suppliers" (
+CREATE TABLE "Supplier" (
     "Id" SERIAL PRIMARY KEY, 
     "SupplierName" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "Items" (
+CREATE TABLE "Item" (
     "Id" SERIAL PRIMARY KEY, 
     "ItemName" VARCHAR(255), 
     "Barcode" VARCHAR(255), 
     "ExpireDate" DATE, 
-    "ItemTypeId" INTEGER REFERENCES "ItemTypes"("Id") ON DELETE CASCADE, 
-    "BrandId" INTEGER REFERENCES "Brands"("Id") ON DELETE CASCADE, 
-    "SalesGroupId" INTEGER REFERENCES "SalesGroups"("Id") ON DELETE CASCADE, 
-    "SupplierId" INTEGER REFERENCES "Suppliers"("Id") ON DELETE CASCADE, 
+    "ItemTypeId" INTEGER REFERENCES "ItemType"("Id") ON DELETE CASCADE, 
+    "BrandId" INTEGER REFERENCES "Brand"("Id") ON DELETE CASCADE, 
+    "SalesGroupId" INTEGER REFERENCES "SalesGroup"("Id") ON DELETE CASCADE, 
+    "SupplierId" INTEGER REFERENCES "Supplier"("Id") ON DELETE CASCADE, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "ItemPrices" (
+CREATE TABLE "ItemPrice" (
     "Id" SERIAL PRIMARY KEY, 
-    "ItemId" INTEGER REFERENCES "Items"("Id") ON DELETE CASCADE, 
+    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
     "Capital" FLOAT, 
     "Price" FLOAT, 
-    "PromoId" INTEGER REFERENCES "Promos"("Id") ON DELETE CASCADE, 
+    "PromoId" INTEGER REFERENCES "Promo"("Id") ON DELETE CASCADE, 
     "Discount" FLOAT,
     "EffectiveDate" DATE,  
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "Stocks" (
+CREATE TABLE "Stock" (
     "Id" SERIAL PRIMARY KEY, 
-    "ItemId" INTEGER REFERENCES "Items"("Id") ON DELETE CASCADE, 
+    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
     "OnHand" INTEGER DEFAULT 0, 
     "Available" INTEGER DEFAULT 0, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "Users" (
+CREATE TABLE "User" (
     "Id" SERIAL PRIMARY KEY, 
-    "OrganizationId" INTEGER REFERENCES "Organizations"("Id") ON DELETE CASCADE, 
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
     "UserName" VARCHAR(255), 
     "AccessCode" VARCHAR(255), 
     "FullName" VARCHAR(255), 
@@ -107,9 +107,9 @@ CREATE TABLE "Users" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "UserSessionInfos" (
+CREATE TABLE "UserSession" (
     "Id" SERIAL PRIMARY KEY, 
-    "UserId" INTEGER REFERENCES "Users"("Id") ON DELETE CASCADE, 
+    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE CASCADE, 
     "ActiveStatus" INTEGER, 
     "LastLoginTs" TIMESTAMP, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -117,8 +117,8 @@ CREATE TABLE "UserSessionInfos" (
 
 
 
--- Create the Dates table
-CREATE TABLE IF NOT EXISTS "Dates" (
+-- Create the Date table
+CREATE TABLE IF NOT EXISTS "Date" (
     "Id" SERIAL PRIMARY KEY,
     "DateValue" DATE UNIQUE NOT NULL,
     "Dayofweek" INT NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS "Dates" (
 );
 
 -- Insert dates from 1980-01-01 to 3000-01-01
-INSERT INTO "Dates" ("DateValue", "Dayofweek", "Weekday", "Quarter", "Year", "Month", "MonthName", "Day")
+INSERT INTO "Date" ("DateValue", "Dayofweek", "Weekday", "Quarter", "Year", "Month", "MonthName", "Day")
 SELECT 
     date::DATE AS "DateValue",
     EXTRACT(DOW FROM date) AS "Dayofweek",
@@ -146,7 +146,7 @@ FROM
     generate_series('1980-01-01'::DATE, '3000-01-01'::DATE, '1 day'::INTERVAL) date;
 
 -- Update the IsHoliday field for specific dates
-UPDATE "Dates"
+UPDATE "Date"
 SET "IsHoliday" = TRUE
 WHERE   
     ("Month" = 1 AND "Day" = 1) OR
@@ -154,16 +154,16 @@ WHERE
     ("Month" = 12 AND "Day" BETWEEN 24 AND 31);
 
 -- for transaction db
-CREATE TABLE "Sales" (
+CREATE TABLE "Sale" (
     "Id" SERIAL PRIMARY KEY, 
-    "UserId" INTEGER REFERENCES "Users"("Id") ON DELETE CASCADE, 
-    "CustomerId" INTEGER REFERENCES "Members"("Id") ON DELETE CASCADE, 
-    "ItemId" INTEGER REFERENCES "Items"("Id") ON DELETE CASCADE, 
+    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE CASCADE, 
+    "CustomerId" INTEGER REFERENCES "Member"("Id") ON DELETE CASCADE, 
+    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
     "Quantity" INTEGER, 
     "QuantityPrice" FLOAT, 
     "Reason" TEXT, 
     "ReferenceId" TEXT, 
     "Status" INTEGER, 
-    "DateId" INTEGER REFERENCES "Dates"("Id") ON DELETE CASCADE, 
+    "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE CASCADE, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

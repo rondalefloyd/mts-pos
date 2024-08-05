@@ -39,7 +39,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self._populateComboBoxItemTypeBrandSupplier()
 
     def _populateComboBoxItemTypeBrandSupplier(self):
-        self.fetchThread = FetchThread('fetch_all_items_related_data')
+        self.fetchThread = FetchThread('fetch_all_item_related_data')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierResult)
         self.fetchThread.start()
         
@@ -85,7 +85,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         pass
         
     def _onPushButtonAddClicked(self):
-        self.currentThread = RegisterThread('register_items', {
+        self.currentThread = RegisterThread('register_item', {
             'itemName': f"{self.lineEditItemName.text()}".upper(),
             'barcode': f"{self.lineEditBarcode.text()}",
             'expireDate': f"{self.dateEditExpireDate.text()}",
@@ -113,7 +113,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         return
         
     def _populateTableWidgetData(self):
-        self.currentThread = FetchThread('fetch_all_items_related_data_by_keyword_in_pagination', {
+        self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })
@@ -173,7 +173,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['itemName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('remove_item_prices_by_id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('remove_item_price_by_id', {'id': f"{data['id']}"})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

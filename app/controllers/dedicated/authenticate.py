@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.models.entities import Users, Organizations, UserSessionInfos
+from app.models.entities import User, Organization, UserSession
 from app.utils.databases import postgres_db
 
 
@@ -29,8 +29,8 @@ class AuthenticateThread(QThread):
             with postgres_db:
                 if self.function_route == 'authenticate_user_by_user_name_access_code':
                     result = authenticate_user_by_user_name_access_code(self.entry, result)
-                elif self.function_route == 'unauthenticate_users_by_id':
-                    result = unauthenticate_users_by_id(self.entry, result)
+                elif self.function_route == 'unauthenticate_user_by_id':
+                    result = unauthenticate_user_by_id(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -52,16 +52,16 @@ class AuthenticateThread(QThread):
 # add function here
 def authenticate_user_by_user_name_access_code(entry=None, result=None):
     try:
-        user = Users.select().where(
-            (Users.UserName == entry['userName']) & 
-            (Users.AccessCode == entry['accessCode'])
+        user = User.select().where(
+            (User.UserName == entry['userName']) & 
+            (User.AccessCode == entry['accessCode'])
         )
         if not user.exists():
             result['message'] = 'User does not exists'
             return result
         user = user.first()
         
-        userSessionInfos = UserSessionInfos.select().where(UserSessionInfos.Id == user.Id)
+        userSessionInfos = UserSession.select().where(UserSession.Id == user.Id)
         if not userSessionInfos.exists():
             result['message'] = 'UserSession does not exists'
             return result
@@ -73,7 +73,7 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
         result['success'] = True
         result['dictData'] = {
             'userId': user.id,
-            'organizationName': Organizations.get_or_none(Organizations.Id == user.OrganizationId).OrganizationName,
+            'organizationName': Organization.get_or_none(Organization.Id == user.OrganizationId).OrganizationName,
             'userName': user.UserName,
             'accessCode': user.AccessCode,
             'fullName': user.FullName,
@@ -88,9 +88,9 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
-def unauthenticate_users_by_id(entry=None, result=None):
+def unauthenticate_user_by_id(entry=None, result=None):
     try:
-        userSessionInfos = UserSessionInfos.select().where(UserSessionInfos.Id == entry['id'])
+        userSessionInfos = UserSession.select().where(UserSession.Id == entry['id'])
         
         if not userSessionInfos.exists():
             result['message'] = 'UserSession does not exists'
