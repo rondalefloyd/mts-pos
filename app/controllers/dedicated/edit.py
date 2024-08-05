@@ -93,6 +93,7 @@ def edit_members_data_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -115,6 +116,7 @@ def edit_promos_data_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -138,6 +140,7 @@ def edit_rewards_data_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
 
@@ -153,5 +156,6 @@ def edit_stocks_data_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result

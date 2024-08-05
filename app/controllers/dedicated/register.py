@@ -139,6 +139,7 @@ def register_items(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
 
@@ -171,6 +172,7 @@ def register_members(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -196,6 +198,7 @@ def register_promos(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -223,6 +226,7 @@ def register_rewards(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -263,6 +267,7 @@ def register_users(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -292,5 +297,6 @@ def register_organizations(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result

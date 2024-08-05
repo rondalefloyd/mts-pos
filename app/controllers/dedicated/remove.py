@@ -81,6 +81,7 @@ def remove_members_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -99,6 +100,7 @@ def remove_promos_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -117,6 +119,7 @@ def remove_rewards_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -135,5 +138,6 @@ def remove_users_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result

@@ -98,6 +98,7 @@ def fetch_all_organizations_data(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
 
@@ -123,6 +124,7 @@ def fetch_promo_data_by_promo_name(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
 
@@ -145,6 +147,7 @@ def fetch_all_promos_data(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -191,6 +194,7 @@ def fetch_all_items_related_data(entry=None, result=None):
         return result
 
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -230,6 +234,7 @@ def fetch_all_stocks_data_by_keyword_in_pagination(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -294,6 +299,7 @@ def fetch_all_items_related_data_by_keyword_in_pagination(entry=None, result=Non
         return result
     
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
 
@@ -333,6 +339,7 @@ def fetch_all_members_data_by_keyword_in_pagination(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -366,6 +373,7 @@ def fetch_all_promos_data_by_keyword_in_pagination(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -401,6 +409,7 @@ def fetch_all_rewards_data_by_keyword_in_pagination(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
     
@@ -441,5 +450,6 @@ def fetch_all_users_data_by_keyword_in_pagination(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result

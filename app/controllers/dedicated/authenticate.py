@@ -84,6 +84,7 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
 
@@ -104,5 +105,6 @@ def unauthenticate_users_by_id(entry=None, result=None):
         return result
         
     except Exception as exception:
+        result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
