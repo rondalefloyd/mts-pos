@@ -69,6 +69,7 @@ class EditThread(QThread):
         
 # add function here
 def edit_items_related_data_by_ids(entry=None, result=None):
+    # TODO: finish this
     return result
     pass
 def edit_members_data_by_id(entry=None, result=None):

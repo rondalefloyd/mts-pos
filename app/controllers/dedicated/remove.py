@@ -63,12 +63,77 @@ class RemoveThread(QThread):
 
 # add function here
 def remove_item_prices_by_id(entry=None, result=None):
+    # TODO: finish this
+    return result
     pass
 def remove_members_by_id(entry=None, result=None):
-    pass
+    try:
+        member = Members.select().where(Members.Id == entry['id'])
+        
+        if not member.exists():
+            result['message'] = 'Member does not exists'
+            return
+        
+        member.get().delete_instance()
+        
+        result['success'] = True
+        result['message'] = 'Member updated'
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
 def remove_promos_by_id(entry=None, result=None):
-    pass
+    try:
+        promo = Promos.select().where(Promos.Id == entry['id'])
+        
+        if not promo.exists():
+            result['message'] = 'Promo does not exists'
+            return
+        
+        promo.get().delete_instance()
+        
+        result['success'] = True
+        result['message'] = 'Promo updated'
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
 def remove_rewards_by_id(entry=None, result=None):
-    pass
+    try:
+        reward = Rewards.select().where(Rewards.Id == entry['id'])
+        
+        if not reward.exists():
+            result['message'] = 'Reward does not exists'
+            return
+        
+        reward.get().delete_instance()
+        
+        result['success'] = True
+        result['message'] = 'Reward updated'
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
 def remove_users_by_id(entry=None, result=None):
-    pass
+    try:
+        user = Users.select().where(Users.Id == entry['id'])
+        
+        if not user.exists():
+            result['message'] = 'User does not exists'
+            return
+        
+        user.get().delete_instance()
+        
+        result['success'] = True
+        result['message'] = 'User updated'
+        return result
+        
+    except Exception as exception:
+        result['message'] = f"An error occured: {exception}"
+        return result
