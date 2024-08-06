@@ -69,7 +69,7 @@ class EditThread(QThread):
         
 # add function here
 def edit_item_price_related_data_by_id(entry=None, result=None):
-    # TODO: finish this
+    # TODO: fix this "An error occured: 'NoneType' object has no attribute 'delete_instance'"
     try:
         print('this is the entry:', entry)
         itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
@@ -98,17 +98,24 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
         ) if not item.exists() else item.first()
 
         # applying promo
-        itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['itemPriceId'])
-        
-        if entry['applyPromo'] == 'True' and entry['promoId'] != 'None':
-            result['message'] = 'Item already has promo'
-            return result
 
-        elif entry['applyPromo'] == 'True' and entry['promoId'] == 'None':
+        if entry['applyPromo'] == 'True' and entry['promoId'] == 'None':
+            endDate = datetime.strptime(entry['endDate'], '%Y-%m-%d') + timedelta(days=1)
+            itemPrice = ItemPrice.select().where(
+                (ItemPrice.ItemId == item.Id) &
+                (ItemPrice.Price == entry['price']) & 
+                (ItemPrice.EffectiveDate == endDate) 
+            )
+            
+            if itemPrice.exists():
+                result['message'] = 'ItemPrice already exists'
+                return result
+            
+            itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['itemPriceId'])
             itemPrice.ItemId = item.Id
             itemPrice.Capital = entry['capital']
             itemPrice.Price = entry['price']
-            itemPrice.EffectiveDate = datetime.strptime(entry['endDate'], '%Y-%m-%d') + timedelta(days=1)
+            itemPrice.EffectiveDate = endDate
             itemPrice.UpdateTs = datetime.now()
             itemPrice.save()
             
@@ -121,22 +128,36 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
                 EffectiveDate=entry['startDate'],
             )
             
-        else:
+        elif entry['applyPromo'] == 'False' and entry['promoId'] == 'None':
+            itemPrice = ItemPrice.select().where(
+                (ItemPrice.ItemId == item.Id) &
+                (ItemPrice.Price == entry['price']) & 
+                (ItemPrice.EffectiveDate == entry['effectiveDate']) 
+            )
+            
+            if itemPrice.exists():
+                result['message'] = 'ItemPrice already exists'
+                return result
+            
+            itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['itemPriceId'])
+            
             itemPrice.ItemId = item.Id
             itemPrice.Capital = entry['capital']
             itemPrice.Price = entry['price']
             itemPrice.EffectiveDate = entry['effectiveDate']
             itemPrice.save()
             
+        # TODO: fix the stock
         # applying stock
-        if entry['trackInventory'] == 'True' and entry['stockId'] != 'None':
-            result['message'] = 'Item already has stock'
-            return result
+        print('---trackInventory:', entry['trackInventory'])
+        print('---stockId:', entry['stockId'])
+
         
-        elif entry['trackInventory'] == 'True' and entry['stockId'] == 'None':
+        if entry['trackInventory'] == 'True' and entry['stockId'] == 'None':
             stock = Stock.create(ItemId=item.Id)
             
-        else:
+        elif entry['trackInventory'] == 'False' and entry['stockId'] != 'None':
+            print('you are here!')
             stock = Stock.get_or_none(Stock.ItemId == item.Id).delete_instance()
         
         result['success'] = True

@@ -99,9 +99,9 @@ def register_item(entry=None, result=None):
                 (Item.SalesGroupId == SalesGroup.get_or_none(SalesGroup.SalesGroupName == salesGroupEntry['salesGroupName']).Id)
             )
             
-            if item.exists():
-                result['message'] = 'Item already exists'
-                return result
+            # if item.exists():
+            #     result['message'] = 'Item already exists'
+            #     return result
             
             item = Item.create(
                 ItemName=entry['itemName'],
@@ -111,11 +111,10 @@ def register_item(entry=None, result=None):
                 BrandId=brand.Id,
                 SupplierId=supplier.Id,
                 SalesGroupId=SalesGroup.get_or_none(SalesGroup.SalesGroupName == salesGroupEntry['salesGroupName']).Id,
-            )
+            ) if not item.exists() else item.first()
             
             itemPrice = ItemPrice.select().where(
                 (ItemPrice.ItemId == item.Id) &
-                (ItemPrice.Capital == entry['capital']) &
                 (ItemPrice.Price == salesGroupEntry['salesGroupPrice']) & 
                 (ItemPrice.EffectiveDate == entry['effectiveDate']) 
             )

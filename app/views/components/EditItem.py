@@ -24,24 +24,20 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.activeThreads = []
         
         
-        print('check this out:', self.selectedData['stockId'], self.selectedData['stockId'] is not None)
         self.checkBoxTrackInventory.setChecked(self.selectedData['stockId'] is not None)
-        print('check this out:', self.selectedData['promoId'], self.selectedData['promoId'] is not None)
-        self.checkBoxApplyPromo.setChecked(self.selectedData['promoId'] is not None)
-
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
         self.lineEditBarcode.setText(f"{self.selectedData['barcode']}")
         self.dateEditExpireDate.setDate(QDate.fromString(f"{self.selectedData['expireDate']}", 'yyyy-MM-dd'))
         self.lineEditCapital.setText(f"{self.selectedData['capital']}")
         self.lineEditPrice.setText(f"{self.selectedData['price']}")
         self.dateEditEffectiveDate.setDate(QDate.fromString(f"{self.selectedData['effectiveDate']}", 'yyyy-MM-dd'))
-
+        self.comboBoxPromoName.setCurrentText("N/A")        
+        self.lineEditDiscountRate.setText("0.0")
+        self.lineEditDiscount.setText("0.0")
+        self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
 
         self._populateComboBoxItemTypeBrandSupplierSalesGroup()
-        self._populateComboBoxPromoName()
-        self._populateLineEditDiscountRate()
         
-        self.checkBoxTrackInventory.stateChanged.connect(self._onCheckBoxTrackInventoryStateChanged)
         self.checkBoxApplyPromo.stateChanged.connect(self._onCheckBoxApplyPromoStateChanged)
         self.lineEditPrice.textChanged.connect(self._populateLineEditDiscountRate)
         self.comboBoxPromoName.currentTextChanged.connect(self._populateLineEditDiscountRate)
@@ -50,13 +46,21 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
 
     # private methods
-    def _onCheckBoxTrackInventoryStateChanged(self):
-        pass
-    
     def _onCheckBoxApplyPromoStateChanged(self):
+        self.dateEditEffectiveDate.setEnabled(self.checkBoxApplyPromo.isChecked() is False)
         self.comboBoxPromoName.setEnabled(self.checkBoxApplyPromo.isChecked() is True)
         self.dateEditStartDate.setEnabled(self.checkBoxApplyPromo.isChecked() is True)
         self.dateEditEndDate.setEnabled(self.checkBoxApplyPromo.isChecked() is True)
+
+        if self.checkBoxApplyPromo.isChecked() is False:
+            self.comboBoxPromoName.setCurrentText("N/A")        
+            self.lineEditDiscountRate.setText("0.0")
+            self.lineEditDiscount.setText("0.0")
+            self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
+            return
+            
+        self._populateComboBoxPromoName()
+        self._populateLineEditDiscountRate()
     
     def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
         self.fetchThread = FetchThread('fetch_all_item_related_data')
@@ -102,9 +106,6 @@ class EditItem(Ui_DialogEditItem, QDialog):
         for data in listData:
             self.comboBoxPromoName.addItem(f"{data['promoName']}")
             
-        # if self.selectedData['promoName'] is None:
-        #     self.comboBoxPromoName.setCurrentText("N/A")        
-    
     def _populateLineEditDiscountRate(self):
         self.currentThread = FetchThread('fetch_promo_data_by_promo_name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
         self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateResult)
@@ -113,20 +114,13 @@ class EditItem(Ui_DialogEditItem, QDialog):
         
     # TODO: instead of fixing it, just add a warning for the users when they're editing an item that has an applied promo
     def _handlePopulateLineEditDiscountRateResult(self, result):
-        if result['success'] is False:
-            self.lineEditDiscountRate.setText("0.0")
-            self.lineEditDiscount.setText("0.0")
-            self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
-            return
-        
-        
         dictData = result['dictData']
         discountRate = dictData['discountRate'] if 'discountRate' in dictData else 0
         
         self.lineEditDiscountRate.setText(f"{0.0 if discountRate is None else discountRate}")
         
         price = float(self.lineEditPrice.text())
-        discountRate = float(self.lineEditDiscountRate.text()) / 100.0  # Assuming the discount rate is given as a percentage
+        discountRate = float(self.lineEditDiscountRate.text()) / 100.0  
 
         discount = price * discountRate
         newPrice = price - discount

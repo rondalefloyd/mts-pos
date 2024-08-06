@@ -155,6 +155,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
                 self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
+                    manageActionButton.pushButtonEdit.setVisible(False)
                     tableitem.setForeground(QColor(255, 0, 0))
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
