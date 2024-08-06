@@ -23,6 +23,12 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
+        
+        print('check this out:', self.selectedData['stockId'], self.selectedData['stockId'] is not None)
+        self.checkBoxTrackInventory.setChecked(self.selectedData['stockId'] is not None)
+        print('check this out:', self.selectedData['promoId'], self.selectedData['promoId'] is not None)
+        self.checkBoxApplyPromo.setChecked(self.selectedData['promoId'] is not None)
+
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
         self.lineEditBarcode.setText(f"{self.selectedData['barcode']}")
         self.dateEditExpireDate.setDate(QDate.fromString(f"{self.selectedData['expireDate']}", 'yyyy-MM-dd'))
@@ -35,6 +41,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self._populateComboBoxPromoName()
         self._populateLineEditDiscountRate()
         
+        self.checkBoxTrackInventory.stateChanged.connect(self._onCheckBoxTrackInventoryStateChanged)
         self.checkBoxApplyPromo.stateChanged.connect(self._onCheckBoxApplyPromoStateChanged)
         self.lineEditPrice.textChanged.connect(self._populateLineEditDiscountRate)
         self.comboBoxPromoName.currentTextChanged.connect(self._populateLineEditDiscountRate)
@@ -43,6 +50,9 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
 
     # private methods
+    def _onCheckBoxTrackInventoryStateChanged(self):
+        pass
+    
     def _onCheckBoxApplyPromoStateChanged(self):
         self.comboBoxPromoName.setEnabled(self.checkBoxApplyPromo.isChecked() is True)
         self.dateEditStartDate.setEnabled(self.checkBoxApplyPromo.isChecked() is True)
@@ -133,7 +143,15 @@ class EditItem(Ui_DialogEditItem, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.currentThread = EditThread('edit_item_price_related_data_by_id', {
-            'id': f"{self.selectedData['id']}",
+            'itemPriceId': f"{self.selectedData['itemPriceId']}",
+            'itemid': f"{self.selectedData['itemid']}",
+            'itemTypeId': f"{self.selectedData['itemTypeId']}",
+            'brandId': f"{self.selectedData['brandId']}",
+            'supplierId': f"{self.selectedData['supplierId']}",
+            'salesGroupId': f"{self.selectedData['salesGroupId']}",
+            'promoId': f"{self.selectedData['promoId']}",
+            'stockId': f"{self.selectedData['stockId']}",
+            
             'itemName': f"{self.lineEditItemName.text()}".upper(),
             'barcode': f"{self.lineEditBarcode.text()}",
             'expireDate': f"{self.dateEditExpireDate.text()}",

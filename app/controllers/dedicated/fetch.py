@@ -190,7 +190,7 @@ def fetch_all_item_related_data(entry=None, result=None):
         for salesGroup in salesGroups:
             dictData['salesGroups'].append({
                 'id': salesGroup.Id,
-                'salesGroupName': salesGroup.SupplierName,
+                'salesGroupName': salesGroup.SalesGroupName,
                 'updateTs': salesGroup.UpdateTs,
             })
             
@@ -262,7 +262,6 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
         ).join(Brand, JOIN.LEFT_OUTER, on=(Item.BrandId == Brand.Id)
         ).join(Supplier, JOIN.LEFT_OUTER, on=(Item.SupplierId == Supplier.Id)
         ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
-        ).join(Stock, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == Stock.Id)
         ).where(
             (Item.ItemName.cast('TEXT').like(keyword)) |
             (Item.Barcode.cast('TEXT').like(keyword)) |
@@ -282,21 +281,37 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
         result['success'] = True
         result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
         for item_price in paginated_item_prices:
+            item = item_price.ItemId
+            itemType = item.ItemTypeId
+            brand = item.BrandId
+            supplier = item.SupplierId
+            salesGroup = item.SalesGroupId
+            promo = item_price.PromoId
+            stock = Stock.get_or_none(Stock.ItemId == item.Id)
+            
             result['listData'].append({
-                'id': item_price.Id,
-                'itemid': item_price.ItemId.Id,
-                'itemName': item_price.ItemId.ItemName,
-                'barcode': item_price.ItemId.Barcode,
-                'expireDate': item_price.ItemId.ExpireDate,
-                'itemTypeName': item_price.ItemId.ItemTypeId.ItemTypeName,
-                'brandName': item_price.ItemId.BrandId.BrandName,
-                'supplierName': item_price.ItemId.SupplierId.SupplierName,
-                'salesGroupName': item_price.ItemId.SalesGroupId.SalesGroupName,
+                # ids for editting purpose
+                'itemid': item.Id,
+                'itemTypeId': itemType.Id,
+                'brandId': brand.Id,
+                'supplierId': supplier.Id,
+                'salesGroupId': salesGroup.Id,
+                'itemPriceId': item_price.Id,
+                'promoId': promo.Id if promo else None,
+                'stockId': stock.Id if stock else None,
+                # ids for displaying purpose
+                'itemName': item.ItemName,
+                'barcode': item.Barcode,
+                'expireDate': item.ExpireDate,
+                'itemTypeName': itemType.ItemTypeName,
+                'brandName': brand.BrandName,
+                'supplierName': supplier.SupplierName,
+                'salesGroupName': salesGroup.SalesGroupName,
                 'capital': item_price.Capital,
                 'price': item_price.Price,
                 'discount': item_price.Discount,
                 'effectiveDate': item_price.EffectiveDate,
-                'promoName': item_price.PromoId.PromoName if item_price.PromoId else None,
+                'promoName': promo.PromoName if promo else None,
                 'updateTs': item_price.UpdateTs,
             })
             

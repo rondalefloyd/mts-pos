@@ -173,7 +173,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['itemName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('remove_item_price_by_id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('remove_item_price_by_id', {'itemPriceId': f"{data['itemPriceId']}"})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

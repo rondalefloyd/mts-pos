@@ -67,7 +67,7 @@ class RemoveThread(QThread):
 # add function here
 def remove_item_price_by_id(entry=None, result=None):
     try:
-        itemPrice = ItemPrice.select().where(ItemPrice.Id == entry['id'])
+        itemPrice = ItemPrice.select().where(ItemPrice.Id == entry['itemPriceId'])
         
         if not itemPrice.exists():
             result['message'] = 'ItemPrice does not exists'

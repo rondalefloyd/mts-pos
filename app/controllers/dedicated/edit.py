@@ -71,6 +71,7 @@ class EditThread(QThread):
 def edit_item_price_related_data_by_id(entry=None, result=None):
     # TODO: finish this
     try:
+        print('this is the entry:', entry)
         itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
         brand = Brand.select().where(Brand.BrandName == entry['brandName'])
         supplier = Supplier.select().where(Supplier.SupplierName == entry['supplierName'])
@@ -96,9 +97,14 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
             SalesGroupId=salesGroup.Id,
         ) if not item.exists() else item.first()
 
-        itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['id'])
+        # applying promo
+        itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['itemPriceId'])
         
-        if entry['applyPromo'] is 'True':
+        if entry['applyPromo'] == 'True' and entry['promoId'] != 'None':
+            result['message'] = 'Item already has promo'
+            return result
+
+        elif entry['applyPromo'] == 'True' and entry['promoId'] == 'None':
             itemPrice.ItemId = item.Id
             itemPrice.Capital = entry['capital']
             itemPrice.Price = entry['price']
@@ -114,6 +120,7 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
                 Discount=entry['discount'],
                 EffectiveDate=entry['startDate'],
             )
+            
         else:
             itemPrice.ItemId = item.Id
             itemPrice.Capital = entry['capital']
@@ -121,11 +128,16 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
             itemPrice.EffectiveDate = entry['effectiveDate']
             itemPrice.save()
             
-        if entry['trackInventory'] is 'True':
+        # applying stock
+        if entry['trackInventory'] == 'True' and entry['stockId'] != 'None':
+            result['message'] = 'Item already has stock'
+            return result
+        
+        elif entry['trackInventory'] == 'True' and entry['stockId'] == 'None':
             stock = Stock.create(ItemId=item.Id)
-        # TODO: fix how the stocks are being deleted via checkbox
-        # if entry['trackInventory'] is 'False':
-        #     stock = Stock.get_or_none(Stock.ItemId == item.Id).delete_instance()
+            
+        else:
+            stock = Stock.get_or_none(Stock.ItemId == item.Id).delete_instance()
         
         result['success'] = True
         result['message'] = 'ItemPrice updated'
