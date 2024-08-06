@@ -21,6 +21,11 @@ class EditStock(Ui_DialogEditStock, QDialog):
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
+
+        self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
+        self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
+        self.lineEditAvailable.setText(f"{self.selectedData['available']}")
+        self.lineEditOnHand.setText(f"{self.selectedData['onHand']}")
         
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)

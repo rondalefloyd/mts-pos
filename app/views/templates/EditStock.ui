@@ -77,9 +77,12 @@
         <widget class="QLineEdit" name="lineEditAvailable"/>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="comboBoxSalesGroup">
+        <widget class="QComboBox" name="comboBoxSalesGroupName">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

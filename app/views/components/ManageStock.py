@@ -73,7 +73,7 @@ class ManageStock(Ui_FormManageStock, QWidget):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{data['salesGroup']}"),
+                QTableWidgetItem(f"{data['salesGroupName']}"),
                 QTableWidgetItem(f"{data['onHand']}"),
                 QTableWidgetItem(f"{data['available']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),

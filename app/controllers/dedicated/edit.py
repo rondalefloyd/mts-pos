@@ -71,7 +71,6 @@ class EditThread(QThread):
 def edit_item_price_related_data_by_id(entry=None, result=None):
     # TODO: fix this "An error occured: 'NoneType' object has no attribute 'delete_instance'"
     try:
-        print('this is the entry:', entry)
         itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
         brand = Brand.select().where(Brand.BrandName == entry['brandName'])
         supplier = Supplier.select().where(Supplier.SupplierName == entry['supplierName'])
@@ -135,31 +134,16 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
                 (ItemPrice.EffectiveDate == entry['effectiveDate']) 
             )
             
-            if itemPrice.exists():
-                result['message'] = 'ItemPrice already exists'
-                return result
-            
-            itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['itemPriceId'])
-            
+            itemPrice = itemPrice.first()
             itemPrice.ItemId = item.Id
             itemPrice.Capital = entry['capital']
             itemPrice.Price = entry['price']
             itemPrice.EffectiveDate = entry['effectiveDate']
             itemPrice.save()
             
-        # TODO: fix the stock
-        # applying stock
-        print('---trackInventory:', entry['trackInventory'])
-        print('---stockId:', entry['stockId'])
-
-        
         if entry['trackInventory'] == 'True' and entry['stockId'] == 'None':
             stock = Stock.create(ItemId=item.Id)
             
-        elif entry['trackInventory'] == 'False' and entry['stockId'] != 'None':
-            print('you are here!')
-            stock = Stock.get_or_none(Stock.ItemId == item.Id).delete_instance()
-        
         result['success'] = True
         result['message'] = 'ItemPrice updated'
         return result

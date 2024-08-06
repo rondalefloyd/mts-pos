@@ -9,6 +9,7 @@ from app.utils.config import *
 from app.views.templates.EditItem_ui import Ui_DialogEditItem
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.fetch import FetchThread
+from app.controllers.dedicated.remove import RemoveThread
 from app.controllers.dedicated.edit import EditThread
 
 class EditItem(Ui_DialogEditItem, QDialog):
@@ -24,6 +25,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.activeThreads = []
         
         
+        self.checkBoxTrackInventory.setDisabled(self.selectedData['stockId'] is not None)
         self.checkBoxTrackInventory.setChecked(self.selectedData['stockId'] is not None)
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
         self.lineEditBarcode.setText(f"{self.selectedData['barcode']}")
@@ -31,7 +33,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.lineEditCapital.setText(f"{self.selectedData['capital']}")
         self.lineEditPrice.setText(f"{self.selectedData['price']}")
         self.dateEditEffectiveDate.setDate(QDate.fromString(f"{self.selectedData['effectiveDate']}", 'yyyy-MM-dd'))
-        self.comboBoxPromoName.setCurrentText("N/A")        
+        self.comboBoxPromoName.setCurrentText("N/A")
         self.lineEditDiscountRate.setText("0.0")
         self.lineEditDiscount.setText("0.0")
         self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
@@ -46,6 +48,9 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
 
     # private methods
+    def _handleOnCheckBoxTrackInventoryStateChangedResult(self, result):
+        QMessageBox.information(self, 'Success', f"{result['message']}")
+        
     def _onCheckBoxApplyPromoStateChanged(self):
         self.dateEditEffectiveDate.setEnabled(self.checkBoxApplyPromo.isChecked() is False)
         self.comboBoxPromoName.setEnabled(self.checkBoxApplyPromo.isChecked() is True)

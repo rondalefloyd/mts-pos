@@ -229,7 +229,7 @@ def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
             result['listData'].append({
                 'id': stocks.Id,
                 'itemName': stocks.ItemId.ItemName,
-                'salesGroup': stocks.ItemId.SalesGroupId.SalesGroupName,
+                'salesGroupName': stocks.ItemId.SalesGroupId.SalesGroupName,
                 'onHand': stocks.OnHand,
                 'available': stocks.Available,
                 'updateTs': stocks.UpdateTs,
