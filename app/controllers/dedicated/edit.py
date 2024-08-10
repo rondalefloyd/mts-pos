@@ -67,9 +67,7 @@ class EditThread(QThread):
         self.finished.emit(result)
         print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
-# add function here
 def edit_item_price_related_data_by_id(entry=None, result=None):
-    # TODO: fix this "An error occured: 'NoneType' object has no attribute 'delete_instance'"
     try:
         itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
         brand = Brand.select().where(Brand.BrandName == entry['brandName'])
@@ -95,8 +93,6 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
             SupplierId=supplier.Id,
             SalesGroupId=salesGroup.Id,
         ) if not item.exists() else item.first()
-
-        # applying promo
 
         if entry['applyPromo'] == 'True' and entry['promoId'] == 'None':
             endDate = datetime.strptime(entry['endDate'], '%Y-%m-%d') + timedelta(days=1)

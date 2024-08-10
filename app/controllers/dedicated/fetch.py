@@ -220,12 +220,12 @@ def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
             (Stock.UpdateTs.cast('TEXT').like(keyword))
         ).order_by(Stock.UpdateTs.desc()))
         
-        total_count = stocks.count()
-        paginated_stocks = stocks.limit(limit).offset(offset)
+        totalCount = stocks.count()
+        paginatedStocks = stocks.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
-        for stocks in paginated_stocks:
+        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        for stocks in paginatedStocks:
             result['listData'].append({
                 'id': stocks.Id,
                 'itemName': stocks.ItemId.ItemName,
@@ -248,7 +248,7 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
-        item_prices = (ItemPrice.select(
+        itemPrices = (ItemPrice.select(
             ItemPrice,
             Item,
             Promo,
@@ -275,18 +275,18 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
             (ItemPrice.UpdateTs.cast('TEXT').like(keyword))
         ).order_by(ItemPrice.UpdateTs.desc(), ItemPrice.EffectiveDate.desc()))
         
-        total_count = item_prices.count()
-        paginated_item_prices = item_prices.limit(limit).offset(offset)
+        totalCount = itemPrices.count()
+        paginatedItemPrices = itemPrices.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
-        for item_price in paginated_item_prices:
-            item = item_price.ItemId
+        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        for itemPrice in paginatedItemPrices:
+            item = itemPrice.ItemId
             itemType = item.ItemTypeId
             brand = item.BrandId
             supplier = item.SupplierId
             salesGroup = item.SalesGroupId
-            promo = item_price.PromoId
+            promo = itemPrice.PromoId
             stock = Stock.get_or_none(Stock.ItemId == item.Id)
             
             result['listData'].append({
@@ -296,7 +296,7 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
                 'brandId': brand.Id,
                 'supplierId': supplier.Id,
                 'salesGroupId': salesGroup.Id,
-                'itemPriceId': item_price.Id,
+                'itemPriceId': itemPrice.Id,
                 'promoId': promo.Id if promo else None,
                 'stockId': stock.Id if stock else None,
                 # ids for displaying purpose
@@ -307,12 +307,12 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
                 'brandName': brand.BrandName,
                 'supplierName': supplier.SupplierName,
                 'salesGroupName': salesGroup.SalesGroupName,
-                'capital': item_price.Capital,
-                'price': item_price.Price,
-                'discount': item_price.Discount,
-                'effectiveDate': item_price.EffectiveDate,
+                'capital': itemPrice.Capital,
+                'price': itemPrice.Price,
+                'discount': itemPrice.Discount,
+                'effectiveDate': itemPrice.EffectiveDate,
                 'promoName': promo.PromoName if promo else None,
-                'updateTs': item_price.UpdateTs,
+                'updateTs': itemPrice.UpdateTs,
             })
             
         return result
@@ -338,12 +338,12 @@ def fetch_all_member_data_by_keyword_in_pagination(entry=None, result=None):
             (Member.UpdateTs.cast('TEXT').like(keyword)))
         ).order_by(Member.UpdateTs.desc())
         
-        total_count = members.count()
-        paginated_members = members.limit(limit).offset(offset)
+        totalCount = members.count()
+        paginatedMembers = members.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
-        for member in paginated_members:
+        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        for member in paginatedMembers:
             result['listData'].append({
                 'id': member.Id,
                 'organizationId': member.OrganizationId,
@@ -375,12 +375,12 @@ def fetch_all_promo_data_by_keyword_in_pagination(entry=None, result=None):
             (Promo.UpdateTs.cast('TEXT').like(keyword))
         ).order_by(Promo.UpdateTs.desc())
         
-        total_count = promos.count()
-        paginated_promos = promos.limit(limit).offset(offset)
+        totalCount = promos.count()
+        paginatedPromos = promos.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
-        for promo in paginated_promos:
+        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        for promo in paginatedPromos:
             result['listData'].append({
                 'id': promo.Id,
                 'promoName': promo.PromoName,
@@ -410,12 +410,12 @@ def fetch_all_reward_data_by_keyword_in_pagination(entry=None, result=None):
             (Reward.UpdateTs.cast('TEXT').like(keyword))
         ).order_by(Reward.UpdateTs.desc())
         
-        total_count = rewards.count()
-        paginated_rewards = rewards.limit(limit).offset(offset)
+        totalCount = rewards.count()
+        paginatedRewards = rewards.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
-        for reward in paginated_rewards:
+        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        for reward in paginatedRewards:
             result['listData'].append({
                 'id': reward.Id,
                 'rewardName': reward.RewardName,
@@ -440,6 +440,7 @@ def fetch_all_user_data_by_keyword_in_pagination(entry=None, result=None):
         
         users = User.select().where(
             (User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
+            (User.AccessLevel < 3) &
             ((User.UserName.cast('TEXT').like(keyword)) |
             (User.AccessCode.cast('TEXT').like(keyword)) |
             (User.FullName.cast('TEXT').like(keyword)) |
@@ -449,12 +450,12 @@ def fetch_all_user_data_by_keyword_in_pagination(entry=None, result=None):
             (User.UpdateTs.cast('TEXT').like(keyword)))
         ).order_by(User.UpdateTs.desc())
         
-        total_count = users.count()
-        paginated_users = users.limit(limit).offset(offset)
+        totalCount = users.count()
+        paginatedUsers = users.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(total_count / limit) if 0 else 1}
-        for user in paginated_users:
+        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        for user in paginatedUsers:
             result['listData'].append({
                 'id': user.Id,
                 'userName': user.UserName,

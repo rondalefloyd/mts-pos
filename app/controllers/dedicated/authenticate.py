@@ -49,7 +49,6 @@ class AuthenticateThread(QThread):
         self.finished.emit(result)
         print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
-# add function here
 def authenticate_user_by_user_name_access_code(entry=None, result=None):
     try:
         user = User.select().where(
@@ -61,18 +60,18 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
             return result
         user = user.first()
         
-        userSessionInfos = UserSession.select().where(UserSession.Id == user.Id)
-        if not userSessionInfos.exists():
+        userSessions = UserSession.select().where(UserSession.Id == user.Id)
+        if not userSessions.exists():
             result['message'] = 'UserSession does not exists'
             return result
-        userSessionInfos = userSessionInfos.first()
-        userSessionInfos.ActiveStatus = 1
-        userSessionInfos.LastLoginTs = datetime.now()
-        userSessionInfos.save()
+        userSessions = userSessions.first()
+        userSessions.ActiveStatus = 1
+        userSessions.LastLoginTs = datetime.now()
+        userSessions.save()
         
         result['success'] = True
         result['dictData'] = {
-            'userId': user.id,
+            'id': user.Id,
             'organizationName': Organization.get_or_none(Organization.Id == user.OrganizationId).OrganizationName,
             'userName': user.UserName,
             'accessCode': user.AccessCode,
@@ -90,15 +89,15 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
 
 def unauthenticate_user_by_id(entry=None, result=None):
     try:
-        userSessionInfos = UserSession.select().where(UserSession.Id == entry['id'])
+        userSession = UserSession.select().where(UserSession.UserId == entry['id'])
         
-        if not userSessionInfos.exists():
+        if not userSession.exists():
             result['message'] = 'UserSession does not exists'
             return result
         
-        userSessionInfos = userSessionInfos.first()
-        userSessionInfos.ActiveStatus = 0
-        userSessionInfos.save()
+        userSession = userSession.first()
+        userSession.ActiveStatus = 0
+        userSession.save()
         
         result['success'] = True
         

@@ -7,7 +7,6 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import (
     User,
-    UserSession,
     Member,
     Promo,
     Reward,
