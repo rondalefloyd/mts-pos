@@ -98,6 +98,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
     def _populateComboBoxPromoName(self):
         self.currentThread = FetchThread('fetch_all_promo_data')
         self.currentThread.finished.connect(self._handlePopulateComboBoxPromoNameResult)
+        self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
@@ -114,6 +115,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
     def _populateLineEditDiscountRate(self):
         self.currentThread = FetchThread('fetch_promo_data_by_promo_name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
         self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateResult)
+        self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         

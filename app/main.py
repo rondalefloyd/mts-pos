@@ -61,3 +61,8 @@ def _startApp():
 if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
+    
+    
+# TODO: cleanup the codes
+# TODO: standardized other codes
+# TODO: make sure the thread clean up function is being used by each and every function
