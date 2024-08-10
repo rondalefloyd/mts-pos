@@ -78,6 +78,31 @@
        </column>
        <column>
         <property name="text">
+         <string>ItemName</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Brand</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Price</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Available</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>PromoName</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
          <string>UpdateTs</string>
         </property>
        </column>
