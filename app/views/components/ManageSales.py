@@ -1,5 +1,6 @@
-import os, sys, logging
+import os, sys, logging, json
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
@@ -21,10 +22,22 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
+        self.orderNumber = 0
+        self.orderType = None
+        self.orderIndex = None
+        self.orderData = {
+            'ongoing': [],
+            'saved': [],
+            'finished': [],
+            'cancelled': [],
+        }
+        
         self.refresh()
         
         self.tabWidgetOrder.clear()
         
+        self.tabWidgetOrder.tabCloseRequested.connect(self._onTabWidgetOrderTabCloseRequested)
+        self.tabWidgetOrder.currentChanged.connect(self._onTabWidgetOrderClicked)
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
         self.pushButtonPrev.clicked.connect(self._onPushButtonPrevClicked)
         self.pushButtonNext.clicked.connect(self._onPushButtonNextClicked)
@@ -36,13 +49,46 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self._populateTableWidgetData()
 
+    def _onTabWidgetOrderTabCloseRequested(self, index):
+        self.orderData['cancelled'].append({
+            'orderName': self.orderData['ongoing'][index]['orderName'],
+            'orderWidget': self.orderData['ongoing'][index]['orderWidget'],
+        })
+        self.tabWidgetOrder.removeTab(index)
+        self.orderData['ongoing'].pop(index)
+
+    def _onTabWidgetOrderClicked(self):
+        self.orderIndex = self.tabWidgetOrder.currentIndex()
+        self.labelOrderNumber.setText(f"{self.tabWidgetOrder.tabText(self.orderIndex)}")
+        self.orderType = self.orderData['ongoing'][self.orderIndex]['orderWidget'].labelOrderType.text()
+        # self._populateTableWidgetData()
+        print("self.order:", json.dumps(self.orderData, indent=4, default=str))
+
     def _onPushButtonNewClicked(self):
         self.preOrder = PreOrder()
-        self.orderNumber = f"Order " # TODO: add iterating value
-        self.tabWidgetOrder.addTab(self.preOrder, self.orderNumber)
+        self.orderNumber += 1
+        self.orderName = f"Order {self.orderNumber}" # TODO: add iterating value
+        self.orderData['ongoing'].append({
+            'orderName': self.orderName,
+            'orderWidget': self.preOrder,
+        })
         
-        self.preOrder.labelOrderType.setText(f"{self.comboBoxOrderType.currentText()}")
-
+        self.orderIndex = len(self.orderData['ongoing']) - 1 # gets the latest index of the order
+        
+        orderWidget = self.orderData['ongoing'][self.orderIndex]['orderWidget']
+        orderWidget.pushButtonDiscard.clicked.connect(self._onTabWidgetOrderTabCloseRequested)
+        orderWidget.labelOrderType.setText(f"{self.comboBoxOrderType.currentText()}")
+        
+        self.tabWidgetOrder.addTab(orderWidget, self.orderName)
+        self.tabWidgetOrder.setCurrentIndex(self.orderIndex)
+        
+        print("self.order:", json.dumps(self.orderData, indent=4, default=str))
+    
+    def _onOrderWidgetPushButtonDiscardClicked(self):
+        self.orderIndex = self.tabWidgetOrder.currentIndex()
+        self.tabWidgetOrder.removeTab(self.orderIndex)
+        self.orderData['ongoing'].pop(self.orderIndex)
+        
     def _onPushButtonFilterClicked(self):
         self.currentPage = 1
         self._populateTableWidgetData()
@@ -59,9 +105,10 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
     def _populateTableWidgetData(self):
         # TODO: add fetcher for item displays
-        self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_in_pagination', {
+        self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_order_type_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
+            'orderType': f"{self.orderType}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -80,17 +127,20 @@ class ManageSales(Ui_FormManageSales, QWidget):
         for i, data in enumerate(manyData):
             manageActionButton = ManageActionButton(add=True)
             tableItems = [
-                QTableWidgetItem(f"{data['salesName']}"),
-                QTableWidgetItem(f"{data['discountRate']}"),
-                QTableWidgetItem(f"{data['description']}"),
-                QTableWidgetItem(f"{data['updateTs']}"),
+                QTableWidgetItem(f"{data['itemName']}"),
+                QTableWidgetItem(f"{data['brandName']}"),
+                QTableWidgetItem(f"{data['price']}"),
+                QTableWidgetItem(f"{data['promoName']}"),
+                QTableWidgetItem(f"{data['available']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
-            self.tableWidgetData.setItem(i, 1, tableItems[0])
-            self.tableWidgetData.setItem(i, 2, tableItems[1])
-            self.tableWidgetData.setItem(i, 3, tableItems[2])
-            self.tableWidgetData.setItem(i, 4, tableItems[3])
+            for j, tableitem in enumerate(tableItems):
+                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                
+                if data['promoName'] is not None:
+                    manageActionButton.pushButtonEdit.setVisible(False)
+                    tableitem.setForeground(QColor(255, 0, 0))
         
             # TODO: add function
             manageActionButton.pushButtonAdd.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))

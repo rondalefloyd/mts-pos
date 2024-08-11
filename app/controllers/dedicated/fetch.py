@@ -48,6 +48,8 @@ class FetchThread(QThread):
                     result = fetch_all_promo_data(self.entry, result)
                 elif self.function_route == 'fetch_all_item_related_data':
                     result = fetch_all_item_related_data(self.entry, result)
+                elif self.function_route == 'fetch_all_item_price_related_data_by_keyword_order_type_in_pagination':
+                    result = fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(self.entry, result)
                 elif self.function_route == 'fetch_all_stock_data_by_keyword_in_pagination':
                     result = fetch_all_stock_data_by_keyword_in_pagination(self.entry, result)
                 elif self.function_route == 'fetch_all_item_price_related_data_by_keyword_in_pagination':
@@ -200,6 +202,71 @@ def fetch_all_item_related_data(entry=None, result=None):
         result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
+    
+def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=None, result=None):
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        print('look for this entry:', entry)
+        itemPrices = (ItemPrice.select(
+            ItemPrice,
+            Item,
+            Promo,
+            Brand,
+            SalesGroup,
+        ).join(Item, JOIN.LEFT_OUTER, on=(ItemPrice.ItemId == Item.Id)
+        ).join(Promo, JOIN.LEFT_OUTER, on=(ItemPrice.PromoId == Promo.Id)
+        ).join(Brand, JOIN.LEFT_OUTER, on=(Item.BrandId == Brand.Id)
+        ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
+        ).where(
+            # (SalesGroup.SalesGroupName == entry['orderType']) &
+            ((Item.ItemName.cast('TEXT').like(keyword)) |
+            (Brand.BrandName.cast('TEXT').like(keyword)) |
+            (ItemPrice.EffectiveDate.cast('TEXT').like(keyword)) |
+            (Promo.PromoName.cast('TEXT').like(keyword)) |
+            (ItemPrice.UpdateTs.cast('TEXT').like(keyword)))
+        ).order_by(ItemPrice.UpdateTs.desc(), ItemPrice.EffectiveDate.desc()))
+        
+        totalCount = itemPrices.count()
+        paginatedItemPrices = itemPrices.limit(limit).offset(offset)
+        
+        result['success'] = True
+        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        for itemPrice in paginatedItemPrices:
+            item = itemPrice.ItemId
+            brand = item.BrandId
+            salesGroup = item.SalesGroupId
+            promo = itemPrice.PromoId
+            stock = Stock.get_or_none(Stock.ItemId == item.Id)
+            
+            if itemPrice.EffectiveDate:
+                # TODO: write a filter logic here for ranking items
+                pass
+            result['listData'].append({
+                # ids for editting purpose
+                'itemid': item.Id,
+                'brandId': brand.Id,
+                'salesGroupId': salesGroup.Id,
+                'itemPriceId': itemPrice.Id,
+                'promoId': promo.Id if promo else None,
+                'stockId': stock.Id if stock else None,
+                # ids for displaying purpose
+                'itemName': item.ItemName,
+                'brandName': brand.BrandName,
+                'price': itemPrice.Price,
+                'promoName': promo.PromoName if promo else None,
+                'available': stock.Available if stock else None,
+                'updateTs': itemPrice.UpdateTs,
+            })
+            
+        return result
+    
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+
     
 def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
     try:
@@ -439,8 +506,8 @@ def fetch_all_user_data_by_keyword_in_pagination(entry=None, result=None):
         keyword = f"%{entry['keyword']}%"
         
         users = User.select().where(
-            (User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
-            (User.AccessLevel < 3) &
+            ((User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
+            (User.AccessLevel < 3)) &
             ((User.UserName.cast('TEXT').like(keyword)) |
             (User.AccessCode.cast('TEXT').like(keyword)) |
             (User.FullName.cast('TEXT').like(keyword)) |
