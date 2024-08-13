@@ -23,13 +23,14 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.activeThreads = []
         
         self.orderNumber = 0
-        self.orderType = None
-        self.orderIndex = None
+        self.orderIndex = 0
+        self.orderName = 'N/A'
+        self.orderType = 'N/A'
         self.orderData = {
             'ongoing': [],
+            'cancelled': [],
             'saved': [],
             'finished': [],
-            'cancelled': [],
         }
         
         self.refresh()
@@ -37,7 +38,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.tabWidgetOrder.clear()
         
         self.tabWidgetOrder.tabCloseRequested.connect(self._onTabWidgetOrderTabCloseRequested)
-        self.tabWidgetOrder.currentChanged.connect(self._onTabWidgetOrderClicked)
+        self.tabWidgetOrder.currentChanged.connect(self._onTabWidgetOrderCurrentChanged)
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
         self.pushButtonPrev.clicked.connect(self._onPushButtonPrevClicked)
         self.pushButtonNext.clicked.connect(self._onPushButtonNextClicked)
@@ -50,39 +51,42 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self._populateTableWidgetData()
 
     def _onTabWidgetOrderTabCloseRequested(self, index):
+        orderOngoing = self.orderData['ongoing']
         self.orderData['cancelled'].append({
-            'orderName': self.orderData['ongoing'][index]['orderName'],
-            'orderWidget': self.orderData['ongoing'][index]['orderWidget'],
+            'orderName': orderOngoing[index]['orderName'],
+            'orderWidget': orderOngoing[index]['orderWidget'],
         })
         self.tabWidgetOrder.removeTab(index)
-        self.orderData['ongoing'].pop(index)
+        orderOngoing.pop(index)
+        
+        print('self.orderData:', json.dumps(self.orderData, indent=4, default=str))
 
-    def _onTabWidgetOrderClicked(self):
+    def _onTabWidgetOrderCurrentChanged(self):
         self.orderIndex = self.tabWidgetOrder.currentIndex()
-        self.labelOrderNumber.setText(f"{self.tabWidgetOrder.tabText(self.orderIndex)}")
-        self.orderType = self.orderData['ongoing'][self.orderIndex]['orderWidget'].labelOrderType.text()
-        # self._populateTableWidgetData()
-        print("self.order:", json.dumps(self.orderData, indent=4, default=str))
+        self.labelOrderNumber.setText(self.orderData['ongoing'][self.orderIndex]['orderName'])
+        pass
+        # CONTINUE THIS
 
     def _onPushButtonNewClicked(self):
-        self.preOrder = PreOrder()
+        self.preOrder = PreOrder(self)
+        
         self.orderNumber += 1
-        self.orderName = f"Order {self.orderNumber}" # TODO: add iterating value
-        self.orderData['ongoing'].append({
+        self.orderName = f"Order {self.orderNumber}"
+        orderOngoing = self.orderData['ongoing']
+        orderOngoing.append({
             'orderName': self.orderName,
             'orderWidget': self.preOrder,
         })
         
-        self.orderIndex = len(self.orderData['ongoing']) - 1 # gets the latest index of the order
+        self.orderIndex = len(orderOngoing) - 1
         
-        orderWidget = self.orderData['ongoing'][self.orderIndex]['orderWidget']
-        orderWidget.pushButtonDiscard.clicked.connect(self._onTabWidgetOrderTabCloseRequested)
-        orderWidget.labelOrderType.setText(f"{self.comboBoxOrderType.currentText()}")
-        
+        orderWidget: PreOrder = self.orderData['ongoing'][self.orderIndex]['orderWidget']
+        orderWidget.tableWidgetData.clearContents()
         self.tabWidgetOrder.addTab(orderWidget, self.orderName)
         self.tabWidgetOrder.setCurrentIndex(self.orderIndex)
         
-        print("self.order:", json.dumps(self.orderData, indent=4, default=str))
+        print('self.orderData:', json.dumps(self.orderData, indent=4, default=str))
+        # CONTINUE THIS
     
     def _onOrderWidgetPushButtonDiscardClicked(self):
         self.orderIndex = self.tabWidgetOrder.currentIndex()
@@ -143,11 +147,27 @@ class ManageSales(Ui_FormManageSales, QWidget):
                     tableitem.setForeground(QColor(255, 0, 0))
         
             # TODO: add function
-            manageActionButton.pushButtonAdd.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
+            manageActionButton.pushButtonAdd.clicked.connect(lambda _=i, data=data: self._onPushButtonAddClicked(data))
             
         self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
+
+    def _onPushButtonAddClicked(self, data):
+        # TODO: create new method using array for getting the items added to cart
+        
+        self.orderIndex = self.tabWidgetOrder.currentIndex()
+        orderWidget: PreOrder = self.orderData['ongoing'][self.orderIndex]['orderWidget']
+
+        # TODO: fix indexing for rows
+        rowCount = orderWidget.tableWidgetData.rowCount()
+        orderWidget.tableWidgetData.insertRow(rowCount)
+        orderWidget.tableWidgetData.setCellWidget(rowCount, 0, PreOrderActionButton())
+        orderWidget.tableWidgetData.setItem(rowCount, 1, QTableWidgetItem(f"{data['itemName']}")) # the qty should be incremented
+        orderWidget.tableWidgetData.setItem(rowCount, 2, QTableWidgetItem(f"{data['itemName']}"))
+        orderWidget.tableWidgetData.setItem(rowCount, 3, QTableWidgetItem(f"{data['price']}")) # the price should be incremented
+        
+        print("orderWidget.tableWidgetData.rowCount():", orderWidget.tableWidgetData.rowCount())
 
     def _cleanupThread(self):
         sender = self.sender()
