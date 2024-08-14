@@ -130,7 +130,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
             self.tableWidgetData.setItem(i, 6, tableItems[5])
             self.tableWidgetData.setItem(i, 7, tableItems[6])
         
-            manageActionButton.pushButtonDelete.clicked.connect(lambda _=i, data=data: self._onPushButtonDeleteClicked(data))
+            manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))
             
         self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         self.pushButtonPrev.setEnabled(self.currentPage > 1)

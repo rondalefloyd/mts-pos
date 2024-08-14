@@ -245,7 +245,7 @@ def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=
                 pass
             result['listData'].append({
                 # ids for editting purpose
-                'itemid': item.Id,
+                'itemId': item.Id,
                 'brandId': brand.Id,
                 'salesGroupId': salesGroup.Id,
                 'itemPriceId': itemPrice.Id,
@@ -358,7 +358,7 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
             
             result['listData'].append({
                 # ids for editting purpose
-                'itemid': item.Id,
+                'itemId': item.Id,
                 'itemTypeId': itemType.Id,
                 'brandId': brand.Id,
                 'supplierId': supplier.Id,

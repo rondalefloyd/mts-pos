@@ -85,7 +85,7 @@ class ManageStock(Ui_FormManageStock, QWidget):
                 self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
-            manageActionButton.pushButtonDelete.clicked.connect(lambda _=i, data=data: self._onPushButtonDeleteClicked(data))
+            manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))
             
         self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         self.pushButtonPrev.setEnabled(self.currentPage > 1)

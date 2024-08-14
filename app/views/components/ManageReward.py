@@ -120,7 +120,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
             self.tableWidgetData.setItem(i, 5, tableItems[4])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
-            manageActionButton.pushButtonDelete.clicked.connect(lambda _=i, data=data: self._onPushButtonDeleteClicked(data))
+            manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))
             
         self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
