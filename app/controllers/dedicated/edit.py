@@ -94,25 +94,25 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
             SalesGroupId=salesGroup.Id,
         ) if not item.exists() else item.first()
 
-        if entry['applyPromo'] == 'True' and entry['promoId'] == 'None':
-            endDate = datetime.strptime(entry['endDate'], '%Y-%m-%d') + timedelta(days=1)
+        if entry['applyPromo'] is True and entry['promoId'] is None:
+            itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['itemPriceId'])
+            itemPrice.ItemId = item.Id
+            itemPrice.Capital = entry['capital']
+            itemPrice.Price = entry['price']
+            itemPrice.EffectiveDate = datetime.strptime(entry['endDate'], '%Y-%m-%d') + timedelta(days=1)
+            itemPrice.UpdateTs = datetime.now()
+            itemPrice.save()
+            
             itemPrice = ItemPrice.select().where(
                 (ItemPrice.ItemId == item.Id) &
-                (ItemPrice.Price == entry['price']) & 
-                (ItemPrice.EffectiveDate == endDate) 
+                (ItemPrice.Price == entry['newPrice']) & 
+                (ItemPrice.PromoId == Promo.get_or_none(Promo.PromoName == entry['promoName']).Id) & 
+                (ItemPrice.EffectiveDate == datetime.strptime(entry['startDate'], '%Y-%m-%d')) 
             )
             
             if itemPrice.exists():
                 result['message'] = 'ItemPrice already exists'
                 return result
-            
-            itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['itemPriceId'])
-            itemPrice.ItemId = item.Id
-            itemPrice.Capital = entry['capital']
-            itemPrice.Price = entry['price']
-            itemPrice.EffectiveDate = endDate
-            itemPrice.UpdateTs = datetime.now()
-            itemPrice.save()
             
             itemPrice = ItemPrice.create(
                 ItemId=item.Id,
@@ -123,7 +123,7 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
                 EffectiveDate=entry['startDate'],
             )
             
-        elif entry['applyPromo'] == 'False' and entry['promoId'] == 'None':
+        elif entry['applyPromo'] is False and entry['promoId'] is None:
             itemPrice = ItemPrice.select().where(
                 (ItemPrice.ItemId == item.Id) &
                 (ItemPrice.Price == entry['price']) & 
@@ -137,7 +137,7 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
             itemPrice.EffectiveDate = entry['effectiveDate']
             itemPrice.save()
             
-        if entry['trackInventory'] == 'True' and entry['stockId'] == 'None':
+        if entry['trackInventory'] is True and entry['stockId'] is None:
             stock = Stock.create(ItemId=item.Id)
             
         result['success'] = True
