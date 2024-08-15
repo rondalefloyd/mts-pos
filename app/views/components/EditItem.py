@@ -118,7 +118,6 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    # TODO: instead of fixing it, just add a warning for the users when they're editing an item that has an applied promo
     def _handlePopulateLineEditDiscountRateResult(self, result):
         dictData = result['dictData']
         discountRate = dictData['discountRate'] if 'discountRate' in dictData else 0

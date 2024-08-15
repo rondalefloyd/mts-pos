@@ -45,16 +45,17 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self._populateTableWidgetData()
 
-    def _onTabWidgetOrderTabCloseRequested(self, index): # TODO: do this
+    def _onTabWidgetOrderTabCloseRequested(self, index):
         self.tabWidgetOrder.removeTab(index)
         self.activeOrder.pop(index)
         print('self.activeOrder:', json.dumps(self.activeOrder, indent=4, default=str))
 
-    def _onTabWidgetOrderCurrentChanged(self): # TODO: do this
+    def _onTabWidgetOrderCurrentChanged(self):
         self.orderIndex = self.tabWidgetOrder.currentIndex()
+        # TODO: finish this
         pass
 
-    def _onPushButtonNewClicked(self): # TODO: do this
+    def _onPushButtonNewClicked(self):
         self.orderNumber += 1
         self.orderName = f"Order {self.orderNumber}"
         
@@ -132,14 +133,13 @@ class ManageSales(Ui_FormManageSales, QWidget):
                     manageActionButton.pushButtonEdit.setVisible(False)
                     tableitem.setForeground(QColor(255, 0, 0))
         
-            # TODO: add function
             manageActionButton.pushButtonAdd.clicked.connect(lambda _=i, data=data: self._onPushButtonAddClicked(data))
             
         self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
-    def _onPushButtonAddClicked(self, data): # TODO: do this
+    def _onPushButtonAddClicked(self, data):
         print('you are here data:', data)
         itemId = data['itemId']
         itemName = data['itemName']

@@ -61,5 +61,3 @@ def _startApp():
 if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
-
-# TODO: remove all the stringifiers in the components. it's not needed since the data are being returned base on their data type set in the database
