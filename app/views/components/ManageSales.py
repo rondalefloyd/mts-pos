@@ -94,7 +94,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
             self._populateTableWidgetData()
         
     def _populateTableWidgetData(self):
-        # TODO: add fetcher for item displays
+        # TODO: fix this FetchThread where it should filter depending on the order type (retail/wholesale/mixed)
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_order_type_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
@@ -120,8 +120,8 @@ class ManageSales(Ui_FormManageSales, QWidget):
                 QTableWidgetItem(f"{data['itemName']}"),
                 QTableWidgetItem(f"{data['brandName']}"),
                 QTableWidgetItem(f"{data['price']}"),
-                QTableWidgetItem(f"{data['promoName']}"),
                 QTableWidgetItem(f"{data['available']}"),
+                QTableWidgetItem(f"{data['promoName']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
@@ -140,18 +140,31 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonAddClicked(self, data): # TODO: do this
-        print('you are here')
-        itemId = f"{data['itemId']}"
-        itemName = f"{data['itemName']}"
-        promoName = f"{data['promoName']}"
-        price = float(data['price'])
+        print('you are here data:', data)
+        itemId = data['itemId']
+        itemName = data['itemName']
+        promoName = data['promoName']
+        price = data['price']
+        discount = data['discount']
+        available = data['available']
+        stockBypass = False
         
         orderItem = self.activeOrder[self.orderIndex]['orderItem']
         orderWidget: PreOrder = self.activeOrder[self.orderIndex]['orderWidget']
         isItemExist = False
         
+        # TODO: make a clean method of this instead of too much nested if else
         for item in orderItem:
             if item['itemId'] == itemId:
+                if item['stockBypass'] is False and available is not None:
+                    if item['quantity'] >= available:
+                        confirm = QMessageBox.warning(self, 'Error', "Item out of stock. Bypass stock?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                        
+                        if confirm == QMessageBox.StandardButton.Yes:
+                            item['stockBypass'] = True
+                        if confirm == QMessageBox.StandardButton.No:
+                            return
+                
                 item['quantity'] += 1
                 item['total'] += price
                 isItemExist = True
@@ -161,6 +174,10 @@ class ManageSales(Ui_FormManageSales, QWidget):
             orderItem.append({
                 'itemId': itemId,
                 'price': price,
+                'discount': discount,
+                'available': available,
+                'stockBypass': stockBypass,
+                
                 'quantity': 1,
                 'itemName': itemName,
                 'promoName': promoName,

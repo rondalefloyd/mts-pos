@@ -108,6 +108,7 @@ class Ui_FormPreOrder(object):
         self.pushButtonPark.setObjectName("pushButtonPark")
         self.horizontalLayout.addWidget(self.pushButtonPark)
         self.pushButtonPay = QtWidgets.QPushButton(FormPreOrder)
+        self.pushButtonPay.setEnabled(False)
         self.pushButtonPay.setObjectName("pushButtonPay")
         self.horizontalLayout.addWidget(self.pushButtonPay)
         self.verticalLayout.addLayout(self.horizontalLayout)

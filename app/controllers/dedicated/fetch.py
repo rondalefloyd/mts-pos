@@ -255,6 +255,7 @@ def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=
                 'itemName': item.ItemName,
                 'brandName': brand.BrandName,
                 'price': itemPrice.Price,
+                'discount': itemPrice.Discount,
                 'promoName': promo.PromoName if promo else None,
                 'available': stock.Available if stock else None,
                 'updateTs': itemPrice.UpdateTs,
