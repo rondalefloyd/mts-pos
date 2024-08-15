@@ -41,12 +41,12 @@ class EditMember(Ui_DialogEditMember, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.currentThread = EditThread('edit_member_data_by_id', {
-            'id': f"{self.selectedData['id']}",
-            'memberName': f"{self.lineEditMemberName.text()}".upper(),
-            'birthDate': f"{self.dateEditBirthDate.text()}",
-            'address': f"{self.lineEditAddress.text()}".upper(),
-            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
-            'points': f"{self.lineEditPoints.text()}",  # Assuming new members start with 0 points
+            'id': self.selectedData['id'],
+            'memberName': self.lineEditMemberName.text().upper(),
+            'birthDate': self.dateEditBirthDate.text(),
+            'address': self.lineEditAddress.text().upper(),
+            'mobileNumber': self.lineEditMobileNumber.text(),
+            'points': self.lineEditPoints.text(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)

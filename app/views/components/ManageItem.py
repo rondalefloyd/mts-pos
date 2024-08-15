@@ -86,17 +86,17 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
     def _onPushButtonAddClicked(self):
         self.currentThread = RegisterThread('register_item', {
-            'itemName': f"{self.lineEditItemName.text()}".upper(),
-            'barcode': f"{self.lineEditBarcode.text()}",
-            'expireDate': f"{self.dateEditExpireDate.text()}",
-            'itemTypeName': f"{self.comboBoxItemTypeName.currentText()}".upper(),
-            'brandName': f"{self.comboBoxBrandName.currentText()}".upper(),
-            'supplierName': f"{self.comboBoxSupplierName.currentText()}".upper(),
-            'capital': f"{self.lineEditCapital.text()}",
-            'retailPrice': f"{self.lineEditRetailPrice.text()}",
-            'wholesalePrice': f"{self.lineEditWholesalePrice.text()}",
-            'effectiveDate': f"{self.dateEditEffectiveDate.text()}",
-            'trackInventory': f"{self.checkBoxTrackInventory.isChecked()}"
+            'itemName': self.lineEditItemName.text().upper(),
+            'barcode': self.lineEditBarcode.text(),
+            'expireDate': self.dateEditExpireDate.text(),
+            'itemTypeName': self.comboBoxItemTypeName.currentText().upper(),
+            'brandName': self.comboBoxBrandName.currentText().upper(),
+            'supplierName': self.comboBoxSupplierName.currentText().upper(),
+            'capital': self.lineEditCapital.text(),
+            'retailPrice': self.lineEditRetailPrice.text(),
+            'wholesalePrice': self.lineEditWholesalePrice.text(),
+            'effectiveDate': self.dateEditEffectiveDate.text(),
+            'trackInventory': self.checkBoxTrackInventory.isChecked()
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -174,7 +174,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['itemName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('remove_item_price_by_id', {'itemPriceId': f"{data['itemPriceId']}"})
+            self.currentThread = RemoveThread('remove_item_price_by_id', {'itemPriceId': data['itemPriceId']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

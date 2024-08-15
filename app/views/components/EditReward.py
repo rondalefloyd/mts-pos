@@ -34,11 +34,11 @@ class EditReward(Ui_DialogEditReward, QDialog):
 
     def _onPushButtonSaveClicked(self):
         self.currentThread = EditThread('edit_reward_data_by_id', {
-            'id': f"{self.selectedData['id']}",
-            'rewardName': f"{self.lineEditRewardName.text()}".upper(),
-            'points': f"{self.lineEditPoints.text()}",
-            'target': f"{self.lineEditTarget.text()}",
-            'description': f"{self.lineEditDescription.text()}".upper(),
+            'id': self.selectedData['id'],
+            'rewardName': self.lineEditRewardName.text().upper(),
+            'points': self.lineEditPoints.text(),
+            'target': self.lineEditTarget.text(),
+            'description': self.lineEditDescription.text().upper(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)

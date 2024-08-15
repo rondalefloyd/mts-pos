@@ -66,13 +66,13 @@ class ManageUser(Ui_FormManageUser, QWidget):
         
     def _onPushButtonAddClicked(self):
         self.currentThread = RegisterThread('register_user', {
-            'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
-            'userName': f"{self.lineEditUserName.text()}",
-            'accessCode': f"{self.lineEditAccessCode.text()}",
-            'fullName': f"{self.lineEditFullName.text()}".upper(),
-            'birthDate': f"{self.dateEditBirthDate.text()}",
-            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
-            'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
+            'organizationName': self.comboBoxOrganizationName.currentText().upper(),
+            'userName': self.lineEditUserName.text(),
+            'accessCode': self.lineEditAccessCode.text(),
+            'fullName': self.lineEditFullName.text().upper(),
+            'birthDate': self.dateEditBirthDate.text(),
+            'mobileNumber': self.lineEditMobileNumber.text(),
+            'accessLevel': self.comboBoxAccessLevel.currentText(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -141,7 +141,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('remove_user_by_id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('remove_user_by_id', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

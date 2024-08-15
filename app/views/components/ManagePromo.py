@@ -60,9 +60,9 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         
     def _onPushButtonAddClicked(self):
         self.currentThread = RegisterThread('register_promo', {
-            'promoName': f"{self.lineEditPromoName.text()}".upper(),
-            'discountRate': f"{self.lineEditDiscountRate.text()}",
-            'description': f"{self.lineEditDescription.text()}",
+            'promoName': self.lineEditPromoName.text().upper(),
+            'discountRate': self.lineEditDiscountRate.text(),
+            'description': self.lineEditDescription.text(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -128,7 +128,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['promoName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('remove_promo_by_id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('remove_promo_by_id', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

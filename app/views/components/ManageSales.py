@@ -149,6 +149,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         available = data['available']
         stockBypass = False
         
+        # TODO: add error handler when the tab is empty should not be able to add item
         orderItem = self.activeOrder[self.orderIndex]['orderItem']
         orderWidget: PreOrder = self.activeOrder[self.orderIndex]['orderWidget']
         isItemExist = False

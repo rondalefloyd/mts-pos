@@ -35,9 +35,9 @@ class EditStock(Ui_DialogEditStock, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.currentThread = EditThread('edit_stock_data_by_id', {
-            'id': f"{self.selectedData['id']}",
-            'onHand': f"{self.lineEditOnHand.text()}".upper(),
-            'available': f"{self.lineEditAvailable.text()}",
+            'id': self.selectedData['id'],
+            'onHand': self.lineEditOnHand.text().upper(),
+            'available': self.lineEditAvailable.text(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)

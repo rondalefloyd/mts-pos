@@ -64,10 +64,10 @@ class ManageReward(Ui_FormManageReward, QWidget):
         
     def _onPushButtonAddClicked(self):
         self.currentThread = RegisterThread('register_reward', {
-            'rewardName': f"{self.lineEditRewardName.text()}".upper(),
-            'points': f"{self.lineEditPoints.text()}",
-            'target': f"{self.lineEditTarget.text()}",
-            'description': f"{self.lineEditDescription.text()}",
+            'rewardName': self.lineEditRewardName.text().upper(),
+            'points': self.lineEditPoints.text(),
+            'target': self.lineEditTarget.text(),
+            'description': self.lineEditDescription.text(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -135,7 +135,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['rewardName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('remove_reward_by_id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('remove_reward_by_id', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

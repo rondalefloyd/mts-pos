@@ -33,11 +33,11 @@ class Setup(Ui_DialogSetup, QDialog):
 
     def _onPushButtonCreateClicked(self):
         self.currentThread = RegisterThread('register_organization', {
-            'taxId': f"{self.lineEditTaxId.text()}".upper(),
-            'organizationName': f"{self.lineEditOrganizationName.text()}".upper(),
-            'address': f"{self.lineEditAddress.text()}".upper(),
-            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
-            'accessCode': f"{self.lineEditAccessCode.text()}",
+            'taxId': self.lineEditTaxId.text().upper(),
+            'organizationName': self.lineEditOrganizationName.text().upper(),
+            'address': self.lineEditAddress.text().upper(),
+            'mobileNumber': self.lineEditMobileNumber.text(),
+            'accessCode': self.lineEditAccessCode.text(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)

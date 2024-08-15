@@ -100,7 +100,7 @@ class ManageStock(Ui_FormManageStock, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['itemName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.currentThread = RemoveThread('remove_stock_by_id', {'id': f"{data['id']}"})
+            self.currentThread = RemoveThread('remove_stock_by_id', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()

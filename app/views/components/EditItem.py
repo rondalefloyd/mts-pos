@@ -93,7 +93,6 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.comboBoxBrandName.setCurrentText(f"{self.selectedData['brandName']}")
         self.comboBoxSupplierName.setCurrentText(f"{self.selectedData['supplierName']}")
         self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
-        print("self.selectedData['salesGroupName']:", self.selectedData['salesGroupName'])
     
     def _populateComboBoxPromoName(self):
         self.currentThread = FetchThread('fetch_all_promo_data')
@@ -144,34 +143,34 @@ class EditItem(Ui_DialogEditItem, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.currentThread = EditThread('edit_item_price_related_data_by_id', {
-            'itemPriceId': f"{self.selectedData['itemPriceId']}",
-            'itemId': f"{self.selectedData['itemId']}",
-            'itemTypeId': f"{self.selectedData['itemTypeId']}",
-            'brandId': f"{self.selectedData['brandId']}",
-            'supplierId': f"{self.selectedData['supplierId']}",
-            'salesGroupId': f"{self.selectedData['salesGroupId']}",
-            'promoId': f"{self.selectedData['promoId']}",
-            'stockId': f"{self.selectedData['stockId']}",
+            'itemPriceId': self.selectedData['itemPriceId'],
+            'itemId': self.selectedData['itemId'],
+            'itemTypeId': self.selectedData['itemTypeId'],
+            'brandId': self.selectedData['brandId'],
+            'supplierId': self.selectedData['supplierId'],
+            'salesGroupId': self.selectedData['salesGroupId'],
+            'promoId': self.selectedData['promoId'],
+            'stockId': self.selectedData['stockId'],
             
-            'itemName': f"{self.lineEditItemName.text()}".upper(),
-            'barcode': f"{self.lineEditBarcode.text()}",
-            'expireDate': f"{self.dateEditExpireDate.text()}",
-            'itemTypeName': f"{self.comboBoxItemTypeName.currentText()}".upper(),
-            'brandName': f"{self.comboBoxBrandName.currentText()}".upper(),
-            'supplierName': f"{self.comboBoxSupplierName.currentText()}".upper(),
-            'salesGroupName': f"{self.comboBoxSalesGroupName.currentText()}".upper(),
-            'capital': f"{self.lineEditCapital.text()}",
-            'price': f"{self.lineEditPrice.text()}",
-            'effectiveDate': f"{self.dateEditEffectiveDate.text()}",
-            'promoName': f"{self.comboBoxPromoName.currentText()}",
-            'discountRate': f"{self.lineEditDiscountRate.text()}",
-            'discount': f"{self.lineEditDiscount.text()}",
-            'price': f"{self.lineEditPrice.text()}",
-            'newPrice': f"{self.lineEditNewPrice.text()}",
-            'startDate': f"{self.dateEditStartDate.text()}",
-            'endDate': f"{self.dateEditEndDate.text()}",
-            'applyPromo': f"{self.checkBoxApplyPromo.isChecked()}",
-            'trackInventory': f"{self.checkBoxTrackInventory.isChecked()}",
+            'itemName': self.lineEditItemName.text().upper(),
+            'barcode': self.lineEditBarcode.text(),
+            'expireDate': self.dateEditExpireDate.text(),
+            'itemTypeName': self.comboBoxItemTypeName.currentText().upper(),
+            'brandName': self.comboBoxBrandName.currentText().upper(),
+            'supplierName': self.comboBoxSupplierName.currentText().upper(),
+            'salesGroupName': self.comboBoxSalesGroupName.currentText().upper(),
+            'capital': self.lineEditCapital.text(),
+            'price': self.lineEditPrice.text(),
+            'effectiveDate': self.dateEditEffectiveDate.text(),
+            'promoName': self.comboBoxPromoName.currentText(),
+            'discountRate': self.lineEditDiscountRate.text(),
+            'discount': self.lineEditDiscount.text(),
+            'price': self.lineEditPrice.text(),
+            'newPrice': self.lineEditNewPrice.text(),
+            'startDate': self.dateEditStartDate.text(),
+            'endDate': self.dateEditEndDate.text(),
+            'applyPromo': self.checkBoxApplyPromo.isChecked(),
+            'trackInventory': self.checkBoxTrackInventory.isChecked(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)

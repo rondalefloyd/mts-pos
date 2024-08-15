@@ -45,13 +45,13 @@ class SignUp(Ui_DialogSignUp, QDialog):
     
     def _onPushButtonCreateClicked(self):
         self.currentThread = RegisterThread('register_user', {
-            'organizationName': f"{self.comboBoxOrganizationName.currentText()}".upper(),
-            'userName': f"{self.lineEditUserName.text()}",
-            'accessCode': f"{self.lineEditAccessCode.text()}",
-            'fullName': f"{self.lineEditFullName.text()}".upper(),
-            'birthDate': f"{self.dateEditBirthDate.text()}",
-            'mobileNumber': f"{self.lineEditMobileNumber.text()}",
-            'accessLevel': f"{self.comboBoxAccessLevel.currentText()}",
+            'organizationName': self.comboBoxOrganizationName.currentText().upper(),
+            'userName': self.lineEditUserName.text(),
+            'accessCode': self.lineEditAccessCode.text(),
+            'fullName': self.lineEditFullName.text().upper(),
+            'birthDate': self.dateEditBirthDate.text(),
+            'mobileNumber': self.lineEditMobileNumber.text(),
+            'accessLevel': self.comboBoxAccessLevel.currentText(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
         self.currentThread.finished.connect(self._cleanupThread)
