@@ -27,14 +27,14 @@ CREATE TABLE "Member" (
     "BirthDate" DATE, 
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 
-    "Points" FLOAT DEFAULT 0, 
+    "Points" DECIMAL(10, 2) DEFAULT 0, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Promo" (
     "Id" SERIAL PRIMARY KEY, 
     "PromoName" VARCHAR(255), 
-    "DiscountRate" FLOAT, 
+    "DiscountRate" DECIMAL(10, 2), 
     "Description" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -42,8 +42,8 @@ CREATE TABLE "Promo" (
 CREATE TABLE "Reward" (
     "Id" SERIAL PRIMARY KEY, 
     "RewardName" VARCHAR(255), 
-    "Points" FLOAT, 
-    "Target" FLOAT, 
+    "Points" DECIMAL(10, 2), 
+    "Target" DECIMAL(10, 2), 
     "Description" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -79,10 +79,10 @@ CREATE TABLE "Item" (
 CREATE TABLE "ItemPrice" (
     "Id" SERIAL PRIMARY KEY, 
     "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
-    "Capital" FLOAT, 
-    "Price" FLOAT, 
+    "Capital" DECIMAL(10, 2), 
+    "Price" DECIMAL(10, 2), 
     "PromoId" INTEGER REFERENCES "Promo"("Id") ON DELETE CASCADE, 
-    "Discount" FLOAT,
+    "Discount" DECIMAL(10, 2),
     "EffectiveDate" DATE,  
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -160,7 +160,7 @@ CREATE TABLE "Sale" (
     "CustomerId" INTEGER REFERENCES "Member"("Id") ON DELETE CASCADE, 
     "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
     "Quantity" INTEGER, 
-    "QuantityPrice" FLOAT, 
+    "QuantityPrice" DECIMAL(10, 2), 
     "Reason" TEXT, 
     "ReferenceId" TEXT, 
     "Status" INTEGER, 
