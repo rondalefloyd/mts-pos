@@ -211,7 +211,22 @@ def fetch_all_item_price_related_data_by_barcode_order_type(entry=None, result=N
         orderType = entry['orderType']
         print('check this part orderType:', orderType)
         
-        if orderType == 'RETAIL' or orderType == 'WHOLESALE':
+        if orderType == 'MIXED':
+            itemPrices = (ItemPrice.select(
+                ItemPrice,
+                Item,
+                Promo,
+                Brand,
+                SalesGroup,
+            ).join(Item, JOIN.LEFT_OUTER, on=(ItemPrice.ItemId == Item.Id)
+            ).join(Promo, JOIN.LEFT_OUTER, on=(ItemPrice.PromoId == Promo.Id)
+            ).join(Brand, JOIN.LEFT_OUTER, on=(Item.BrandId == Brand.Id)
+            ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
+            ).where(
+                (Item.Barcode == barcode)
+            ).order_by(ItemPrice.UpdateTs.desc(), ItemPrice.EffectiveDate.desc()))
+        
+        else:
             itemPrices = (ItemPrice.select(
                 ItemPrice,
                 Item,
@@ -227,21 +242,6 @@ def fetch_all_item_price_related_data_by_barcode_order_type(entry=None, result=N
                 (Item.Barcode == barcode)
             ).order_by(ItemPrice.UpdateTs.desc(), ItemPrice.EffectiveDate.desc()))
         
-        if orderType == 'MIXED' or orderType == 'BOTH':
-            itemPrices = (ItemPrice.select(
-                ItemPrice,
-                Item,
-                Promo,
-                Brand,
-                SalesGroup,
-            ).join(Item, JOIN.LEFT_OUTER, on=(ItemPrice.ItemId == Item.Id)
-            ).join(Promo, JOIN.LEFT_OUTER, on=(ItemPrice.PromoId == Promo.Id)
-            ).join(Brand, JOIN.LEFT_OUTER, on=(Item.BrandId == Brand.Id)
-            ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
-            ).where(
-                (Item.Barcode == barcode)
-            ).order_by(ItemPrice.UpdateTs.desc(), ItemPrice.EffectiveDate.desc()))
-
         result['success'] = True
         for itemPrice in itemPrices:
             item = itemPrice.ItemId

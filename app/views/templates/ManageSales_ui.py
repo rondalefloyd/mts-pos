@@ -147,7 +147,7 @@ class Ui_FormManageSales(object):
         self.pushButtonFilter.setText(_translate("FormManageSales", "Filter"))
         self.comboBoxBarcodeFilter.setItemText(0, _translate("FormManageSales", "Retail"))
         self.comboBoxBarcodeFilter.setItemText(1, _translate("FormManageSales", "Wholesale"))
-        self.comboBoxBarcodeFilter.setItemText(2, _translate("FormManageSales", "Both"))
+        self.comboBoxBarcodeFilter.setItemText(2, _translate("FormManageSales", "Mixed"))
         self.pushButtonAdd.setText(_translate("FormManageSales", "Add"))
         self.tableWidgetData.setSortingEnabled(False)
         item = self.tableWidgetData.verticalHeaderItem(0)

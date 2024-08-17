@@ -23,10 +23,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        self.orderIndex = 0
         self.orderNumber = 0
-        self.orderType = "N/A"
-        self.orderName = "N/A"
         self.activeOrder = []
         self.parkedOrder = []
         
@@ -51,16 +48,13 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
     def _onLineEditBarcodeReturnPressed(self):
         # TODO: fix this where the filterer should base on the barcode filter and not ordertype
-        if self.orderType == 'MIXED':
-            self.currentThread = FetchThread('fetch_all_item_price_related_data_by_barcode_order_type', {
-                'barcode': f"{self.lineEditBarcode.text()}",
-                'orderType': f"{self.comboBoxBarcodeFilter.currentText().upper()}",
-            })
-        else:
-            self.currentThread = FetchThread('fetch_all_item_price_related_data_by_barcode_order_type', {
-                'barcode': f"{self.lineEditBarcode.text()}",
-                'orderType': f"{self.orderType.upper()}",
-            })
+        orderIndex = self.tabWidgetOrder.currentIndex()
+        orderType = self.activeOrder[orderIndex]['orderType']
+        
+        self.currentThread = FetchThread('fetch_all_item_price_related_data_by_barcode_order_type', {
+            'barcode': f"{self.lineEditBarcode.text()}",
+            'orderType': f"{self.comboBoxBarcodeFilter.currentText().upper() if orderType == 'MIXED' else orderType.upper()}",
+        })
 
         self.currentThread.finished.connect(self._handleOnLineEditBarcodeReturnPressedResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -78,12 +72,13 @@ class ManageSales(Ui_FormManageSales, QWidget):
         print('self.activeOrder:', json.dumps(self.activeOrder, indent=4, default=str))
 
     def _onTabWidgetOrderCurrentChanged(self):
-        self.orderIndex = self.tabWidgetOrder.currentIndex()
-        self.orderType = self.activeOrder[self.orderIndex]['orderType']
-        self.comboBoxBarcodeFilter.setVisible(self.orderType == 'MIXED')
+        orderIndex = self.tabWidgetOrder.currentIndex()
+        orderType = self.activeOrder[orderIndex]['orderType']
         
-        print('self.orderIndex:', self.orderIndex)
-        print('self.orderType:', self.orderType)
+        self.comboBoxBarcodeFilter.setVisible(orderType == 'MIXED')
+        
+        print('orderIndex:', orderIndex)
+        print('orderType:', orderType)
         
         print('you clickin this')
         self._populateTableWidgetData()
@@ -92,28 +87,27 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
     def _onPushButtonNewClicked(self):
         self.orderNumber += 1
-        self.orderName = f"Order {self.orderNumber}"
         
         self.activeOrder.append({
-            'orderName': f"{self.orderName}", 
-            'orderType': f"{self.comboBoxOrderType.currentText()}".upper(),
+            'orderName': f"Order {self.orderNumber}", 
+            'orderType': f"{self.comboBoxOrderType.currentText().upper()}",
             'orderItem': [], 
             'orderWidget': PreOrder(self),
         })
         
-        self.orderIndex = len(self.activeOrder) - 1
+        orderIndex = len(self.activeOrder) - 1
         
         self.tabWidgetOrder.addTab(
-            self.activeOrder[self.orderIndex]['orderWidget'], 
-            self.activeOrder[self.orderIndex]['orderName'],
+            self.activeOrder[orderIndex]['orderWidget'], 
+            self.activeOrder[orderIndex]['orderName'],
         )
         
-        self.tabWidgetOrder.setCurrentIndex(self.orderIndex)
+        self.tabWidgetOrder.setCurrentIndex(orderIndex)
         
         print('self.activeOrder:', json.dumps(self.activeOrder, indent=4, default=str))
     
     def _onOrderWidgetPushButtonDiscardClicked(self):
-        self._onTabWidgetOrderTabCloseRequested(self.orderIndex)
+        self._onTabWidgetOrderTabCloseRequested(self.tabWidgetOrder.currentIndex())
         
     def _onPushButtonFilterClicked(self):
         self.currentPage = 1
@@ -133,7 +127,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_order_type_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
-            'orderType': f"{self.orderType.upper()}",
+            'orderType': f"{self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderType'].upper() if len(self.activeOrder) > 0 else ''}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataResult)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -187,8 +181,9 @@ class ManageSales(Ui_FormManageSales, QWidget):
         stockBypass = False
         
         # TODO: add error handler when the tab is empty should not be able to add item
-        orderItem: list = self.activeOrder[self.orderIndex]['orderItem']
-        orderWidget: PreOrder = self.activeOrder[self.orderIndex]['orderWidget']
+        orderIndex = self.tabWidgetOrder.currentIndex()
+        orderItem: list = self.activeOrder[orderIndex]['orderItem']
+        orderWidget: PreOrder = self.activeOrder[orderIndex]['orderWidget']
         isItemExist = False
         
         # TODO: make a clean method of this instead of too much nested if else
