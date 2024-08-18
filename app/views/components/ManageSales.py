@@ -47,6 +47,19 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self._populateTableWidgetData()
 
+    def onTabWidgetOrderTabCloseRequested(self, index):
+        orderItem: list = self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderItem']
+        
+        if len(orderItem) > 0:
+            confirm = QMessageBox.warning(self, 'Confirm', "Order contains item. Discard order?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            
+            if confirm == QMessageBox.StandardButton.Yes:
+                self.tabWidgetOrder.removeTab(index)
+                self.activeOrder.pop(index)
+                self._populateTableWidgetData()
+            else:
+                return
+
     def _onLineEditBarcodeReturnPressed(self):
         orderType = self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderType']
         
@@ -66,19 +79,6 @@ class ManageSales(Ui_FormManageSales, QWidget):
         for data in result['listData']:
             self._populateOrderItem(data)
 
-    def onTabWidgetOrderTabCloseRequested(self, index):
-        orderItem: list = self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderItem']
-        
-        if len(orderItem) > 0:
-            confirm = QMessageBox.warning(self, 'Confirm', "Order contains item. Discard order?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            
-            if confirm != QMessageBox.StandardButton.Yes:
-                return
-            
-        self.tabWidgetOrder.removeTab(index)
-        self.activeOrder.pop(index)
-        self._populateTableWidgetData()
-
     def _onTabWidgetOrderCurrentChanged(self):
         orderIndex = self.tabWidgetOrder.currentIndex()
         orderType = self.activeOrder[orderIndex]['orderType']
@@ -96,6 +96,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
             'orderType': f"{self.comboBoxOrderType.currentText().upper()}",
             'orderItem': [], 
             'orderWidget': PreOrder(self),
+            'orderStatus': 1,
         })
         
         orderIndex = len(self.activeOrder) - 1
@@ -178,6 +179,19 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self._populateOrderItem(data)
 
     def _populateOrderItem(self, data):
+        orderIndex = self.tabWidgetOrder.currentIndex()
+        orderWidget: PreOrder = self.activeOrder[orderIndex]['orderWidget']
+        
+        if self.activeOrder[orderIndex]['orderStatus'] == 2:
+            confirm = QMessageBox.warning(self, 'Confirm', 'Order is currently parked. Unpark order?', QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            
+            if confirm == QMessageBox.StandardButton.Yes:
+                self.activeOrder[orderIndex]['orderStatus'] = 1
+                orderWidget.pushButtonPark.setChecked(False)
+                orderWidget.onPushButtonParkClicked()
+            else:
+                return
+        
         itemId = data['itemId']
         itemName = data['itemName']
         promoName = data['promoName']
@@ -250,35 +264,25 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.manageSales: ManageSales = manageSales
         
         self.tableWidgetData.clearContents()
-        
         self.labelOrderType.setText(self.manageSales.comboBoxOrderType.currentText())
-        
         self.labelSubtotal.setText("0.00")
         self.labelDiscount.setText("0.00")
         self.labelTax.setText("0.00")
         self.labelGrandTotal.setText("0.00")
         
-        self.tableWidgetData
         self.pushButtonClear.clicked.connect(self._onPushButtonClearClicked)
         self.pushButtonDiscard.clicked.connect(self._onPushButtonDiscardClicked)
-        self.pushButtonPark.clicked.connect(self._onPushButtonParkClicked)
+        self.pushButtonPark.clicked.connect(self.onPushButtonParkClicked)
         self.pushButtonPay.clicked.connect(self._onPushButtonPayClicked)
         
-    def _onPushButtonClearClicked(self):
-        confirm = QMessageBox.warning(self, 'Confirm', "Delete all items?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+    def onPushButtonParkClicked(self):
+        orderIndex = self.manageSales.tabWidgetOrder.currentIndex()
+        orderStatus = 2 if self.pushButtonPark.isChecked() else 1
+        self.manageSales.activeOrder[orderIndex]['orderStatus'] = orderStatus
         
-        if confirm == QMessageBox.StandardButton.Yes:
-            orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['orderItem']
-            orderItem.clear()
-            self.populateTableWidgetData(orderItem)
-        
-    def _onPushButtonDiscardClicked(self):
-        self.manageSales.onTabWidgetOrderTabCloseRequested(self.manageSales.tabWidgetOrder.currentIndex())
-        pass
-    def _onPushButtonParkClicked(self):
-        pass
-    def _onPushButtonPayClicked(self):
-        pass
+        self.tableWidgetData.setEnabled(orderStatus == 1)
+        self.pushButtonPark.setText('PARK' if orderStatus == 1 else 'UNPARK')
+        self.pushButtonPay.setEnabled(orderStatus == 1)
         
     def populateTableWidgetData(self, entry):
         rowCount = len(entry)
@@ -321,7 +325,22 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText(f"{discount:.2f}")
         self.labelTax.setText(f"{tax:.2f}")
         self.labelGrandTotal.setText(f"{grandTotal:.2f}")
-            
+     
+    def _onPushButtonClearClicked(self):
+        confirm = QMessageBox.warning(self, 'Confirm', "Delete all items?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        if confirm == QMessageBox.StandardButton.Yes:
+            orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['orderItem']
+            orderItem.clear()
+            self.populateTableWidgetData(orderItem)
+        
+    def _onPushButtonDiscardClicked(self):
+        self.manageSales.onTabWidgetOrderTabCloseRequested(self.manageSales.tabWidgetOrder.currentIndex())
+
+    def _onPushButtonPayClicked(self):
+        # TODO: continue doing InOrder
+        pass
+               
     def _onPushButtonAddExactClicked(self, index, entry):
         orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['orderItem']
         price = float(entry[index]['price'])
