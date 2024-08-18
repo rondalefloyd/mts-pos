@@ -48,10 +48,17 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QLineEdit" name="lineEditBarcode"/>
+          <widget class="QLineEdit" name="lineEditBarcode">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QComboBox" name="comboBoxBarcodeFilter">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <item>
             <property name="text">
              <string>Retail</string>
@@ -71,6 +78,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButtonAdd">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Add</string>
            </property>
@@ -232,9 +242,9 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="labelOrderNumber">
+        <widget class="QLabel" name="labelOrderName">
          <property name="text">
-          <string>&lt;OrderNumber&gt;</string>
+          <string>&lt;OrderName&gt;</string>
          </property>
         </widget>
        </item>

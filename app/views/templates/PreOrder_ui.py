@@ -25,6 +25,7 @@ class Ui_FormPreOrder(object):
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.pushButtonClear = QtWidgets.QPushButton(FormPreOrder)
+        self.pushButtonClear.setEnabled(False)
         self.pushButtonClear.setObjectName("pushButtonClear")
         self.horizontalLayout_2.addWidget(self.pushButtonClear)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
