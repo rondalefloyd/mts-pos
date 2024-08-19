@@ -171,6 +171,6 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
         self.activeThreads.clear()
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')

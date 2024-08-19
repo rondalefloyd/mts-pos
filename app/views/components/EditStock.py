@@ -1,8 +1,6 @@
-import os
-import sys
-import logging
-from PyQt5.QtWidgets import QDialog, QMessageBox
-from PyQt5.QtCore import QDate
+import os, sys, logging
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
@@ -68,6 +66,6 @@ class EditStock(Ui_DialogEditStock, QDialog):
         
         self.activeThreads.clear()
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')

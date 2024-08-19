@@ -79,6 +79,6 @@ class EditMember(Ui_DialogEditMember, QDialog):
         
         self.activeThreads.clear()
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')

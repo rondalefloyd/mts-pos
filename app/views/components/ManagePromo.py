@@ -154,6 +154,6 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         
         self.activeThreads.clear()
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')

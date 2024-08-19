@@ -81,6 +81,6 @@ class Login(Ui_DialogLogin, QDialog):
         
         self.activeThreads.clear()
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')

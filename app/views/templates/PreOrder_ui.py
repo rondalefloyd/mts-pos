@@ -41,6 +41,7 @@ class Ui_FormPreOrder(object):
         sizePolicy.setHeightForWidth(self.comboBoxMemberName.sizePolicy().hasHeightForWidth())
         self.comboBoxMemberName.setSizePolicy(sizePolicy)
         self.comboBoxMemberName.setEditable(True)
+        self.comboBoxMemberName.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBoxMemberName.setObjectName("comboBoxMemberName")
         self.horizontalLayout_3.addWidget(self.comboBoxMemberName)
         self.label_6 = QtWidgets.QLabel(FormPreOrder)

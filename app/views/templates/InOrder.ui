@@ -79,6 +79,11 @@
            <string>Total</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>CustomDiscount</string>
+          </property>
+         </column>
         </widget>
        </item>
        <item>
@@ -281,7 +286,11 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEditCash"/>
+            <widget class="QLineEdit" name="lineEditCash">
+             <property name="inputMethodHints">
+              <set>Qt::ImhDigitsOnly</set>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

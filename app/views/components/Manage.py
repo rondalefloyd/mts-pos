@@ -114,7 +114,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
             self.currentThread.finished.connect(self._handleOnActionLogoutTriggeredResult)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
-        self.activeThreads.append(self.currentThread)
+            self.activeThreads.append(self.currentThread)
         
     def _handleOnActionLogoutTriggeredResult(self, result):
         if result['success'] is False:
@@ -144,6 +144,6 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         # Set the window event state to EVENT_START_LOGIN
         self.windowEvent = EVENT_START_LOGIN
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')

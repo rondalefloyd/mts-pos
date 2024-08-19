@@ -200,6 +200,6 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
         self.activeThreads.clear()
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')

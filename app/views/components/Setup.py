@@ -73,6 +73,6 @@ class Setup(Ui_DialogSetup, QDialog):
         # Set the window event state to EVENT_START_LOGIN
         self.windowEvent = EVENT_START_LOGIN
         
-        event.accept()
+        event.accept() # for closing the window
 
         print('closed...')

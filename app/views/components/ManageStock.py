@@ -126,6 +126,6 @@ class ManageStock(Ui_FormManageStock, QWidget):
         
         self.activeThreads.clear()
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')

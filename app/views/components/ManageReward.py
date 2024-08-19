@@ -161,6 +161,6 @@ class ManageReward(Ui_FormManageReward, QWidget):
         
         self.activeThreads.clear()
         
-        event.accept()
+        event.accept() # for closing the window
         
         print('closed...')
