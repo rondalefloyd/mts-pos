@@ -151,7 +151,10 @@ def edit_item_price_related_data_by_id(entry=None, result=None):
     
 def edit_member_data_by_id(entry=None, result=None):
     try:
-        member = Member.select().where(Member.MemberName == entry['memberName'])
+        member = Member.select().where(
+            (Member.Id != entry['id']) &
+            (Member.MemberName == entry['memberName'])
+        )
         
         if member.exists():
             result['message'] = 'Member already exists'
@@ -176,7 +179,10 @@ def edit_member_data_by_id(entry=None, result=None):
     
 def edit_promo_data_by_id(entry=None, result=None):
     try:
-        promo = Promo.select().where(Promo.PromoName == entry['promoName'])
+        promo = Promo.select().where(
+            (Promo.Id == entry['id']) &
+            (Promo.PromoName == entry['promoName'])
+        )
         
         if promo.exists():
             result['message'] = 'Promo already exists'
@@ -199,7 +205,10 @@ def edit_promo_data_by_id(entry=None, result=None):
     
 def edit_reward_data_by_id(entry=None, result=None):
     try:
-        reward = Reward.select().where(Reward.RewardName == entry['rewardName'])
+        reward = Reward.select().where(
+            (Reward.Id == entry['id']) &
+            (Reward.RewardName == entry['rewardName'])
+        )
         
         if reward.exists():
             result['message'] = 'Reward already exists'
