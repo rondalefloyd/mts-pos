@@ -42,6 +42,10 @@ class FetchThread(QThread):
             with postgres_db:
                 if self.function_route == 'fetch_all_organization_data':
                     result = fetch_all_organization_data(self.entry, result)
+                elif self.function_route == 'fetch_member_data_by_member_name':
+                    result = fetch_member_data_by_member_name(self.entry, result)
+                elif self.function_route == 'fetch_all_member_data':
+                    result = fetch_all_member_data(self.entry, result)
                 elif self.function_route == 'fetch_promo_data_by_promo_name':
                     result = fetch_promo_data_by_promo_name(self.entry, result)
                 elif self.function_route == 'fetch_all_promo_data':
@@ -107,7 +111,6 @@ def fetch_all_organization_data(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
-
 def fetch_promo_data_by_promo_name(entry=None, result=None):
     try:
         promo = Promo.select().where(Promo.PromoName == entry['promoName']).order_by(Promo.UpdateTs.desc())
@@ -134,6 +137,36 @@ def fetch_promo_data_by_promo_name(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
+def fetch_member_data_by_member_name(entry=None, result=None):
+    try:
+        member = Member.select().where(Member.MemberName == entry['memberName']).order_by(Member.UpdateTs.desc())
+        
+        if not member.exists():
+            result['message'] = 'Member does not exists'
+            return result
+        
+        member = member.first()
+        
+        result['success'] = True
+        result['dictData'] = {
+            'id': member.Id,
+            'organizationName': Organization.get_or_none(Organization.Id == member.OrganizationId).OrganizationName,
+            'organizationId': member.OrganizationId,
+            'memberName': member.MemberName,
+            'birthDate': member.BirthDate,
+            'address': member.Address,
+            'mobileNumber': member.MobileNumber,
+            'points': member.Points,
+        }
+
+        return result
+
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+
+
 def fetch_all_promo_data(entry=None, result=None):
     try:
         promos = Promo.select().order_by(Promo.UpdateTs.desc())
@@ -157,6 +190,34 @@ def fetch_all_promo_data(entry=None, result=None):
         result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
+    
+def fetch_all_member_data(entry=None, result=None):
+    try:
+        members = Member.select().order_by(Member.UpdateTs.desc())
+        
+        if not members.exists():
+            result['message'] = 'Member does not exists'
+            return result
+        
+        result['success'] = True
+        for member in members:
+            result['listData'].append({
+                'id': member.Id,
+                'organizationName': Organization.get_or_none(Organization.Id == member.OrganizationId).OrganizationName,
+                'organizationId': member.OrganizationId,
+                'memberName': member.MemberName,
+                'birthDate': member.BirthDate,
+                'address': member.Address,
+                'mobileNumber': member.MobileNumber,
+                'points': member.Points,
+            })
+        return result
+
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
     
 def fetch_all_item_related_data(entry=None, result=None):
     try:

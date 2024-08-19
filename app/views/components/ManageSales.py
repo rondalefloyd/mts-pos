@@ -9,6 +9,7 @@ from app.views.templates.ManageSales_ui import Ui_FormManageSales
 from app.views.templates.PreOrder_ui import Ui_FormPreOrder
 from app.views.components.PreOrderActionButton import PreOrderActionButton
 from app.views.components.ManageActionButton import ManageActionButton
+from app.views.components.InOrder import InOrder
 from app.views.components.Loading import Loading
 from app.controllers.dedicated.fetch import FetchThread
    
@@ -97,6 +98,10 @@ class ManageSales(Ui_FormManageSales, QWidget):
             'orderItem': [], 
             'orderWidget': PreOrder(self),
             'orderStatus': 1,
+            'orderMember': {
+                'memberName': None,
+                'points': None,
+            }
         })
         
         orderIndex = len(self.activeOrder) - 1
@@ -270,10 +275,13 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelTax.setText("0.00")
         self.labelGrandTotal.setText("0.00")
         
+        self.comboBoxMemberName.currentTextChanged.connect(self._onComboBoxMemberNameCurrentTextChanged)
         self.pushButtonClear.clicked.connect(self._onPushButtonClearClicked)
         self.pushButtonDiscard.clicked.connect(self._onPushButtonDiscardClicked)
         self.pushButtonPark.clicked.connect(self.onPushButtonParkClicked)
         self.pushButtonPay.clicked.connect(self._onPushButtonPayClicked)
+        
+        self._populateComboBoxMemberName()
         
     def onPushButtonParkClicked(self):
         orderIndex = self.manageSales.tabWidgetOrder.currentIndex()
@@ -325,12 +333,41 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText(f"{discount:.2f}")
         self.labelTax.setText(f"{tax:.2f}")
         self.labelGrandTotal.setText(f"{grandTotal:.2f}")
+
+    def _populateComboBoxMemberName(self):
+        self.manageSales.currentThread = FetchThread('fetch_all_member_data')
+        self.manageSales.currentThread.finished.connect(self._handlePopulateComboBoxMemberNameResult)
+        self.manageSales.currentThread.finished.connect(self.manageSales._cleanupThread)
+        self.manageSales.currentThread.start()
+        self.manageSales.activeThreads.append(self.manageSales.currentThread)
+        
+    def _handlePopulateComboBoxMemberNameResult(self, result):
+        self.comboBoxMemberName.clear()
+        print('check this result:', result)
+        listData = result['listData']
+        
+        for data in listData:
+            self.comboBoxMemberName.addItem(f"{data['memberName']}")        
+
+    def _onComboBoxMemberNameCurrentTextChanged(self):
+        self.manageSales.currentThread = FetchThread('fetch_member_data_by_member_name', {'memberName': f"{self.comboBoxMemberName.currentText()}"})
+        self.manageSales.currentThread.finished.connect(self._handleOnComboBoxMemberNameCurrentTextChangedResult)
+        self.manageSales.currentThread.finished.connect(self.manageSales._cleanupThread)
+        self.manageSales.currentThread.start()
+        self.manageSales.activeThreads.append(self.manageSales.currentThread)
+     
+    def _handleOnComboBoxMemberNameCurrentTextChangedResult(self, result):
+        # TODO: finish this function
+        dictData = result['dictData']
+        points = dictData['points'] if 'points' in dictData else 0
+        
+        self.lineEditPoints.setText(f"{points:.2f}")
      
     def _onPushButtonClearClicked(self):
         confirm = QMessageBox.warning(self, 'Confirm', "Delete all items?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['orderItem']
+            orderItem: list = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['orderItem']
             orderItem.clear()
             self.populateTableWidgetData(orderItem)
         
@@ -339,6 +376,11 @@ class PreOrder(Ui_FormPreOrder, QWidget):
 
     def _onPushButtonPayClicked(self):
         # TODO: continue doing InOrder
+        self.inOrder = InOrder(
+            self.manageSales.userData, 
+            self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]
+        )
+        self.inOrder.exec()
         pass
                
     def _onPushButtonAddExactClicked(self, index, entry):
