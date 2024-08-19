@@ -1,6 +1,7 @@
 # import
 import os, sys
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
@@ -12,6 +13,11 @@ from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
+from app.controllers.common.validator import (
+    mobileNumberValidator,
+    addressFormatValidator,
+    customNameValidator,
+)
 
 # class definition
 class ManageMember(Ui_FormManageMember, QWidget):
@@ -20,6 +26,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         super().__init__()
         self.setupUi(self)
         
+        self.mobileNumberValidator = QRegExpValidator(QRegExp(r'^\d{11}$'))
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
         self.userData = userData

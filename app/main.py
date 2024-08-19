@@ -61,3 +61,5 @@ def _startApp():
 if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
+
+# TODO: add validators for fields

@@ -1,6 +1,7 @@
 # import
 import os, sys
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
@@ -134,6 +135,8 @@ class Manage(Ui_MainWindowManage, QMainWindow):
 
     # overridden methods
     def closeEvent(self, event):
+        self.userData = None
+        
         for thread in self.activeThreads:
             if thread.isRunning():
                 thread.quit()

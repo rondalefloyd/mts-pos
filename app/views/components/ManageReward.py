@@ -1,7 +1,5 @@
-import os
-import sys
-import logging
-from PyQt5.QtWidgets import QWidget, QMessageBox, QTableWidgetItem
+import os, sys, logging
+from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
@@ -19,14 +17,12 @@ class ManageReward(Ui_FormManageReward, QWidget):
         super().__init__()
         self.setupUi(self)
         
+        self.billValidator = QDoubleValidator(0, 9999999999, 2)
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
         self.userData = userData
         self.currentThread = None
         self.activeThreads = []
-        
-        self.lineEditPoints.setValidator(QDoubleValidator())
-        self.lineEditTarget.setValidator(QDoubleValidator())
         
         self.refresh()
         
