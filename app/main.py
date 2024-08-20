@@ -62,4 +62,6 @@ if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
 
-# TODO: add validators for fields
+# TODO: set clear button enabled for all line edit
+# TODO: fix the sizes of the QTableWidgetItems in all table widgets
+# TODO: add peso sign in each bill formatted labels
