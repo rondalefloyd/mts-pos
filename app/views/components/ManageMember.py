@@ -10,14 +10,10 @@ from app.views.templates.ManageMember_ui import Ui_FormManageMember
 from app.views.components.Loading import Loading
 from app.views.components.EditMember import EditMember
 from app.views.components.ManageActionButton import ManageActionButton
+from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
-from app.controllers.common.validator import (
-    mobileNumberValidator,
-    addressFormatValidator,
-    customNameValidator,
-)
 
 # class definition
 class ManageMember(Ui_FormManageMember, QWidget):
@@ -32,6 +28,10 @@ class ManageMember(Ui_FormManageMember, QWidget):
         self.userData = userData
         self.currentThread = None
         self.activeThreads = []
+        
+        self.lineEditMemberName.setValidator(nonSpaceTextFormatValidator())
+        self.lineEditAddress.setValidator(addressFormatValidator())
+        self.lineEditMobileNumber.setValidator(nonSpaceTextFormatValidator())
         
         self.refresh()
         

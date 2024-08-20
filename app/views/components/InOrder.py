@@ -12,6 +12,7 @@ from app.utils.config import *
 from app.views.templates.InOrder_ui import Ui_DialogInOrder
 from app.views.components.Loading import Loading
 from app.views.components.ManageActionButton import ManageActionButton
+from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class InOrder(Ui_DialogInOrder, QDialog):
@@ -26,6 +27,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
+        self.lineEditCash.setValidator(billFormatValidator())
+
         orderMember = self.selectedOrder['orderMember']
         if orderMember is not None:
             self.lineEditMemberName.setText(f"{orderMember['memberName']}")
@@ -35,6 +38,15 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self._populateTableWidgetData()
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
+        self.pushButtonKeyOne
+        self.pushButtonKeyTwo
+        self.pushButtonKeyThree
+        self.pushButtonKeyFour
+        self.pushButtonKeyFive
+        self.pushButtonKeySix
+        self.pushButtonKeySeven
+        self.pushButtonKeyEight
+        self.pushButtonKeyNine
 
     def _populateTableWidgetData(self):
         orderItem = self.selectedOrder['orderItem']

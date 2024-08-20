@@ -9,6 +9,7 @@ from app.utils.config import *
 from app.views.templates.ManageUser_ui import Ui_FormManageUser
 from app.views.components.Loading import Loading
 from app.views.components.ManageActionButton import ManageActionButton
+from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
@@ -25,6 +26,10 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.userData = userData
         self.currentThread = None
         self.activeThreads = []
+        
+        self.lineEditUserName.setValidator(nonSpaceTextFormatValidator())
+        self.lineEditFullName.setValidator(fullNameValidator())
+        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
         
         self.refresh()
         

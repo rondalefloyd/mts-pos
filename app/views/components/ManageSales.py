@@ -11,6 +11,7 @@ from app.views.components.PreOrderActionButton import PreOrderActionButton
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.InOrder import InOrder
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
    
 class ManageSales(Ui_FormManageSales, QWidget):
@@ -28,10 +29,12 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.activeOrder = []
         self.parkedOrder = []
         
-        self.refresh()
-        
         self.tabWidgetOrder.clear()
         self.comboBoxBarcodeFilter.setVisible(False)
+        self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
+        
+        self.refresh()
+        
         
         self.lineEditBarcode.returnPressed.connect(self._onLineEditBarcodeReturnPressed)
         self.pushButtonAdd.clicked.connect(self._onLineEditBarcodeReturnPressed)

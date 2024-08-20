@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath('')) # required to change the default path
 from app.utils.config import *
 from app.views.templates.SignUp_ui import Ui_DialogSignUp
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.fetch import FetchThread
 
@@ -23,9 +24,14 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
+        self.lineEditUserName.setValidator(nonSpaceTextFormatValidator())
+        self.lineEditFullName.setValidator(fullNameValidator())
+        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
+        
+        self._populateComboBoxOrganizationName()
+        
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
-        self._populateComboBoxOrganizationName()
     
     # private methods
     def _populateComboBoxOrganizationName(self):

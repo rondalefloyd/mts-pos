@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath('')) # required to change the default path
 from app.utils.config import *
 from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
+from app.views.validator import nonSpaceTextFormatValidator
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
 # class definition
@@ -22,6 +23,7 @@ class Login(Ui_DialogLogin, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
+        self.lineEditUserName.setValidator(nonSpaceTextFormatValidator())
         self.pushButtonAccessCodeVisibility.setText('Show')
         
         self.pushButtonSetup.clicked.connect(self._onPushButtonSetupClicked)

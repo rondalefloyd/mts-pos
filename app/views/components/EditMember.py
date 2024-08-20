@@ -8,6 +8,7 @@ from app.utils.config import *
 from app.views.templates.EditMember_ui import Ui_DialogEditMember
 from app.views.components.Loading import Loading
 from app.views.components.ManageActionButton import ManageActionButton
+from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 # class definition
@@ -23,6 +24,11 @@ class EditMember(Ui_DialogEditMember, QDialog):
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
+        
+        self.lineEditMemberName.setValidator(withSpaceTextFormatValidator())
+        self.lineEditAddress.setValidator(addressFormatValidator())
+        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
+        self.lineEditPoints.setValidator(billFormatValidator())
         
         self.comboBoxOrganizationName.setCurrentText(f"{self.userData['organizationName']}")
 

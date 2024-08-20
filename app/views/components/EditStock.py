@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
 from app.views.templates.EditStock_ui import Ui_DialogEditStock
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditStock(Ui_DialogEditStock, QDialog):
@@ -19,6 +20,9 @@ class EditStock(Ui_DialogEditStock, QDialog):
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
+
+        self.lineEditOnHand.setValidator(billFormatValidator())
+        self.lineEditAvailable.setValidator(billFormatValidator())
 
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
         self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")

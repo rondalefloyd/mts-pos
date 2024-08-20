@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
 from app.views.templates.EditItem_ui import Ui_DialogEditItem
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.remove import RemoveThread
 from app.controllers.dedicated.edit import EditThread
@@ -22,7 +23,15 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        
+        self.lineEditItemName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
+        self.comboBoxItemTypeName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.comboBoxBrandName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.comboBoxSupplierName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditCapital.setValidator(billFormatValidator())
+        self.lineEditPrice.setValidator(billFormatValidator())
+        self.comboBoxPromoName.setValidator(billFormatValidator())
+
         self.checkBoxTrackInventory.setDisabled(self.selectedData['stockId'] is not None)
         self.checkBoxTrackInventory.setChecked(self.selectedData['stockId'] is not None)
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")

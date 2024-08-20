@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
 from app.views.templates.EditReward_ui import Ui_DialogEditReward
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditReward(Ui_DialogEditReward, QDialog):
@@ -19,6 +20,10 @@ class EditReward(Ui_DialogEditReward, QDialog):
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
+                
+        self.lineEditRewardName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditPoints.setValidator(billFormatValidator)
+        self.lineEditTarget.setValidator(billFormatValidator)
 
         self.lineEditRewardName.setText(f"{self.selectedData['rewardName']}")
         self.lineEditPoints.setText(f"{self.selectedData['points']}")

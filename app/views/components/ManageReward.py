@@ -8,6 +8,7 @@ from app.views.templates.ManageReward_ui import Ui_FormManageReward
 from app.views.components.Loading import Loading
 from app.views.components.EditReward import EditReward
 from app.views.components.ManageActionButton import ManageActionButton
+from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
@@ -23,6 +24,10 @@ class ManageReward(Ui_FormManageReward, QWidget):
         self.userData = userData
         self.currentThread = None
         self.activeThreads = []
+                
+        self.lineEditRewardName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditPoints.setValidator(billFormatValidator())
+        self.lineEditTarget.setValidator(billFormatValidator())
         
         self.refresh()
         

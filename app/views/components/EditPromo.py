@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
 from app.views.templates.EditPromo_ui import Ui_DialogEditPromo
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditPromo(Ui_DialogEditPromo, QDialog):
@@ -19,6 +20,9 @@ class EditPromo(Ui_DialogEditPromo, QDialog):
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
+        
+        self.lineEditPromoName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditDiscountRate.setValidator(billFormatValidator())
         
         self.lineEditPromoName.setText(f"{self.selectedData['promoName']}")
         self.lineEditDiscountRate.setText(f"{self.selectedData['discountRate']}")

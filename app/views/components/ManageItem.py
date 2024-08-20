@@ -8,6 +8,7 @@ from app.views.templates.ManageItem_ui import Ui_FormManageItem
 from app.views.components.Loading import Loading
 from app.views.components.EditItem import EditItem
 from app.views.components.ManageActionButton import ManageActionButton
+from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
@@ -22,6 +23,15 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.userData = userData
         self.currentThread = None
         self.activeThreads = []
+        
+        self.lineEditItemName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
+        self.comboBoxItemTypeName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.comboBoxBrandName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.comboBoxSupplierName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditCapital.setValidator(billFormatValidator())
+        self.lineEditRetailPrice.setValidator(billFormatValidator())
+        self.lineEditWholesalePrice.setValidator(billFormatValidator())
         
         self.refresh()
         
