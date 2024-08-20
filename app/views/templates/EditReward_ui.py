@@ -43,12 +43,14 @@ class Ui_DialogEditReward(object):
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.lineEditPoints = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditPoints.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditPoints.setObjectName("lineEditPoints")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lineEditPoints)
         self.label_4 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_4.setObjectName("label_4")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_4)
         self.lineEditTarget = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditTarget.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditTarget.setObjectName("lineEditTarget")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lineEditTarget)
         self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -78,7 +80,7 @@ class Ui_DialogEditReward(object):
 
     def retranslateUi(self, DialogEditReward):
         _translate = QtCore.QCoreApplication.translate
-        DialogEditReward.setWindowTitle(_translate("DialogEditReward", "Sign up"))
+        DialogEditReward.setWindowTitle(_translate("DialogEditReward", "Edit reward"))
         self.label_6.setText(_translate("DialogEditReward", "MTS POS"))
         self.label_3.setText(_translate("DialogEditReward", "Reward name"))
         self.label_2.setText(_translate("DialogEditReward", "Points"))

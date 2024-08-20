@@ -105,6 +105,7 @@ class Ui_DialogEditItem(object):
         self.label_10.setObjectName("label_10")
         self.formLayout.setWidget(9, QtWidgets.QFormLayout.LabelRole, self.label_10)
         self.lineEditCapital = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditCapital.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditCapital.setObjectName("lineEditCapital")
         self.formLayout.setWidget(9, QtWidgets.QFormLayout.FieldRole, self.lineEditCapital)
         self.label_8 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -113,6 +114,7 @@ class Ui_DialogEditItem(object):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.lineEditPrice = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditPrice.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditPrice.setObjectName("lineEditPrice")
         self.horizontalLayout_3.addWidget(self.lineEditPrice)
         self.checkBoxApplyPromo = QtWidgets.QCheckBox(self.scrollAreaWidgetContents)
@@ -148,6 +150,7 @@ class Ui_DialogEditItem(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.lineEditDiscountRate = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
         self.lineEditDiscountRate.setEnabled(False)
+        self.lineEditDiscountRate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditDiscountRate.setObjectName("lineEditDiscountRate")
         self.horizontalLayout_2.addWidget(self.lineEditDiscountRate)
         self.label_17 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -155,6 +158,7 @@ class Ui_DialogEditItem(object):
         self.horizontalLayout_2.addWidget(self.label_17)
         self.lineEditDiscount = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
         self.lineEditDiscount.setEnabled(False)
+        self.lineEditDiscount.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditDiscount.setObjectName("lineEditDiscount")
         self.horizontalLayout_2.addWidget(self.lineEditDiscount)
         self.formLayout.setLayout(14, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout_2)
@@ -163,6 +167,7 @@ class Ui_DialogEditItem(object):
         self.formLayout.setWidget(15, QtWidgets.QFormLayout.LabelRole, self.label_14)
         self.lineEditNewPrice = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
         self.lineEditNewPrice.setEnabled(False)
+        self.lineEditNewPrice.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditNewPrice.setObjectName("lineEditNewPrice")
         self.formLayout.setWidget(15, QtWidgets.QFormLayout.FieldRole, self.lineEditNewPrice)
         self.label_15 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -202,7 +207,7 @@ class Ui_DialogEditItem(object):
 
     def retranslateUi(self, DialogEditItem):
         _translate = QtCore.QCoreApplication.translate
-        DialogEditItem.setWindowTitle(_translate("DialogEditItem", "Sign up"))
+        DialogEditItem.setWindowTitle(_translate("DialogEditItem", "Edit item"))
         self.label_6.setText(_translate("DialogEditItem", "MTS POS"))
         self.label.setText(_translate("DialogEditItem", "Item name"))
         self.checkBoxTrackInventory.setText(_translate("DialogEditItem", "Track inventory"))

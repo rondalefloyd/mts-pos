@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>In-Order</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QVBoxLayout" name="verticalLayout_5">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
@@ -237,6 +237,9 @@
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
             </widget>
            </item>
            <item row="1" column="0">
@@ -251,12 +254,15 @@
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
             </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_11">
              <property name="text">
-              <string>Points</string>
+              <string>Point/s</string>
              </property>
             </widget>
            </item>
@@ -264,6 +270,9 @@
             <widget class="QLineEdit" name="lineEditPoints">
              <property name="enabled">
               <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
@@ -289,6 +298,9 @@
             <widget class="QLineEdit" name="lineEditCash">
              <property name="inputMethodHints">
               <set>Qt::ImhDigitsOnly</set>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
@@ -536,21 +548,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QFormLayout" name="formLayout_3">
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>Cash</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_13">
-           <property name="text">
-            <string>Points</string>
-           </property>
-          </widget>
-         </item>
+        <layout class="QGridLayout" name="gridLayout_2">
          <item row="3" column="0">
           <widget class="QLabel" name="label_14">
            <property name="text">
@@ -558,8 +556,15 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelCashShortage">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Cash</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="labelPointsShortageExcess">
            <property name="font">
             <font>
              <weight>75</weight>
@@ -567,30 +572,17 @@
             </font>
            </property>
            <property name="text">
-            <string>&lt;CashShortage&gt;</string>
+            <string>&lt;PointsShortageExcess&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
-         <item row="0" column="0" colspan="2">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Payment eligibility:</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="labelPointsShortage">
-           <property name="font">
-            <font>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
+          <widget class="QLabel" name="labelPointsPayment">
            <property name="text">
-            <string>&lt;PointsShortage&gt;</string>
+            <string>&lt;PointsPayment&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -598,7 +590,47 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QLabel" name="labelHybridShortage">
+          <widget class="QLabel" name="labelHybridPayment">
+           <property name="text">
+            <string>&lt;HybridPayment&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>Shortage/Excess</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelCashPayment">
+           <property name="text">
+            <string>&lt;CashPayment&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="label_15">
+           <property name="text">
+            <string>Payment</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLabel" name="labelHybridShortageExcess">
            <property name="font">
             <font>
              <weight>75</weight>
@@ -606,10 +638,40 @@
             </font>
            </property>
            <property name="text">
-            <string>&lt;HybridShortage&gt;</string>
+            <string>&lt;HybridShortageExcess&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="labelCashShortageExcess">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>&lt;CashShortageExcess&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Points</string>
            </property>
           </widget>
          </item>

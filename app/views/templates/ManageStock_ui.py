@@ -84,7 +84,7 @@ class Ui_FormManageStock(object):
 
     def retranslateUi(self, FormManageStock):
         _translate = QtCore.QCoreApplication.translate
-        FormManageStock.setWindowTitle(_translate("FormManageStock", "Form"))
+        FormManageStock.setWindowTitle(_translate("FormManageStock", "Manage stock"))
         self.pushButtonFilter.setText(_translate("FormManageStock", "Filter"))
         self.tableWidgetData.setSortingEnabled(False)
         item = self.tableWidgetData.verticalHeaderItem(0)

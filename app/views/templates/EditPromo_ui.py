@@ -43,6 +43,7 @@ class Ui_DialogEditPromo(object):
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.lineEditDiscountRate = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditDiscountRate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditDiscountRate.setObjectName("lineEditDiscountRate")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lineEditDiscountRate)
         self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -72,7 +73,7 @@ class Ui_DialogEditPromo(object):
 
     def retranslateUi(self, DialogEditPromo):
         _translate = QtCore.QCoreApplication.translate
-        DialogEditPromo.setWindowTitle(_translate("DialogEditPromo", "Sign up"))
+        DialogEditPromo.setWindowTitle(_translate("DialogEditPromo", "Edit promo"))
         self.label_6.setText(_translate("DialogEditPromo", "MTS POS"))
         self.label_3.setText(_translate("DialogEditPromo", "Promo name"))
         self.label_2.setText(_translate("DialogEditPromo", "Discount rate"))

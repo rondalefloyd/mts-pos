@@ -27,26 +27,107 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
+        self.cashPayment = 0.0
+        self.pointsPayment = 0.0
+        self.hybridPayment = 0.0
+
         self.lineEditCash.setValidator(billFormatValidator())
 
-        orderMember = self.selectedOrder['orderMember']
-        if orderMember is not None:
-            self.lineEditMemberName.setText(f"{orderMember['memberName']}")
-            self.lineEditMobileNumber.setText(f"{orderMember['mobileNumber']}")
-            self.lineEditPoints.setText(f"{orderMember['points']}")
+        self.labelCashShortageExcess.setText('0.00')
+        self.labelPointsShortageExcess.setText('0.00')
+        self.labelHybridShortageExcess.setText('0.00')
 
         self._populateTableWidgetData()
+        self._populateSelectedMemberFields()
+        self._populatePaymentEligibilityFields()
 
+        self.lineEditCash.textChanged.connect(self._populatePaymentEligibilityFields)
+        self.pushButtonKeyOne.clicked.connect(lambda: self._onPushButtonKeyClicked('1'))
+        self.pushButtonKeyTwo.clicked.connect(lambda: self._onPushButtonKeyClicked('2'))
+        self.pushButtonKeyThree.clicked.connect(lambda: self._onPushButtonKeyClicked('3'))
+        self.pushButtonKeyFour.clicked.connect(lambda: self._onPushButtonKeyClicked('4'))
+        self.pushButtonKeyFive.clicked.connect(lambda: self._onPushButtonKeyClicked('5'))
+        self.pushButtonKeySix.clicked.connect(lambda: self._onPushButtonKeyClicked('6'))
+        self.pushButtonKeySeven.clicked.connect(lambda: self._onPushButtonKeyClicked('7'))
+        self.pushButtonKeyEight.clicked.connect(lambda: self._onPushButtonKeyClicked('8'))
+        self.pushButtonKeyNine.clicked.connect(lambda: self._onPushButtonKeyClicked('9'))
+        self.pushButtonKeyZero.clicked.connect(lambda: self._onPushButtonKeyClicked('0'))
+        self.pushButtonKeyDecimal.clicked.connect(lambda: self._onPushButtonKeyClicked('.'))
+        self.pushButtonKeyDelete.clicked.connect(lambda: self._onPushButtonKeyClicked('DEL'))
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
-        self.pushButtonKeyOne
-        self.pushButtonKeyTwo
-        self.pushButtonKeyThree
-        self.pushButtonKeyFour
-        self.pushButtonKeyFive
-        self.pushButtonKeySix
-        self.pushButtonKeySeven
-        self.pushButtonKeyEight
-        self.pushButtonKeyNine
+        self.pushButtonPayCash.clicked.connect(lambda: self._processOrder('CASH'))
+        self.pushButtonPayPoints.clicked.connect(lambda: self._processOrder('POINTS'))
+        self.pushButtonPayHybrid.clicked.connect(lambda: self._processOrder('HYBRID'))
+
+    def _processOrder(self, paymentType):
+        payment = 0.0
+        if paymentType == 'CASH':
+            payment = self.cashPayment
+        if paymentType == 'POINTS':
+            payment = self.pointsPayment
+        if paymentType == 'HYBRID':
+            payment = self.hybridPayment
+            
+        confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?")
+            # TODO: add thread here where it registers all of the items in the cart
+        pass
+    def _handleOnPushButtonPayCashPointsHybridClickedResult(self, result):
+        
+        pass
+
+    def _populateSelectedMemberFields(self):
+        orderMember = self.selectedOrder['orderMember']
+        self.lineEditMemberName.setText(f"{orderMember['memberName']}" if orderMember else 'N/A')
+        self.lineEditMobileNumber.setText(f"{orderMember['mobileNumber']}" if orderMember else 'N/A')
+        self.lineEditPoints.setText(f"{orderMember['points']}" if orderMember else 'N/A')
+
+    def _onPushButtonKeyClicked(self, key):
+        if key == 'DEL':
+            self.cashPayment = self.lineEditCash.text()
+            self.lineEditCash.setText(self.cashPayment[:-1])
+            return
+
+        self.cashPayment = self.lineEditCash.text()
+        self.cashPayment = self.cashPayment + key
+        state, _, _ = billFormatValidator().validate(self.cashPayment, 0)
+        
+        if state == 2:
+            self.lineEditCash.setText(self.cashPayment)
+
+    def _populatePaymentEligibilityFields(self):
+        orderMember = self.selectedOrder['orderMember']
+        grandTotal = float(self.labelGrandTotal.text())
+        
+        self.cashPayment = self.lineEditCash.text()
+        self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0)
+        cashShortageExcess = self.cashPayment - grandTotal
+        
+        self.labelCashPayment.setText(f"{self.cashPayment}")
+        self.labelCashShortageExcess.setText(f"{cashShortageExcess}")
+        
+        self.pushButtonPayCash.setEnabled(self.cashPayment >= grandTotal)
+        
+        if orderMember:
+            self.pointsPayment = orderMember['points']
+            self.hybridPayment = self.cashPayment + self.pointsPayment
+            pointsShortageExcess = self.pointsPayment - grandTotal
+            hybridShortageExcess = self.hybridPayment - grandTotal
+            
+            self.labelPointsPayment.setText(f"{self.pointsPayment}")
+            self.labelHybridPayment.setText(f"{self.hybridPayment}")
+            self.labelPointsShortageExcess.setText(f"{pointsShortageExcess}")
+            self.labelHybridShortageExcess.setText(f"{hybridShortageExcess}")
+            
+            self.pushButtonPayPoints.setEnabled(self.pointsPayment >= grandTotal)
+            self.pushButtonPayHybrid.setEnabled(self.hybridPayment == grandTotal)
+            return
+    
+        self.labelPointsPayment.setText('N/A')
+        self.labelHybridPayment.setText('N/A')
+        self.labelPointsShortageExcess.setText('N/A')
+        self.labelHybridShortageExcess.setText('N/A')
+        self.pushButtonPayPoints.setEnabled(False)
+        self.pushButtonPayHybrid.setEnabled(False)
 
     def _populateTableWidgetData(self):
         orderItem = self.selectedOrder['orderItem']
@@ -98,7 +179,6 @@ class InOrder(Ui_DialogInOrder, QDialog):
             
             self._populateTableWidgetData()
         
-
     def _onPushButtonCancelClicked(self):
         self.close()
 

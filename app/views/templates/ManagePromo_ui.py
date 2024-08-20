@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_FormManagePromo(object):
     def setupUi(self, FormManagePromo):
         FormManagePromo.setObjectName("FormManagePromo")
-        FormManagePromo.resize(994, 629)
+        FormManagePromo.resize(994, 1072)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(FormManagePromo)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -87,7 +87,7 @@ class Ui_FormManagePromo(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 476, 576))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 476, 1019))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.formLayout = QtWidgets.QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
@@ -101,6 +101,7 @@ class Ui_FormManagePromo(object):
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.lineEditDiscountRate = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditDiscountRate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditDiscountRate.setObjectName("lineEditDiscountRate")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lineEditDiscountRate)
         self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -129,7 +130,7 @@ class Ui_FormManagePromo(object):
 
     def retranslateUi(self, FormManagePromo):
         _translate = QtCore.QCoreApplication.translate
-        FormManagePromo.setWindowTitle(_translate("FormManagePromo", "Form"))
+        FormManagePromo.setWindowTitle(_translate("FormManagePromo", "Manage promo"))
         self.pushButtonFilter.setText(_translate("FormManagePromo", "Filter"))
         self.tableWidgetData.setSortingEnabled(False)
         item = self.tableWidgetData.verticalHeaderItem(0)

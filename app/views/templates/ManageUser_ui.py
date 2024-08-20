@@ -167,7 +167,7 @@ class Ui_FormManageUser(object):
 
     def retranslateUi(self, FormManageUser):
         _translate = QtCore.QCoreApplication.translate
-        FormManageUser.setWindowTitle(_translate("FormManageUser", "Form"))
+        FormManageUser.setWindowTitle(_translate("FormManageUser", "Manage user"))
         self.pushButtonFilter.setText(_translate("FormManageUser", "Filter"))
         self.tableWidgetData.setSortingEnabled(False)
         item = self.tableWidgetData.verticalHeaderItem(0)

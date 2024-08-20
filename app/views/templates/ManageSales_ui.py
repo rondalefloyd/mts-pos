@@ -146,7 +146,7 @@ class Ui_FormManageSales(object):
 
     def retranslateUi(self, FormManageSales):
         _translate = QtCore.QCoreApplication.translate
-        FormManageSales.setWindowTitle(_translate("FormManageSales", "Form"))
+        FormManageSales.setWindowTitle(_translate("FormManageSales", "Manage sales"))
         self.pushButtonFilter.setText(_translate("FormManageSales", "Filter"))
         self.comboBoxBarcodeFilter.setItemText(0, _translate("FormManageSales", "Retail"))
         self.comboBoxBarcodeFilter.setItemText(1, _translate("FormManageSales", "Wholesale"))

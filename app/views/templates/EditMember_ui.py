@@ -72,6 +72,7 @@ class Ui_DialogEditMember(object):
         self.label_9.setObjectName("label_9")
         self.formLayout.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.label_9)
         self.lineEditPoints = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditPoints.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditPoints.setObjectName("lineEditPoints")
         self.formLayout.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.lineEditPoints)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
@@ -96,7 +97,7 @@ class Ui_DialogEditMember(object):
 
     def retranslateUi(self, DialogEditMember):
         _translate = QtCore.QCoreApplication.translate
-        DialogEditMember.setWindowTitle(_translate("DialogEditMember", "Sign up"))
+        DialogEditMember.setWindowTitle(_translate("DialogEditMember", "Edit member"))
         self.label_6.setText(_translate("DialogEditMember", "MTS POS"))
         self.label_8.setText(_translate("DialogEditMember", "Organization"))
         self.label_3.setText(_translate("DialogEditMember", "Member name"))

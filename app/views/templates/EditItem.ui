@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Sign up</string>
+   <string>Edit item</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -183,7 +183,11 @@
         </widget>
        </item>
        <item row="9" column="1">
-        <widget class="QLineEdit" name="lineEditCapital"/>
+        <widget class="QLineEdit" name="lineEditCapital">
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
        </item>
        <item row="10" column="0">
         <widget class="QLabel" name="label_8">
@@ -195,7 +199,11 @@
        <item row="10" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QLineEdit" name="lineEditPrice"/>
+          <widget class="QLineEdit" name="lineEditPrice">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBoxApplyPromo">
@@ -269,6 +277,9 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
           </widget>
          </item>
          <item>
@@ -282,6 +293,9 @@
           <widget class="QLineEdit" name="lineEditDiscount">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -298,6 +312,9 @@
         <widget class="QLineEdit" name="lineEditNewPrice">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>

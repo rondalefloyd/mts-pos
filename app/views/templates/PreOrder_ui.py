@@ -144,7 +144,7 @@ class Ui_FormPreOrder(object):
 
     def retranslateUi(self, FormPreOrder):
         _translate = QtCore.QCoreApplication.translate
-        FormPreOrder.setWindowTitle(_translate("FormPreOrder", "Form"))
+        FormPreOrder.setWindowTitle(_translate("FormPreOrder", "Pre-Order"))
         self.labelOrderType.setText(_translate("FormPreOrder", "<OrderType>"))
         self.pushButtonClear.setText(_translate("FormPreOrder", "Clear"))
         self.label_5.setText(_translate("FormPreOrder", "Member"))

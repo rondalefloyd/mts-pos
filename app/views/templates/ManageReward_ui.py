@@ -103,12 +103,14 @@ class Ui_FormManageReward(object):
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.lineEditPoints = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditPoints.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditPoints.setObjectName("lineEditPoints")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lineEditPoints)
         self.label_4 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_4.setObjectName("label_4")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_4)
         self.lineEditTarget = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditTarget.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditTarget.setObjectName("lineEditTarget")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lineEditTarget)
         self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -137,7 +139,7 @@ class Ui_FormManageReward(object):
 
     def retranslateUi(self, FormManageReward):
         _translate = QtCore.QCoreApplication.translate
-        FormManageReward.setWindowTitle(_translate("FormManageReward", "Form"))
+        FormManageReward.setWindowTitle(_translate("FormManageReward", "Manage reward"))
         self.pushButtonFilter.setText(_translate("FormManageReward", "Filter"))
         self.tableWidgetData.setSortingEnabled(False)
         item = self.tableWidgetData.verticalHeaderItem(0)

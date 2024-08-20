@@ -44,12 +44,14 @@ class Ui_DialogEditStock(object):
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.lineEditOnHand = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditOnHand.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditOnHand.setObjectName("lineEditOnHand")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lineEditOnHand)
         self.label_4 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_4.setObjectName("label_4")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_4)
         self.lineEditAvailable = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditAvailable.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEditAvailable.setObjectName("lineEditAvailable")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lineEditAvailable)
         self.comboBoxSalesGroupName = QtWidgets.QComboBox(self.scrollAreaWidgetContents)
@@ -81,7 +83,7 @@ class Ui_DialogEditStock(object):
 
     def retranslateUi(self, DialogEditStock):
         _translate = QtCore.QCoreApplication.translate
-        DialogEditStock.setWindowTitle(_translate("DialogEditStock", "Sign up"))
+        DialogEditStock.setWindowTitle(_translate("DialogEditStock", "Edit stock"))
         self.label_6.setText(_translate("DialogEditStock", "MTS POS"))
         self.label_3.setText(_translate("DialogEditStock", "Item name"))
         self.label_2.setText(_translate("DialogEditStock", "OnHand"))
