@@ -154,16 +154,55 @@ WHERE
     ("Month" = 12 AND "Day" BETWEEN 24 AND 31);
 
 -- for transaction db
-CREATE TABLE "Sale" (
+
+CREATE TABLE "OrderType" (
     "Id" SERIAL PRIMARY KEY, 
+    "OrderTypeName" TEXT, 
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO "OrderType" ("Id", "OrderTypeName") VALUES 
+(1, 'RETAIL'), 
+(2, 'WHOLESALE'), 
+(3, 'MIXED');
+
+CREATE TABLE "Receipt" (
+    "Id" SERIAL PRIMARY KEY,  
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
     "UserId" INTEGER REFERENCES "User"("Id") ON DELETE CASCADE, 
-    "CustomerId" INTEGER REFERENCES "Member"("Id") ON DELETE CASCADE, 
+    "MemberId" INTEGER REFERENCES "Member"("Id") ON DELETE CASCADE, 
+    "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE CASCADE, 
+    "OrderTypeId" INTEGER REFERENCES "OrderType"("Id") ON DELETE CASCADE, 
+    "ReferenceId" TEXT,
+    "OrderName" TEXT,
+    "OrderItem" JSONB,
+    "OrderSummary" JSONB,
+    "OrderPayment" JSONB,
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "Reason" (
+    "Id" SERIAL PRIMARY KEY, 
+    "ReasonName" TEXT, 
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE "ItemSold" (
+    "Id" SERIAL PRIMARY KEY, 
+    "ReceiptId" INTEGER REFERENCES "Receipt"("Id") ON DELETE CASCADE, 
     "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
     "Quantity" INTEGER, 
-    "QuantityPrice" DECIMAL(10, 2), 
-    "Reason" TEXT, 
-    "ReferenceId" TEXT, 
+    "Total" DECIMAL(10, 2), 
+    "ReasonId" INTEGER REFERENCES "Reason"("Id") ON DELETE CASCADE, 
     "Status" INTEGER, 
-    "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE CASCADE, 
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE "POSConfig" (
+    "Id" SERIAL PRIMARY KEY, 
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
+    "Config" JSONB,
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

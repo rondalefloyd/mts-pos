@@ -1,4 +1,5 @@
 from peewee import *
+from playhouse.postgres_ext import JSONField
 from app.utils.databases import postgres_db
 
 class BaseModel(Model):
@@ -49,7 +50,7 @@ class Member(BaseModel):
     BirthDate = DateField(null=True)
     Address = CharField(max_length=255, null=True)
     MobileNumber = CharField(max_length=20, null=True)
-    Points = FloatField(null=True)
+    Points = DecimalField(max_digits=10, decimal_places=2, default=0, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -61,7 +62,7 @@ class Member(BaseModel):
 class Promo(BaseModel):
     Id = AutoField()
     PromoName = CharField(max_length=255, null=True)
-    DiscountRate = FloatField(null=True)
+    DiscountRate = DecimalField(max_digits=10, decimal_places=2, null=True)
     Description = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
@@ -74,8 +75,8 @@ class Promo(BaseModel):
 class Reward(BaseModel):
     Id = AutoField()
     RewardName = CharField(max_length=255, null=True)
-    Points = FloatField(null=True)
-    Target = FloatField(null=True)
+    Points = DecimalField(max_digits=10, decimal_places=2, null=True)
+    Target = DecimalField(max_digits=10, decimal_places=2, null=True)
     Description = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
@@ -106,7 +107,7 @@ class Supplier(BaseModel):
 
     def __str__(self):
         return self.SupplierName
-    
+
 class Item(BaseModel):
     Id = AutoField()
     ItemName = CharField(max_length=255, null=True)
@@ -127,10 +128,10 @@ class Item(BaseModel):
 class ItemPrice(BaseModel):
     Id = AutoField()
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
-    Capital = FloatField(null=True)
-    Price = FloatField(null=True)
+    Capital = DecimalField(max_digits=10, decimal_places=2, null=True)
+    Price = DecimalField(max_digits=10, decimal_places=2, null=True)
     PromoId = ForeignKeyField(Promo, on_delete='CASCADE', column_name='PromoId', null=True)
-    Discount = FloatField(null=True)
+    Discount = DecimalField(max_digits=10, decimal_places=2, null=True)
     EffectiveDate = DateField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
@@ -143,8 +144,8 @@ class ItemPrice(BaseModel):
 class Stock(BaseModel):
     Id = AutoField()
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
-    OnHand = IntegerField(null=True)
-    Available = IntegerField(null=True)
+    OnHand = IntegerField(default=0, null=True)
+    Available = IntegerField(default=0, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -152,6 +153,7 @@ class Stock(BaseModel):
 
     def __str__(self):
         return f"Stock {self.Id}"
+
 class User(BaseModel):
     Id = AutoField()
     OrganizationId = ForeignKeyField(Organization, on_delete='CASCADE', column_name='OrganizationId', null=True)
@@ -200,21 +202,80 @@ class Date(BaseModel):
     def __str__(self):
         return str(self.DateValue)
 
-class Sale(BaseModel):
+class Reason(BaseModel):
     Id = AutoField()
-    UserId = ForeignKeyField(User, on_delete='CASCADE', column_name='UserId', null=True)
-    CustomerId = ForeignKeyField(Member, on_delete='CASCADE', column_name='CustomerId', null=True)
-    ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
-    Quantity = IntegerField(null=True)
-    QuantityPrice = FloatField(null=True)
-    Reason = TextField(null=True)
-    ReferenceId = CharField(max_length=255, null=True)
-    Status = IntegerField(null=True)
-    DateId = ForeignKeyField(Date, on_delete='CASCADE', column_name='DateId', null=True)
+    ReasonName = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
-        table_name = 'Sale'
+        table_name = 'Reason'
 
     def __str__(self):
-        return f"Sale {self.Id}"
+        return self.ReasonName
+
+class OrderType(BaseModel):
+    Id = AutoField()
+    OrderTypeName = CharField(max_length=255, null=True)
+    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
+
+    class Meta:
+        table_name = 'OrderType'
+
+    def __str__(self):
+        return self.OrderTypeName
+
+class Receipt(BaseModel):
+    Id = AutoField()
+    OrganizationId = ForeignKeyField(Organization, on_delete='CASCADE', column_name='OrganizationId', null=True)
+    UserId = ForeignKeyField(User, on_delete='CASCADE', column_name='UserId', null=True)
+    MemberId = ForeignKeyField(Member, on_delete='CASCADE', column_name='MemberId', null=True)
+    DateId = ForeignKeyField(Date, on_delete='CASCADE', column_name='DateId', null=True)
+    OrderTypeId = ForeignKeyField(OrderType, on_delete='CASCADE', column_name='OrderTypeId', null=True)
+    ReferenceId = CharField(max_length=255, null=True)
+    OrderName = CharField(max_length=255, null=True)
+    OrderItem = JSONField(null=True)
+    OrderSummary = JSONField(null=True)
+    OrderPayment = JSONField(null=True)
+    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
+
+    class Meta:
+        table_name = 'Receipt'
+
+    def __str__(self):
+        return f"Receipt {self.Id}"
+
+class ItemSold(BaseModel):
+    Id = AutoField()
+    ReceiptId = ForeignKeyField(Receipt, on_delete='CASCADE', column_name='ReceiptId', null=True)
+    ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
+    Quantity = IntegerField(null=True)
+    Total = DecimalField(max_digits=10, decimal_places=2, null=True)
+    ReasonId = ForeignKeyField(Reason, on_delete='CASCADE', column_name='ReasonId', null=True)
+    Status = IntegerField(null=True)
+    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
+
+    class Meta:
+        table_name = 'ItemSold'
+
+    def __str__(self):
+        return f"ItemSold {self.Id}"
+
+class POSConfig(BaseModel):
+    Id = AutoField()
+    OrganizationId = ForeignKeyField(Organization, on_delete='CASCADE', column_name='OrganizationId', null=True)
+    Config = JSONField(null=True)
+    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
+
+    class Meta:
+        table_name = 'POSConfig'
+
+    def __str__(self):
+        return f"POSConfig {self.Id}"
+
+# Ensure to create the tables in the database
+def create_tables():
+    with postgres_db:
+        postgres_db.create_tables([Brand, ItemType, Organization, Member, Promo, Reward, SalesGroup, Supplier, Item, ItemPrice, Stock, User, UserSession, Date, Reason, OrderType, Receipt, ItemSold, POSConfig])
+
+if __name__ == '__main__':
+    create_tables()

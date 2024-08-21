@@ -32,6 +32,9 @@ class Ui_FormManageActionButton(object):
         self.pushButtonDiscount = QtWidgets.QPushButton(FormManageActionButton)
         self.pushButtonDiscount.setObjectName("pushButtonDiscount")
         self.horizontalLayout.addWidget(self.pushButtonDiscount)
+        self.pushButtonVoid = QtWidgets.QPushButton(FormManageActionButton)
+        self.pushButtonVoid.setObjectName("pushButtonVoid")
+        self.horizontalLayout.addWidget(self.pushButtonVoid)
 
         self.retranslateUi(FormManageActionButton)
         QtCore.QMetaObject.connectSlotsByName(FormManageActionButton)
@@ -44,3 +47,4 @@ class Ui_FormManageActionButton(object):
         self.pushButtonDelete.setText(_translate("FormManageActionButton", "Delete"))
         self.pushButtonAdd.setText(_translate("FormManageActionButton", "Add"))
         self.pushButtonDiscount.setText(_translate("FormManageActionButton", "Discount"))
+        self.pushButtonVoid.setText(_translate("FormManageActionButton", "Void"))

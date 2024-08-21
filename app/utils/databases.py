@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from playhouse.postgres_ext import PostgresqlExtDatabase
+from playhouse.postgres_ext import *
 
 # Load the global .env file
 load_dotenv()

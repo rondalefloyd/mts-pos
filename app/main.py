@@ -62,6 +62,7 @@ if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
 
+# TODO: create item sold table / sale table in the ui
 # TODO: set clear button enabled for all line edit
 # TODO: fix the sizes of the QTableWidgetItems in all table widgets
 # TODO: add peso sign in each bill formatted labels
