@@ -1,5 +1,4 @@
-from peewee import *
-from playhouse.postgres_ext import JSONField
+from playhouse.postgres_ext import *
 from app.utils.databases import postgres_db
 
 class BaseModel(Model):

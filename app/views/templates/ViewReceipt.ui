@@ -70,6 +70,16 @@
      </row>
      <column>
       <property name="text">
+       <string>Action</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>ReceiptId</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
        <string>ItemName</string>
       </property>
      </column>
@@ -81,6 +91,21 @@
      <column>
       <property name="text">
        <string>Total</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>ReasonId</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Status</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>UpdateTs</string>
       </property>
      </column>
     </widget>

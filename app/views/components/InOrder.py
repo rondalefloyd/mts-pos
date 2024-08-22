@@ -70,6 +70,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             
         confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?")
             # TODO: add thread here where it registers all of the items in the cart
+            # TODO: THIS IS THE PRIORITY. FINISH THIS FIRST
         pass
     def _handleOnPushButtonPayCashPointsHybridClickedResult(self, result):
         

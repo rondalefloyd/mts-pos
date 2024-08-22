@@ -1,5 +1,5 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 from playhouse.postgres_ext import *
 
 # Load the global .env file
