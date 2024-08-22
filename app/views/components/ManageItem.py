@@ -24,11 +24,11 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditItemName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditItemName.setValidator(withSpaceTextDigitFormatValidator())
         self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.comboBoxItemTypeName.setValidator(withSpaceTextWithDigitFormatValidator())
-        self.comboBoxBrandName.setValidator(withSpaceTextWithDigitFormatValidator())
-        self.comboBoxSupplierName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.comboBoxItemTypeName.setValidator(withSpaceTextDigitFormatValidator())
+        self.comboBoxBrandName.setValidator(withSpaceTextDigitFormatValidator())
+        self.comboBoxSupplierName.setValidator(withSpaceTextDigitFormatValidator())
         self.lineEditCapital.setValidator(billFormatValidator())
         self.lineEditRetailPrice.setValidator(billFormatValidator())
         self.lineEditWholesalePrice.setValidator(billFormatValidator())

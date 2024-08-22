@@ -23,7 +23,7 @@ class Setup(Ui_DialogSetup, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
-        self.lineEditOrganizationName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditOrganizationName.setValidator(withSpaceTextDigitFormatValidator())
         self.lineEditMobileNumber.setValidator(mobileNumberValidator())
         self.lineEditAddress.setValidator(addressFormatValidator())
         self.lineEditTaxId.setValidator(tinValidator())

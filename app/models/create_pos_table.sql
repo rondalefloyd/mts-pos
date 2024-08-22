@@ -27,14 +27,14 @@ CREATE TABLE "Member" (
     "BirthDate" DATE, 
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 
-    "Points" DECIMAL(10, 2) DEFAULT 0, 
+    "Points" FLOAT DEFAULT 0, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Promo" (
     "Id" SERIAL PRIMARY KEY, 
     "PromoName" VARCHAR(255), 
-    "DiscountRate" DECIMAL(10, 2), 
+    "DiscountRate" FLOAT, 
     "Description" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -42,8 +42,8 @@ CREATE TABLE "Promo" (
 CREATE TABLE "Reward" (
     "Id" SERIAL PRIMARY KEY, 
     "RewardName" VARCHAR(255), 
-    "Points" DECIMAL(10, 2), 
-    "Target" DECIMAL(10, 2), 
+    "Points" FLOAT, 
+    "Target" FLOAT, 
     "Description" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -79,10 +79,10 @@ CREATE TABLE "Item" (
 CREATE TABLE "ItemPrice" (
     "Id" SERIAL PRIMARY KEY, 
     "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
-    "Capital" DECIMAL(10, 2), 
-    "Price" DECIMAL(10, 2), 
+    "Capital" FLOAT, 
+    "Price" FLOAT, 
     "PromoId" INTEGER REFERENCES "Promo"("Id") ON DELETE CASCADE, 
-    "Discount" DECIMAL(10, 2),
+    "Discount" FLOAT,
     "EffectiveDate" DATE,  
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -175,7 +175,6 @@ CREATE TABLE "Receipt" (
     "OrderTypeId" INTEGER REFERENCES "OrderType"("Id") ON DELETE CASCADE, 
     "ReferenceId" TEXT,
     "OrderName" TEXT,
-    "OrderItem" JSONB,
     "OrderSummary" JSONB,
     "OrderPayment" JSONB,
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -193,7 +192,7 @@ CREATE TABLE "ItemSold" (
     "ReceiptId" INTEGER REFERENCES "Receipt"("Id") ON DELETE CASCADE, 
     "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
     "Quantity" INTEGER, 
-    "Total" DECIMAL(10, 2), 
+    "Total" FLOAT, 
     "ReasonId" INTEGER REFERENCES "Reason"("Id") ON DELETE CASCADE, 
     "Status" INTEGER, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP

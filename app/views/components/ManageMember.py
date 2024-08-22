@@ -31,7 +31,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
         self.lineEditMemberName.setValidator(nonSpaceTextFormatValidator())
         self.lineEditAddress.setValidator(addressFormatValidator())
-        self.lineEditMobileNumber.setValidator(nonSpaceTextFormatValidator())
+        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
         
         self.refresh()
         

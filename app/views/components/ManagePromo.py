@@ -25,7 +25,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditPromoName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditPromoName.setValidator(withSpaceTextDigitFormatValidator())
         self.lineEditDiscountRate.setValidator(billFormatValidator())
         
         self.refresh()

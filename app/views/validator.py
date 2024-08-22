@@ -23,12 +23,15 @@ def withSpaceTextFormatValidator():
     return QRegExpValidator(QRegExp(r'^[A-Za-z ]+$'))
 
 def fullNameValidator():
-    return QRegExpValidator(QRegExp(r'^[A-Za-z]+, [A-Za-z]\., [A-Za-z]+$'))
+    return QRegExpValidator(QRegExp(r'^[A-Za-z]+( [A-Za-z]+)* [A-Za-z]\. [A-Za-z]+( [A-Za-z0-9]+)?$'))
 
 def nonSpaceTextWithDigitFormatValidator():
     return QRegExpValidator(QRegExp(r'^[A-Za-z0-9-]+$'))
 
-def withSpaceTextWithDigitFormatValidator():
+def withSpaceTextDigitFormatValidator():
     return QRegExpValidator(QRegExp(r'^[A-Za-z0-9 -]+$'))
+
+def withSpaceTextDigitSymbolFormatValidator():
+    return QRegExpValidator(QRegExp(r'^[A-Za-z0-9 .,\-_/!@#$%^&*()+=]+$'))
 
 QRegExp(r'^[A-Za-z]+$')

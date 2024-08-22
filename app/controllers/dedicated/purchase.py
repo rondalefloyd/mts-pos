@@ -19,7 +19,8 @@ from app.models.entities import (
     Item,
     ItemPrice,
     Stock,
-    ItemSold
+    ItemSold,
+    Receipt
 )
 from app.utils.databases import postgres_db
 
@@ -66,66 +67,30 @@ class PurchaseThread(QThread):
 def purchase_item(entry=None, result=None):
     """This function is a special case. The coding structure might be different from the standard."""
     try:
-        itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
-        brand = Brand.select().where(Brand.BrandName == entry['brandName'])
-        supplier = Supplier.select().where(Supplier.SupplierName == entry['supplierName'])
+        print('---check this entry:', json.dumps(entry, indent=4, default=str))
+        orderName = entry['orderName']
+        orderType = entry['orderType']
+        orderItem = entry['orderItem']
+        orderWidget = entry['orderWidget']
+        orderStatus = entry['orderStatus']
+        orderMember = entry['orderMember']
         
-        itemType = ItemType.create(ItemTypeName=entry['itemTypeName']) if not itemType.exists() else itemType.first()
-        brand = Brand.create(BrandName=entry['brandName']) if not brand.exists() else brand.first()
-        supplier = Supplier.create(SupplierName=entry['supplierName']) if not supplier.exists() else supplier.first()
-        
-        salesGroupEntries = [
-            {'salesGroupName': 'retail'.upper(), 'salesGroupPrice': entry['retailPrice']},
-            {'salesGroupName': 'wholesale'.upper(), 'salesGroupPrice': entry['wholesalePrice']},
-        ]
-        
-        for salesGroupEntry in salesGroupEntries:
-            item = Item.select().where(
-                (Item.ItemName == entry['itemName']) &
-                (Item.Barcode == entry['barcode']) &
-                (Item.ExpireDate == entry['expireDate']) &
-                (Item.ItemTypeId == itemType.Id) &
-                (Item.BrandId == brand.Id) &
-                (Item.SupplierId == supplier.Id) &
-                (Item.SalesGroupId == SalesGroup.get_or_none(SalesGroup.SalesGroupName == salesGroupEntry['salesGroupName']).Id)
-            )
-            
-            # if item.exists():
-            #     result['message'] = 'Item already exists'
-            #     return result
-            
-            item = Item.create(
-                ItemName=entry['itemName'],
-                Barcode=entry['barcode'],
-                ExpireDate=entry['expireDate'],
-                ItemTypeId=itemType.Id,
-                BrandId=brand.Id,
-                SupplierId=supplier.Id,
-                SalesGroupId=SalesGroup.get_or_none(SalesGroup.SalesGroupName == salesGroupEntry['salesGroupName']).Id,
-            ) if not item.exists() else item.first()
-            
-            itemPrice = ItemPrice.select().where(
-                (ItemPrice.ItemId == item.Id) &
-                (ItemPrice.Price == salesGroupEntry['salesGroupPrice']) & 
-                (ItemPrice.EffectiveDate == entry['effectiveDate']) 
-            )
-        
-            if itemPrice.exists():
-                result['message'] = 'ItemPrice already exists'
-                return result
-            
-            itemPrice = ItemPrice.create(
-                ItemId=item.Id,
-                Capital=entry['capital'],
-                Price=salesGroupEntry['salesGroupPrice'], 
-                EffectiveDate=entry['effectiveDate'],
-            )
-        
-            if entry['trackInventory'] is 'True':
-                stock = Stock.create(ItemId=item.Id)
-        
+        # TODO: finish this
+        # receipt = Receipt.create(
+        #     OrganizationId=1123,
+        #     UserId=1123,
+        #     MemberId=1123,
+        #     DateId=1123,
+        #     OrderTypeId=1123,
+        #     ReferenceId=1123,
+        #     OrderName=1123,
+        #     OrderSummary=1123,
+        #     OrderPayment=1123,
+        # )
+        # itemSold = ItemSold
+
         result['success'] = True
-        result['message'] = 'Item added'
+        result['message'] = 'Purchase added'
         return result
 
     except Exception as exception:

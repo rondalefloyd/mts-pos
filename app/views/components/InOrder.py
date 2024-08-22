@@ -13,7 +13,7 @@ from app.views.templates.InOrder_ui import Ui_DialogInOrder
 from app.views.components.Loading import Loading
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.validator import *
-from app.controllers.dedicated.edit import EditThread
+from app.controllers.dedicated.purchase import PurchaseThread
 
 class InOrder(Ui_DialogInOrder, QDialog):
     def __init__(self, userData, selectedOrder):
@@ -61,19 +61,51 @@ class InOrder(Ui_DialogInOrder, QDialog):
 
     def _processOrder(self, paymentType):
         payment = 0.0
+        change = 0.0
+        
         if paymentType == 'CASH':
             payment = self.cashPayment
+            change = float(self.labelCashShortageExcess.text())
         if paymentType == 'POINTS':
             payment = self.pointsPayment
+            change = float(self.labelPointsShortageExcess.text())
         if paymentType == 'HYBRID':
             payment = self.hybridPayment
+            change = float(self.labelHybridShortageExcess.text())
             
-        confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?")
+        confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        if confirm == QMessageBox.StandardButton.Yes:
             # TODO: add thread here where it registers all of the items in the cart
             # TODO: THIS IS THE PRIORITY. FINISH THIS FIRST
+            self.currentThread = PurchaseThread('purchase_item', {
+                'organizationId': self.selectedOrder['orderName'],
+                'orderUser': self.userData,
+                'orderName': self.selectedOrder['orderName'],
+                'orderType': self.selectedOrder['orderType'],
+                'orderItem': self.selectedOrder['orderItem'],
+                'orderWidget': self.selectedOrder['orderWidget'],
+                'orderStatus': self.selectedOrder['orderStatus'],
+                'orderMember': self.selectedOrder['orderMember'],
+                'orderSummary': {
+                    'subtotal': float(self.labelSubtotal.text()),
+                    'discount': float(self.labelDiscount.text()),
+                    'tax': float(self.labelTax.text()),
+                    'grandTotal': float(self.labelGrandTotal.text()),
+                },
+                'orderPayment': {
+                    'paymentType': paymentType,
+                    'payment': payment,
+                    'change': change,
+                }
+            })
+            self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedResult)
+            self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.start()
+            self.activeThreads.append(self.currentThread)
         pass
     def _handleOnPushButtonPayCashPointsHybridClickedResult(self, result):
-        
+        print('result:', result)
         pass
 
     def _populateSelectedMemberFields(self):

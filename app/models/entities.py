@@ -1,4 +1,5 @@
-from playhouse.postgres_ext import *
+from peewee import *
+from playhouse.postgres_ext import JSONField
 from app.utils.databases import postgres_db
 
 class BaseModel(Model):
@@ -49,7 +50,7 @@ class Member(BaseModel):
     BirthDate = DateField(null=True)
     Address = CharField(max_length=255, null=True)
     MobileNumber = CharField(max_length=20, null=True)
-    Points = DecimalField(max_digits=10, decimal_places=2, default=0, null=True)
+    Points = FloatField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -61,7 +62,7 @@ class Member(BaseModel):
 class Promo(BaseModel):
     Id = AutoField()
     PromoName = CharField(max_length=255, null=True)
-    DiscountRate = DecimalField(max_digits=10, decimal_places=2, null=True)
+    DiscountRate = FloatField(null=True)
     Description = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
@@ -74,8 +75,8 @@ class Promo(BaseModel):
 class Reward(BaseModel):
     Id = AutoField()
     RewardName = CharField(max_length=255, null=True)
-    Points = DecimalField(max_digits=10, decimal_places=2, null=True)
-    Target = DecimalField(max_digits=10, decimal_places=2, null=True)
+    Points = FloatField(null=True)
+    Target = FloatField(null=True)
     Description = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
@@ -127,10 +128,10 @@ class Item(BaseModel):
 class ItemPrice(BaseModel):
     Id = AutoField()
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
-    Capital = DecimalField(max_digits=10, decimal_places=2, null=True)
-    Price = DecimalField(max_digits=10, decimal_places=2, null=True)
+    Capital = FloatField(null=True)
+    Price = FloatField(null=True)
     PromoId = ForeignKeyField(Promo, on_delete='CASCADE', column_name='PromoId', null=True)
-    Discount = DecimalField(max_digits=10, decimal_places=2, null=True)
+    Discount = FloatField(null=True)
     EffectiveDate = DateField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
@@ -232,7 +233,6 @@ class Receipt(BaseModel):
     OrderTypeId = ForeignKeyField(OrderType, on_delete='CASCADE', column_name='OrderTypeId', null=True)
     ReferenceId = CharField(max_length=255, null=True)
     OrderName = CharField(max_length=255, null=True)
-    OrderItem = JSONField(null=True)
     OrderSummary = JSONField(null=True)
     OrderPayment = JSONField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
@@ -248,7 +248,7 @@ class ItemSold(BaseModel):
     ReceiptId = ForeignKeyField(Receipt, on_delete='CASCADE', column_name='ReceiptId', null=True)
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
     Quantity = IntegerField(null=True)
-    Total = DecimalField(max_digits=10, decimal_places=2, null=True)
+    Total = FloatField(null=True)
     ReasonId = ForeignKeyField(Reason, on_delete='CASCADE', column_name='ReasonId', null=True)
     Status = IntegerField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)

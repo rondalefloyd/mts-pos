@@ -25,7 +25,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
         self.currentThread = None
         self.activeThreads = []
                 
-        self.lineEditRewardName.setValidator(withSpaceTextWithDigitFormatValidator())
+        self.lineEditRewardName.setValidator(withSpaceTextDigitFormatValidator())
         self.lineEditPoints.setValidator(billFormatValidator())
         self.lineEditTarget.setValidator(billFormatValidator())
         
