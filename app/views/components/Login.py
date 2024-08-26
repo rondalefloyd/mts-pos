@@ -19,7 +19,7 @@ class Login(Ui_DialogLogin, QDialog):
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = None
+        self.authData = None
         self.currentThread = None
         self.activeThreads = []
         
@@ -62,7 +62,9 @@ class Login(Ui_DialogLogin, QDialog):
             return
         
         self.windowEvent = EVENT_START_MANAGE
-        self.userData = result['dictData']
+        self.authData = result['dictData']
+        
+        print("please look at this result['dictData']:", result['dictData'])
         self.close()
         return
 

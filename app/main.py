@@ -28,7 +28,7 @@ def _startApp():
         
     app = QApplication(sys.argv)
     windowEvent = EVENT_START_LOGIN
-    userData = None
+    authData = None
 
     while True:
         if windowEvent == EVENT_START_SETUP:
@@ -42,13 +42,13 @@ def _startApp():
         elif windowEvent == EVENT_START_LOGIN:
             login = Login()
             login.exec()
-            userData = login.userData
+            authData = login.authData
             windowEvent = login.windowEvent
         elif windowEvent == EVENT_START_MANAGE:
-            manage = Manage(userData)
+            manage = Manage(authData)
             manage.show()
             app.exec()
-            userData = manage.userData
+            authData = manage.authData
             windowEvent = manage.windowEvent
         elif windowEvent == EVENT_START_TESTER:
             tester = Tester()

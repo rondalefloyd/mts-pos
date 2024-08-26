@@ -18,14 +18,14 @@ from app.controllers.dedicated.remove import RemoveThread
 # class definition
 class ManageMember(Ui_FormManageMember, QWidget):
     # initialization method (__init__)
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.mobileNumberValidator = QRegExpValidator(QRegExp(r'^\d{11}$'))
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.organizationData = authData['organization']
         self.currentThread = None
         self.activeThreads = []
         
@@ -46,7 +46,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         self.currentPage = 1
         self.totalPages = 1
         
-        self.comboBoxOrganizationName.setCurrentText(f"{self.userData['organizationName']}")
+        self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
         self._populateTableWidgetData()
 
     # private methods
@@ -98,7 +98,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_member_data_by_keyword_in_pagination', {
-            'organizationName': self.userData['organizationName'],
+            'organizationName': self.organizationData['organizationName'],
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })
@@ -143,7 +143,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
-        self.editMember = EditMember(self.userData, data)
+        self.editMember = EditMember(self.authData, data)
         self.editMember.exec()
         self._populateTableWidgetData()
 

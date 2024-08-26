@@ -13,13 +13,13 @@ from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
 class ManageItemSold(Ui_FormManageItemSold, QWidget):
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
         self.currentThread = None
         self.activeThreads = []
         

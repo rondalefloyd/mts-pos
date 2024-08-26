@@ -60,6 +60,12 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
             return result
         user = user.first()
         
+        organization = Organization.select().where(Organization.Id == user.OrganizationId)
+        if not organization.exists():
+            result['message'] = 'Organization in this user does not exists'
+            return result
+        organization = organization.first()
+        
         userSessions = UserSession.select().where(UserSession.Id == user.Id)
         if not userSessions.exists():
             result['message'] = 'UserSession does not exists'
@@ -69,17 +75,30 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
         userSessions.LastLoginTs = datetime.now()
         userSessions.save()
         
+        organization = user.OrganizationId
+        
         result['success'] = True
         result['dictData'] = {
-            'id': user.Id,
-            'organizationName': Organization.get_or_none(Organization.Id == user.OrganizationId).OrganizationName,
-            'userName': user.UserName,
-            'accessCode': user.AccessCode,
-            'fullName': user.FullName,
-            'birthDate': user.BirthDate,
-            'mobileNumber': user.MobileNumber,
-            'accessLevel': user.AccessLevel,
+            'user': {
+                'id': user.Id,
+                'organizationId': user.OrganizationId,
+                'userName': user.UserName,
+                'accessCode': user.AccessCode,
+                'fullName': user.FullName,
+                'birthDate': user.BirthDate,
+                'mobileNumber': user.MobileNumber,
+                'accessLevel': user.AccessLevel,
+            },
+            'organization': {
+                'id': organization.Id,
+                'taxId': organization.TaxId,
+                'organizationName': organization.OrganizationName,
+                'address': organization.Address,
+                'mobileNumber': organization.MobileNumber,
+                'accessCode': organization.AccessCode,
+            }
         }
+        
         return result
         
     except Exception as exception:

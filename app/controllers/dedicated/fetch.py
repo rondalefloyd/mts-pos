@@ -146,12 +146,13 @@ def fetch_member_data_by_member_name(entry=None, result=None):
             return result
         
         member = member.first()
+        organization = member.OrganizationId
         
+        print('here member:', member)
         result['success'] = True
         result['dictData'] = {
             'id': member.Id,
-            'organizationName': Organization.get_or_none(Organization.Id == member.OrganizationId).OrganizationName,
-            'organizationId': member.OrganizationId,
+            'organizationId': organization.Id,
             'memberName': member.MemberName,
             'birthDate': member.BirthDate,
             'address': member.Address,
@@ -204,7 +205,6 @@ def fetch_all_member_data(entry=None, result=None):
             result['listData'].append({
                 'id': member.Id,
                 'organizationName': Organization.get_or_none(Organization.Id == member.OrganizationId).OrganizationName,
-                'organizationId': member.OrganizationId,
                 'memberName': member.MemberName,
                 'birthDate': member.BirthDate,
                 'address': member.Address,

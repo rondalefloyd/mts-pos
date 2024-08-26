@@ -20,7 +20,9 @@ from app.models.entities import (
     ItemPrice,
     Stock,
     ItemSold,
-    Receipt
+    Receipt,
+    OrderType,
+    Date
 )
 from app.utils.databases import postgres_db
 
@@ -68,26 +70,41 @@ def purchase_item(entry=None, result=None):
     """This function is a special case. The coding structure might be different from the standard."""
     try:
         print('---check this entry:', json.dumps(entry, indent=4, default=str))
-        orderName = entry['orderName']
-        orderType = entry['orderType']
-        orderItem = entry['orderItem']
-        orderWidget = entry['orderWidget']
-        orderStatus = entry['orderStatus']
-        orderMember = entry['orderMember']
+        currentDate = datetime.now()
+        member = entry['member']
+        orderItem = entry['order']['item']
+        orderStatus = entry['order']['status']
+        
+        organizationId = entry['organization']['id']
+        userId = entry['user']['id']
+        memberId = member['id'] if member is not None else None
+        dateId = Date.get_or_none(Date.DateValue == currentDate).Id
+        orderTypeId = OrderType.get_or_none(OrderType.OrderTypeName == entry['order']['type']).Id
+        referenceId = f"{member['memberName'] if member is not None else 'GUEST'}{orderTypeId}{organizationId}{userId}{currentDate.strftime('%m%d%Y%H%M')}"
+        orderName = entry['order']['name']
+        orderSummary = entry['summary']
+        orderPayment = entry['payment']
         
         # TODO: finish this
-        # receipt = Receipt.create(
-        #     OrganizationId=1123,
-        #     UserId=1123,
-        #     MemberId=1123,
-        #     DateId=1123,
-        #     OrderTypeId=1123,
-        #     ReferenceId=1123,
-        #     OrderName=1123,
-        #     OrderSummary=1123,
-        #     OrderPayment=1123,
-        # )
-        # itemSold = ItemSold
+        receipt = Receipt.create(
+            OrganizationId=organizationId,
+            UserId=userId,
+            MemberId=memberId,
+            DateId=dateId,
+            OrderTypeId=orderTypeId,
+            ReferenceId=referenceId,
+            OrderName=orderName,
+            OrderSummary=orderSummary,
+            OrderPayment=orderPayment,
+        )
+        
+        for item in orderItem:
+            itemSold = ItemSold.create(
+                ReceiptId=receipt.Id,
+                ItemId=item['itemId'],
+                Quantity=item['quantity'],
+                Total=item['total'],
+            )
 
         result['success'] = True
         result['message'] = 'Purchase added'

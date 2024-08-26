@@ -12,13 +12,13 @@ from app.controllers.dedicated.register import RegisterThread
 """Class Definition"""
 class ManageUser(Ui_FormManageUser, QWidget):
     """Initialization Method (__init__)"""
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
         self.currentThread = None
         self.activeThreads = []
     

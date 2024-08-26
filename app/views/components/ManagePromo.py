@@ -15,13 +15,13 @@ from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
 class ManagePromo(Ui_FormManagePromo, QWidget):
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
         self.currentThread = None
         self.activeThreads = []
         
@@ -124,7 +124,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
-        self.editPromo = EditPromo(self.userData, data)
+        self.editPromo = EditPromo(self.authData, data)
         self.editPromo.exec()
         self._populateTableWidgetData()
 

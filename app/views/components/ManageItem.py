@@ -14,13 +14,13 @@ from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
 class ManageItem(Ui_FormManageItem, QWidget):
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
         self.currentThread = None
         self.activeThreads = []
         
@@ -176,7 +176,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
-        self.editItem = EditItem(self.userData, data)
+        self.editItem = EditItem(self.authData, data)
         self.editItem.exec()
         self._populateTableWidgetData()
 

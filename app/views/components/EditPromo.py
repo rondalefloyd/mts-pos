@@ -10,13 +10,13 @@ from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditPromo(Ui_DialogEditPromo, QDialog):
-    def __init__(self, userData, selectedData):
+    def __init__(self, authData, selectedData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []

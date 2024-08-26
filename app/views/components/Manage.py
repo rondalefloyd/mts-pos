@@ -20,24 +20,24 @@ from app.controllers.dedicated.authenticate import AuthenticateThread
 # class definition
 class Manage(Ui_MainWindowManage, QMainWindow):
     # initialization method (__init__)
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.userData = authData['user']
         self.currentThread = None
         self.activeThreads = []
         
         # Initialize widgets only once
-        self.manageSales = ManageSales(self.userData)
-        self.manageStock = ManageStock(self.userData)
-        self.manageItem = ManageItem(self.userData)
-        self.managePromo = ManagePromo(self.userData)
-        self.manageReward = ManageReward(self.userData)
-        self.manageMember = ManageMember(self.userData)
-        self.manageUser = ManageUser(self.userData)
+        self.manageSales = ManageSales(authData)
+        self.manageStock = ManageStock(authData)
+        self.manageItem = ManageItem(authData)
+        self.managePromo = ManagePromo(authData)
+        self.manageReward = ManageReward(authData)
+        self.manageMember = ManageMember(authData)
+        self.manageUser = ManageUser(authData)
         
         # Add widgets to the stacked widget
         self.stackedWidgetManage.insertWidget(0, self.manageSales)
@@ -123,7 +123,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
             return
         
         self.windowEvent = EVENT_START_LOGIN
-        self.userData = None
+        self.authData = None
         self.close()
 
     def _cleanupThread(self):
@@ -135,7 +135,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
 
     # overridden methods
     def closeEvent(self, event):
-        self.userData = None
+        self.authData = None
         
         for thread in self.activeThreads:
             if thread.isRunning():

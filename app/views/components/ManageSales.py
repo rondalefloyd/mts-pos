@@ -15,13 +15,13 @@ from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
    
 class ManageSales(Ui_FormManageSales, QWidget):
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
         self.currentThread = None
         self.activeThreads = []
         
@@ -381,7 +381,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
 
     def _onPushButtonPayClicked(self):
         self.inOrder = InOrder(
-            self.manageSales.userData, 
+            self.manageSales.authData, 
             self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()],
         )
         self.inOrder.exec()

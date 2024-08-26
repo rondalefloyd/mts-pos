@@ -19,7 +19,7 @@ class Setup(Ui_DialogSetup, QDialog):
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = None
+        self.authData = None
         self.currentThread = None
         self.activeThreads = []
 

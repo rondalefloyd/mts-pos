@@ -14,14 +14,14 @@ from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
 class ManageReward(Ui_FormManageReward, QWidget):
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.billValidator = QDoubleValidator(0, 9999999999, 2)
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
         self.currentThread = None
         self.activeThreads = []
                 
@@ -128,7 +128,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
-        self.editReward = EditReward(self.userData, data)
+        self.editReward = EditReward(self.authData, data)
         self.editReward.exec()
         self._populateTableWidgetData()
 

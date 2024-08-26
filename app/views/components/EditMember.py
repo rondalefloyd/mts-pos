@@ -14,13 +14,13 @@ from app.controllers.dedicated.edit import EditThread
 # class definition
 class EditMember(Ui_DialogEditMember, QDialog):
     # initialization method (__init__)
-    def __init__(self, userData, selectedData):
+    def __init__(self, authData, selectedData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.organizationData = authData['organization']
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
@@ -30,7 +30,7 @@ class EditMember(Ui_DialogEditMember, QDialog):
         self.lineEditMobileNumber.setValidator(mobileNumberValidator())
         self.lineEditPoints.setValidator(billFormatValidator())
         
-        self.comboBoxOrganizationName.setCurrentText(f"{self.userData['organizationName']}")
+        self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
 
         self.lineEditMemberName.setText(f"{self.selectedData['memberName']}")
         self.dateEditBirthDate.setDate(QDate.fromString(f"{self.selectedData['birthDate']}", 'yyyy-MM-dd'))

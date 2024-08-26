@@ -14,13 +14,13 @@ from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
 class ManageStock(Ui_FormManageStock, QWidget):
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
         self.currentThread = None
         self.activeThreads = []
         
@@ -92,7 +92,7 @@ class ManageStock(Ui_FormManageStock, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
-        self.editStock = EditStock(self.userData, data)
+        self.editStock = EditStock(self.authData, data)
         self.editStock.exec()
         self._populateTableWidgetData()
 

@@ -17,13 +17,14 @@ from app.controllers.dedicated.remove import RemoveThread
 # class definition
 class ManageUser(Ui_FormManageUser, QWidget):
     # initialization method (__init__)
-    def __init__(self, userData):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.authData = authData
+        self.organizationData = authData['organization']
         self.currentThread = None
         self.activeThreads = []
         
@@ -44,7 +45,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.currentPage = 1
         self.totalPages = 1
         
-        self.comboBoxOrganizationName.setCurrentText(f"{self.userData['organizationName']}")
+        self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
         self._populateTableWidgetData()
 
     # private methods
@@ -97,7 +98,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_user_data_by_keyword_in_pagination', {
-            'organizationName': self.userData['organizationName'],
+            'organizationName': self.organizationData['organizationName'],
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })

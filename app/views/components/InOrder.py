@@ -16,13 +16,14 @@ from app.views.validator import *
 from app.controllers.dedicated.purchase import PurchaseThread
 
 class InOrder(Ui_DialogInOrder, QDialog):
-    def __init__(self, userData, selectedOrder):
+    def __init__(self, authData, selectedOrder):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.userData = userData
+        self.organizationData = authData['organization']
+        self.userData = authData['user']
         self.selectedOrder = selectedOrder
         self.currentThread = None
         self.activeThreads = []
@@ -79,23 +80,25 @@ class InOrder(Ui_DialogInOrder, QDialog):
             # TODO: add thread here where it registers all of the items in the cart
             # TODO: THIS IS THE PRIORITY. FINISH THIS FIRST
             self.currentThread = PurchaseThread('purchase_item', {
-                'organizationId': self.selectedOrder['orderName'],
-                'orderUser': self.userData,
-                'orderName': self.selectedOrder['orderName'],
-                'orderType': self.selectedOrder['orderType'],
-                'orderItem': self.selectedOrder['orderItem'],
-                'orderWidget': self.selectedOrder['orderWidget'],
-                'orderStatus': self.selectedOrder['orderStatus'],
-                'orderMember': self.selectedOrder['orderMember'],
-                'orderSummary': {
+                'organization': self.organizationData,
+                'user': self.userData,
+                'member': self.selectedOrder['orderMember'],
+                'order': {
+                    'name': self.selectedOrder['orderName'],
+                    'type': self.selectedOrder['orderType'],
+                    'item': self.selectedOrder['orderItem'],
+                    'status': self.selectedOrder['orderStatus'],
+                    'widget': self.selectedOrder['orderWidget'],
+                },
+                'summary': {
                     'subtotal': float(self.labelSubtotal.text()),
                     'discount': float(self.labelDiscount.text()),
                     'tax': float(self.labelTax.text()),
                     'grandTotal': float(self.labelGrandTotal.text()),
                 },
-                'orderPayment': {
-                    'paymentType': paymentType,
-                    'payment': payment,
+                'payment': {
+                    'type': paymentType,
+                    'amount': payment,
                     'change': change,
                 }
             })
