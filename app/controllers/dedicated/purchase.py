@@ -73,7 +73,6 @@ def purchase_item(entry=None, result=None):
         currentDate = datetime.now()
         member = entry['member']
         orderItem = entry['order']['item']
-        orderStatus = entry['order']['status']
         
         organizationId = entry['organization']['id']
         userId = entry['user']['id']

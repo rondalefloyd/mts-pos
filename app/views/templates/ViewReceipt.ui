@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Edit stock</string>
+   <string>view receipt</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -71,11 +71,6 @@
      <column>
       <property name="text">
        <string>Action</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>ReceiptId</string>
       </property>
      </column>
      <column>

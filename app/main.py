@@ -61,8 +61,10 @@ def _startApp():
 if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
-
-# TODO: create item sold table / sale table in the ui
+    
+# TODO: add the last widget which is post order
+# TODO: remove all print debuggers
+# TODO: check the variable names
 # TODO: set clear button enabled for all line edit
 # TODO: fix the sizes of the QTableWidgetItems in all table widgets
 # TODO: add peso sign in each bill formatted labels

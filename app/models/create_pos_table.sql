@@ -186,6 +186,12 @@ CREATE TABLE "Reason" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+INSERT INTO "Reason" ("ReasonName") VALUES
+('Customer Request'),
+('Damaged Item'),
+('Inventory Adjustment'),
+('Promotion Discount'),
+('Price Correction');
 
 CREATE TABLE "ItemSold" (
     "Id" SERIAL PRIMARY KEY, 

@@ -18,6 +18,10 @@ from app.models.entities import (
     Stock,
     Item,
     ItemPrice,
+    Receipt,
+    Date,
+    OrderType,
+    ItemSold,
 )
 from app.utils.databases import postgres_db
 
@@ -50,6 +54,8 @@ class FetchThread(QThread):
                     result = fetch_promo_data_by_promo_name(self.entry, result)
                 elif self.function_route == 'fetch_all_promo_data':
                     result = fetch_all_promo_data(self.entry, result)
+                elif self.function_route == 'fetch_all_item_sold_data':
+                    result = fetch_all_item_sold_data(self.entry, result)
                 elif self.function_route == 'fetch_all_item_related_data':
                     result = fetch_all_item_related_data(self.entry, result)
                 elif self.function_route == 'fetch_all_item_price_related_data_by_barcode_order_type':
@@ -68,6 +74,8 @@ class FetchThread(QThread):
                     result = fetch_all_reward_data_by_keyword_in_pagination(self.entry, result)
                 elif self.function_route == 'fetch_all_user_data_by_keyword_in_pagination':
                     result = fetch_all_user_data_by_keyword_in_pagination(self.entry, result)
+                elif self.function_route == 'fetch_all_receipt_data_by_keyword_in_pagination':
+                    result = fetch_all_receipt_data_by_keyword_in_pagination(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -192,6 +200,35 @@ def fetch_all_promo_data(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
     
+def fetch_all_item_sold_data(entry=None, result=None):
+    try:
+        print('this is the one you will checkl:', entry)
+        itemSolds = ItemSold.select().where(ItemSold.ReceiptId == entry['receiptId']).order_by(ItemSold.UpdateTs.desc())
+        
+        if not itemSolds.exists():
+            result['message'] = 'ItemSold does not exists'
+            return result
+        
+        result['success'] = True
+        for itemSold in itemSolds:
+            result['listData'].append({
+                'id': itemSold.Id,
+                'receiptId': itemSold.ReceiptId,
+                'itemId': itemSold.ItemId,
+                'itemName': Item.get_or_none(Item.Id == itemSold.ItemId).ItemName,
+                'quantity': itemSold.Quantity,
+                'total': itemSold.Total,
+                'reasonId': itemSold.ReasonId,
+                'status': itemSold.Status,
+                'updateTs': itemSold.UpdateTs,
+            })
+        return result
+
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+   
 def fetch_all_member_data(entry=None, result=None):
     try:
         members = Member.select().order_by(Member.UpdateTs.desc())
@@ -701,3 +738,69 @@ def fetch_all_user_data_by_keyword_in_pagination(entry=None, result=None):
         result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
+
+def fetch_all_receipt_data_by_keyword_in_pagination(entry=None, result=None):
+    try:
+        limit = 30
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        receipts = Receipt.select(
+            Receipt, 
+            User, 
+            Member, 
+            Date,
+            OrderType
+        ).join(User, JOIN.LEFT_OUTER, on=(Receipt.UserId == User.Id)
+        ).join(Member, JOIN.LEFT_OUTER, on=(Receipt.MemberId == Member.Id)
+        ).join(Date, JOIN.LEFT_OUTER, on=(Receipt.DateId == Date.Id)
+        ).join(OrderType, JOIN.LEFT_OUTER, on=(Receipt.OrderTypeId == OrderType.Id)
+        ).where(
+            (Receipt.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
+            ((User.UserName.cast('TEXT').like(keyword)) |
+            (Member.MemberName.cast('TEXT').like(keyword)) |
+            (Date.DateValue.cast('TEXT').like(keyword)) |
+            (OrderType.OrderTypeName.cast('TEXT').like(keyword)) |
+            (Receipt.OrderName.cast('TEXT').like(keyword)) |
+            (Receipt.UpdateTs.cast('TEXT').like(keyword)))
+        ).order_by(Receipt.UpdateTs.desc())
+        
+        totalCount = receipts.count()
+        paginatedReceipts = receipts.limit(limit).offset(offset)
+        
+        result['success'] = True
+        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        for receipt in paginatedReceipts:
+            organization = receipt.OrganizationId
+            user = receipt.UserId
+            member = receipt.MemberId
+            date = receipt.DateId
+            orderType = receipt.OrderTypeId
+        
+            result['listData'].append({
+                'id': receipt.Id,
+                'organizationName': organization.OrganizationName,
+                'userName': user.UserName,
+                'memberName': member.MemberName,
+                'dateValue': date.DateValue,
+                'orderTypeName': orderType.OrderTypeName,
+                'referenceId': receipt.ReferenceId,
+                'orderName': receipt.OrderName,
+                'orderSummary': receipt.OrderSummary,
+                'orderPayment': receipt.OrderPayment,
+                'updateTs': receipt.UpdateTs,
+            })
+        print('you went hereAA')
+        
+        print('check this one out', result)
+        
+        return result
+        
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+
+    
+    
+    

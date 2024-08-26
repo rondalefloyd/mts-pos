@@ -15,6 +15,7 @@ from app.views.components.ManageReward import ManageReward
 from app.views.components.ManageItem import ManageItem
 from app.views.components.ManageStock import ManageStock
 from app.views.components.ManageSales import ManageSales
+from app.views.components.ManageReceipt import ManageReceipt
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
 # class definition
@@ -32,6 +33,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         # Initialize widgets only once
         self.manageSales = ManageSales(authData)
+        self.manageReceipt = ManageReceipt(authData)
         self.manageStock = ManageStock(authData)
         self.manageItem = ManageItem(authData)
         self.managePromo = ManagePromo(authData)
@@ -41,6 +43,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         # Add widgets to the stacked widget
         self.stackedWidgetManage.insertWidget(0, self.manageSales)
+        self.stackedWidgetManage.insertWidget(1, self.manageReceipt)
         self.stackedWidgetManage.insertWidget(2, self.manageItem)
         self.stackedWidgetManage.insertWidget(3, self.manageStock)
         self.stackedWidgetManage.insertWidget(4, self.managePromo)
