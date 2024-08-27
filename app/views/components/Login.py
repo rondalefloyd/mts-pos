@@ -64,7 +64,6 @@ class Login(Ui_DialogLogin, QDialog):
         self.windowEvent = EVENT_START_MANAGE
         self.authData = result['dictData']
         
-        print("please look at this result['dictData']:", result['dictData'])
         self.close()
         return
 

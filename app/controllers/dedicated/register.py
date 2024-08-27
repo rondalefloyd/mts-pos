@@ -69,7 +69,7 @@ class RegisterThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
+        # print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
 # add function here
 def register_item(entry=None, result=None):

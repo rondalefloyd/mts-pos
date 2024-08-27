@@ -47,7 +47,7 @@ class AuthenticateThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
+        # print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
 def authenticate_user_by_user_name_access_code(entry=None, result=None):
     try:

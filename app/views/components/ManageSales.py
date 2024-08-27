@@ -368,8 +368,6 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         
         self.manageSales.activeOrder[orderIndex]['orderMember'] = dictData if dictData else None
         
-        print("self.manageSales.activeOrder:", json.dumps(self.manageSales.activeOrder, indent=4, default=str))
-     
     def _onPushButtonClearClicked(self):
         confirm = QMessageBox.warning(self, 'Confirm', "Delete all items?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         

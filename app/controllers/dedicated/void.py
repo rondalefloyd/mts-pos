@@ -59,7 +59,7 @@ class VoidThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
+        # print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
 def void_item_sold_data_by_id(entry=None, result=None):
     try:
@@ -78,6 +78,7 @@ def void_item_sold_data_by_id(entry=None, result=None):
         itemSold.save()
         
         # TODO: add stock by taking it from qty (depending on the condition if it got bypassed or not)
+        # TODO: change the computation of the summary (deduct the ones that are voided)
         
         result['success'] = True
         result['message'] = 'ItemSold voided'

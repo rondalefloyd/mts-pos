@@ -65,7 +65,7 @@ class EditThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
+        # print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
         
 def edit_item_price_related_data_by_id(entry=None, result=None):
     try:
