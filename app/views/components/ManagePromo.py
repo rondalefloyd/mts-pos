@@ -68,12 +68,12 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
             'discountRate': self.lineEditDiscountRate.text(),
             'description': self.lineEditDescription.text(),
         })
-        self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
+        self.currentThread.finished.connect(self._handleOnPushButtonAddClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handleOnPushButtonAddClickedResult(self, result):
+    def _handleOnPushButtonAddClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
@@ -87,12 +87,12 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })
-        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataResult)
+        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
-    def _handlePopulateTableWidgetDataResult(self, result):
+    def _handlePopulateTableWidgetDataFinished(self, result):
         oneData = result['dictData']
         manyData = result['listData']
         
@@ -133,12 +133,12 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.currentThread = RemoveThread('remove_promo_by_id', {'id': data['id']})
-            self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
+            self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
 
-    def _handleOnPushButtonDeleteClickedResult(self, result):
+    def _handleOnPushButtonDeleteClickedFinished(self, result):
         QMessageBox.information(self, 'Success', f"{result['message']}")
         self.currentPage = 1
         self._populateTableWidgetData()

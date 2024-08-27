@@ -54,12 +54,12 @@ class EditMember(Ui_DialogEditMember, QDialog):
             'mobileNumber': self.lineEditMobileNumber.text(),
             'points': self.lineEditPoints.text(),
         })
-        self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
+        self.currentThread.finished.connect(self._handleOnPushButtonAddClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handleOnPushButtonAddClickedResult(self, result):
+    def _handleOnPushButtonAddClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return

@@ -72,12 +72,12 @@ class ManageSales(Ui_FormManageSales, QWidget):
             'barcode': f"{self.lineEditBarcode.text()}",
             'orderType': f"{self.comboBoxBarcodeFilter.currentText().upper() if orderType == 'MIXED' else orderType.upper()}",
         })
-        self.currentThread.finished.connect(self._handleOnLineEditBarcodeReturnPressedResult)
+        self.currentThread.finished.connect(self._handleOnLineEditBarcodeReturnPressedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
-    def _handleOnLineEditBarcodeReturnPressedResult(self, result):
+    def _handleOnLineEditBarcodeReturnPressedFinished(self, result):
         if len(result['listData']) <= 0:
             QMessageBox.information(self, 'Success', 'Item not found')
         
@@ -137,12 +137,12 @@ class ManageSales(Ui_FormManageSales, QWidget):
             'keyword': f"{self.lineEditFilter.text()}",
             'orderType': f"{self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderType'].upper() if len(self.activeOrder) > 0 else ''}",
         })
-        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataResult)
+        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
-    def _handlePopulateTableWidgetDataResult(self, result):
+    def _handlePopulateTableWidgetDataFinished(self, result):
         oneData = result['dictData']
         manyData = result['listData']
 
@@ -339,12 +339,12 @@ class PreOrder(Ui_FormPreOrder, QWidget):
 
     def _populateComboBoxMemberName(self):
         self.manageSales.currentThread = FetchThread('fetch_all_member_data')
-        self.manageSales.currentThread.finished.connect(self._handlePopulateComboBoxMemberNameResult)
+        self.manageSales.currentThread.finished.connect(self._handlePopulateComboBoxMemberNameFinished)
         self.manageSales.currentThread.finished.connect(self.manageSales._cleanupThread)
         self.manageSales.currentThread.start()
         self.manageSales.activeThreads.append(self.manageSales.currentThread)
         
-    def _handlePopulateComboBoxMemberNameResult(self, result):
+    def _handlePopulateComboBoxMemberNameFinished(self, result):
         self.comboBoxMemberName.clear()
         
         listData = result['listData']
@@ -354,12 +354,12 @@ class PreOrder(Ui_FormPreOrder, QWidget):
 
     def _onComboBoxMemberNameCurrentTextChanged(self):
         self.manageSales.currentThread = FetchThread('fetch_member_data_by_member_name', {'memberName': f"{self.comboBoxMemberName.currentText()}"})
-        self.manageSales.currentThread.finished.connect(self._handleOnComboBoxMemberNameCurrentTextChangedResult)
+        self.manageSales.currentThread.finished.connect(self._handleOnComboBoxMemberNameCurrentTextChangedFinished)
         self.manageSales.currentThread.finished.connect(self.manageSales._cleanupThread)
         self.manageSales.currentThread.start()
         self.manageSales.activeThreads.append(self.manageSales.currentThread)
      
-    def _handleOnComboBoxMemberNameCurrentTextChangedResult(self, result):
+    def _handleOnComboBoxMemberNameCurrentTextChangedFinished(self, result):
         orderIndex = self.manageSales.tabWidgetOrder.currentIndex()
         dictData = result['dictData']
         points = dictData['points'] if 'points' in dictData else 0
@@ -520,12 +520,12 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     'change': paymentChange,
                 }
             })
-            self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedResult)
+            self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
         pass
-    def _handleOnPushButtonPayCashPointsHybridClickedResult(self, result):
+    def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
         self.close()
         self.postOrder = PostOrder(self.manageSales, self.authData, result['dictData'])
         self.postOrder.exec()

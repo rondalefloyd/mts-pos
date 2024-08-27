@@ -17,11 +17,11 @@ class Tester(Ui_Dialog, QDialog):
         
     def _onPushButtonTestClicked(self):
         self.authenticate = AuthenticateThread('authenticate_user_by_user_name_access_code')
-        self.authenticate.finished.connect(self._handleOnPushButtonTestClickedResult)
+        self.authenticate.finished.connect(self._handleOnPushButtonTestClickedFinished)
         self.authenticate.start()
         pass
     
-    def _handleOnPushButtonTestClickedResult(self, result):
+    def _handleOnPushButtonTestClickedFinished(self, result):
         print('--result:', result)
     
     def closeEvent(self):

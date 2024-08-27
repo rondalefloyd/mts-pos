@@ -236,9 +236,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonImport">
+        <widget class="QPushButton" name="pushButtonLoad">
          <property name="text">
-          <string>Import</string>
+          <string>Load</string>
          </property>
         </widget>
        </item>

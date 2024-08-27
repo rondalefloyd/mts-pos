@@ -1,4 +1,4 @@
-import os, sys, logging
+import os, sys, logging, csv
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
@@ -6,11 +6,13 @@ sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
 from app.views.templates.ManageItem_ui import Ui_FormManageItem
 from app.views.components.Loading import Loading
+from app.views.components.LoadData import LoadData
 from app.views.components.EditItem import EditItem
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
+from app.controllers.dedicated.load import LoadThread
 from app.controllers.dedicated.remove import RemoveThread
 
 class ManageItem(Ui_FormManageItem, QWidget):
@@ -40,6 +42,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.pushButtonNext.clicked.connect(self._onPushButtonNextClicked)
         self.pushButtonClear.clicked.connect(self._onPushButtonClearClicked)
         self.pushButtonAdd.clicked.connect(self._onPushButtonAddClicked)
+        self.pushButtonLoad.clicked.connect(self._onPushButtonLoadClicked)
 
     def refresh(self):
         self.currentPage = 1
@@ -48,12 +51,39 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self._populateTableWidgetData()
         self._populateComboBoxItemTypeBrandSupplier()
 
+    def _onPushButtonLoadClicked(self):
+        # Open a file dialog to select a CSV file
+        filePath, _ = QFileDialog.getOpenFileName(self, "Open CSV", "", "CSV Files (*.csv);;All Files (*)")
+
+        if not filePath:
+            return  # No file selected, exit the function
+
+        self.loadData = LoadData()
+        self.currentThread = LoadThread('load_item', {'filePath': filePath})
+        self.currentThread.inProgress.connect(self._handleOnPushButtonLoadClickedInProgress)
+        self.currentThread.finished.connect(self._handleOnPushButtonLoadClickedFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        self.loadData.exec()
+        
+    def _handleOnPushButtonLoadClickedInProgress(self, result):
+        print('this is the progress:', result)
+        self.loadData.progressBarLoad.setValue(result['currentDataCount'])
+        self.loadData.progressBarLoad.setMaximum(result['totalDataCount'])
+        self.loadData.labelDataRepresentation.setText(f"{result['dataRepresentation']}")
+        self.loadData.labelLoadPercentage.setText(f"{result['currentDataCount']}")
+        
+    def _handleOnPushButtonLoadClickedFinished(self, result):
+        self.loadData.close()
+        print('here')
+
     def _populateComboBoxItemTypeBrandSupplier(self):
         self.fetchThread = FetchThread('fetch_all_item_related_data')
-        self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierResult)
+        self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierFinished)
         self.fetchThread.start()
         
-    def _handlePopulateComboBoxItemTypeBrandSupplierResult(self, result):
+    def _handlePopulateComboBoxItemTypeBrandSupplierFinished(self, result):
         self.comboBoxItemTypeName.clear()
         self.comboBoxBrandName.clear()
         self.comboBoxSupplierName.clear()
@@ -108,12 +138,12 @@ class ManageItem(Ui_FormManageItem, QWidget):
             'effectiveDate': self.dateEditEffectiveDate.text(),
             'trackInventory': self.checkBoxTrackInventory.isChecked()
         })
-        self.currentThread.finished.connect(self._handleOnPushButtonAddClickedResult)
+        self.currentThread.finished.connect(self._handleOnPushButtonAddClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handleOnPushButtonAddClickedResult(self, result):
+    def _handleOnPushButtonAddClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
@@ -127,12 +157,12 @@ class ManageItem(Ui_FormManageItem, QWidget):
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })
-        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataResult)
+        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
-    def _handlePopulateTableWidgetDataResult(self, result):
+    def _handlePopulateTableWidgetDataFinished(self, result):
         oneData = result['dictData']
         manyData = result['listData']
         
@@ -185,12 +215,12 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.currentThread = RemoveThread('remove_item_price_by_id', {'itemPriceId': data['itemPriceId']})
-            self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedResult)
+            self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
 
-    def _handleOnPushButtonDeleteClickedResult(self, result):
+    def _handleOnPushButtonDeleteClickedFinished(self, result):
         QMessageBox.information(self, 'Success', f"{result['message']}")
         self.currentPage = 1
         self._populateTableWidgetData()

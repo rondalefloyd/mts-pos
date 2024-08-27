@@ -73,6 +73,7 @@ class RegisterThread(QThread):
 
 # add function here
 def register_item(entry=None, result=None):
+    print('this is the register item')
     """This function is a special case. The coding structure might be different from the standard."""
     try:
         itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
@@ -130,7 +131,7 @@ def register_item(entry=None, result=None):
                 EffectiveDate=entry['effectiveDate'],
             )
         
-            if entry['trackInventory'] is 'True':
+            if entry['trackInventory'] is True:
                 stock = Stock.create(ItemId=item.Id)
         
         result['success'] = True

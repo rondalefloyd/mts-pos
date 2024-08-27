@@ -62,6 +62,7 @@ if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
     
+# TODO: add populate combobox in the components that doesnt have it
 # TODO: check the variable names
 # TODO: set clear button enabled for all line edit
 # TODO: fix the sizes of the QTableWidgetItems in all table widgets

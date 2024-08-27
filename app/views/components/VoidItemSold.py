@@ -29,12 +29,12 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
 
     def _populateComboBoxReasonName(self):
         self.currentThread = FetchThread('fetch_all_reason_data')
-        self.currentThread.finished.connect(self._handlePopulateComboBoxReasonNameResult)
+        self.currentThread.finished.connect(self._handlePopulateComboBoxReasonNameFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handlePopulateComboBoxReasonNameResult(self, result):
+    def _handlePopulateComboBoxReasonNameFinished(self, result):
         self.comboBoxReasonName.clear()
         
         listData = result['listData']
@@ -54,12 +54,12 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
                 'itemId': self.selectedData['itemId'],
                 'reasonName': f"{self.comboBoxReasonName.currentText()}",
             })
-            self.currentThread.finished.connect(self._handleOnPushButtonVoidClickedResult)
+            self.currentThread.finished.connect(self._handleOnPushButtonVoidClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
         
-    def _handleOnPushButtonVoidClickedResult(self, result):
+    def _handleOnPushButtonVoidClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return

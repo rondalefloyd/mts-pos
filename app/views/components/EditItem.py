@@ -55,7 +55,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
 
     # private methods
-    def _handleOnCheckBoxTrackInventoryStateChangedResult(self, result):
+    def _handleOnCheckBoxTrackInventoryStateChangedFinished(self, result):
         QMessageBox.information(self, 'Success', f"{result['message']}")
         
     def _onCheckBoxApplyPromoStateChanged(self):
@@ -76,10 +76,10 @@ class EditItem(Ui_DialogEditItem, QDialog):
     
     def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
         self.fetchThread = FetchThread('fetch_all_item_related_data')
-        self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupResult)
+        self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupFinished)
         self.fetchThread.start()
         
-    def _handlePopulateComboBoxItemTypeBrandSupplierSalesGroupResult(self, result):
+    def _handlePopulateComboBoxItemTypeBrandSupplierSalesGroupFinished(self, result):
         self.comboBoxItemTypeName.clear()
         self.comboBoxBrandName.clear()
         self.comboBoxSupplierName.clear()
@@ -103,12 +103,12 @@ class EditItem(Ui_DialogEditItem, QDialog):
     
     def _populateComboBoxPromoName(self):
         self.currentThread = FetchThread('fetch_all_promo_data')
-        self.currentThread.finished.connect(self._handlePopulateComboBoxPromoNameResult)
+        self.currentThread.finished.connect(self._handlePopulateComboBoxPromoNameFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handlePopulateComboBoxPromoNameResult(self, result):
+    def _handlePopulateComboBoxPromoNameFinished(self, result):
         self.comboBoxPromoName.clear()
         
         listData = result['listData']
@@ -120,12 +120,12 @@ class EditItem(Ui_DialogEditItem, QDialog):
             
     def _populateLineEditDiscountRate(self):
         self.currentThread = FetchThread('fetch_promo_data_by_promo_name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
-        self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateResult)
+        self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handlePopulateLineEditDiscountRateResult(self, result):
+    def _handlePopulateLineEditDiscountRateFinished(self, result):
         dictData = result['dictData']
         discountRate = dictData['discountRate'] if 'discountRate' in dictData else 0
         
@@ -178,12 +178,12 @@ class EditItem(Ui_DialogEditItem, QDialog):
             'applyPromo': self.checkBoxApplyPromo.isChecked(),
             'trackInventory': self.checkBoxTrackInventory.isChecked(),
         })
-        self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedResult)
+        self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handleOnPushButtonSaveClickedResult(self, result):
+    def _handleOnPushButtonSaveClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return

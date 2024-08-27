@@ -45,12 +45,12 @@ class Setup(Ui_DialogSetup, QDialog):
             'mobileNumber': self.lineEditMobileNumber.text(),
             'accessCode': self.lineEditAccessCode.text(),
         })
-        self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedResult)
+        self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handleOnPushButtonCreateClickedResult(self, result):
+    def _handleOnPushButtonCreateClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return

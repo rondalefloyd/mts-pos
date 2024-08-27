@@ -41,12 +41,12 @@ class EditPromo(Ui_DialogEditPromo, QDialog):
             'discountRate': self.lineEditDiscountRate.text(),
             'description': self.lineEditDescription.text().upper(),
         })
-        self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedResult)
+        self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handleOnPushButtonSaveClickedResult(self, result):
+    def _handleOnPushButtonSaveClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return

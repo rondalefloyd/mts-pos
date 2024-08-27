@@ -46,12 +46,12 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_item_sold_data', {'receiptId': self.selectedData['id']})
-        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataResult)
+        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handlePopulateTableWidgetDataResult(self, result):
+    def _handlePopulateTableWidgetDataFinished(self, result):
         oneData = result['dictData']
         manyData = result['listData']
         

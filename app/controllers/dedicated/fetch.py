@@ -451,7 +451,7 @@ def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=
         paginatedItemPrices = itemPrices.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for itemPrice in paginatedItemPrices:
             item = itemPrice.ItemId
             brand = item.BrandId
@@ -511,7 +511,7 @@ def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
         paginatedStocks = stocks.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for stocks in paginatedStocks:
             result['listData'].append({
                 'id': stocks.Id,
@@ -565,8 +565,10 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
         totalCount = itemPrices.count()
         paginatedItemPrices = itemPrices.limit(limit).offset(offset)
         
+        print('--totalCount:', totalCount)
+        print('--math.ceil(totalCount / limit) if 0 else 1:', math.ceil(totalCount / limit) if 0 else 1)
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for itemPrice in paginatedItemPrices:
             item = itemPrice.ItemId
             itemType = item.ItemTypeId
@@ -629,7 +631,7 @@ def fetch_all_member_data_by_keyword_in_pagination(entry=None, result=None):
         paginatedMembers = members.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for member in paginatedMembers:
             result['listData'].append({
                 'id': member.Id,
@@ -666,7 +668,7 @@ def fetch_all_promo_data_by_keyword_in_pagination(entry=None, result=None):
         paginatedPromos = promos.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for promo in paginatedPromos:
             result['listData'].append({
                 'id': promo.Id,
@@ -701,7 +703,7 @@ def fetch_all_reward_data_by_keyword_in_pagination(entry=None, result=None):
         paginatedRewards = rewards.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for reward in paginatedRewards:
             result['listData'].append({
                 'id': reward.Id,
@@ -741,7 +743,7 @@ def fetch_all_user_data_by_keyword_in_pagination(entry=None, result=None):
         paginatedUsers = users.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for user in paginatedUsers:
             result['listData'].append({
                 'id': user.Id,
@@ -791,7 +793,7 @@ def fetch_all_receipt_data_by_keyword_in_pagination(entry=None, result=None):
         paginatedReceipts = receipts.limit(limit).offset(offset)
         
         result['success'] = True
-        result['dictData'] = {'totalPages': math.ceil(totalCount / limit) if 0 else 1}
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for receipt in paginatedReceipts:
             organization = receipt.OrganizationId
             user = receipt.UserId

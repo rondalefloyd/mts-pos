@@ -57,12 +57,12 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text()}",
         })
-        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataResult)
+        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
-    def _handlePopulateTableWidgetDataResult(self, result):
+    def _handlePopulateTableWidgetDataFinished(self, result):
         oneData = result['dictData']
         manyData = result['listData']
         

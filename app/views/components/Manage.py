@@ -116,12 +116,12 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.currentThread = AuthenticateThread('unauthenticate_user_by_id', {'id': self.userData['id']})
-            self.currentThread.finished.connect(self._handleOnActionLogoutTriggeredResult)
+            self.currentThread.finished.connect(self._handleOnActionLogoutTriggeredFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
         
-    def _handleOnActionLogoutTriggeredResult(self, result):
+    def _handleOnActionLogoutTriggeredFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
