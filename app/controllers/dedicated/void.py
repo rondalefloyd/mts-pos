@@ -77,6 +77,8 @@ def void_item_sold_data_by_id(entry=None, result=None):
         itemSold.Status = 1
         itemSold.save()
         
+        # TODO: add stock by taking it from qty (depending on the condition if it got bypassed or not)
+        
         result['success'] = True
         result['message'] = 'ItemSold voided'
         return result

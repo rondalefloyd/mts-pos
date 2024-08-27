@@ -89,6 +89,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
                 self.manageSales.refresh()
             case 1:
                 menuManageTitle = 'Transaction'
+                self.manageReceipt.refresh()
             case 2:
                 menuManageTitle = 'Item'
                 self.manageItem.refresh()

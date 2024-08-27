@@ -125,20 +125,12 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonNew">
-       <property name="text">
-        <string>New</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>pushButtonClose</tabstop>
-  <tabstop>pushButtonNew</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -65,14 +65,10 @@ class Ui_DialogPostOrder(object):
         self.pushButtonClose = QtWidgets.QPushButton(DialogPostOrder)
         self.pushButtonClose.setObjectName("pushButtonClose")
         self.horizontalLayout.addWidget(self.pushButtonClose)
-        self.pushButtonNew = QtWidgets.QPushButton(DialogPostOrder)
-        self.pushButtonNew.setObjectName("pushButtonNew")
-        self.horizontalLayout.addWidget(self.pushButtonNew)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
 
         self.retranslateUi(DialogPostOrder)
         QtCore.QMetaObject.connectSlotsByName(DialogPostOrder)
-        DialogPostOrder.setTabOrder(self.pushButtonClose, self.pushButtonNew)
 
     def retranslateUi(self, DialogPostOrder):
         _translate = QtCore.QCoreApplication.translate
@@ -84,4 +80,3 @@ class Ui_DialogPostOrder(object):
         self.labelPayment.setText(_translate("DialogPostOrder", "TextLabel"))
         self.labelChange.setText(_translate("DialogPostOrder", "TextLabel"))
         self.pushButtonClose.setText(_translate("DialogPostOrder", "Close"))
-        self.pushButtonNew.setText(_translate("DialogPostOrder", "New"))

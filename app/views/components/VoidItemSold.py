@@ -51,6 +51,7 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
         if confirm == QMessageBox.StandardButton.Yes:
             self.currentThread = VoidThread('void_item_sold_data_by_id', {
                 'id': self.selectedData['id'],
+                'itemId': self.selectedData['itemId'],
                 'reasonName': f"{self.comboBoxReasonName.currentText()}",
             })
             self.currentThread.finished.connect(self._handleOnPushButtonVoidClickedResult)

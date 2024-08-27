@@ -69,7 +69,6 @@ class PurchaseThread(QThread):
 def purchase_item(entry=None, result=None):
     """This function is a special case. The coding structure might be different from the standard."""
     try:
-        print('---check this entry:', json.dumps(entry, indent=4, default=str))
         currentDate = datetime.now()
         member = entry['member']
         orderItem = entry['order']['item']
@@ -106,6 +105,11 @@ def purchase_item(entry=None, result=None):
             )
 
         result['success'] = True
+        result['dictData'] = {
+            'amount': orderPayment['amount'],
+            'grandTotal': orderSummary['grandTotal'],
+            'change': orderPayment['change'],
+        }
         result['message'] = 'Purchase added'
         return result
 

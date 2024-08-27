@@ -14,9 +14,6 @@ class Brand(BaseModel):
     class Meta:
         table_name = 'Brand'
 
-    def __str__(self):
-        return self.BrandName
-
 class ItemType(BaseModel):
     Id = AutoField()
     ItemTypeName = CharField(max_length=255, null=True)
@@ -24,9 +21,6 @@ class ItemType(BaseModel):
 
     class Meta:
         table_name = 'ItemType'
-
-    def __str__(self):
-        return self.ItemTypeName
 
 class Organization(BaseModel):
     Id = AutoField()
@@ -39,9 +33,6 @@ class Organization(BaseModel):
 
     class Meta:
         table_name = 'Organization'
-
-    def __str__(self):
-        return self.OrganizationName
 
 class Member(BaseModel):
     Id = AutoField()
@@ -56,9 +47,6 @@ class Member(BaseModel):
     class Meta:
         table_name = 'Member'
 
-    def __str__(self):
-        return self.MemberName
-
 class Promo(BaseModel):
     Id = AutoField()
     PromoName = CharField(max_length=255, null=True)
@@ -68,9 +56,6 @@ class Promo(BaseModel):
 
     class Meta:
         table_name = 'Promo'
-
-    def __str__(self):
-        return self.PromoName
 
 class Reward(BaseModel):
     Id = AutoField()
@@ -83,9 +68,6 @@ class Reward(BaseModel):
     class Meta:
         table_name = 'Reward'
 
-    def __str__(self):
-        return self.RewardName
-
 class SalesGroup(BaseModel):
     Id = AutoField()
     SalesGroupName = CharField(max_length=255, null=True)
@@ -94,9 +76,6 @@ class SalesGroup(BaseModel):
     class Meta:
         table_name = 'SalesGroup'
 
-    def __str__(self):
-        return self.SalesGroupName
-
 class Supplier(BaseModel):
     Id = AutoField()
     SupplierName = CharField(max_length=255, null=True)
@@ -104,9 +83,6 @@ class Supplier(BaseModel):
 
     class Meta:
         table_name = 'Supplier'
-
-    def __str__(self):
-        return self.SupplierName
 
 class Item(BaseModel):
     Id = AutoField()
@@ -122,9 +98,6 @@ class Item(BaseModel):
     class Meta:
         table_name = 'Item'
 
-    def __str__(self):
-        return self.ItemName
-
 class ItemPrice(BaseModel):
     Id = AutoField()
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
@@ -138,9 +111,6 @@ class ItemPrice(BaseModel):
     class Meta:
         table_name = 'ItemPrice'
 
-    def __str__(self):
-        return f"ItemPrice {self.Id}"
-
 class Stock(BaseModel):
     Id = AutoField()
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
@@ -150,9 +120,6 @@ class Stock(BaseModel):
 
     class Meta:
         table_name = 'Stock'
-
-    def __str__(self):
-        return f"Stock {self.Id}"
 
 class User(BaseModel):
     Id = AutoField()
@@ -168,9 +135,6 @@ class User(BaseModel):
     class Meta:
         table_name = 'User'
 
-    def __str__(self):
-        return self.UserName
-
 class UserSession(BaseModel):
     Id = AutoField()
     UserId = ForeignKeyField(User, on_delete='CASCADE', column_name='UserId', null=True)
@@ -180,9 +144,6 @@ class UserSession(BaseModel):
 
     class Meta:
         table_name = 'UserSession'
-
-    def __str__(self):
-        return f"UserSessionInfo {self.Id}"
 
 class Date(BaseModel):
     Id = AutoField()
@@ -199,9 +160,6 @@ class Date(BaseModel):
     class Meta:
         table_name = 'Date'
 
-    def __str__(self):
-        return str(self.DateValue)
-
 class Reason(BaseModel):
     Id = AutoField()
     ReasonName = CharField(max_length=255, null=True)
@@ -210,9 +168,6 @@ class Reason(BaseModel):
     class Meta:
         table_name = 'Reason'
 
-    def __str__(self):
-        return self.ReasonName
-
 class OrderType(BaseModel):
     Id = AutoField()
     OrderTypeName = CharField(max_length=255, null=True)
@@ -220,9 +175,6 @@ class OrderType(BaseModel):
 
     class Meta:
         table_name = 'OrderType'
-
-    def __str__(self):
-        return self.OrderTypeName
 
 class Receipt(BaseModel):
     Id = AutoField()
@@ -240,9 +192,6 @@ class Receipt(BaseModel):
     class Meta:
         table_name = 'Receipt'
 
-    def __str__(self):
-        return f"Receipt {self.Id}"
-
 class ItemSold(BaseModel):
     Id = AutoField()
     ReceiptId = ForeignKeyField(Receipt, on_delete='CASCADE', column_name='ReceiptId', null=True)
@@ -256,9 +205,6 @@ class ItemSold(BaseModel):
     class Meta:
         table_name = 'ItemSold'
 
-    def __str__(self):
-        return f"ItemSold {self.Id}"
-
 class POSConfig(BaseModel):
     Id = AutoField()
     OrganizationId = ForeignKeyField(Organization, on_delete='CASCADE', column_name='OrganizationId', null=True)
@@ -267,9 +213,6 @@ class POSConfig(BaseModel):
 
     class Meta:
         table_name = 'POSConfig'
-
-    def __str__(self):
-        return f"POSConfig {self.Id}"
 
 # Ensure to create the tables in the database
 def create_tables():

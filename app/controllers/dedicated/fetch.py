@@ -159,7 +159,6 @@ def fetch_member_data_by_member_name(entry=None, result=None):
         member = member.first()
         organization = member.OrganizationId
         
-        print('here member:', member)
         result['success'] = True
         result['dictData'] = {
             'id': member.Id,
@@ -228,7 +227,6 @@ def fetch_all_reason_data(entry=None, result=None):
     
 def fetch_all_item_sold_data(entry=None, result=None):
     try:
-        print('this is the one you will checkl:', entry)
         itemSolds = ItemSold.select().where(ItemSold.ReceiptId == entry['receiptId']).order_by(ItemSold.UpdateTs.desc())
         
         if not itemSolds.exists():
@@ -333,7 +331,6 @@ def fetch_all_item_price_related_data_by_barcode_order_type(entry=None, result=N
     try:
         barcode = entry['barcode']
         orderType = entry['orderType']
-        print('check this part orderType:', orderType)
         
         if orderType == 'MIXED':
             itemPrices = (ItemPrice.select(
@@ -395,7 +392,6 @@ def fetch_all_item_price_related_data_by_barcode_order_type(entry=None, result=N
                     'updateTs': itemPrice.UpdateTs,
                 })
             
-        print('please check this out:', result)
         return result
     
     except Exception as exception:
@@ -816,9 +812,6 @@ def fetch_all_receipt_data_by_keyword_in_pagination(entry=None, result=None):
                 'orderPayment': receipt.OrderPayment,
                 'updateTs': receipt.UpdateTs,
             })
-        print('you went hereAA')
-        
-        print('check this one out', result)
         
         return result
         
