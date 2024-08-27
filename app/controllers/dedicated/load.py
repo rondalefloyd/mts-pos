@@ -32,6 +32,7 @@ class LoadThread(QThread):
         super().__init__()
         self.function_route = function_route
         self.entry = entry
+        self.isActive = True
     
     def run(self):
         result = {
@@ -63,6 +64,9 @@ class LoadThread(QThread):
         self.finished.emit(result)
         # print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
+    def stop(self):
+        self.isActive = False  # Set the flag to stop the thread
+        
     # add function here
     def load_item(self, entry=None, result=None):
         # Load the CSV file using pandas
@@ -89,6 +93,12 @@ class LoadThread(QThread):
         try:
             # Process each row in the DataFrame
             for _, row in df.iterrows():
+                if not self.isActive:
+                    # TODO: write a better message
+                    result['success'] = True
+                    result['message'] = 'Loading canceled. Incomplete data'
+                    return result
+                
                 itemName = row['ItemName'] if not pd.isna(row['ItemName']) else None
                 barcode = row['Barcode'] if not pd.isna(row['Barcode']) else None
                 expireDate = row['ExpireDate'] if not pd.isna(row['ExpireDate']) else None
@@ -99,7 +109,9 @@ class LoadThread(QThread):
                 retailPrice = row['RetailPrice'] if not pd.isna(row['RetailPrice']) else None
                 wholesalePrice = row['WholesalePrice'] if not pd.isna(row['WholesalePrice']) else None
                 effectiveDate = row['EffectiveDate'] if not pd.isna(row['EffectiveDate']) else None
-                                
+
+                print('IMPORTING:', itemName, barcode, expireDate, itemTypeName, brandName, supplierName, capital, retailPrice, wholesalePrice, effectiveDate)
+
                 # TODO: write this in a better way by isolating it or something
                 itemType = ItemType.select().where(ItemType.ItemTypeName == itemTypeName)
                 brand = Brand.select().where(Brand.BrandName == brandName)

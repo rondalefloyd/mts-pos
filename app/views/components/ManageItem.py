@@ -52,13 +52,14 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self._populateComboBoxItemTypeBrandSupplier()
 
     def _onPushButtonLoadClicked(self):
-        # Open a file dialog to select a CSV file
-        filePath, _ = QFileDialog.getOpenFileName(self, "Open CSV", "", "CSV Files (*.csv);;All Files (*)")
+        filePath, _ = QFileDialog.getOpenFileName(self, 'Open CSV', '', 'CSV Files (*.csv);;All Files (*)')
 
         if not filePath:
             return  # No file selected, exit the function
 
-        self.loadData = LoadData()
+        # TODO: decide where to put load data (should be at the init or here)
+        self.loadData = LoadData(self.authData)
+        self.loadData.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.currentThread = LoadThread('load_item', {'filePath': filePath})
         self.currentThread.inProgress.connect(self._handleOnPushButtonLoadClickedInProgress)
         self.currentThread.finished.connect(self._handleOnPushButtonLoadClickedFinished)
@@ -67,16 +68,26 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.activeThreads.append(self.currentThread)
         self.loadData.exec()
         
+    def _onPushButtonCancelClicked(self):
+        # TODO: make sure the self.currentThread is the one being used here when executing LoadThread
+        self.currentThread.stop()  # Signal the thread to stop
+        self.loadData.close()  # Close the loading dialog
+        
     def _handleOnPushButtonLoadClickedInProgress(self, result):
-        print('this is the progress:', result)
         self.loadData.progressBarLoad.setValue(result['currentDataCount'])
         self.loadData.progressBarLoad.setMaximum(result['totalDataCount'])
         self.loadData.labelDataRepresentation.setText(f"{result['dataRepresentation']}")
         self.loadData.labelLoadPercentage.setText(f"{result['currentDataCount']}")
         
     def _handleOnPushButtonLoadClickedFinished(self, result):
+        if result['success'] is False:
+            QMessageBox.critical(self, 'Error', f"{result['message']}")
+            self.loadData.close()
+            return
+            
+        QMessageBox.information(self, 'Success', f"{result['message']}")
+        self._populateTableWidgetData()
         self.loadData.close()
-        print('here')
 
     def _populateComboBoxItemTypeBrandSupplier(self):
         self.fetchThread = FetchThread('fetch_all_item_related_data')
