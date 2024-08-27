@@ -118,6 +118,12 @@
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
+     <attribute name="verticalHeaderDefaultSectionSize">
+      <number>100</number>
+     </attribute>
+     <attribute name="verticalHeaderMinimumSectionSize">
+      <number>60</number>
+     </attribute>
      <column>
       <property name="text">
        <string>Action</string>

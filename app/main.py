@@ -62,8 +62,6 @@ if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
     
-# TODO: add the last widget which is post order
-# TODO: remove all print debuggers
 # TODO: check the variable names
 # TODO: set clear button enabled for all line edit
 # TODO: fix the sizes of the QTableWidgetItems in all table widgets

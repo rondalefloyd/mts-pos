@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_DialogInOrder(object):
     def setupUi(self, DialogInOrder):
         DialogInOrder.setObjectName("DialogInOrder")
-        DialogInOrder.resize(922, 567)
+        DialogInOrder.resize(922, 610)
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(DialogInOrder)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
@@ -48,6 +48,8 @@ class Ui_DialogInOrder(object):
         self.tableWidgetData.setHorizontalHeaderItem(4, item)
         self.tableWidgetData.horizontalHeader().setStretchLastSection(True)
         self.tableWidgetData.verticalHeader().setVisible(False)
+        self.tableWidgetData.verticalHeader().setDefaultSectionSize(50)
+        self.tableWidgetData.verticalHeader().setMinimumSectionSize(30)
         self.verticalLayout.addWidget(self.tableWidgetData)
         self.formLayout = QtWidgets.QFormLayout()
         self.formLayout.setObjectName("formLayout")

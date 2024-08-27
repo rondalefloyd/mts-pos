@@ -56,6 +56,12 @@
        <attribute name="verticalHeaderVisible">
         <bool>false</bool>
        </attribute>
+       <attribute name="verticalHeaderDefaultSectionSize">
+        <number>50</number>
+       </attribute>
+       <attribute name="verticalHeaderMinimumSectionSize">
+        <number>30</number>
+       </attribute>
        <row>
         <property name="text">
          <string>New Row</string>

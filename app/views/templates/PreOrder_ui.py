@@ -72,6 +72,8 @@ class Ui_FormPreOrder(object):
         self.tableWidgetData.setHorizontalHeaderItem(3, item)
         self.tableWidgetData.horizontalHeader().setStretchLastSection(True)
         self.tableWidgetData.verticalHeader().setVisible(False)
+        self.tableWidgetData.verticalHeader().setDefaultSectionSize(100)
+        self.tableWidgetData.verticalHeader().setMinimumSectionSize(60)
         self.verticalLayout_2.addWidget(self.tableWidgetData)
         self.formLayout = QtWidgets.QFormLayout()
         self.formLayout.setObjectName("formLayout")
