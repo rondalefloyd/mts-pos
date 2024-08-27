@@ -35,7 +35,6 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self.refresh()
         
-        
         self.lineEditBarcode.returnPressed.connect(self._onLineEditBarcodeReturnPressed)
         self.pushButtonAdd.clicked.connect(self._onLineEditBarcodeReturnPressed)
         self.tabWidgetOrder.tabCloseRequested.connect(self.onTabWidgetOrderTabCloseRequested)

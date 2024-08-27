@@ -6,9 +6,11 @@ sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
 from app.views.templates.ViewReceipt_ui import Ui_DialogViewReceipt
 from app.views.components.ManageActionButton import ManageActionButton
+from app.views.components.VoidItemSold import VoidItemSold
 from app.views.components.Loading import Loading
 from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
+from app.controllers.dedicated.void import VoidThread
 
 class ViewReceipt(Ui_DialogViewReceipt, QDialog):
     def __init__(self, authData, selectedData):
@@ -22,9 +24,15 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
+        self._populateTableWidgetData()
+        self._populateOrderSummary()
 
-        orderSummary = selectedData['orderSummary']
-        orderPayment = selectedData['orderPayment']
+        self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
+
+    def _populateOrderSummary(self):
+        orderSummary = self.selectedData['orderSummary']
+        orderPayment = self.selectedData['orderPayment']
+        
         self.labelSubtotal.setText(f"{orderSummary['subtotal']}")
         self.labelDiscount.setText(f"{orderSummary['discount']}")
         self.labelTax.setText(f"{orderSummary['tax']}")
@@ -33,22 +41,17 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.labelPaymentType.setText(f"{orderPayment['type']}")
         self.labelPayment.setText(f"{orderPayment['amount']}")
 
-
-        self._populateTableWidgetData()
-
-        self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
-
     def _onPushButtonCloseClicked(self):
         self.close()
         
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_item_sold_data', {'receiptId': self.selectedData['id']})
-        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataAResult)
+        self.currentThread.finished.connect(self._handlePopulateTableWidgetDataResult)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
-    def _handlePopulateTableWidgetDataAResult(self, result):
+    def _handlePopulateTableWidgetDataResult(self, result):
         oneData = result['dictData']
         manyData = result['listData']
         
@@ -73,14 +76,15 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
             for j, tableitem in enumerate(tableItems):
                 self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
         
+                if data['status'] is not None:
+                    manageActionButton.pushButtonVoid.setVisible(data['status'] != 1)
+        
             manageActionButton.pushButtonVoid.clicked.connect(lambda _, data=data: self._onPushButtonVoidClicked(data))
         
     def _onPushButtonVoidClicked(self, data):
-        confirm = QMessageBox.warning(self, 'Confirm', f"Void {data['itemName']} in this order?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        
-        if confirm == QMessageBox.StandardButton.Yes:
-            # TODO: finish this
-            pass
+        self.voidItemSold = VoidItemSold(self.authData, data)
+        self.voidItemSold.exec()
+        self._populateTableWidgetData()
         
     def _cleanupThread(self):
         sender = self.sender()

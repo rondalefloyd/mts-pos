@@ -61,24 +61,22 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pushButtonPayHybrid.clicked.connect(lambda: self._processOrder('HYBRID'))
 
     def _processOrder(self, paymentType):
-        payment = 0.0
-        change = 0.0
+        paymentAmount = 0.0
+        paymentChange = 0.0
         
         if paymentType == 'CASH':
-            payment = self.cashPayment
-            change = float(self.labelCashShortageExcess.text())
+            paymentAmount = self.cashPayment
+            paymentChange = float(self.labelCashShortageExcess.text())
         if paymentType == 'POINTS':
-            payment = self.pointsPayment
-            change = float(self.labelPointsShortageExcess.text())
+            paymentAmount = self.pointsPayment
+            paymentChange = float(self.labelPointsShortageExcess.text())
         if paymentType == 'HYBRID':
-            payment = self.hybridPayment
-            change = float(self.labelHybridShortageExcess.text())
+            paymentAmount = self.hybridPayment
+            paymentChange = float(self.labelHybridShortageExcess.text())
             
-        confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{paymentAmount}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            # TODO: add thread here where it registers all of the items in the cart
-            # TODO: THIS IS THE PRIORITY. FINISH THIS FIRST
             self.currentThread = PurchaseThread('purchase_item', {
                 'organization': self.organizationData,
                 'user': self.userData,
@@ -98,8 +96,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
                 },
                 'payment': {
                     'type': paymentType,
-                    'amount': payment,
-                    'change': change,
+                    'amount': paymentAmount,
+                    'change': paymentChange,
                 }
             })
             self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedResult)

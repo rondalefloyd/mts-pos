@@ -22,6 +22,7 @@ from app.models.entities import (
     Date,
     OrderType,
     ItemSold,
+    Reason,
 )
 from app.utils.databases import postgres_db
 
@@ -54,6 +55,8 @@ class FetchThread(QThread):
                     result = fetch_promo_data_by_promo_name(self.entry, result)
                 elif self.function_route == 'fetch_all_promo_data':
                     result = fetch_all_promo_data(self.entry, result)
+                elif self.function_route == 'fetch_all_reason_data':
+                    result = fetch_all_reason_data(self.entry, result)
                 elif self.function_route == 'fetch_all_item_sold_data':
                     result = fetch_all_item_sold_data(self.entry, result)
                 elif self.function_route == 'fetch_all_item_related_data':
@@ -199,6 +202,29 @@ def fetch_all_promo_data(entry=None, result=None):
         result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
+    
+def fetch_all_reason_data(entry=None, result=None):
+    try:
+        reasons = Reason.select().order_by(Reason.UpdateTs.desc())
+        
+        if not reasons.exists():
+            result['message'] = 'Reason does not exists'
+            return result
+        
+        result['success'] = True
+        for reason in reasons:
+            result['listData'].append({
+                'id': reason.Id,
+                'reasonName': reason.ReasonName,
+                'updateTs': reason.UpdateTs,
+            })
+        return result
+
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+ 
     
 def fetch_all_item_sold_data(entry=None, result=None):
     try:
