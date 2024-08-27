@@ -62,6 +62,7 @@ if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
     
+# TODO: add loading everytime a query is being executed
 # TODO: add populate combobox in the components that doesnt have it
 # TODO: check the variable names
 # TODO: set clear button enabled for all line edit

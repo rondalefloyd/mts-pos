@@ -565,8 +565,6 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
         totalCount = itemPrices.count()
         paginatedItemPrices = itemPrices.limit(limit).offset(offset)
         
-        print('--totalCount:', totalCount)
-        print('--math.ceil(totalCount / limit) if 0 else 1:', math.ceil(totalCount / limit) if 0 else 1)
         result['success'] = True
         result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
         for itemPrice in paginatedItemPrices:
@@ -805,7 +803,7 @@ def fetch_all_receipt_data_by_keyword_in_pagination(entry=None, result=None):
                 'id': receipt.Id,
                 'organizationName': organization.OrganizationName,
                 'userName': user.UserName,
-                'memberName': member.MemberName,
+                'memberName': member.MemberName if member else None, # TODO: check the other queries/controllers if some of it have the same case
                 'dateValue': date.DateValue,
                 'orderTypeName': orderType.OrderTypeName,
                 'referenceId': receipt.ReferenceId,
