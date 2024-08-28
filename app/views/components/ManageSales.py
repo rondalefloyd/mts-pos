@@ -87,6 +87,12 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
     def _onTabWidgetOrderCurrentChanged(self):
         orderIndex = self.tabWidgetOrder.currentIndex()
+        # TODO: investigate this part where it keeps populating even though the tab is already empty
+        if orderIndex == -1:  # No tab selected
+            self.tableWidgetData.clearContents()
+            self.tableWidgetData.setRowCount(0)
+            return
+        
         orderType = self.activeOrder[orderIndex]['orderType']
         
         self.comboBoxBarcodeFilter.setVisible(orderType == 'MIXED')
@@ -144,15 +150,15 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.activeThreads.append(self.currentThread)
 
     def _handlePopulateTableWidgetDataFinished(self, result):
-        oneData = result['dictData']
-        manyData = result['listData']
+        dictData = result['dictData']
+        listData = result['listData']
 
         self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(manyData))
+        self.tableWidgetData.setRowCount(len(listData))
         
-        self.totalPages = oneData['totalPages'] if 'totalPages' in oneData else 1
+        self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
         
-        for i, data in enumerate(manyData):
+        for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(add=True)
             tableItems = [
                 QTableWidgetItem(f"{data['itemName']}"),

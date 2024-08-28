@@ -99,11 +99,11 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.comboBoxBrandName.clear()
         self.comboBoxSupplierName.clear()
         
-        manyData = result['dictData']
+        listData = result['dictData']
         
-        itemTypes = manyData['itemTypes'] if 'itemTypes' in manyData else []
-        brands = manyData['brands'] if 'brands' in manyData else []
-        suppliers = manyData['suppliers'] if 'suppliers' in manyData else []
+        itemTypes = listData['itemTypes'] if 'itemTypes' in listData else []
+        brands = listData['brands'] if 'brands' in listData else []
+        suppliers = listData['suppliers'] if 'suppliers' in listData else []
 
         for itemType in itemTypes:
             self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
@@ -174,15 +174,15 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.activeThreads.append(self.currentThread)
 
     def _handlePopulateTableWidgetDataFinished(self, result):
-        oneData = result['dictData']
-        manyData = result['listData']
+        dictData = result['dictData']
+        listData = result['listData']
         
         self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(manyData))
+        self.tableWidgetData.setRowCount(len(listData))
         
-        self.totalPages = oneData['totalPages'] if 'totalPages' in oneData else 1
+        self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
         
-        for i, data in enumerate(manyData):
+        for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['itemName']}"),
