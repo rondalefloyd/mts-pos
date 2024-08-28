@@ -15,6 +15,7 @@ from app.views.components.Loading import Loading
 from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.purchase import PurchaseThread
+from app.controllers.dedicated.print import PrintThread
    
 class ManageSales(Ui_FormManageSales, QWidget):
     def __init__(self, authData):
@@ -525,9 +526,10 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
         pass
+    
     def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
         self.close()
-        self.postOrder = PostOrder(self.manageSales, self.authData, result['dictData'])
+        self.postOrder = PostOrder(self.manageSales, self.authData, result)
         self.postOrder.exec()
 
     def _populateSelectedMemberFields(self):
@@ -680,11 +682,33 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
-        self.labelPayment.setText(f"{selectedOrder['amount']}")
-        self.labelGrandTotal.setText(f"{selectedOrder['grandTotal']}")
-        self.labelChange.setText(f"{selectedOrder['change']}")
+        self.labelPayment.setText(f"{selectedOrder['payment']['amount']}")
+        self.labelGrandTotal.setText(f"{selectedOrder['summary']['grandTotal']}")
+        self.labelChange.setText(f"{selectedOrder['payment']['change']}")
+        
+        self._printReceipt()
         
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
+
+
+    def _printReceipt(self):
+        self.currentThread = PrintThread('print_receipt', self.selectedOrder)
+        self.currentThread.running.connect(self._handlePrintReceiptRunning)
+        self.currentThread.finished.connect(self._handlePrintReceiptFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+
+    def _handlePrintReceiptRunning(self, status):
+        # TODO: FINISH THIS
+        print(status)
+        print('receipt is printing')
+        
+    def _handlePrintReceiptFinished(self, result):
+        # TODO: FINISH THIS
+        print(result)
+        print('receipt is done printing')
+        
 
     def _onPushButtonCloseClicked(self):
         self.manageSales.onTabWidgetOrderTabCloseRequested(

@@ -87,11 +87,7 @@ def purchase_item(entry=None, result=None):
             )
 
         result['success'] = True
-        result['dictData'] = {
-            'amount': orderPayment['amount'],
-            'grandTotal': orderSummary['grandTotal'],
-            'change': orderPayment['change'],
-        }
+        result['dictData'] = entry
         result['message'] = 'Purchase added'
         return result
 
