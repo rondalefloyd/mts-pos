@@ -5,25 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
-from app.models.entities import (
-    User, 
-    UserSession, 
-    Organization,
-    Member,
-    Promo,
-    Reward,
-    ItemType,
-    Brand,
-    Supplier,
-    SalesGroup,
-    Item,
-    ItemPrice,
-    Stock,
-    ItemSold,
-    Receipt,
-    OrderType,
-    Date
-)
+from app.models.entities import *
 from app.utils.databases import postgres_db
 
 

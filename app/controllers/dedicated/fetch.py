@@ -5,24 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.models.entities import (
-    User, 
-    Organization,
-    Member,
-    Promo,
-    Reward,
-    ItemType,
-    Brand,
-    Supplier,
-    SalesGroup,
-    Stock,
-    Item,
-    ItemPrice,
-    Receipt,
-    Date,
-    OrderType,
-    ItemSold,
-)
+from app.models.entities import *
 from app.utils.databases import postgres_db
 
 
@@ -174,7 +157,6 @@ def fetch_member_data_by_member_name(entry=None, result=None):
         result['message'] = f"An error occured: {exception}"
         return result
 
-
 def fetch_all_promo_data(entry=None, result=None):
     try:
         promos = Promo.select().order_by(Promo.UpdateTs.desc())
@@ -198,7 +180,6 @@ def fetch_all_promo_data(entry=None, result=None):
         result['success'] = False
         result['message'] = f"An error occured: {exception}"
         return result
-    
     
 def fetch_all_item_sold_data(entry=None, result=None):
     try:
@@ -374,6 +355,7 @@ def fetch_all_item_price_related_data_by_barcode_order_type(entry=None, result=N
         result['message'] = f"An error occured: {exception}"
         return result
     
+    
 def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=None, result=None):
     try:
         limit = 15
@@ -462,48 +444,6 @@ def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=
         result['message'] = f"An error occured: {exception}"
         return result
 
-    
-def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
-    try:
-        limit = 15
-        offset = (entry['currentPage'] - 1) * limit
-        keyword = f"%{entry['keyword']}%"
-        
-        stocks = (Stock.select(
-            Stock,
-            Item,
-        ).join(Item, JOIN.LEFT_OUTER, on=(Stock.ItemId == Item.Id)
-        ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
-        ).where(
-            (Item.ItemName.cast('TEXT').like(keyword)) |
-            (SalesGroup.SalesGroupName.cast('TEXT').like(keyword)) |
-            (Stock.OnHand.cast('TEXT').like(keyword)) |
-            (Stock.Available.cast('TEXT').like(keyword)) |
-            (Stock.UpdateTs.cast('TEXT').like(keyword))
-        ).order_by(Stock.UpdateTs.desc()))
-        
-        totalCount = stocks.count()
-        paginatedStocks = stocks.limit(limit).offset(offset)
-        
-        result['success'] = True
-        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
-        for stocks in paginatedStocks:
-            result['listData'].append({
-                'id': stocks.Id,
-                'itemName': stocks.ItemId.ItemName,
-                'salesGroupName': stocks.ItemId.SalesGroupId.SalesGroupName,
-                'onHand': stocks.OnHand,
-                'available': stocks.Available,
-                'updateTs': stocks.UpdateTs,
-            })
-        
-        return result
-        
-    except Exception as exception:
-        result['success'] = False
-        result['message'] = f"An error occured: {exception}"
-        return result
-    
 def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 15
@@ -584,6 +524,47 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
         result['message'] = f"An error occured: {exception}"
         return result
 
+def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
+    try:
+        limit = 15
+        offset = (entry['currentPage'] - 1) * limit
+        keyword = f"%{entry['keyword']}%"
+        
+        stocks = (Stock.select(
+            Stock,
+            Item,
+        ).join(Item, JOIN.LEFT_OUTER, on=(Stock.ItemId == Item.Id)
+        ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
+        ).where(
+            (Item.ItemName.cast('TEXT').like(keyword)) |
+            (SalesGroup.SalesGroupName.cast('TEXT').like(keyword)) |
+            (Stock.OnHand.cast('TEXT').like(keyword)) |
+            (Stock.Available.cast('TEXT').like(keyword)) |
+            (Stock.UpdateTs.cast('TEXT').like(keyword))
+        ).order_by(Stock.UpdateTs.desc()))
+        
+        totalCount = stocks.count()
+        paginatedStocks = stocks.limit(limit).offset(offset)
+        
+        result['success'] = True
+        result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
+        for stocks in paginatedStocks:
+            result['listData'].append({
+                'id': stocks.Id,
+                'itemName': stocks.ItemId.ItemName,
+                'salesGroupName': stocks.ItemId.SalesGroupId.SalesGroupName,
+                'onHand': stocks.OnHand,
+                'available': stocks.Available,
+                'updateTs': stocks.UpdateTs,
+            })
+        
+        return result
+        
+    except Exception as exception:
+        result['success'] = False
+        result['message'] = f"An error occured: {exception}"
+        return result
+    
 def fetch_all_member_data_by_keyword_in_pagination(entry=None, result=None):
     try:
         limit = 15

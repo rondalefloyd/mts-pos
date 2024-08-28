@@ -66,7 +66,7 @@ def authenticate_user_by_user_name_access_code(entry=None, result=None):
             return result
         organization = organization.first()
         
-        userSessions = UserSession.select().where(UserSession.Id == user.Id)
+        userSessions = UserSession.select().where(UserSession.UserId == user.Id)
         if not userSessions.exists():
             result['message'] = 'UserSession does not exists'
             return result
