@@ -61,7 +61,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.loadData = LoadData(self.authData)
         self.loadData.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.currentThread = LoadThread('load_item', {'filePath': filePath})
-        self.currentThread.inProgress.connect(self._handleOnPushButtonLoadClickedInProgress)
+        self.currentThread.running.connect(self._handleOnPushButtonLoadClickedInProgress)
         self.currentThread.finished.connect(self._handleOnPushButtonLoadClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.start()

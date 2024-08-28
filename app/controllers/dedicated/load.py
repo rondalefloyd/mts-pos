@@ -11,7 +11,7 @@ from app.controllers.dedicated.register import register_item
 
 
 class LoadThread(QThread):
-    inProgress = pyqtSignal(object)
+    running = pyqtSignal(object)
     finished = pyqtSignal(object)
     
     def __init__(self, function_route, entry=None):
@@ -156,7 +156,7 @@ class LoadThread(QThread):
                 dictData['dataRepresentation'] = itemName
                 dictData['currentDataCount'] += 1
 
-                self.inProgress.emit(dictData)
+                self.running.emit(dictData)
 
             result['success'] = True
             result['message'] = 'Items loaded'
