@@ -1,8 +1,9 @@
-import os, sys, logging, math, json, pandas as pd
+import os, sys, logging, math, json, pandas as pd, win32com.client, pythoncom
 from peewee import *
 from datetime import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from docx import Document
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.models.entities import *
@@ -55,8 +56,63 @@ class PrintThread(QThread):
     # add function here
     def print_receipt(self, entry=None, result=None):
         try:
+            # TODO: clean this up and make sure the code structure follows the standards
+            pythoncom.CoInitialize()
+            # Load the DOCX template
+            template_path = os.path.abspath('app/utils/receipt_template.docx')
+            document = Document(template_path)
+            
+            # Define the mapping of placeholders to their corresponding values from the JSON object
+            placeholders = {
+                '<OrganizationName>': entry['organization']['organizationName'],
+                '<Address>': entry['organization']['address'],
+                '<TransactionDate>': datetime.now().strftime('%Y-%m-%d'),  # Example: current date
+                '<ReferenceId>': entry['order']['name'],
+                '<TaxId>': entry['organization']['taxId'],
+                '<MachineId>': '123456',  # Example: static value
+                '<Quantity>': '\n'.join([str(item['quantity']) for item in entry['order']['item']]),
+                '<ItemName>': '\n'.join([item['itemName'] for item in entry['order']['item']]),
+                '<Total>': '\n'.join([str(item['total']) for item in entry['order']['item']]),
+                '<Subtotal>': str(entry['summary']['subtotal']),
+                '<Discount>': str(entry['summary']['discount']),
+                '<Tax>': str(entry['summary']['tax']),
+                '<GrandTotal>': str(entry['summary']['grandTotal']),
+                '<Amount>': str(entry['payment']['amount']),
+                '<Type>': entry['payment']['type'],
+                '<Change>': str(entry['payment']['change']),
+                '<UserName>': entry['user']['userName'],
+                '<MobileNumber>': entry['user']['mobileNumber'],
+            }
+            
+            # TODO: fix the REF, TIN, MIN in the receipt as it is being duplicated when the placeholder are being replcaced
+            # Replace placeholders in paragraphs and tables
+            elements = document.paragraphs + [paragraph for table in document.tables for row in table.rows for cell in row.cells for paragraph in cell.paragraphs]
+            for element in elements:
+                inline_text = ''.join(run.text for run in element.runs)
+                for placeholder, value in placeholders.items():
+                    if placeholder in inline_text:
+                        inline_text = inline_text.replace(placeholder, value)
+                        for run in element.runs:
+                            run.text = inline_text if placeholder in run.text else ''
+                        element.runs[0].text = inline_text
+            
+            # Save the modified document
+            output_path = os.path.abspath('app/utils/output.docx')
+            document.save(output_path)
+            
+            # Print the document (Windows-specific)
+            word = win32com.client.Dispatch("Word.Application")
+            word.Visible = False
+            doc = word.Documents.Open(output_path)
+            doc.PrintOut()
+            doc.Close(False)
+            word.Quit()
+            
+            pythoncom.CoInitialize()
+            
             result['success'] = True
-            result['message'] = 'Items loaded'
+            result['message'] = 'Receipt generated and sent to printer successfully'
+            result['dictData'] = placeholders  # Optionally return the placeholders and their values
             return result
 
         except Exception as exception:

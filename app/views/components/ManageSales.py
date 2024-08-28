@@ -529,7 +529,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
     
     def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
         self.close()
-        self.postOrder = PostOrder(self.manageSales, self.authData, result)
+        print('result:', json.dumps(result['dictData'], indent=4, default=str))
+        self.postOrder = PostOrder(self.manageSales, self.authData, result['dictData'])
         self.postOrder.exec()
 
     def _populateSelectedMemberFields(self):
