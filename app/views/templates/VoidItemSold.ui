@@ -50,7 +50,39 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="comboBoxReasonName"/>
+        <widget class="QComboBox" name="comboBoxReasonName">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::NoInsert</enum>
+         </property>
+         <item>
+          <property name="text">
+           <string>Customer Cancellation</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Incorrect Entry</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Price Discrepancy</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Item Not Available</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Payment Issue</string>
+          </property>
+         </item>
+        </widget>
        </item>
       </layout>
      </widget>

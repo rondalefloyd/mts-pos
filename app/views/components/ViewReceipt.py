@@ -66,7 +66,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
                 QTableWidgetItem(f"{data['itemName']}"),
                 QTableWidgetItem(f"{data['quantity']}"),
                 QTableWidgetItem(f"{data['total']}"),
-                QTableWidgetItem(f"{data['reasonId']}"),
+                QTableWidgetItem(f"{data['reasonDescription']}"),
                 QTableWidgetItem(f"{data['status']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]

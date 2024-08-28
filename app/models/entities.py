@@ -160,14 +160,6 @@ class Date(BaseModel):
     class Meta:
         table_name = 'Date'
 
-class Reason(BaseModel):
-    Id = AutoField()
-    ReasonName = CharField(max_length=255, null=True)
-    UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
-
-    class Meta:
-        table_name = 'Reason'
-
 class OrderType(BaseModel):
     Id = AutoField()
     OrderTypeName = CharField(max_length=255, null=True)
@@ -198,7 +190,7 @@ class ItemSold(BaseModel):
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
     Quantity = IntegerField(null=True)
     Total = FloatField(null=True)
-    ReasonId = ForeignKeyField(Reason, on_delete='CASCADE', column_name='ReasonId', null=True)
+    ReasonDescription = CharField(max_length=255, null=True)
     Status = IntegerField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
@@ -217,7 +209,7 @@ class POSConfig(BaseModel):
 # Ensure to create the tables in the database
 def create_tables():
     with postgres_db:
-        postgres_db.create_tables([Brand, ItemType, Organization, Member, Promo, Reward, SalesGroup, Supplier, Item, ItemPrice, Stock, User, UserSession, Date, Reason, OrderType, Receipt, ItemSold, POSConfig])
+        postgres_db.create_tables([Brand, ItemType, Organization, Member, Promo, Reward, SalesGroup, Supplier, Item, ItemPrice, Stock, User, UserSession, Date, OrderType, Receipt, ItemSold, POSConfig])
 
 if __name__ == '__main__':
     create_tables()

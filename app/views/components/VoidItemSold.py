@@ -22,25 +22,8 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self._populateComboBoxReasonName()
-
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
-        self.pushButtonVoid.clicked.connect(self._onPushButtonVoidClicked)
-
-    def _populateComboBoxReasonName(self):
-        self.currentThread = FetchThread('fetch_all_reason_data')
-        self.currentThread.finished.connect(self._handlePopulateComboBoxReasonNameFinished)
-        self.currentThread.finished.connect(self._cleanupThread)
-        self.currentThread.start()
-        self.activeThreads.append(self.currentThread)
-        
-    def _handlePopulateComboBoxReasonNameFinished(self, result):
-        self.comboBoxReasonName.clear()
-        
-        listData = result['listData']
-        
-        for data in listData:
-            self.comboBoxReasonName.addItem(f"{data['reasonName']}")        
+        self.pushButtonVoid.clicked.connect(self._onPushButtonVoidClicked) 
 
     def _onPushButtonCancelClicked(self):
         self.close()

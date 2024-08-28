@@ -54,9 +54,6 @@ CREATE TABLE "SalesGroup" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO "SalesGroup" ("Id", "SalesGroupName") VALUES 
-(1, 'RETAIL'), 
-(2, 'WHOLESALE');
 
 CREATE TABLE "Supplier" (
     "Id" SERIAL PRIMARY KEY, 
@@ -115,6 +112,49 @@ CREATE TABLE "UserSession" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE "OrderType" (
+    "Id" SERIAL PRIMARY KEY, 
+    "OrderTypeName" TEXT, 
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "Receipt" (
+    "Id" SERIAL PRIMARY KEY,  
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
+    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE CASCADE, 
+    "MemberId" INTEGER REFERENCES "Member"("Id") ON DELETE CASCADE, 
+    "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE CASCADE, 
+    "OrderTypeId" INTEGER REFERENCES "OrderType"("Id") ON DELETE CASCADE, 
+    "ReferenceId" TEXT,
+    "OrderName" TEXT,
+    "OrderSummary" JSONB,
+    "OrderPayment" JSONB,
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "ItemSold" (
+    "Id" SERIAL PRIMARY KEY, 
+    "ReceiptId" INTEGER REFERENCES "Receipt"("Id") ON DELETE CASCADE, 
+    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
+    "Quantity" INTEGER, 
+    "Total" FLOAT, 
+    "ReasonDescription" VARCHAR(255), 
+    "Status" INTEGER, 
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE "POSConfig" (
+    "Id" SERIAL PRIMARY KEY, 
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
+    "Config" JSONB,
+    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+
 
 
 -- Create the Date table
@@ -132,18 +172,7 @@ CREATE TABLE IF NOT EXISTS "Date" (
 );
 
 -- Insert dates from 1980-01-01 to 3000-01-01
-INSERT INTO "Date" ("DateValue", "Dayofweek", "Weekday", "Quarter", "Year", "Month", "MonthName", "Day")
-SELECT 
-    date::DATE AS "DateValue",
-    EXTRACT(DOW FROM date) AS "Dayofweek",
-    TO_CHAR(date, 'Day') AS "Weekday",
-    EXTRACT(QUARTER FROM date) AS "Quarter",
-    EXTRACT(YEAR FROM date) AS "Year",
-    EXTRACT(MONTH FROM date) AS "Month",
-    TO_CHAR(date, 'Mon') AS "MonthName",
-    EXTRACT(DAY FROM date) AS "Day"
-FROM 
-    generate_series('1980-01-01'::DATE, '3000-01-01'::DATE, '1 day'::INTERVAL) date;
+
 
 -- Update the IsHoliday field for specific dates
 UPDATE "Date"
@@ -152,62 +181,3 @@ WHERE
     ("Month" = 1 AND "Day" = 1) OR
     ("Month" = 11 AND "Day" BETWEEN 29 AND 30) OR
     ("Month" = 12 AND "Day" BETWEEN 24 AND 31);
-
--- for transaction db
-
-CREATE TABLE "OrderType" (
-    "Id" SERIAL PRIMARY KEY, 
-    "OrderTypeName" TEXT, 
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-INSERT INTO "OrderType" ("Id", "OrderTypeName") VALUES 
-(1, 'RETAIL'), 
-(2, 'WHOLESALE'), 
-(3, 'MIXED');
-
-CREATE TABLE "Receipt" (
-    "Id" SERIAL PRIMARY KEY,  
-    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
-    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE CASCADE, 
-    "MemberId" INTEGER REFERENCES "Member"("Id") ON DELETE CASCADE, 
-    "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE CASCADE, 
-    "OrderTypeId" INTEGER REFERENCES "OrderType"("Id") ON DELETE CASCADE, 
-    "ReferenceId" TEXT,
-    "OrderName" TEXT,
-    "OrderSummary" JSONB,
-    "OrderPayment" JSONB,
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE "Reason" (
-    "Id" SERIAL PRIMARY KEY, 
-    "ReasonName" TEXT, 
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-INSERT INTO "Reason" ("ReasonName") VALUES
-('Customer Request'),
-('Damaged Item'),
-('Inventory Adjustment'),
-('Promotion Discount'),
-('Price Correction');
-
-CREATE TABLE "ItemSold" (
-    "Id" SERIAL PRIMARY KEY, 
-    "ReceiptId" INTEGER REFERENCES "Receipt"("Id") ON DELETE CASCADE, 
-    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
-    "Quantity" INTEGER, 
-    "Total" FLOAT, 
-    "ReasonId" INTEGER REFERENCES "Reason"("Id") ON DELETE CASCADE, 
-    "Status" INTEGER, 
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE "POSConfig" (
-    "Id" SERIAL PRIMARY KEY, 
-    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
-    "Config" JSONB,
-    "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);

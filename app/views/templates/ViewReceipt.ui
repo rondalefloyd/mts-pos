@@ -105,7 +105,7 @@
      </column>
      <column>
       <property name="text">
-       <string>ReasonId</string>
+       <string>ReasonDescription</string>
       </property>
      </column>
      <column>

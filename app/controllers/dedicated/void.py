@@ -18,7 +18,6 @@ from app.models.entities import (
     ItemPrice,
     Stock,
     ItemSold,
-    Reason
 )
 from app.utils.databases import postgres_db
 
@@ -73,7 +72,7 @@ def void_item_sold_data_by_id(entry=None, result=None):
             return result
         
         itemSold = ItemSold.get_or_none(ItemSold.Id == entry['id'])
-        itemSold.ReasonId = Reason.get_or_none(Reason.ReasonName == entry['reasonName']).Id
+        itemSold.ReasonDescription = entry['reasonName']
         itemSold.Status = 1
         itemSold.save()
         

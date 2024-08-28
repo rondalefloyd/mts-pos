@@ -151,7 +151,7 @@ class Ui_DialogViewReceipt(object):
         item = self.tableWidgetData.horizontalHeaderItem(3)
         item.setText(_translate("DialogViewReceipt", "Total"))
         item = self.tableWidgetData.horizontalHeaderItem(4)
-        item.setText(_translate("DialogViewReceipt", "ReasonId"))
+        item.setText(_translate("DialogViewReceipt", "ReasonDescription"))
         item = self.tableWidgetData.horizontalHeaderItem(5)
         item.setText(_translate("DialogViewReceipt", "Status"))
         item = self.tableWidgetData.horizontalHeaderItem(6)
