@@ -401,7 +401,7 @@ def fetch_all_item_price_related_data_by_barcode_order_type(entry=None, result=N
     
 def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=None, result=None):
     try:
-        limit = 30
+        limit = 15
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         orderType = entry['orderType']
@@ -490,7 +490,7 @@ def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=
     
 def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
     try:
-        limit = 30
+        limit = 15
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
@@ -531,7 +531,7 @@ def fetch_all_stock_data_by_keyword_in_pagination(entry=None, result=None):
     
 def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, result=None):
     try:
-        limit = 30
+        limit = 15
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
@@ -611,7 +611,7 @@ def fetch_all_item_price_related_data_by_keyword_in_pagination(entry=None, resul
 
 def fetch_all_member_data_by_keyword_in_pagination(entry=None, result=None):
     try:
-        limit = 30
+        limit = 15
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
@@ -651,7 +651,7 @@ def fetch_all_member_data_by_keyword_in_pagination(entry=None, result=None):
     
 def fetch_all_promo_data_by_keyword_in_pagination(entry=None, result=None):
     try:
-        limit = 30
+        limit = 15
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
@@ -685,7 +685,7 @@ def fetch_all_promo_data_by_keyword_in_pagination(entry=None, result=None):
     
 def fetch_all_reward_data_by_keyword_in_pagination(entry=None, result=None):
     try:
-        limit = 30
+        limit = 15
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
@@ -721,7 +721,7 @@ def fetch_all_reward_data_by_keyword_in_pagination(entry=None, result=None):
     
 def fetch_all_user_data_by_keyword_in_pagination(entry=None, result=None):
     try:
-        limit = 30
+        limit = 15
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
@@ -763,7 +763,7 @@ def fetch_all_user_data_by_keyword_in_pagination(entry=None, result=None):
 
 def fetch_all_receipt_data_by_keyword_in_pagination(entry=None, result=None):
     try:
-        limit = 30
+        limit = 15
         offset = (entry['currentPage'] - 1) * limit
         keyword = f"%{entry['keyword']}%"
         
