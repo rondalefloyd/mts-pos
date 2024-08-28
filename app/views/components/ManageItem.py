@@ -10,14 +10,14 @@ from app.views.components.LoadData import LoadData
 from app.views.components.EditItem import EditItem
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.validator import *
-from app.controllers.dedicated.fetch import FetchThread
-from app.controllers.dedicated.register import RegisterThread
-from app.controllers.dedicated.load import LoadThread
-from app.controllers.dedicated.remove import RemoveThread
+from app.controllers.dedicated.fetch import *
+from app.controllers.dedicated.register import *
+from app.controllers.dedicated.load import *
+from app.controllers.dedicated.remove import *
 
 class ManageItem(Ui_FormManageItem, QWidget):
     def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
         

@@ -8,10 +8,10 @@ from app.utils.config import *
 from app.views.templates.Setup_ui import Ui_DialogSetup
 from app.views.components.Loading import Loading
 from app.views.validator import *
-from app.controllers.dedicated.register import RegisterThread
+from app.controllers.dedicated.register import *
 
 class Setup(Ui_DialogSetup, QDialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT

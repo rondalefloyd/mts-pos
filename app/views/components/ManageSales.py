@@ -13,14 +13,14 @@ from app.views.components.PreOrderActionButton import PreOrderActionButton
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.Loading import Loading
 from app.views.validator import *
-from app.controllers.dedicated.fetch import FetchThread
-from app.controllers.dedicated.purchase import PurchaseThread
+from app.controllers.dedicated.fetch import *
+from app.controllers.dedicated.purchase import *
    
 class ManageSales(Ui_FormManageSales, QWidget):
     def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
 
 class PreOrder(Ui_FormPreOrder, QWidget):
     def __init__(self, manageSales):
@@ -34,7 +34,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         super().__init__()
         self.setupUi(self)
         self.manageSales: ManageSales = manageSales
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
         
 
 class PostOrder(Ui_DialogPostOrder, QDialog):
@@ -42,5 +42,5 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         super().__init__()
         self.setupUi(self)
         self.manageSales: ManageSales = manageSales
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
         

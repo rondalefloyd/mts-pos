@@ -42,7 +42,7 @@ def _startApp():
             login = Login()
             login.exec()
             authData = login.authData
-            windowEvent = login.windowEvent
+            windowEvent = login.window_event
         elif windowEvent == EVENT_START_MANAGE:
             manage = Manage(authData)
             manage.show()

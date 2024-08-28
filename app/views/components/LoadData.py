@@ -14,7 +14,7 @@ class LoadData(Ui_DialogLoadData, QDialog):
         self.setupUi(self)
         
         self.loading = Loading()
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
         self.authData = authData
         self.currentThread = None
         self.activeThreads = []

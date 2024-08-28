@@ -7,13 +7,13 @@ from app.utils.config import *
 from app.views.templates.EditItem_ui import Ui_DialogEditItem
 from app.views.components.Loading import Loading
 from app.views.validator import *
-from app.controllers.dedicated.fetch import FetchThread
-from app.controllers.dedicated.remove import RemoveThread
-from app.controllers.dedicated.edit import EditThread
+from app.controllers.dedicated.fetch import *
+from app.controllers.dedicated.remove import *
+from app.controllers.dedicated.edit import *
 
 class EditItem(Ui_DialogEditItem, QDialog):
     def __init__(self, authData, selectedData):
         super().__init__()
         self.setupUi(self)
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
         

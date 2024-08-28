@@ -7,11 +7,11 @@ from app.utils.config import *
 from app.views.templates.EditStock_ui import Ui_DialogEditStock
 from app.views.components.Loading import Loading
 from app.views.validator import *
-from app.controllers.dedicated.edit import EditThread
+from app.controllers.dedicated.edit import *
 
 class EditStock(Ui_DialogEditStock, QDialog):
     def __init__(self, authData, selectedData):
         super().__init__()
         self.setupUi(self)
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
         

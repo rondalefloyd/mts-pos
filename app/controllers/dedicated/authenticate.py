@@ -7,3 +7,15 @@ from PyQt5.QtCore import *
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import *
 from app.utils.databases import postgres_db
+
+def authenticateUserData(entry):
+    result = {
+        'success': False,
+        'message': 'N/A',
+        'data': None
+    }
+    
+    # try:
+        
+    # except Exception as error:
+        

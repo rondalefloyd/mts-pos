@@ -16,11 +16,11 @@ from app.views.components.ManageItem import ManageItem
 from app.views.components.ManageStock import ManageStock
 from app.views.components.ManageSales import ManageSales
 from app.views.components.ManageReceipt import ManageReceipt
-from app.controllers.dedicated.authenticate import AuthenticateThread
+from app.controllers.dedicated.authenticate import *
 
 class Manage(Ui_MainWindowManage, QMainWindow):
     def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
         

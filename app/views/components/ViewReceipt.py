@@ -9,12 +9,12 @@ from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.VoidItemSold import VoidItemSold
 from app.views.components.Loading import Loading
 from app.views.validator import *
-from app.controllers.dedicated.fetch import FetchThread
-from app.controllers.dedicated.void import VoidThread
+from app.controllers.dedicated.fetch import *
+from app.controllers.dedicated.void import *
 
 class ViewReceipt(Ui_DialogViewReceipt, QDialog):
     def __init__(self, authData, selectedData):
         super().__init__()
         self.setupUi(self)
-        self.windowEvent = EVENT_NO_EVENT
+        self.window_event = EVENT_NO_EVENT
         
