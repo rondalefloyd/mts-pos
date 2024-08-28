@@ -10,5 +10,4 @@ class PreOrderActionButton(Ui_FormPreOrderActionButton, QWidget):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        
         self.setWindowFlags(Qt.FramelessWindowHint)

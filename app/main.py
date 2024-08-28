@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import QApplication
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.utils.databases import postgres_db
 from app.utils.config import *
-from app.views.components.Tester import Tester
 from app.views.components.Setup import Setup
 from app.views.components.SignUp import SignUp
 from app.views.components.Login import Login
@@ -50,9 +49,6 @@ def _startApp():
             app.exec()
             authData = manage.authData
             windowEvent = manage.windowEvent
-        elif windowEvent == EVENT_START_TESTER:
-            tester = Tester()
-            tester.exec()
         else:
             break
                 

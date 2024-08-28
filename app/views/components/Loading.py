@@ -10,5 +10,4 @@ class Loading(Ui_FormLoading, QDialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        
         self.setWindowFlags(Qt.FramelessWindowHint)
