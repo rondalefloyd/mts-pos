@@ -87,12 +87,6 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
     def _onTabWidgetOrderCurrentChanged(self):
         orderIndex = self.tabWidgetOrder.currentIndex()
-        # TODO: investigate this part where it keeps populating even though the tab is already empty
-        if orderIndex == -1:  # No tab selected
-            self.tableWidgetData.clearContents()
-            self.tableWidgetData.setRowCount(0)
-            return
-        
         orderType = self.activeOrder[orderIndex]['orderType']
         
         self.comboBoxBarcodeFilter.setVisible(orderType == 'MIXED')
@@ -152,41 +146,42 @@ class ManageSales(Ui_FormManageSales, QWidget):
     def _handlePopulateTableWidgetDataFinished(self, result):
         dictData = result['dictData']
         listData = result['listData']
+        activeOrderCount = len(self.activeOrder)
 
         self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(listData))
-        
-        self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
-        
-        for i, data in enumerate(listData):
-            manageActionButton = ManageActionButton(add=True)
-            tableItems = [
-                QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{data['barcode']}"),
-                QTableWidgetItem(f"{data['brandName']}"),
-                QTableWidgetItem(f"{data['price']}"),
-                QTableWidgetItem(f"{data['available']}"),
-                QTableWidgetItem(f"{data['promoName']}"),
-            ]
-            
-            self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
-            for j, tableitem in enumerate(tableItems):
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
-                
-                if data['promoName'] is not None:
-                    manageActionButton.pushButtonEdit.setVisible(False)
-                    tableitem.setForeground(QColor(255, 0, 0))
-        
-            manageActionButton.pushButtonAdd.clicked.connect(lambda _=i, data=data: self._onPushButtonAddClicked(data))
-            
-        activeOrderCount = len(self.activeOrder)
+        self.tableWidgetData.setRowCount(len(listData) if activeOrderCount > 0 else 0)
         self.lineEditBarcode.setEnabled(activeOrderCount > 0)
         self.comboBoxBarcodeFilter.setEnabled(activeOrderCount > 0)
         self.pushButtonAdd.setEnabled(activeOrderCount > 0)
+        
+        if activeOrderCount > 0:
+            self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
             
-        self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
-        self.pushButtonPrev.setEnabled(self.currentPage > 1)
-        self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
+            for i, data in enumerate(listData):
+                manageActionButton = ManageActionButton(add=True)
+                tableItems = [
+                    QTableWidgetItem(f"{data['itemName']}"),
+                    QTableWidgetItem(f"{data['barcode']}"),
+                    QTableWidgetItem(f"{data['brandName']}"),
+                    QTableWidgetItem(f"{data['price']}"),
+                    QTableWidgetItem(f"{data['available']}"),
+                    QTableWidgetItem(f"{data['promoName']}"),
+                ]
+                
+                self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
+                for j, tableitem in enumerate(tableItems):
+                    self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                    
+                    if data['promoName'] is not None:
+                        manageActionButton.pushButtonEdit.setVisible(False)
+                        tableitem.setForeground(QColor(255, 0, 0))
+            
+                manageActionButton.pushButtonAdd.clicked.connect(lambda _=i, data=data: self._onPushButtonAddClicked(data))
+                
+            self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
+            self.pushButtonPrev.setEnabled(self.currentPage > 1)
+            self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
+            
 
     def _onPushButtonAddClicked(self, data):
         self._populateOrderItem(data)
