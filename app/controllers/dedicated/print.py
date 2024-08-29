@@ -84,7 +84,6 @@ class PrintThread(QThread):
                 '<MobileNumber>': entry['user']['mobileNumber'],
             }
             
-            # TODO: fix the REF, TIN, MIN in the receipt as it is being duplicated when the placeholder are being replcaced
             # Replace placeholders in paragraphs and tables
             elements = document.paragraphs + [paragraph for table in document.tables for row in table.rows for cell in row.cells for paragraph in cell.paragraphs]
             for element in elements:
