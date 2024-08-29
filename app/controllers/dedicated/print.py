@@ -67,7 +67,7 @@ class PrintThread(QThread):
                 '<OrganizationName>': entry['organization']['organizationName'],
                 '<Address>': entry['organization']['address'],
                 '<TransactionDate>': datetime.now().strftime('%Y-%m-%d'),  # Example: current date
-                '<ReferenceId>': entry['order']['name'],
+                '<ReferenceId>': entry['order']['referenceId'],
                 '<TaxId>': entry['organization']['taxId'],
                 '<MachineId>': '123456',  # Example: static value
                 '<Quantity>': '\n'.join([str(item['quantity']) for item in entry['order']['item']]),
@@ -88,13 +88,10 @@ class PrintThread(QThread):
             # Replace placeholders in paragraphs and tables
             elements = document.paragraphs + [paragraph for table in document.tables for row in table.rows for cell in row.cells for paragraph in cell.paragraphs]
             for element in elements:
-                inline_text = ''.join(run.text for run in element.runs)
-                for placeholder, value in placeholders.items():
-                    if placeholder in inline_text:
-                        inline_text = inline_text.replace(placeholder, value)
-                        for run in element.runs:
-                            run.text = inline_text if placeholder in run.text else ''
-                        element.runs[0].text = inline_text
+                for run in element.runs:
+                    for placeholder, value in placeholders.items():
+                        if placeholder in run.text:
+                            run.text = run.text.replace(placeholder, value)
             
             # Save the modified document
             output_path = os.path.abspath('app/utils/output.docx')

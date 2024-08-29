@@ -2,6 +2,7 @@ import os, sys, logging, json
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from datetime import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
@@ -504,6 +505,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
                 'user': self.userData,
                 'member': self.selectedOrder['orderMember'],
                 'order': {
+                    'referenceId': f"{self.selectedOrder['orderMember']['memberName'] if self.selectedOrder['orderMember'] is not None else 'GUEST'}{self.selectedOrder['orderType']}{self.organizationData['id']}{self.userData['id']}{datetime.now().strftime('%m%d%Y%H%M')}",
                     'name': self.selectedOrder['orderName'],
                     'type': self.selectedOrder['orderType'],
                     'item': self.selectedOrder['orderItem'],

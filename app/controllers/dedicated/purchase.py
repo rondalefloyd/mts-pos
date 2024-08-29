@@ -60,7 +60,7 @@ def purchase_item(entry=None, result=None):
         memberId = member['id'] if member is not None else None
         dateId = Date.get_or_none(Date.DateValue == currentDate).Id
         orderTypeId = OrderType.get_or_none(OrderType.OrderTypeName == entry['order']['type']).Id
-        referenceId = f"{member['memberName'] if member is not None else 'GUEST'}{orderTypeId}{organizationId}{userId}{currentDate.strftime('%m%d%Y%H%M')}"
+        referenceId = entry['order']['referenceId']
         orderName = entry['order']['name']
         orderSummary = entry['summary']
         orderPayment = entry['payment']
