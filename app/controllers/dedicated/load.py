@@ -57,20 +57,13 @@ class LoadThread(QThread):
     def load_item(self, entry=None, result=None):
         # Load the CSV file using pandas
         if entry['replaceData'] is True:
-            itemType = ItemType.delete()
-            brand = Brand.delete()
-            supplier = Supplier.delete()
-            item = Item.delete()
-            itemPrice = ItemPrice.delete()
-            stock = Stock.delete()
-            
-            itemType.execute()
-            brand.execute()
-            supplier.execute()
-            item.execute()
-            itemPrice.execute()
-            stock.execute()
-            
+            itemType = ItemType.delete().execute()
+            brand = Brand.delete().execute()
+            supplier = Supplier.delete().execute()
+            item = Item.delete().execute()
+            itemPrice = ItemPrice.delete().execute()
+            stock = Stock.delete().execute()
+
         df = pd.read_csv(entry['filePath'], encoding='utf-8')
 
         # Define the expected headers
