@@ -100,7 +100,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.currentThread = FetchThread('fetch_all_user_data_by_keyword_in_pagination', {
             'organizationName': self.organizationData['organizationName'],
             'currentPage': self.currentPage,
-            'keyword': f"{self.lineEditFilter.text()}",
+            'keyword': f"{self.lineEditFilter.text().upper()}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)

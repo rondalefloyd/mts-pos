@@ -58,9 +58,17 @@ class ManageItem(Ui_FormManageItem, QWidget):
             return  # No file selected, exit the function
 
         # TODO: decide where to put load data (should be at the init or here)
+        confirm = QMessageBox.warning(self, 'Confirm', "Replace current data with new data?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        isReplaceData = False
+        if confirm == QMessageBox.StandardButton.Yes:
+            isReplaceData = True
+            
         self.loadData = LoadData(self.authData)
         self.loadData.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
-        self.currentThread = LoadThread('load_item', {'filePath': filePath})
+        self.currentThread = LoadThread('load_item', {
+            'filePath': filePath,
+            'replaceData': isReplaceData
+        })
         self.currentThread.running.connect(self._handleOnPushButtonLoadClickedInProgress)
         self.currentThread.finished.connect(self._handleOnPushButtonLoadClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -166,7 +174,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_in_pagination', {
             'currentPage': self.currentPage,
-            'keyword': f"{self.lineEditFilter.text()}",
+            'keyword': f"{self.lineEditFilter.text().upper()}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)

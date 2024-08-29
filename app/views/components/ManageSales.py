@@ -135,7 +135,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_order_type_in_pagination', {
             'currentPage': self.currentPage,
-            'keyword': f"{self.lineEditFilter.text()}",
+            'keyword': f"{self.lineEditFilter.text().upper()}",
             'orderType': f"{self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderType'].upper() if len(self.activeOrder) > 0 else ''}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)

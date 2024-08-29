@@ -87,7 +87,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_reward_data_by_keyword_in_pagination', {
             'currentPage': self.currentPage,
-            'keyword': f"{self.lineEditFilter.text()}",
+            'keyword': f"{self.lineEditFilter.text().upper()}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)

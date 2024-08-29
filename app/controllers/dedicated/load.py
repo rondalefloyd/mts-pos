@@ -56,6 +56,21 @@ class LoadThread(QThread):
     # add function here
     def load_item(self, entry=None, result=None):
         # Load the CSV file using pandas
+        if entry['replaceData'] is True:
+            itemType = ItemType.delete()
+            brand = Brand.delete()
+            supplier = Supplier.delete()
+            item = Item.delete()
+            itemPrice = ItemPrice.delete()
+            stock = Stock.delete()
+            
+            itemType.execute()
+            brand.execute()
+            supplier.execute()
+            item.execute()
+            itemPrice.execute()
+            stock.execute()
+            
         df = pd.read_csv(entry['filePath'], encoding='utf-8')
 
         # Define the expected headers
@@ -82,15 +97,15 @@ class LoadThread(QThread):
                 if not self.isActive:
                     # TODO: write a better message
                     result['success'] = True
-                    result['message'] = 'Loading canceled. Incomplete data'
+                    result['message'] = 'Loading canceled'
                     return result
                 
-                itemName = row['ItemName'] if not pd.isna(row['ItemName']) else None
+                itemName = row['ItemName'].upper() if not pd.isna(row['ItemName']) else None
                 barcode = row['Barcode'] if not pd.isna(row['Barcode']) else None
                 expireDate = row['ExpireDate'] if not pd.isna(row['ExpireDate']) else None
-                itemTypeName = row['ItemType'] if not pd.isna(row['ItemType']) else None
-                brandName = row['Brand'] if not pd.isna(row['Brand']) else None
-                supplierName = row['Supplier'] if not pd.isna(row['Supplier']) else None
+                itemTypeName = row['ItemType'].upper() if not pd.isna(row['ItemType']) else None
+                brandName = row['Brand'].upper() if not pd.isna(row['Brand']) else None
+                supplierName = row['Supplier'].upper() if not pd.isna(row['Supplier']) else None
                 capital = row['Capital'] if not pd.isna(row['Capital']) else None
                 retailPrice = row['RetailPrice'] if not pd.isna(row['RetailPrice']) else None
                 wholesalePrice = row['WholesalePrice'] if not pd.isna(row['WholesalePrice']) else None
