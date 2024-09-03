@@ -28,7 +28,7 @@ class PurchaseThread(QThread):
         try:
             with postgres_db:
                 if self.function_route == 'purchase_item':
-                    result = purchase_item(self.entry, result)
+                    result = self.purchase_item(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -47,53 +47,53 @@ class PurchaseThread(QThread):
         self.finished.emit(result)
         # print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
 
-# add function here
-def purchase_item(entry=None, result=None):
-    """This function is a special case. The coding structure might be different from the standard."""
-    try:
-        currentDate = datetime.now()
-        member = entry['member']
-        orderItem = entry['order']['item']
-        
-        organizationId = entry['organization']['id']
-        userId = entry['user']['id']
-        memberId = member['id'] if member is not None else None
-        dateId = Date.get_or_none(Date.DateValue == currentDate).Id
-        orderTypeId = OrderType.get_or_none(OrderType.OrderTypeName == entry['order']['type']).Id
-        referenceId = entry['order']['referenceId']
-        orderName = entry['order']['name']
-        orderSummary = entry['summary']
-        orderPayment = entry['payment']
-        
-        receipt = Receipt.create(
-            OrganizationId=organizationId,
-            UserId=userId,
-            MemberId=memberId,
-            DateId=dateId,
-            OrderTypeId=orderTypeId,
-            ReferenceId=referenceId,
-            OrderName=orderName,
-            OrderSummary=orderSummary,
-            OrderPayment=orderPayment,
-        )
-        
-        for item in orderItem:
-            itemSold = ItemSold.create(
-                ReceiptId=receipt.Id,
-                ItemId=item['itemId'],
-                Quantity=item['quantity'],
-                Total=item['total'],
-                StockBypass=item['stockBypass'],
+    # add function here
+    def purchase_item(self, entry=None, result=None):
+        """This function is a special case. The coding structure might be different from the standard."""
+        try:
+            currentDate = datetime.now()
+            member = entry['member']
+            orderItem = entry['order']['item']
+            
+            organizationId = entry['organization']['id']
+            userId = entry['user']['id']
+            memberId = member['id'] if member is not None else None
+            dateId = Date.get_or_none(Date.DateValue == currentDate).Id
+            orderTypeId = OrderType.get_or_none(OrderType.OrderTypeName == entry['order']['type']).Id
+            referenceId = entry['order']['referenceId']
+            orderName = entry['order']['name']
+            orderSummary = entry['summary']
+            orderPayment = entry['payment']
+            
+            receipt = Receipt.create(
+                OrganizationId=organizationId,
+                UserId=userId,
+                MemberId=memberId,
+                DateId=dateId,
+                OrderTypeId=orderTypeId,
+                ReferenceId=referenceId,
+                OrderName=orderName,
+                OrderSummary=orderSummary,
+                OrderPayment=orderPayment,
             )
+            
+            for item in orderItem:
+                itemSold = ItemSold.create(
+                    ReceiptId=receipt.Id,
+                    ItemId=item['itemId'],
+                    Quantity=item['quantity'],
+                    Total=item['total'],
+                    StockBypass=item['stockBypass'],
+                )
 
-        result['success'] = True
-        result['dictData'] = entry
-        result['message'] = 'Purchase added'
-        return result
+            result['success'] = True
+            result['dictData'] = entry
+            result['message'] = 'Purchase added'
+            return result
 
-    except Exception as exception:
-        result['success'] = False
-        result['message'] = f"An error occured: {exception}"
-        return result
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
 
     
