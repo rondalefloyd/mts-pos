@@ -109,7 +109,22 @@
        </column>
        <column>
         <property name="text">
-         <string>DateValue</string>
+         <string>PurchaseDate</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>GrandTotal</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Payment</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Change</string>
         </property>
        </column>
        <column>

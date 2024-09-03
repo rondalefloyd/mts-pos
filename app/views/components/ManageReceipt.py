@@ -80,6 +80,9 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
                 QTableWidgetItem(f"{data['userName']}"),
                 QTableWidgetItem(f"{data['memberName']}"),
                 QTableWidgetItem(f"{data['dateValue']}"),
+                QTableWidgetItem(f"{data['orderSummary']['grandTotal']}"),
+                QTableWidgetItem(f"{data['orderPayment']['amount']}"),
+                QTableWidgetItem(f"{data['orderPayment']['change']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

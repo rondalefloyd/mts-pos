@@ -25,21 +25,8 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.activeThreads = []
 
         self._populateTableWidgetData()
-        self._populateOrderSummary()
 
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
-
-    def _populateOrderSummary(self):
-        orderSummary = self.selectedData['orderSummary']
-        orderPayment = self.selectedData['orderPayment']
-        
-        self.labelSubtotal.setText(f"{orderSummary['subtotal']}")
-        self.labelDiscount.setText(f"{orderSummary['discount']}")
-        self.labelTax.setText(f"{orderSummary['tax']}")
-        self.labelGrandTotal.setText(f"{orderSummary['grandTotal']}")
-        
-        self.labelPaymentType.setText(f"{orderPayment['type']}")
-        self.labelPayment.setText(f"{orderPayment['amount']}")
 
     def _onPushButtonCloseClicked(self):
         self.close()

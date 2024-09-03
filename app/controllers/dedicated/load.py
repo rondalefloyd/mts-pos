@@ -88,7 +88,6 @@ class LoadThread(QThread):
             # Process each row in the DataFrame
             for _, row in df.iterrows():
                 if not self.isActive:
-                    # TODO: write a better message
                     result['success'] = True
                     result['message'] = 'Loading canceled'
                     return result

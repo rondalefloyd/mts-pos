@@ -192,6 +192,7 @@ class ItemSold(BaseModel):
     Total = FloatField(null=True)
     ReasonDescription = CharField(max_length=255, null=True)
     Status = IntegerField(null=True)
+    StockBypass = IntegerField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:

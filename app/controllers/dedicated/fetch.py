@@ -200,6 +200,7 @@ def fetch_all_item_sold_data(entry=None, result=None):
                 'total': itemSold.Total,
                 'reasonDescription': itemSold.ReasonDescription,
                 'status': itemSold.Status,
+                'stockBypass': itemSold.StockBypass,
                 'updateTs': itemSold.UpdateTs,
             })
         return result
@@ -328,7 +329,6 @@ def fetch_all_item_price_related_data_by_barcode_order_type(entry=None, result=N
             stock = Stock.get_or_none(Stock.ItemId == item.Id)
             
             if itemPrice.EffectiveDate < datetime.now().date():
-                # TODO: write a filter logic here where
                 result['listData'].append({
                     # ids for editting purpose
                     'itemId': item.Id,
@@ -417,7 +417,6 @@ def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(entry=
             stock = Stock.get_or_none(Stock.ItemId == item.Id)
             
             if itemPrice.EffectiveDate < datetime.now().date():
-                # TODO: write a filter logic here where
                 result['listData'].append({
                     # ids for editting purpose
                     'itemId': item.Id,

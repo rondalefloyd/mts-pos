@@ -56,7 +56,6 @@ class PrintThread(QThread):
     # add function here
     def print_receipt(self, entry=None, result=None):
         try:
-            # TODO: clean this up and make sure the code structure follows the standards
             pythoncom.CoInitialize()
             # Load the DOCX template
             template_path = os.path.abspath('app/utils/receipt_template.docx')

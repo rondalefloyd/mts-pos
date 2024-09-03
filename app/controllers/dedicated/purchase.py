@@ -65,7 +65,6 @@ def purchase_item(entry=None, result=None):
         orderSummary = entry['summary']
         orderPayment = entry['payment']
         
-        # TODO: finish this
         receipt = Receipt.create(
             OrganizationId=organizationId,
             UserId=userId,
@@ -84,6 +83,7 @@ def purchase_item(entry=None, result=None):
                 ItemId=item['itemId'],
                 Quantity=item['quantity'],
                 Total=item['total'],
+                StockBypass=item['stockBypass'],
             )
 
         result['success'] = True

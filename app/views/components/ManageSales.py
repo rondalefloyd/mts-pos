@@ -500,12 +500,14 @@ class InOrder(Ui_DialogInOrder, QDialog):
         confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{paymentAmount}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
+            orderMember = self.selectedOrder['orderMember']
+            
             self.currentThread = PurchaseThread('purchase_item', {
                 'organization': self.organizationData,
                 'user': self.userData,
-                'member': self.selectedOrder['orderMember'],
+                'member': orderMember,
                 'order': {
-                    'referenceId': f"{self.selectedOrder['orderMember']['memberName'] if self.selectedOrder['orderMember'] is not None else 'GUEST'}{self.selectedOrder['orderType']}{self.organizationData['id']}{self.userData['id']}{datetime.now().strftime('%m%d%Y%H%M')}",
+                    'referenceId': f"{orderMember['memberName'] if orderMember is not None else 'GUEST'}{self.selectedOrder['orderType']}{self.organizationData['id']}{self.userData['id']}{datetime.now().strftime('%m%d%Y%H%M')}",
                     'name': self.selectedOrder['orderName'],
                     'type': self.selectedOrder['orderType'],
                     'item': self.selectedOrder['orderItem'],
@@ -528,11 +530,9 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
-        pass
     
     def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
         self.close()
-        print('result:', json.dumps(result['dictData'], indent=4, default=str))
         self.postOrder = PostOrder(self.manageSales, self.authData, result['dictData'])
         self.postOrder.exec()
 

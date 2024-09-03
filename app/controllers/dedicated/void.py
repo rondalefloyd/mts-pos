@@ -66,6 +66,21 @@ def void_item_sold_data_by_id(entry=None, result=None):
         # TODO: add stock by taking it from qty (depending on the condition if it got bypassed or not)
         # TODO: change the computation of the summary (deduct the ones that are voided)
         
+        receipt = Receipt.get_or_none(Receipt.Id == itemSold.ReceiptId)
+        receipt.OrderSummary['subtotal'] -= itemSold.Total
+        receipt.OrderSummary['grandTotal'] = (receipt.OrderSummary['subtotal'] + receipt.OrderSummary['discount']) + receipt.OrderSummary['tax']
+        # TODO: check if it deducts correctly
+        receipt.OrderPayment['change'] -= itemSold.Total
+        receipt.save()
+        
+        stock = Stock.select().where(Stock.ItemId == entry['itemId'])
+        
+        if stock.exists() and entry['stockBypass'] == 0:
+            stock = stock.first()
+            stock.Available = entry['quantity']
+            stock.save()
+
+        
         result['success'] = True
         result['message'] = 'ItemSold voided'
         return result

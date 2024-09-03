@@ -140,6 +140,7 @@ CREATE TABLE "ItemSold" (
     "Total" FLOAT, 
     "ReasonDescription" VARCHAR(255), 
     "Status" INTEGER, 
+    "StockBypass" INTEGER, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
