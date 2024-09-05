@@ -180,8 +180,7 @@ class FetchThread(QThread):
                 'orderTypeId': receipt.OrderTypeId,
                 'referenceId': receipt.ReferenceId,
                 'orderName': receipt.OrderName,
-                'orderSummary': receipt.OrderSummary,
-                'orderPayment': receipt.OrderPayment,
+                'billing': receipt.Billing,
             }
 
             return result
@@ -772,6 +771,8 @@ class FetchThread(QThread):
                 (Member.MemberName.cast('TEXT').like(keyword)) |
                 (Date.DateValue.cast('TEXT').like(keyword)) |
                 (OrderType.OrderTypeName.cast('TEXT').like(keyword)) |
+                (Receipt.ReferenceId.cast('TEXT').like(keyword)) |
+                (Receipt.MachineId.cast('TEXT').like(keyword)) |
                 (Receipt.OrderName.cast('TEXT').like(keyword)) |
                 (Receipt.UpdateTs.cast('TEXT').like(keyword)))
             ).order_by(Receipt.UpdateTs.desc())
@@ -796,9 +797,9 @@ class FetchThread(QThread):
                     'dateValue': date.DateValue,
                     'orderTypeName': orderType.OrderTypeName,
                     'referenceId': receipt.ReferenceId,
+                    'machineId': receipt.MachineId,
                     'orderName': receipt.OrderName,
-                    'orderSummary': receipt.OrderSummary,
-                    'orderPayment': receipt.OrderPayment,
+                    'billing': receipt.Billing,
                     'updateTs': receipt.UpdateTs,
                 })
             

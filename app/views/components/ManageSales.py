@@ -1,4 +1,4 @@
-import os, sys, logging, json
+import os, sys, logging, json, uuid
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -55,7 +55,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self._populateTableWidgetData()
 
     def onTabWidgetOrderTabCloseRequested(self, index, confirmation=True):
-        orderItem: list = self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderItem']
+        orderItem: list = self.activeOrder[self.tabWidgetOrder.currentIndex()]['cart']
         
         if len(orderItem) > 0 and confirmation is True:
             confirm = QMessageBox.warning(self, 'Confirm', "Order contains item. Discard order?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
@@ -68,7 +68,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self._populateTableWidgetData()
 
     def _onLineEditBarcodeReturnPressed(self):
-        orderType = self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderType']
+        orderType = self.activeOrder[self.tabWidgetOrder.currentIndex()]['type']
         
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_barcode_order_type', {
             'barcode': f"{self.lineEditBarcode.text()}",
@@ -88,7 +88,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
     def _onTabWidgetOrderCurrentChanged(self):
         orderIndex = self.tabWidgetOrder.currentIndex()
-        orderType = self.activeOrder[orderIndex]['orderType']
+        orderType = self.activeOrder[orderIndex]['type']
         
         self.comboBoxBarcodeFilter.setVisible(orderType == 'MIXED')
         self.labelOrderName.setText(f"{self.tabWidgetOrder.tabText(orderIndex)}")
@@ -99,19 +99,19 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.orderNumber += 1
         
         self.activeOrder.append({
-            'orderName': f"Order {self.orderNumber}", 
-            'orderType': f"{self.comboBoxOrderType.currentText().upper()}",
-            'orderItem': [], 
-            'orderWidget': PreOrder(self),
-            'orderStatus': 1,
-            'orderMember': None,
+            'name': f"Order {self.orderNumber}", 
+            'type': f"{self.comboBoxOrderType.currentText().upper()}",
+            'cart': [], 
+            'widget': PreOrder(self),
+            'status': 1,
+            'member': None,
         })
         
         orderIndex = len(self.activeOrder) - 1
         
         self.tabWidgetOrder.addTab(
-            self.activeOrder[orderIndex]['orderWidget'], 
-            self.activeOrder[orderIndex]['orderName'],
+            self.activeOrder[orderIndex]['widget'], 
+            self.activeOrder[orderIndex]['name'],
         )
         
         self.tabWidgetOrder.setCurrentIndex(orderIndex)
@@ -137,7 +137,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_order_type_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
-            'orderType': f"{self.activeOrder[self.tabWidgetOrder.currentIndex()]['orderType'].upper() if len(self.activeOrder) > 0 else ''}",
+            'orderType': f"{self.activeOrder[self.tabWidgetOrder.currentIndex()]['type'].upper() if len(self.activeOrder) > 0 else ''}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -189,13 +189,13 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
     def _populateOrderItem(self, data):
         orderIndex = self.tabWidgetOrder.currentIndex()
-        orderWidget: PreOrder = self.activeOrder[orderIndex]['orderWidget']
+        orderWidget: PreOrder = self.activeOrder[orderIndex]['widget']
         
-        if self.activeOrder[orderIndex]['orderStatus'] == 2:
+        if self.activeOrder[orderIndex]['status'] == 2:
             confirm = QMessageBox.warning(self, 'Confirm', 'Order is currently parked. Unpark order?', QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             
             if confirm == QMessageBox.StandardButton.Yes:
-                self.activeOrder[orderIndex]['orderStatus'] = 1
+                self.activeOrder[orderIndex]['status'] = 1
                 orderWidget.pushButtonPark.setChecked(False)
                 orderWidget.onPushButtonParkClicked()
             else:
@@ -210,8 +210,8 @@ class ManageSales(Ui_FormManageSales, QWidget):
         stockBypass = False
         
         orderIndex = self.tabWidgetOrder.currentIndex()
-        orderItem: list = self.activeOrder[orderIndex]['orderItem']
-        orderWidget: PreOrder = self.activeOrder[orderIndex]['orderWidget']
+        orderItem: list = self.activeOrder[orderIndex]['cart']
+        orderWidget: PreOrder = self.activeOrder[orderIndex]['widget']
         isItemExist = False
         
         for item in orderItem:
@@ -291,14 +291,14 @@ class PreOrder(Ui_FormPreOrder, QWidget):
     def onPushButtonParkClicked(self):
         orderIndex = self.manageSales.tabWidgetOrder.currentIndex()
         orderStatus = 2 if self.pushButtonPark.isChecked() else 1
-        self.manageSales.activeOrder[orderIndex]['orderStatus'] = orderStatus
+        self.manageSales.activeOrder[orderIndex]['status'] = orderStatus
         
         self.tableWidgetData.setEnabled(orderStatus == 1)
         self.pushButtonPark.setText('PARK' if orderStatus == 1 else 'UNPARK')
         self.pushButtonPay.setEnabled(orderStatus == 1)
         
     def populateTableWidgetData(self):
-        orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['orderItem']
+        orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart']
         rowCount = len(orderItem)
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(rowCount)
@@ -369,13 +369,13 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         
         self.lineEditPoints.setText(f"{points:.2f}")
         
-        self.manageSales.activeOrder[orderIndex]['orderMember'] = dictData if dictData else None
+        self.manageSales.activeOrder[orderIndex]['member'] = dictData if dictData else None
         
     def _onPushButtonClearClicked(self):
         confirm = QMessageBox.warning(self, 'Confirm', "Delete all items?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['orderItem'].clear()
+            self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart'].clear()
             self.populateTableWidgetData()
         
     def _onPushButtonDiscardClicked(self):
@@ -484,46 +484,45 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pushButtonPayHybrid.clicked.connect(lambda: self._processOrder('HYBRID'))
 
     def _processOrder(self, paymentType):
-        paymentAmount = 0.0
-        paymentChange = 0.0
+        payment = 0.0
+        change = 0.0
         
         if paymentType == 'CASH':
-            paymentAmount = self.cashPayment
-            paymentChange = float(self.labelCashShortageExcess.text())
+            payment = self.cashPayment
+            change = float(self.labelCashShortageExcess.text())
         if paymentType == 'POINTS':
-            paymentAmount = self.pointsPayment
-            paymentChange = float(self.labelPointsShortageExcess.text())
+            payment = self.pointsPayment
+            change = float(self.labelPointsShortageExcess.text())
         if paymentType == 'HYBRID':
-            paymentAmount = self.hybridPayment
-            paymentChange = float(self.labelHybridShortageExcess.text())
+            payment = self.hybridPayment
+            change = float(self.labelHybridShortageExcess.text())
             
-        confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{paymentAmount}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
-            orderMember = self.selectedOrder['orderMember']
+            orderMember = self.selectedOrder['member']
             
             self.currentThread = PurchaseThread('purchase_item', {
-                'organization': self.organizationData,
-                'user': self.userData,
-                'member': orderMember,
+                'organizationId': self.organizationData['id'],
+                'userId': self.userData['id'],
+                'memberId': orderMember['id'] if orderMember else None,
                 'order': {
-                    'referenceId': f"{orderMember['memberName'] if orderMember is not None else 'GUEST'}{self.selectedOrder['orderType']}{self.organizationData['id']}{self.userData['id']}{datetime.now().strftime('%m%d%Y%H%M')}",
-                    'name': self.selectedOrder['orderName'],
-                    'type': self.selectedOrder['orderType'],
-                    'item': self.selectedOrder['orderItem'],
-                    'status': self.selectedOrder['orderStatus'],
-                    'widget': self.selectedOrder['orderWidget'],
+                    'referenceId': f"{orderMember['memberName'] if orderMember is not None else 'GUEST'}{self.selectedOrder['type']}{self.organizationData['id']}{self.userData['id']}{datetime.now().strftime('%m%d%Y%H%M')}",
+                    'machineId': f"{uuid.uuid1()}",
+                    'name': self.selectedOrder['name'],
+                    'type': self.selectedOrder['type'],
+                    'cart': self.selectedOrder['cart'],
+                    'status': self.selectedOrder['status'],
+                    'widget': self.selectedOrder['widget'],
                 },
-                'summary': {
+                'billing': {
                     'subtotal': float(self.labelSubtotal.text()),
                     'discount': float(self.labelDiscount.text()),
                     'tax': float(self.labelTax.text()),
                     'grandTotal': float(self.labelGrandTotal.text()),
-                },
-                'payment': {
-                    'type': paymentType,
-                    'amount': paymentAmount,
-                    'change': paymentChange,
+                    'paymentType': paymentType,
+                    'payment': payment,
+                    'change': change,
                 }
             })
             self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedFinished)
@@ -533,11 +532,12 @@ class InOrder(Ui_DialogInOrder, QDialog):
     
     def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
         self.close()
+        print('here result:', result)
         self.postOrder = PostOrder(self.manageSales, self.authData, result['dictData'])
         self.postOrder.exec()
 
     def _populateSelectedMemberFields(self):
-        orderMember = self.selectedOrder['orderMember']
+        orderMember = self.selectedOrder['member']
         self.lineEditMemberName.setText(f"{orderMember['memberName']}" if orderMember else 'N/A')
         self.lineEditMobileNumber.setText(f"{orderMember['mobileNumber']}" if orderMember else 'N/A')
         self.lineEditPoints.setText(f"{orderMember['points']}" if orderMember else 'N/A')
@@ -556,7 +556,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.lineEditCash.setText(self.cashPayment)
 
     def _populatePaymentEligibilityFields(self):
-        orderMember = self.selectedOrder['orderMember']
+        orderMember = self.selectedOrder['member']
         grandTotal = float(self.labelGrandTotal.text())
         
         self.cashPayment = self.lineEditCash.text()
@@ -591,8 +591,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pushButtonPayHybrid.setEnabled(False)
 
     def _populateTableWidgetData(self):
-        orderItem = self.selectedOrder['orderItem']
-        rowCount = len(orderItem)
+        orderCart = self.selectedOrder['cart']
+        rowCount = len(orderCart)
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(rowCount)
         
@@ -602,7 +602,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         customDiscount = 0.00
         grandTotal = 0.00
         
-        for i, data in enumerate(orderItem):
+        for i, data in enumerate(orderCart):
             manageActionButton = ManageActionButton(discount=True)
             tableItems = [
                 QTableWidgetItem(f"{data['quantity']}"),
@@ -631,12 +631,13 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.labelTax.setText(f"{tax:.2f}")
         self.labelCustomDiscount.setText(f"{customDiscount:.2f}")
         self.labelGrandTotal.setText(f"{grandTotal:.2f}")
+        self.lineEditCash.setText(f"{grandTotal:.2f}")
 
     def _onPushButtonDiscountClicked(self, index, data):
         customDiscount, confirm = QInputDialog.getDouble(self, 'Quantity', "Set custom discount:", 1, 1, 9999999, 2)
         
         if confirm is True:
-            self.selectedOrder['orderItem'][index]['customDiscount'] = customDiscount
+            self.selectedOrder['cart'][index]['customDiscount'] = customDiscount
             
             self._populateTableWidgetData()
         
@@ -651,7 +652,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         print('active threads:', self.activeThreads)
 
     def closeEvent(self, event):
-        for data in self.selectedOrder['orderItem']:
+        for data in self.selectedOrder['cart']:
             data['customDiscount'] = 0.0
         
         for thread in self.activeThreads:
@@ -686,14 +687,17 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
-        self.labelPayment.setText(f"{selectedOrder['payment']['amount']}")
-        self.labelGrandTotal.setText(f"{selectedOrder['summary']['grandTotal']}")
-        self.labelChange.setText(f"{selectedOrder['payment']['change']}")
-        
+        self._populatePostOrderSummary()
         self._printReceipt()
         
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
 
+    def _populatePostOrderSummary(self):
+        billing = self.selectedOrder['billing']
+        
+        self.labelPayment.setText(f"{billing['payment']}")
+        self.labelGrandTotal.setText(f"{billing['grandTotal']}")
+        self.labelChange.setText(f"{billing['change']}")
 
     def _printReceipt(self):
         self.currentThread = PrintThread('print_receipt', self.selectedOrder)

@@ -62,25 +62,31 @@ class PrintThread(QThread):
             document = Document(template_path)
             
             # Define the mapping of placeholders to their corresponding values from the JSON object
+            organization = Organization.get_or_none(Organization.Id == entry['organizationId'])
+            user = User.get_or_none(User.Id == entry['userId'])
+            order = entry['order']
+            billing = entry['billing']
+            cart = order['cart']
+            
             placeholders = {
-                '<OrganizationName>': entry['organization']['organizationName'],
-                '<Address>': entry['organization']['address'],
+                '<OrganizationName>': organization.OrganizationName,
+                '<Address>': organization.Address,
                 '<TransactionDate>': datetime.now().strftime('%Y-%m-%d'),  # Example: current date
-                '<ReferenceId>': entry['order']['referenceId'],
-                '<TaxId>': entry['organization']['taxId'],
-                '<MachineId>': '123456',  # Example: static value
-                '<Quantity>': '\n'.join([str(item['quantity']) for item in entry['order']['item']]),
-                '<ItemName>': '\n'.join([item['itemName'] for item in entry['order']['item']]),
-                '<Total>': '\n'.join([str(item['total']) for item in entry['order']['item']]),
-                '<Subtotal>': str(entry['summary']['subtotal']),
-                '<Discount>': str(entry['summary']['discount']),
-                '<Tax>': str(entry['summary']['tax']),
-                '<GrandTotal>': str(entry['summary']['grandTotal']),
-                '<Amount>': str(entry['payment']['amount']),
-                '<Type>': entry['payment']['type'],
-                '<Change>': str(entry['payment']['change']),
-                '<UserName>': entry['user']['userName'],
-                '<MobileNumber>': entry['user']['mobileNumber'],
+                '<ReferenceId>': order['referenceId'],
+                '<TaxId>': organization.TaxId,
+                '<MachineId>': order['machineId'],  # Example: static value
+                '<Quantity>': '\n'.join([str(item['quantity']) for item in cart]),
+                '<ItemName>': '\n'.join([item['itemName'] for item in cart]),
+                '<Total>': '\n'.join([str(item['total']) for item in cart]),
+                '<Subtotal>': str(billing['subtotal']),
+                '<Discount>': str(billing['discount']),
+                '<Tax>': str(billing['tax']),
+                '<GrandTotal>': str(billing['grandTotal']),
+                '<Payment>': str(billing['payment']),
+                '<PaymentType>': billing['paymentType'],
+                '<Change>': str(billing['change']),
+                '<UserName>': user.UserName,
+                '<MobileNumber>': user.MobileNumber,
             }
             
             # Replace placeholders in paragraphs and tables

@@ -44,14 +44,13 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.labelMemberName.setText(f"{dictData['memberName']}")
         self.labelMobileNumber.setText(f"{dictData['mobileNumber']}")
         
-        self.labelSubtotal.setText(f"{dictData['orderSummary']['subtotal']}")
-        self.labelDiscount.setText(f"{dictData['orderSummary']['discount']}")
-        self.labelTax.setText(f"{dictData['orderSummary']['tax']}")
-        self.labelGrandTotal.setText(f"{dictData['orderSummary']['grandTotal']}")
-        
-        self.labelAmount.setText(f"{dictData['orderPayment']['amount']}")
-        self.labelChange.setText(f"{dictData['orderPayment']['change']}")
-
+        billing = dictData['billing']
+        self.labelSubtotal.setText(f"{billing['subtotal']}")
+        self.labelDiscount.setText(f"{billing['discount']}")
+        self.labelTax.setText(f"{billing['tax']}")
+        self.labelGrandTotal.setText(f"{billing['grandTotal']}")
+        self.labelAmount.setText(f"{billing['payment']}")
+        self.labelChange.setText(f"{billing['change']}")
         
     def _populateTableWidgetData(self):
         self.currentThread = FetchThread('fetch_all_item_sold_data', {'receiptId': self.selectedData['id']})

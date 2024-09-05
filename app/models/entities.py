@@ -176,9 +176,9 @@ class Receipt(BaseModel):
     DateId = ForeignKeyField(Date, on_delete='CASCADE', column_name='DateId', null=True)
     OrderTypeId = ForeignKeyField(OrderType, on_delete='CASCADE', column_name='OrderTypeId', null=True)
     ReferenceId = CharField(max_length=255, null=True)
+    MachineId = CharField(max_length=255, null=True)
     OrderName = CharField(max_length=255, null=True)
-    OrderSummary = JSONField(null=True)
-    OrderPayment = JSONField(null=True)
+    Billing = JSONField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:

@@ -51,19 +51,19 @@ class PurchaseThread(QThread):
     def purchase_item(self, entry=None, result=None):
         """This function is a special case. The coding structure might be different from the standard."""
         try:
+            print('--entry:', entry)
             currentDate = datetime.now()
-            member = entry['member']
-            orderItem = entry['order']['item']
+            order = entry['order']
             
-            organizationId = entry['organization']['id']
-            userId = entry['user']['id']
-            memberId = member['id'] if member is not None else None
+            organizationId = entry['organizationId']
+            userId = entry['userId']
+            memberId = entry['memberId']
             dateId = Date.get_or_none(Date.DateValue == currentDate).Id
-            orderTypeId = OrderType.get_or_none(OrderType.OrderTypeName == entry['order']['type']).Id
-            referenceId = entry['order']['referenceId']
-            orderName = entry['order']['name']
-            orderSummary = entry['summary']
-            orderPayment = entry['payment']
+            orderTypeId = OrderType.get_or_none(OrderType.OrderTypeName == order['type']).Id
+            referenceId = order['referenceId']
+            machineId = order['machineId']
+            orderName = order['name']
+            billing = entry['billing']
             
             receipt = Receipt.create(
                 OrganizationId=organizationId,
@@ -72,12 +72,12 @@ class PurchaseThread(QThread):
                 DateId=dateId,
                 OrderTypeId=orderTypeId,
                 ReferenceId=referenceId,
+                MachineId=machineId,
                 OrderName=orderName,
-                OrderSummary=orderSummary,
-                OrderPayment=orderPayment,
+                Billing=billing,
             )
             
-            for item in orderItem:
+            for item in order['cart']:
                 itemSold = ItemSold.create(
                     ReceiptId=receipt.Id,
                     ItemId=item['itemId'],
@@ -85,6 +85,7 @@ class PurchaseThread(QThread):
                     Total=item['total'],
                     StockBypass=item['stockBypass'],
                 )
+
 
             result['success'] = True
             result['dictData'] = entry

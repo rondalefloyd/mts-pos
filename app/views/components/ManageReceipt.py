@@ -75,14 +75,15 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
             manageActionButton = ManageActionButton(view=True)
             tableItems = [
                 QTableWidgetItem(f"{data['referenceId']}"),
+                QTableWidgetItem(f"{data['machineId']}"),
                 QTableWidgetItem(f"{data['orderName']}"),
                 QTableWidgetItem(f"{data['orderTypeName']}"),
                 QTableWidgetItem(f"{data['userName']}"),
                 QTableWidgetItem(f"{data['memberName']}"),
                 QTableWidgetItem(f"{data['dateValue']}"),
-                QTableWidgetItem(f"{data['orderSummary']['grandTotal']}"),
-                QTableWidgetItem(f"{data['orderPayment']['amount']}"),
-                QTableWidgetItem(f"{data['orderPayment']['change']}"),
+                QTableWidgetItem(f"{data['billing']['grandTotal']}"),
+                QTableWidgetItem(f"{data['billing']['payment']}"),
+                QTableWidgetItem(f"{data['billing']['change']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

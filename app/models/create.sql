@@ -140,9 +140,9 @@ CREATE TABLE "Receipt" (
     "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE CASCADE, 
     "OrderTypeId" INTEGER REFERENCES "OrderType"("Id") ON DELETE CASCADE, 
     "ReferenceId" TEXT,
+    "MachineId" TEXT,
     "OrderName" TEXT,
-    "OrderSummary" JSONB,
-    "OrderPayment" JSONB,
+    "Billing" JSONB,
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
