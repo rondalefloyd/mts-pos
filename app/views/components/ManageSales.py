@@ -355,6 +355,8 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         for data in listData:
             self.comboBoxMemberName.addItem(f"{data['memberName']}")        
 
+        self.comboBoxMemberName.clearEditText()
+
     def _onComboBoxMemberNameCurrentTextChanged(self):
         self.manageSales.currentThread = FetchThread('fetch_member_data_by_member_name', {'memberName': f"{self.comboBoxMemberName.currentText()}"})
         self.manageSales.currentThread.finished.connect(self._handleOnComboBoxMemberNameCurrentTextChangedFinished)
