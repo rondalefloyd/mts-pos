@@ -40,8 +40,8 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
             billing = self.selectedData['billing']
             
             self.currentThread = PrintThread('print_receipt', {
-                'organizationId': self.organizationData['id'],
-                'userId': self.userData['id'],
+                'organizationId': self.selectedData['organizationId'],
+                'userId': self.selectedData['userId'],
                 'order': {
                     'referenceId': self.selectedData['referenceId'],
                     'machineId': self.selectedData['machineId'],

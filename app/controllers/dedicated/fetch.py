@@ -791,6 +791,9 @@ class FetchThread(QThread):
             
                 result['listData'].append({
                     'id': receipt.Id,
+                    'organizationId': receipt.OrganizationId,
+                    'userId': receipt.UserId,
+                    'memberId': receipt.MemberId, 
                     'organizationName': organization.OrganizationName,
                     'userName': user.UserName,
                     'memberName': member.MemberName if member else None, # TODO: check the other queries/controllers if some of it have the same case

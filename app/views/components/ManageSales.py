@@ -702,7 +702,27 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.labelChange.setText(f"{billing['change']}")
 
     def _printReceipt(self):
-        self.currentThread = PrintThread('print_receipt', self.selectedOrder)
+        order = self.selectedOrder['order']
+        billing = self.selectedOrder['billing']
+        
+        self.currentThread = PrintThread('print_receipt', {
+            'organizationId': self.selectedOrder['organizationId'],
+            'userId': self.selectedOrder['userId'],
+            'order': {
+                'referenceId': order['referenceId'],
+                'machineId': order['machineId'],
+                'cart': order['cart'],
+            },
+            'billing': {
+                'subtotal': billing['subtotal'],
+                'discount': billing['discount'],
+                'tax': billing['tax'],
+                'grandTotal': billing['grandTotal'],
+                'paymentType': billing['paymentType'],
+                'payment': billing['payment'],
+                'change': billing['change'],
+            }
+        })
         self.currentThread.running.connect(self._handlePrintReceiptRunning)
         self.currentThread.finished.connect(self._handlePrintReceiptFinished)
         self.currentThread.finished.connect(self._cleanupThread)
