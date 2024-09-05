@@ -82,7 +82,7 @@ class VoidThread(QThread):
 
             
             result['success'] = True
-            result['message'] = 'ItemSold voided'
+            result['message'] = f"ItemSold voided. Amount to return: {itemSold.Total}"
             return result
             
         except Exception as exception:

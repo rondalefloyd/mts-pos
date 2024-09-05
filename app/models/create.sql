@@ -1,3 +1,17 @@
+-- Create the Date table
+CREATE TABLE IF NOT EXISTS "Date" (
+    "Id" SERIAL PRIMARY KEY,
+    "DateValue" DATE UNIQUE NOT NULL,
+    "Dayofweek" INT NOT NULL,
+    "Weekday" TEXT NOT NULL,
+    "Quarter" INT NOT NULL,
+    "Year" INT NOT NULL,
+    "Month" INT NOT NULL,
+    "MonthName" TEXT NOT NULL,
+    "Day" INT NOT NULL,
+    "IsHoliday" BOOLEAN DEFAULT FALSE
+);
+
 CREATE TABLE "Brand" (
     "Id" SERIAL PRIMARY KEY, 
     "BrandName" VARCHAR(255), 
@@ -151,34 +165,3 @@ CREATE TABLE "POSConfig" (
     "Config" JSONB,
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-
-
-
-
-
-
--- Create the Date table
-CREATE TABLE IF NOT EXISTS "Date" (
-    "Id" SERIAL PRIMARY KEY,
-    "DateValue" DATE UNIQUE NOT NULL,
-    "Dayofweek" INT NOT NULL,
-    "Weekday" TEXT NOT NULL,
-    "Quarter" INT NOT NULL,
-    "Year" INT NOT NULL,
-    "Month" INT NOT NULL,
-    "MonthName" TEXT NOT NULL,
-    "Day" INT NOT NULL,
-    "IsHoliday" BOOLEAN DEFAULT FALSE
-);
-
--- Insert dates from 1980-01-01 to 3000-01-01
-
-
--- Update the IsHoliday field for specific dates
-UPDATE "Date"
-SET "IsHoliday" = TRUE
-WHERE   
-    ("Month" = 1 AND "Day" = 1) OR
-    ("Month" = 11 AND "Day" BETWEEN 29 AND 30) OR
-    ("Month" = 12 AND "Day" BETWEEN 24 AND 31);

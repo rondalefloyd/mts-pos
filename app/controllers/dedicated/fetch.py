@@ -31,6 +31,8 @@ class FetchThread(QThread):
                     result = self.fetch_all_organization_data(self.entry, result)
                 elif self.function_route == 'fetch_member_data_by_member_name':
                     result = self.fetch_member_data_by_member_name(self.entry, result)
+                elif self.function_route == 'fetch_receipt_data_by_receipt_id':
+                    result = self.fetch_receipt_data_by_receipt_id(self.entry, result)
                 elif self.function_route == 'fetch_all_member_data':
                     result = self.fetch_all_member_data(self.entry, result)
                 elif self.function_route == 'fetch_promo_data_by_promo_name':
@@ -152,6 +154,38 @@ class FetchThread(QThread):
 
             return result
 
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+
+    def fetch_receipt_data_by_receipt_id(self, entry=None, result=None):
+        try:
+            receipt = Receipt.select().where(Receipt.Id == entry['receiptId'])
+            
+            if not receipt.exists():
+                result['message'] = 'Receipt does not exists'
+                return result
+            
+            receipt = receipt.first()
+            
+            result['success'] = True
+            result['dictData'] = {
+                'organizationId': receipt.OrganizationId,
+                'userId': receipt.UserId,
+                'memberId': receipt.MemberId,
+                'memberName': Member.get_or_none(Member.Id == receipt.MemberId).MemberName if receipt.MemberId else None,
+                'mobileNumber': Member.get_or_none(Member.Id == receipt.MemberId).MobileNumber if receipt.MemberId else None,
+                'dateId': receipt.DateId,
+                'orderTypeId': receipt.OrderTypeId,
+                'referenceId': receipt.ReferenceId,
+                'orderName': receipt.OrderName,
+                'orderSummary': receipt.OrderSummary,
+                'orderPayment': receipt.OrderPayment,
+            }
+
+            return result
+            
         except Exception as exception:
             result['success'] = False
             result['message'] = f"An error occured: {exception}"

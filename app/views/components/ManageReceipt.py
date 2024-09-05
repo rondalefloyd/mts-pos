@@ -100,6 +100,7 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
     def _onPushButtonViewClicked(self, data):
         viewReceipt = ViewReceipt(self.authData, data)
         viewReceipt.exec()
+        self._populateTableWidgetData()
 
     def _cleanupThread(self):
         sender = self.sender()

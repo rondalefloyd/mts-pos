@@ -55,3 +55,5 @@
 ├── requirements.txt
 └── setup.py
 ```
+
+# CREATE POSTGRESQL DB HOSTING IN ANDROID
