@@ -1,4 +1,4 @@
-import os, sys, logging
+import os, sys, logging, json 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
@@ -11,6 +11,7 @@ from app.views.components.Loading import Loading
 from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.void import VoidThread
+from app.controllers.dedicated.print import PrintThread
 
 class ViewReceipt(Ui_DialogViewReceipt, QDialog):
     def __init__(self, authData, selectedData):
@@ -20,15 +21,59 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
+        self.userData = authData['user']
+        self.organizationData = authData['organization']
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
-
+        
         self._populateTableWidgetData()
         self._populateReceipt()
 
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
+        self.pushButtonPrint.clicked.connect(self._onPushButtonPrintClicked)
 
+    def _onPushButtonPrintClicked(self):
+        confirm = QMessageBox.warning(self, 'Confirm', f"Print receipt?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        if confirm == QMessageBox.StandardButton.Yes:
+            billing = self.selectedData['billing']
+            
+            self.currentThread = PrintThread('print_receipt', {
+                'organizationId': self.organizationData['id'],
+                'userId': self.userData['id'],
+                'order': {
+                    'referenceId': self.selectedData['referenceId'],
+                    'machineId': self.selectedData['machineId'],
+                    'cart': self.cart,
+                },
+                'billing': {
+                    'subtotal': billing['subtotal'],
+                    'discount': billing['discount'],
+                    'tax': billing['tax'],
+                    'grandTotal': billing['grandTotal'],
+                    'paymentType': billing['paymentType'],
+                    'payment': billing['payment'],
+                    'change': billing['change'],
+                }
+            })
+            self.currentThread.running.connect(self._handleOnPushButtonPrintClickedRunning)
+            self.currentThread.finished.connect(self._handleOnPushButtonPrintClickedFinished)
+            self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.start()
+            self.activeThreads.append(self.currentThread)
+            pass
+
+    def _handleOnPushButtonPrintClickedRunning(self, status):
+        # TODO: FINISH THIS
+        print(status)
+        print('receipt is printing')
+        
+    def _handleOnPushButtonPrintClickedFinished(self, result):
+        # TODO: FINISH THIS
+        print(result)
+        print('receipt is done printing')
+        
     def _onPushButtonCloseClicked(self):
         self.close()
         
@@ -62,6 +107,8 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
     def _handlePopulateTableWidgetDataFinished(self, result):
         dictData = result['dictData']
         listData = result['listData']
+        
+        self.cart = listData
         
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(len(listData))
