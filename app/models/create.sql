@@ -152,8 +152,8 @@ CREATE TABLE "ItemSold" (
     "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
     "Quantity" INTEGER, 
     "Total" FLOAT, 
-    "ReasonDescription" VARCHAR(255), 
-    "Status" INTEGER, 
+    "VoidReason" VARCHAR(255), 
+    "VoidStatus" INTEGER, 
     "StockBypass" INTEGER, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -190,8 +190,8 @@ class ItemSold(BaseModel):
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
     Quantity = IntegerField(null=True)
     Total = FloatField(null=True)
-    ReasonDescription = CharField(max_length=255, null=True)
-    Status = IntegerField(null=True)
+    VoidReason = CharField(max_length=255, null=True)
+    VoidStatus = IntegerField(null=True)
     StockBypass = IntegerField(null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 

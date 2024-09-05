@@ -143,12 +143,12 @@
      </column>
      <column>
       <property name="text">
-       <string>ReasonDescription</string>
+       <string>VoidReason</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Status</string>
+       <string>VoidStatus</string>
       </property>
      </column>
      <column>

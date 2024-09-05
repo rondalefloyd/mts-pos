@@ -51,7 +51,7 @@ class VoidThread(QThread):
         try:
             itemSold = ItemSold.select().where(
                 (ItemSold.Id == entry['id']) &
-                (ItemSold.Status == 1)
+                (ItemSold.VoidStatus == 1)
             )
             
             if itemSold.exists():
@@ -59,8 +59,8 @@ class VoidThread(QThread):
                 return result
             
             itemSold = ItemSold.get_or_none(ItemSold.Id == entry['id'])
-            itemSold.ReasonDescription = entry['reasonName']
-            itemSold.Status = 1
+            itemSold.VoidReason = entry['reasonName']
+            itemSold.VoidStatus = 1
             itemSold.save()
             
             # TODO: add stock by taking it from qty (depending on the condition if it got bypassed or not)
