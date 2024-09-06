@@ -41,7 +41,7 @@
       <widget class="QLabel" name="labelGrandTotal">
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>8</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -58,7 +58,7 @@
       <widget class="QLabel" name="labelPayment">
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>8</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -75,7 +75,7 @@
       <widget class="QLabel" name="labelChange">
        <property name="font">
         <font>
-         <pointsize>20</pointsize>
+         <pointsize>8</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>

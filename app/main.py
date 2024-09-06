@@ -27,6 +27,10 @@ def _startApp():
     print('app has started running')
         
     app = QApplication(sys.argv)
+    
+    with open(os.path.abspath('app/views/assets/styles/stylesheet.qss'), 'r') as stylesheet:
+        app.setStyleSheet(stylesheet.read())
+    
     windowEvent = EVENT_START_LOGIN
     authData = None
 

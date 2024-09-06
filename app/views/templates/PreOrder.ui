@@ -159,7 +159,7 @@
       <widget class="QLabel" name="labelSubtotal">
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>8</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -183,7 +183,7 @@
       <widget class="QLabel" name="labelDiscount">
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>8</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -207,7 +207,7 @@
       <widget class="QLabel" name="labelTax">
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>8</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -231,7 +231,7 @@
       <widget class="QLabel" name="labelGrandTotal">
        <property name="font">
         <font>
-         <pointsize>20</pointsize>
+         <pointsize>8</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
