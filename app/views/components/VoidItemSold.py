@@ -35,6 +35,8 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
             self.currentThread = VoidThread('void_item_sold_data_by_id', {
                 'id': self.selectedData['id'],
                 'itemId': self.selectedData['itemId'],
+                'stockBypass': self.selectedData['stockBypass'],
+                'quantity': self.selectedData['quantity'],
                 'reasonName': f"{self.comboBoxVoidReason.currentText()}",
             })
             self.currentThread.finished.connect(self._handleOnPushButtonVoidClickedFinished)

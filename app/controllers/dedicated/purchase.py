@@ -45,13 +45,12 @@ class PurchaseThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        # print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
+        print(f"{self.function_route} -> result_message: {result['message']}")
 
     # add function here
     def purchase_item(self, entry=None, result=None):
         """This function is a special case. The coding structure might be different from the standard."""
         try:
-            print('--entry:', entry)
             currentDate = datetime.now()
             order = entry['order']
             
@@ -85,7 +84,11 @@ class PurchaseThread(QThread):
                     Total=item['total'],
                     StockBypass=item['stockBypass'],
                 )
-
+                
+                if item['stockBypass'] == 0:
+                    stock = Stock.get(Stock.ItemId == item['itemId'])
+                    stock.Available -= item['quantity']
+                    stock.save()
 
             result['success'] = True
             result['dictData'] = entry

@@ -207,7 +207,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         price = data['price']
         discount = data['discount']
         available = data['available']
-        stockBypass = False
+        stockBypass = 0
         
         orderIndex = self.tabWidgetOrder.currentIndex()
         orderItem: list = self.activeOrder[orderIndex]['cart']
@@ -218,10 +218,10 @@ class ManageSales(Ui_FormManageSales, QWidget):
             if item['itemId'] != itemId:
                 continue
 
-            if not item['stockBypass'] and available is not None and item['quantity'] >= available:
+            if item['stockBypass'] == 0 and available is not None and item['quantity'] >= available:
                 confirm = QMessageBox.warning(self, 'Error', "Item out of stock. Bypass stock?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
                 if confirm == QMessageBox.StandardButton.Yes:
-                    item['stockBypass'] = True
+                    item['stockBypass'] = 1
                 else:
                     return
 

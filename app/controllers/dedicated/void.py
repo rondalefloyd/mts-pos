@@ -45,7 +45,7 @@ class VoidThread(QThread):
             logging.info('database closed...')
             
         self.finished.emit(result)
-        # print(f'{self.function_route} -> result:', json.dumps(result, indent=4, default=str))
+        print(f"{self.function_route} -> result_message: {result['message']}")
         
     def void_item_sold_data_by_id(self, entry=None, result=None):
         try:
@@ -63,21 +63,21 @@ class VoidThread(QThread):
             itemSold.VoidStatus = 1
             itemSold.save()
             
-            # TODO: add stock by taking it from qty (depending on the condition if it got bypassed or not)
-            # TODO: change the computation of the summary (deduct the ones that are voided)
+            # TODO: add stock by taking it from qty (depending on the condition if it got bypassed or not) #TOBETESTED
+            # TODO: change the computation of the summary (deduct the ones that are voided) #TOBETESTED
             
             receipt = Receipt.get_or_none(Receipt.Id == itemSold.ReceiptId)
-            receipt.OrderSummary['subtotal'] -= itemSold.Total
-            receipt.OrderSummary['grandTotal'] = (receipt.OrderSummary['subtotal'] + receipt.OrderSummary['discount']) + receipt.OrderSummary['tax']
-            # TODO: check if it deducts correctly
-            receipt.OrderPayment['change'] -= itemSold.Total
+            receipt.Billing['subtotal'] -= itemSold.Total
+            receipt.Billing['grandTotal'] = (receipt.Billing['subtotal'] + receipt.Billing['discount']) + receipt.Billing['tax']
+            # TODO: check if it deducts correctly #TOBETESTED
+            receipt.Billing['change'] -= itemSold.Total
             receipt.save()
             
             stock = Stock.select().where(Stock.ItemId == entry['itemId'])
             
             if stock.exists() and entry['stockBypass'] == 0:
                 stock = stock.first()
-                stock.Available = entry['quantity']
+                stock.Available += entry['quantity']
                 stock.save()
 
             
