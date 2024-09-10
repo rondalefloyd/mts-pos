@@ -52,6 +52,7 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
             self._populateTableWidgetData()
         
     def _populateTableWidgetData(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_all_receipt_data_by_keyword_in_pagination', {
             'organizationName': self.organizationData['organizationName'],
             'currentPage': self.currentPage,
@@ -59,6 +60,7 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 

@@ -32,6 +32,7 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
         confirm = QMessageBox.warning(self, 'Confirm', f"Void {self.selectedData['itemName']} in this order?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
+            self.loading.show()
             self.currentThread = VoidThread('void_item_sold_data_by_id', {
                 'id': self.selectedData['id'],
                 'itemId': self.selectedData['itemId'],
@@ -41,6 +42,7 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
             })
             self.currentThread.finished.connect(self._handleOnPushButtonVoidClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
         

@@ -51,12 +51,14 @@ class ManageStock(Ui_FormManageStock, QWidget):
             self._populateTableWidgetData()
         
     def _populateTableWidgetData(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_all_stock_data_by_keyword_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
@@ -100,9 +102,11 @@ class ManageStock(Ui_FormManageStock, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['itemName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
+            self.loading.show()
             self.currentThread = RemoveThread('remove_stock_by_id', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
 

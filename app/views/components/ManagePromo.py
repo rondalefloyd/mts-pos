@@ -63,6 +63,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         pass
         
     def _onPushButtonAddClicked(self):
+        self.loading.show()
         self.currentThread = RegisterThread('register_promo', {
             'promoName': self.lineEditPromoName.text().upper(),
             'discountRate': self.lineEditDiscountRate.text(),
@@ -70,6 +71,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
@@ -83,12 +85,14 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         return
         
     def _populateTableWidgetData(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_all_promo_data_by_keyword_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
@@ -132,9 +136,11 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['promoName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
+            self.loading.show()
             self.currentThread = RemoveThread('remove_promo_by_id', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
 

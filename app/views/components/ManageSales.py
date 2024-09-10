@@ -70,12 +70,14 @@ class ManageSales(Ui_FormManageSales, QWidget):
     def _onLineEditBarcodeReturnPressed(self):
         orderType = self.activeOrder[self.tabWidgetOrder.currentIndex()]['type']
         
+        self.loading.show()
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_barcode_order_type', {
             'barcode': f"{self.lineEditBarcode.text()}",
             'orderType': f"{self.comboBoxBarcodeFilter.currentText().upper() if orderType == 'MIXED' else orderType.upper()}",
         })
         self.currentThread.finished.connect(self._handleOnLineEditBarcodeReturnPressedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
@@ -134,6 +136,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
             self._populateTableWidgetData()
         
     def _populateTableWidgetData(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_order_type_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
@@ -141,6 +144,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
@@ -504,6 +508,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         if confirm == QMessageBox.StandardButton.Yes:
             orderMember = self.selectedOrder['member']
             
+            self.loading.show()
             self.currentThread = PurchaseThread('purchase_item', {
                 'organizationId': self.organizationData['id'],
                 'userId': self.userData['id'],
@@ -529,6 +534,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             })
             self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
     
@@ -705,6 +711,7 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         order = self.selectedOrder['order']
         billing = self.selectedOrder['billing']
         
+        self.loading.show()
         self.currentThread = PrintThread('print_receipt', {
             'organizationId': self.selectedOrder['organizationId'],
             'userId': self.selectedOrder['userId'],
@@ -726,6 +733,7 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.currentThread.running.connect(self._handlePrintReceiptRunning)
         self.currentThread.finished.connect(self._handlePrintReceiptFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 

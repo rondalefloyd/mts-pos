@@ -39,6 +39,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         if confirm == QMessageBox.StandardButton.Yes:
             billing = self.selectedData['billing']
             
+            self.loading.show()
             self.currentThread = PrintThread('print_receipt', {
                 'organizationId': self.selectedData['organizationId'],
                 'userId': self.selectedData['userId'],
@@ -60,6 +61,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
             self.currentThread.running.connect(self._handleOnPushButtonPrintClickedRunning)
             self.currentThread.finished.connect(self._handleOnPushButtonPrintClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
             pass
@@ -78,9 +80,11 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.close()
         
     def _populateReceipt(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_receipt_data_by_receipt_id', {'receiptId': self.selectedData['id']})
         self.currentThread.finished.connect(self._handleOnPopulateReceiptResult)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
@@ -98,9 +102,11 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.labelChange.setText(f"{billing['change']}")
         
     def _populateTableWidgetData(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_all_item_sold_data', {'receiptId': self.selectedData['id']})
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         

@@ -50,6 +50,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
     
     
     def _onPushButtonCreateClicked(self):
+        self.loading.show()
         self.currentThread = RegisterThread('register_user', {
             'organizationName': self.comboBoxOrganizationName.currentText().upper(),
             'userName': self.lineEditUserName.text(),
@@ -61,6 +62,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
         })
         self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 

@@ -46,6 +46,7 @@ class EditMember(Ui_DialogEditMember, QDialog):
         self.close()
         
     def _onPushButtonSaveClicked(self):
+        self.loading.show()
         self.currentThread = EditThread('edit_member_data_by_id', {
             'id': self.selectedData['id'],
             'memberName': self.lineEditMemberName.text().upper(),
@@ -56,6 +57,7 @@ class EditMember(Ui_DialogEditMember, QDialog):
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         

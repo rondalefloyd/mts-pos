@@ -65,6 +65,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
             
         self.loadData = LoadData(self.authData)
         self.loadData.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
+        self.loading.show()
         self.currentThread = LoadThread('load_item', {
             'filePath': filePath,
             'replaceData': isReplaceData
@@ -72,6 +73,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.currentThread.running.connect(self._handleOnPushButtonLoadClickedInProgress)
         self.currentThread.finished.connect(self._handleOnPushButtonLoadClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         self.loadData.exec()
@@ -144,6 +146,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         pass
         
     def _onPushButtonAddClicked(self):
+        self.loading.show()
         self.currentThread = RegisterThread('register_item', {
             'itemName': self.lineEditItemName.text().upper(),
             'barcode': self.lineEditBarcode.text(),
@@ -159,6 +162,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
@@ -172,12 +176,14 @@ class ManageItem(Ui_FormManageItem, QWidget):
         return
         
     def _populateTableWidgetData(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_in_pagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
 
@@ -233,9 +239,11 @@ class ManageItem(Ui_FormManageItem, QWidget):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['itemName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
+            self.loading.show()
             self.currentThread = RemoveThread('remove_item_price_by_id', {'itemPriceId': data['itemPriceId']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
 

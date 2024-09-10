@@ -102,9 +102,11 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
     
     def _populateComboBoxPromoName(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_all_promo_data')
         self.currentThread.finished.connect(self._handlePopulateComboBoxPromoNameFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
@@ -119,9 +121,11 @@ class EditItem(Ui_DialogEditItem, QDialog):
             self.comboBoxPromoName.addItem(f"{data['promoName']}")
             
     def _populateLineEditDiscountRate(self):
+        self.loading.show()
         self.currentThread = FetchThread('fetch_promo_data_by_promo_name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
         self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
@@ -148,6 +152,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.close()
         
     def _onPushButtonSaveClicked(self):
+        self.loading.show()
         self.currentThread = EditThread('edit_item_price_related_data_by_id', {
             'itemPriceId': self.selectedData['itemPriceId'],
             'itemId': self.selectedData['itemId'],
@@ -180,6 +185,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         })
         self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         

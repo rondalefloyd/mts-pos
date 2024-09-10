@@ -115,9 +115,11 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         confirm = QMessageBox.warning(self, 'Confirm', f"Logout {self.userData['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
+            self.loading.show()
             self.currentThread = AuthenticateThread('unauthenticate_user_by_id', {'id': self.userData['id']})
             self.currentThread.finished.connect(self._handleOnActionLogoutTriggeredFinished)
             self.currentThread.finished.connect(self._cleanupThread)
+            self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
         

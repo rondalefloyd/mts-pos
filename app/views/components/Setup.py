@@ -38,6 +38,7 @@ class Setup(Ui_DialogSetup, QDialog):
 
 
     def _onPushButtonCreateClicked(self):
+        self.loading.show()
         self.currentThread = RegisterThread('register_organization', {
             'taxId': self.lineEditTaxId.text().upper(),
             'organizationName': self.lineEditOrganizationName.text(),
@@ -47,6 +48,7 @@ class Setup(Ui_DialogSetup, QDialog):
         })
         self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
         
