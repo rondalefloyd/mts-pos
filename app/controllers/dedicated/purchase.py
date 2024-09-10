@@ -85,8 +85,10 @@ class PurchaseThread(QThread):
                     StockBypass=item['stockBypass'],
                 )
                 
-                if item['stockBypass'] == 0:
-                    stock = Stock.get(Stock.ItemId == item['itemId'])
+                stock = Stock.select().where(Stock.ItemId == item['itemId'])
+                
+                if stock.exists() and item['stockBypass'] == 0:
+                    stock = stock.first()
                     stock.Available -= item['quantity']
                     stock.save()
 

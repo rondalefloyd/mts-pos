@@ -64,8 +64,8 @@ class ManageItem(Ui_FormManageItem, QWidget):
             isReplaceData = True
             
         self.loadData = LoadData(self.authData)
+        self.loadData.show()
         self.loadData.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
-        self.loading.show()
         self.currentThread = LoadThread('load_item', {
             'filePath': filePath,
             'replaceData': isReplaceData
@@ -73,15 +73,13 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.currentThread.running.connect(self._handleOnPushButtonLoadClickedInProgress)
         self.currentThread.finished.connect(self._handleOnPushButtonLoadClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
-        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.finished.connect(self.loadData.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
-        self.loadData.exec()
         
     def _onPushButtonCancelClicked(self):
         # TODO: make sure the self.currentThread is the one being used here when executing LoadThread
         self.currentThread.stop()  # Signal the thread to stop
-        self.loadData.close()  # Close the loading dialog
         
     def _handleOnPushButtonLoadClickedInProgress(self, result):
         self.loadData.progressBarLoad.setValue(result['currentDataCount'])
@@ -92,12 +90,10 @@ class ManageItem(Ui_FormManageItem, QWidget):
     def _handleOnPushButtonLoadClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
-            self.loadData.close()
             return
             
         QMessageBox.information(self, 'Success', f"{result['message']}")
         self._populateTableWidgetData()
-        self.loadData.close()
 
     def _populateComboBoxItemTypeBrandSupplier(self):
         self.fetchThread = FetchThread('fetch_all_item_related_data')

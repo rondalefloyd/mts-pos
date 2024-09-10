@@ -20,12 +20,12 @@ class Ui_FormLoading(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(FormLoading)
-        self.label.setEnabled(True)
-        self.label.setFrameShape(QtWidgets.QFrame.Box)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.label)
+        self.labelMessage = QtWidgets.QLabel(FormLoading)
+        self.labelMessage.setEnabled(True)
+        self.labelMessage.setFrameShape(QtWidgets.QFrame.Box)
+        self.labelMessage.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelMessage.setObjectName("labelMessage")
+        self.verticalLayout.addWidget(self.labelMessage)
 
         self.retranslateUi(FormLoading)
         QtCore.QMetaObject.connectSlotsByName(FormLoading)
@@ -33,4 +33,4 @@ class Ui_FormLoading(object):
     def retranslateUi(self, FormLoading):
         _translate = QtCore.QCoreApplication.translate
         FormLoading.setWindowTitle(_translate("FormLoading", "Form"))
-        self.label.setText(_translate("FormLoading", "Please wait..."))
+        self.labelMessage.setText(_translate("FormLoading", "Please wait..."))

@@ -15,6 +15,7 @@ class Ui_DialogPostOrder(object):
     def setupUi(self, DialogPostOrder):
         DialogPostOrder.setObjectName("DialogPostOrder")
         DialogPostOrder.resize(878, 413)
+        DialogPostOrder.setModal(True)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(DialogPostOrder)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.formLayout = QtWidgets.QFormLayout()

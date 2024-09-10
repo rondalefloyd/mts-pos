@@ -89,6 +89,13 @@ class PrintThread(QThread):
                 '<MobileNumber>': user.MobileNumber,
             }
             
+            result['dictData'] = {
+                'dataRepresentation': None,
+                'currentDataCount': 0,
+                'totalDataCount': len(placeholders),
+            }
+            dictData = result['dictData']
+            
             # Replace placeholders in paragraphs and tables
             elements = document.paragraphs + [paragraph for table in document.tables for row in table.rows for cell in row.cells for paragraph in cell.paragraphs]
             for element in elements:
@@ -96,6 +103,10 @@ class PrintThread(QThread):
                     for placeholder, value in placeholders.items():
                         if placeholder in run.text:
                             run.text = run.text.replace(placeholder, value)
+                            
+                            dictData['dataRepresentation'] = value
+                            dictData['currentDataCount'] += 1
+                            self.running.emit(dictData)
             
             # Save the modified document
             output_path = os.path.abspath('app/utils/output.docx')

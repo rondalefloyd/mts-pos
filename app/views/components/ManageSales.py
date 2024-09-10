@@ -13,6 +13,7 @@ from app.views.templates.PostOrder_ui import Ui_DialogPostOrder
 from app.views.components.PreOrderActionButton import PreOrderActionButton
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.Loading import Loading
+from app.views.components.LoadData import LoadData
 from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.purchase import PurchaseThread
@@ -509,7 +510,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             orderMember = self.selectedOrder['member']
             
             self.loading.show()
-            self.currentThread = PurchaseThread('purchase_item', {
+            self.entry = {
                 'organizationId': self.organizationData['id'],
                 'userId': self.userData['id'],
                 'memberId': orderMember['id'] if orderMember else None,
@@ -531,18 +532,31 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     'payment': payment,
                     'change': change,
                 }
-            })
+            }
+            self.currentThread = PurchaseThread('purchase_item', self.entry)
             self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
+            
     
     def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
         self.close()
-        print('here result:', result)
         self.postOrder = PostOrder(self.manageSales, self.authData, result['dictData'])
-        self.postOrder.exec()
+        self.postOrder.show()
+        self.loading = Loading()
+        self.loading.labelMessage.setText(f"Printing receipt...")
+        self.loading.show()
+        self.currentThread = PrintThread('print_receipt', self.entry)
+        self.currentThread.finished.connect(self._handlePrintReceiptFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+
+    def _handlePrintReceiptFinished(self, result):
+        QMessageBox.information(self, 'Success', f"Receipt printed")
 
     def _populateSelectedMemberFields(self):
         orderMember = self.selectedOrder['member']
@@ -696,7 +710,6 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.activeThreads = []
 
         self._populatePostOrderSummary()
-        self._printReceipt()
         
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
 
@@ -706,46 +719,6 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.labelPayment.setText(f"{billing['payment']}")
         self.labelGrandTotal.setText(f"{billing['grandTotal']}")
         self.labelChange.setText(f"{billing['change']}")
-
-    def _printReceipt(self):
-        order = self.selectedOrder['order']
-        billing = self.selectedOrder['billing']
-        
-        self.loading.show()
-        self.currentThread = PrintThread('print_receipt', {
-            'organizationId': self.selectedOrder['organizationId'],
-            'userId': self.selectedOrder['userId'],
-            'order': {
-                'referenceId': order['referenceId'],
-                'machineId': order['machineId'],
-                'cart': order['cart'],
-            },
-            'billing': {
-                'subtotal': billing['subtotal'],
-                'discount': billing['discount'],
-                'tax': billing['tax'],
-                'grandTotal': billing['grandTotal'],
-                'paymentType': billing['paymentType'],
-                'payment': billing['payment'],
-                'change': billing['change'],
-            }
-        })
-        self.currentThread.running.connect(self._handlePrintReceiptRunning)
-        self.currentThread.finished.connect(self._handlePrintReceiptFinished)
-        self.currentThread.finished.connect(self._cleanupThread)
-        self.currentThread.finished.connect(self.loading.close)
-        self.currentThread.start()
-        self.activeThreads.append(self.currentThread)
-
-    def _handlePrintReceiptRunning(self, status):
-        # TODO: FINISH THIS
-        print(status)
-        print('receipt is printing')
-        
-    def _handlePrintReceiptFinished(self, result):
-        # TODO: FINISH THIS
-        print(result)
-        print('receipt is done printing')
         
 
     def _onPushButtonCloseClicked(self):
