@@ -80,6 +80,13 @@ class Ui_DialogLogin(object):
 
         self.retranslateUi(DialogLogin)
         QtCore.QMetaObject.connectSlotsByName(DialogLogin)
+        DialogLogin.setTabOrder(self.scrollArea, self.lineEditUserName)
+        DialogLogin.setTabOrder(self.lineEditUserName, self.lineEditAccessCode)
+        DialogLogin.setTabOrder(self.lineEditAccessCode, self.pushButtonAccessCodeVisibility)
+        DialogLogin.setTabOrder(self.pushButtonAccessCodeVisibility, self.checkBoxRememberMe)
+        DialogLogin.setTabOrder(self.checkBoxRememberMe, self.pushButtonSetup)
+        DialogLogin.setTabOrder(self.pushButtonSetup, self.pushButtonSignUp)
+        DialogLogin.setTabOrder(self.pushButtonSignUp, self.pushButtonLogin)
 
     def retranslateUi(self, DialogLogin):
         _translate = QtCore.QCoreApplication.translate

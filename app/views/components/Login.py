@@ -48,7 +48,6 @@ class Login(Ui_DialogLogin, QDialog):
         
     def _onPushButtonLoginClicked(self):
         self.loading.show()
-        self.loading.show()
         self.currentThread = AuthenticateThread('authenticate_user_by_user_name_access_code', {
             'userName': self.lineEditUserName.text(),
             'accessCode': self.lineEditAccessCode.text(),

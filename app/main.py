@@ -66,6 +66,7 @@ if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
     
+# TODO: add method where the cursor is automatically being placed in the barcode scanner line edit and cash tender. also add method where pressing enter proceeds to the next step (apply to all components)
 # TODO: write a cleaner version of the managesales codes especially the data entries object etc.
 # TODO: add loading everytime a query is being executed
 # TODO: add populate combobox in the components that doesnt have it

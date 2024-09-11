@@ -160,9 +160,9 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.comboBoxBarcodeFilter.setEnabled(activeOrderCount > 0)
         self.pushButtonAdd.setEnabled(activeOrderCount > 0)
         
+        self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
+        
         if activeOrderCount > 0:
-            self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
-            
             for i, data in enumerate(listData):
                 manageActionButton = ManageActionButton(add=True)
                 tableItems = [
@@ -184,10 +184,11 @@ class ManageSales(Ui_FormManageSales, QWidget):
             
                 manageActionButton.pushButtonAdd.clicked.connect(lambda _=i, data=data: self._onPushButtonAddClicked(data))
                 
-            self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
-            self.pushButtonPrev.setEnabled(self.currentPage > 1)
-            self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
+            self.lineEditBarcode.setFocus()
             
+        self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
+        self.pushButtonPrev.setEnabled(self.currentPage > 1)
+        self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonAddClicked(self, data):
         self._populateOrderItem(data)
@@ -298,9 +299,11 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         orderStatus = 2 if self.pushButtonPark.isChecked() else 1
         self.manageSales.activeOrder[orderIndex]['status'] = orderStatus
         
-        self.tableWidgetData.setEnabled(orderStatus == 1)
         self.pushButtonPark.setText('PARK' if orderStatus == 1 else 'UNPARK')
         self.pushButtonPay.setEnabled(orderStatus == 1)
+        self.comboBoxMemberName.setEnabled(orderStatus == 1)
+        self.tableWidgetData.setEnabled(orderStatus == 1)
+        self.manageSales.lineEditBarcode.setFocus()
         
     def populateTableWidgetData(self):
         orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart']
@@ -344,6 +347,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText(f"{discount:.2f}")
         self.labelTax.setText(f"{tax:.2f}")
         self.labelGrandTotal.setText(f"{grandTotal:.2f}")
+        self.manageSales.lineEditBarcode.setFocus()
 
     def _populateComboBoxMemberName(self):
         self.manageSales.currentThread = FetchThread('fetch_all_member_data')
@@ -395,6 +399,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()],
         )
         self.inOrder.exec()
+        self.manageSales.lineEditBarcode.setFocus()
                
     def _onPushButtonAddExactClicked(self, index, orderItem):
         item = orderItem[index]
@@ -539,7 +544,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
-            
+        self.lineEditCash.setFocus()
     
     def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
         self.close()
@@ -565,9 +570,10 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.lineEditPoints.setText(f"{orderMember['points']}" if orderMember else 'N/A')
 
     def _onPushButtonKeyClicked(self, key):
+        self.lineEditCash.setFocus()
         if key == 'DEL':
             self.cashPayment = self.lineEditCash.text()
-            self.lineEditCash.setText(self.cashPayment[:-1])
+            self.lineEditCash.backspace()
             return
 
         self.cashPayment = self.lineEditCash.text()
@@ -654,6 +660,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.labelCustomDiscount.setText(f"{customDiscount:.2f}")
         self.labelGrandTotal.setText(f"{grandTotal:.2f}")
         self.lineEditCash.setText(f"{grandTotal:.2f}")
+        self.lineEditCash.setFocus()
 
     def _onPushButtonDiscountClicked(self, index, data):
         customDiscount, confirm = QInputDialog.getDouble(self, 'Quantity', "Set custom discount:", 1, 1, 9999999, 2)
@@ -662,6 +669,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.selectedOrder['cart'][index]['customDiscount'] = customDiscount
             
             self._populateTableWidgetData()
+        self.lineEditCash.setFocus()
         
     def _onPushButtonCancelClicked(self):
         self.close()

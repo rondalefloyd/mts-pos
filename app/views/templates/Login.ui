@@ -140,6 +140,16 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>lineEditUserName</tabstop>
+  <tabstop>lineEditAccessCode</tabstop>
+  <tabstop>pushButtonAccessCodeVisibility</tabstop>
+  <tabstop>checkBoxRememberMe</tabstop>
+  <tabstop>pushButtonSetup</tabstop>
+  <tabstop>pushButtonSignUp</tabstop>
+  <tabstop>pushButtonLogin</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
