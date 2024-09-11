@@ -160,9 +160,11 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.comboBoxBarcodeFilter.setEnabled(activeOrderCount > 0)
         self.pushButtonAdd.setEnabled(activeOrderCount > 0)
         
-        self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
+        self.totalPages = 1
         
         if activeOrderCount > 0:
+            self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
+        
             for i, data in enumerate(listData):
                 manageActionButton = ManageActionButton(add=True)
                 tableItems = [
@@ -185,7 +187,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
                 manageActionButton.pushButtonAdd.clicked.connect(lambda _=i, data=data: self._onPushButtonAddClicked(data))
                 
             self.lineEditBarcode.setFocus()
-            
+        
         self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
