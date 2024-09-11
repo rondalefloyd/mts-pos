@@ -213,7 +213,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         itemName = data['itemName']
         promoName = data['promoName']
         price = data['price']
-        discount = data['discount']
+        discount = data['discount'] or 0.00
         available = data['available']
         stockBypass = 0
         
@@ -235,6 +235,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
             item['quantity'] += 1
             item['total'] += price
+            item['discount'] += discount
             isItemExist = True
             break
         
@@ -338,6 +339,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
                     
             # TODO: add tax and discount and implement it properly and clean
             subtotal += float(data['total'])
+            discount += float(data['discount'])
             grandTotal = (subtotal + tax) - discount
                     
             preOrderActionButton.pushButtonAddExact.clicked.connect(lambda _, index=i, orderItem=orderItem: self._onPushButtonAddExactClicked(index, orderItem))
@@ -651,6 +653,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     
             # TODO: add tax and discount and implement it properly and clean
             subtotal += float(data['total'])
+            discount += float(data['discount'])
             customDiscount = float(data['customDiscount'])
             grandTotal = ((subtotal + tax) - discount) - customDiscount
             
