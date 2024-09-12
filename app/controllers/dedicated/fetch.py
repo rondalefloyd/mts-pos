@@ -353,7 +353,10 @@ class FetchThread(QThread):
                     (Item.Barcode == barcode)
                 ).order_by(ItemPrice.UpdateTs.desc(), ItemPrice.EffectiveDate.desc()))
             
+            existingItemId = []
+            
             result['success'] = True
+            
             for itemPrice in itemPrices:
                 item = itemPrice.ItemId
                 brand = item.BrandId
@@ -361,25 +364,32 @@ class FetchThread(QThread):
                 promo = itemPrice.PromoId
                 stock = Stock.get_or_none(Stock.ItemId == item.Id)
                 
-                if itemPrice.EffectiveDate < datetime.now().date():
-                    result['listData'].append({
-                        # ids for editting purpose
-                        'itemId': item.Id,
-                        'brandId': brand.Id,
-                        'salesGroupId': salesGroup.Id,
-                        'itemPriceId': itemPrice.Id,
-                        'promoId': promo.Id if promo else None,
-                        'stockId': stock.Id if stock else None,
-                        # ids for displaying purpose
-                        'itemName': item.ItemName,
-                        'barcode': item.Barcode,
-                        'brandName': brand.BrandName,
-                        'price': itemPrice.Price,
-                        'discount': itemPrice.Discount,
-                        'promoName': promo.PromoName if promo else None,
-                        'available': stock.Available if stock else None,
-                        'updateTs': itemPrice.UpdateTs,
-                    })
+                if itemPrice.EffectiveDate > datetime.now().date():
+                    continue
+                
+                if item.Id in existingItemId:
+                    continue
+                
+                result['listData'].append({
+                    # ids for editting purpose
+                    'itemId': item.Id,
+                    'brandId': brand.Id,
+                    'salesGroupId': salesGroup.Id,
+                    'itemPriceId': itemPrice.Id,
+                    'promoId': promo.Id if promo else None,
+                    'stockId': stock.Id if stock else None,
+                    # ids for displaying purpose
+                    'itemName': item.ItemName,
+                    'barcode': item.Barcode,
+                    'brandName': brand.BrandName,
+                    'price': itemPrice.Price,
+                    'discount': itemPrice.Discount,
+                    'promoName': promo.PromoName if promo else None,
+                    'available': stock.Available if stock else None,
+                    'updateTs': itemPrice.UpdateTs,
+                })
+                
+                existingItemId.append(item.Id)
                 
             return result
         
@@ -445,6 +455,7 @@ class FetchThread(QThread):
             
             totalCount = itemPrices.count()
             paginatedItemPrices = itemPrices.limit(limit).offset(offset)
+            existingItemId = []
             
             result['success'] = True
             result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
@@ -455,25 +466,32 @@ class FetchThread(QThread):
                 promo = itemPrice.PromoId
                 stock = Stock.get_or_none(Stock.ItemId == item.Id)
                 
-                if itemPrice.EffectiveDate < datetime.now().date():
-                    result['listData'].append({
-                        # ids for editting purpose
-                        'itemId': item.Id,
-                        'brandId': brand.Id,
-                        'salesGroupId': salesGroup.Id,
-                        'itemPriceId': itemPrice.Id,
-                        'promoId': promo.Id if promo else None,
-                        'stockId': stock.Id if stock else None,
-                        # ids for displaying purpose
-                        'itemName': item.ItemName,
-                        'barcode': item.Barcode,
-                        'brandName': brand.BrandName,
-                        'price': itemPrice.Price,
-                        'discount': itemPrice.Discount,
-                        'promoName': promo.PromoName if promo else None,
-                        'available': stock.Available if stock else None,
-                        'updateTs': itemPrice.UpdateTs,
-                    })
+                # TODO: fix filtering should exclude duplicate 
+                if itemPrice.EffectiveDate > datetime.now().date():
+                    continue
+                
+                if item.Id in existingItemId:
+                    continue
+                
+                result['listData'].append({
+                    # ids for editting purpose
+                    'itemId': item.Id,
+                    'brandId': brand.Id,
+                    'salesGroupId': salesGroup.Id,
+                    'itemPriceId': itemPrice.Id,
+                    'promoId': promo.Id if promo else None,
+                    'stockId': stock.Id if stock else None,
+                    # ids for displaying purpose
+                    'itemName': item.ItemName,
+                    'barcode': item.Barcode,
+                    'brandName': brand.BrandName,
+                    'price': itemPrice.Price,
+                    'discount': itemPrice.Discount,
+                    'promoName': promo.PromoName if promo else None,
+                    'available': stock.Available if stock else None,
+                    'updateTs': itemPrice.UpdateTs,
+                })
+                existingItemId.append(item.Id)
                 
             return result
         
