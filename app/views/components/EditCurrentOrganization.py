@@ -4,31 +4,33 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
-from app.views.templates.EditStock_ui import Ui_DialogEditStock
+from app.views.templates.EditCurrentOrganization_ui import Ui_DialogEditCurrentOrganization
 from app.views.components.Loading import Loading
 from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
-class EditStock(Ui_DialogEditStock, QDialog):
-    def __init__(self, authData, selectedData):
+class EditCurrentOrganization(Ui_DialogEditCurrentOrganization, QDialog):
+    def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
-        self.selectedData = selectedData
+        self.organizationData = authData['organization']
         self.currentThread = None
         self.activeThreads = []
-
-        self.lineEditOnHand.setValidator(billFormatValidator())
-        self.lineEditAvailable.setValidator(billFormatValidator())
-
-        self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
-        self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
-        self.lineEditAvailable.setText(f"{self.selectedData['available']}")
-        self.lineEditOnHand.setText(f"{self.selectedData['onHand']}")
         
+        self.lineEditOrganizationName.setValidator(withSpaceTextDigitFormatValidator())
+        self.lineEditAddress.setValidator(addressFormatValidator())
+        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
+
+        self.lineEditTaxId.setText(f"{self.organizationData['taxId']}")
+        self.lineEditOrganizationName.setText(f"{self.organizationData['organizationName']}")
+        self.lineEditAddress.setText(f"{self.organizationData['address']}")
+        self.lineEditMobileNumber.setText(f"{self.organizationData['mobileNumber']}")
+        self.lineEditAccessCode.setText(f"{self.organizationData['accessCode']}")
+
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)
 
@@ -37,11 +39,15 @@ class EditStock(Ui_DialogEditStock, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.loading.show()
-        self.currentThread = EditThread('editStockDataById', {
-            'id': self.selectedData['id'],
-            'onHand': self.lineEditOnHand.text().upper(),
-            'available': self.lineEditAvailable.text(),
+        self.currentThread = EditThread('editOrganizationDataById', {
+            'id': self.organizationData['id'],
+            'taxId': self.lineEditTaxId.text(),
+            'organizationName': self.lineEditOrganizationName.text(),
+            'address': self.lineEditAddress.text().upper(),
+            'mobileNumber': self.lineEditMobileNumber.text(),
+            'accessCode': self.lineEditAccessCode.text(),
         })
+        
         self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.finished.connect(self.loading.close)
@@ -54,6 +60,7 @@ class EditStock(Ui_DialogEditStock, QDialog):
             return
             
         QMessageBox.information(self, 'Success', f"{result['message']}")
+        self.windowEvent = EVENT_START_LOGIN
         self.close()
         return
         

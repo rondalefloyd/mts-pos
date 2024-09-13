@@ -27,16 +27,20 @@ class EditThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'edit_item_price_related_data_by_id':
-                    result = self.edit_item_price_related_data_by_id(self.entry, result)
-                elif self.function_route == 'edit_member_data_by_id':
-                    result = self.edit_member_data_by_id(self.entry, result)
-                elif self.function_route == 'edit_promo_data_by_id':
-                    result = self.edit_promo_data_by_id(self.entry, result)
-                elif self.function_route == 'edit_reward_data_by_id':
-                    result = self.edit_reward_data_by_id(self.entry, result)
-                elif self.function_route == 'edit_stock_data_by_id':
-                    result = self.edit_stock_data_by_id(self.entry, result)
+                if self.function_route == 'editItemPriceRelatedDataById':
+                    result = self.editItemPriceRelatedDataById(self.entry, result)
+                elif self.function_route == 'editMemberDataById':
+                    result = self.editMemberDataById(self.entry, result)
+                elif self.function_route == 'editPromoDataById':
+                    result = self.editPromoDataById(self.entry, result)
+                elif self.function_route == 'editRewardDataById':
+                    result = self.editRewardDataById(self.entry, result)
+                elif self.function_route == 'editStockDataById':
+                    result = self.editStockDataById(self.entry, result)
+                elif self.function_route == 'editOrganizationDataById':
+                    result = self.editOrganizationDataById(self.entry, result)
+                elif self.function_route == 'editUserDataById':
+                    result = self.editUserDataById(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -55,7 +59,7 @@ class EditThread(QThread):
         self.finished.emit(result)
         print(f"{self.function_route} -> result_message: {result['message']}")
         
-    def edit_item_price_related_data_by_id(self, entry=None, result=None):
+    def editItemPriceRelatedDataById(self, entry=None, result=None):
         try:
             itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
             brand = Brand.select().where(Brand.BrandName == entry['brandName'])
@@ -137,7 +141,7 @@ class EditThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def edit_member_data_by_id(self, entry=None, result=None):
+    def editMemberDataById(self, entry=None, result=None):
         try:
             member = Member.select().where(
                 (Member.Id != entry['id']) &
@@ -165,7 +169,7 @@ class EditThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def edit_promo_data_by_id(self, entry=None, result=None):
+    def editPromoDataById(self, entry=None, result=None):
         try:
             promo = Promo.select().where(
                 (Promo.Id == entry['id']) &
@@ -191,7 +195,7 @@ class EditThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def edit_reward_data_by_id(self, entry=None, result=None):
+    def editRewardDataById(self, entry=None, result=None):
         try:
             reward = Reward.select().where(
                 (Reward.Id == entry['id']) &
@@ -218,7 +222,7 @@ class EditThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def edit_stock_data_by_id(self, entry=None, result=None):
+    def editStockDataById(self, entry=None, result=None):
         try:
             stock = Stock.get_or_none(Stock.Id == entry['id'])
             stock.OnHand = entry['onHand']
@@ -227,6 +231,45 @@ class EditThread(QThread):
             
             result['success'] = True
             result['message'] = 'Stock updated'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+
+    def editOrganizationDataById(self, entry=None, result=None):
+        try:
+            organization = Organization.get_or_none(Organization.Id == entry['id'])
+            organization.TaxId = entry['taxId']
+            organization.OrganizationName = entry['organizationName']
+            organization.Address = entry['address']
+            organization.MobileNumber = entry['mobileNumber']
+            organization.AccessCode = entry['accessCode']
+            organization.save()
+            
+            result['success'] = True
+            result['message'] = 'Organization updated'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+        
+    def editUserDataById(self, entry=None, result=None):
+        try:
+            user = User.get_or_none(User.Id == entry['id'])
+            user.UserName = entry['userName']
+            user.AccessCode = entry['accessCode']
+            user.FullName = entry['fullName']
+            user.BirthDate = entry['birthDate']
+            user.MobileNumber = entry['mobileNumber']
+            user.AccessLevel = entry['accessLevel']
+            user.save()
+            
+            result['success'] = True
+            result['message'] = 'User updated'
             return result
             
         except Exception as exception:

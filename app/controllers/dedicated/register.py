@@ -27,18 +27,18 @@ class RegisterThread(QThread):
          
         try:
             with postgres_db:
-                if self.function_route == 'register_item':
-                    result = self.register_item(self.entry, result)
-                elif self.function_route == 'register_member':
-                    result = self.register_member(self.entry, result)
-                elif self.function_route == 'register_promo':
-                    result = self.register_promo(self.entry, result)
-                elif self.function_route == 'register_reward':
-                    result = self.register_reward(self.entry, result)
-                elif self.function_route == 'register_user':
-                    result = self.register_user(self.entry, result)
-                elif self.function_route == 'register_organization':
-                    result = self.register_organization(self.entry, result)
+                if self.function_route == 'registerItem':
+                    result = self.registerItem(self.entry, result)
+                elif self.function_route == 'registerMember':
+                    result = self.registerMember(self.entry, result)
+                elif self.function_route == 'registerPromo':
+                    result = self.registerPromo(self.entry, result)
+                elif self.function_route == 'registerReward':
+                    result = self.registerReward(self.entry, result)
+                elif self.function_route == 'registerUser':
+                    result = self.registerUser(self.entry, result)
+                elif self.function_route == 'registerOrganization':
+                    result = self.registerOrganization(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -58,7 +58,7 @@ class RegisterThread(QThread):
         print(f"{self.function_route} -> result_message: {result['message']}")
 
     # add function here
-    def register_item(self, entry=None, result=None):
+    def registerItem(self, entry=None, result=None):
         print('this is the register item')
         """This function is a special case. The coding structure might be different from the standard."""
         try:
@@ -129,7 +129,7 @@ class RegisterThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def register_member(self, entry=None, result=None):
+    def registerMember(self, entry=None, result=None):
         try:
             member = Member.select().where(
                 (Member.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
@@ -162,7 +162,7 @@ class RegisterThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def register_promo(self, entry=None, result=None):
+    def registerPromo(self, entry=None, result=None):
         try:
             promo = Promo.select().where(
                 (Promo.PromoName == entry['promoName']) &
@@ -188,7 +188,7 @@ class RegisterThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def register_reward(self, entry=None, result=None):
+    def registerReward(self, entry=None, result=None):
         try:
             reward = Reward.select().where(
                 (Reward.RewardName == entry['rewardName']) &
@@ -216,7 +216,7 @@ class RegisterThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def register_user(self, entry=None, result=None):
+    def registerUser(self, entry=None, result=None):
         try:
             user = User.select().where(
                 (User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
@@ -257,7 +257,7 @@ class RegisterThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def register_organization(self, entry=None, result=None):
+    def registerOrganization(self, entry=None, result=None):
         try:
             organization = Organization.select().where(
                 (Organization.TaxId == entry['taxId']) &

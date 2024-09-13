@@ -36,7 +36,7 @@ class EditPromo(Ui_DialogEditPromo, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.loading.show()
-        self.currentThread = EditThread('edit_promo_data_by_id', {
+        self.currentThread = EditThread('editPromoDataById', {
             'id': self.selectedData['id'],
             'promoName': self.lineEditPromoName.text().upper(),
             'discountRate': self.lineEditDiscountRate.text(),

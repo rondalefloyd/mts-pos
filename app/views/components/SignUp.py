@@ -35,7 +35,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
     
     # private methods
     def _populateComboBoxOrganizationName(self):
-        self.fetchThread = FetchThread('fetch_all_organization_data')
+        self.fetchThread = FetchThread('fetchAllOrganizationData')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxOrganizationNameFinished)
         self.fetchThread.start()
         
@@ -51,7 +51,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
     
     def _onPushButtonCreateClicked(self):
         self.loading.show()
-        self.currentThread = RegisterThread('register_user', {
+        self.currentThread = RegisterThread('registerUser', {
             'organizationName': self.comboBoxOrganizationName.currentText().upper(),
             'userName': self.lineEditUserName.text(),
             'accessCode': self.lineEditAccessCode.text(),

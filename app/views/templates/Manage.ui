@@ -141,9 +141,9 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionOrganizationConfig"/>
+    <addaction name="actionCurrentOrganization"/>
     <addaction name="separator"/>
-    <addaction name="actionUserConfig"/>
+    <addaction name="actionCurrentUser"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -226,12 +226,12 @@
     <string>User</string>
    </property>
   </action>
-  <action name="actionOrganizationConfig">
+  <action name="actionCurrentOrganization">
    <property name="text">
     <string>&lt;OrganizationName&gt;</string>
    </property>
   </action>
-  <action name="actionUserConfig">
+  <action name="actionCurrentUser">
    <property name="text">
     <string>&lt;UserName&gt;</string>
    </property>

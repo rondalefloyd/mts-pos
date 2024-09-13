@@ -64,7 +64,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         
     def _onPushButtonAddClicked(self):
         self.loading.show()
-        self.currentThread = RegisterThread('register_promo', {
+        self.currentThread = RegisterThread('registerPromo', {
             'promoName': self.lineEditPromoName.text().upper(),
             'discountRate': self.lineEditDiscountRate.text(),
             'description': self.lineEditDescription.text(),
@@ -86,7 +86,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_promo_data_by_keyword_in_pagination', {
+        self.currentThread = FetchThread('fetchAllPromoDataByKeywordInPagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
@@ -137,7 +137,7 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = RemoveThread('remove_promo_by_id', {'id': data['id']})
+            self.currentThread = RemoveThread('removePromoById', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)

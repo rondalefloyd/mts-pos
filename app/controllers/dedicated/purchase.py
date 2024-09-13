@@ -27,8 +27,8 @@ class PurchaseThread(QThread):
          
         try:
             with postgres_db:
-                if self.function_route == 'purchase_item':
-                    result = self.purchase_item(self.entry, result)
+                if self.function_route == 'purchaseItem':
+                    result = self.purchaseItem(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -48,7 +48,7 @@ class PurchaseThread(QThread):
         print(f"{self.function_route} -> result_message: {result['message']}")
 
     # add function here
-    def purchase_item(self, entry=None, result=None):
+    def purchaseItem(self, entry=None, result=None):
         """This function is a special case. The coding structure might be different from the standard."""
         try:
             currentDate = datetime.now()

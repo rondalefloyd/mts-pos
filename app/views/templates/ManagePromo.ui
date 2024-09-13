@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>682</width>
+    <width>738</width>
     <height>752</height>
    </rect>
   </property>
@@ -174,10 +174,10 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="">
+    <widget class="QFrame" name="frameRegister">
      <property name="maximumSize">
       <size>
-       <width>500</width>
+       <width>16777215</width>
        <height>16777215</height>
       </size>
      </property>
@@ -192,8 +192,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>242</width>
-           <height>699</height>
+           <width>282</width>
+           <height>683</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="formLayout">

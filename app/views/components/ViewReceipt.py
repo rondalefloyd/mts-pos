@@ -40,7 +40,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
             billing = self.selectedData['billing']
             
             self.loading.show()
-            self.currentThread = PrintThread('print_receipt', {
+            self.currentThread = PrintThread('printReceipt', {
                 'organizationId': self.selectedData['organizationId'],
                 'userId': self.selectedData['userId'],
                 'order': {
@@ -81,7 +81,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         
     def _populateReceipt(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_receipt_data_by_receipt_id', {'receiptId': self.selectedData['id']})
+        self.currentThread = FetchThread('fetchReceiptDataByReceiptId', {'receiptId': self.selectedData['id']})
         self.currentThread.finished.connect(self._handleOnPopulateReceiptResult)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.finished.connect(self.loading.close)
@@ -103,7 +103,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_item_sold_data', {'receiptId': self.selectedData['id']})
+        self.currentThread = FetchThread('fetchAllItemSoldData', {'receiptId': self.selectedData['id']})
         self.currentThread.finished.connect(self._handlePopulateTableWidgetDataFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.finished.connect(self.loading.close)

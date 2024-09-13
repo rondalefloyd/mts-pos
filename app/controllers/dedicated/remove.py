@@ -26,18 +26,18 @@ class RemoveThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'remove_item_price_by_id':
-                    result = self.remove_item_price_by_id(self.entry, result)
-                elif self.function_route == 'remove_stock_by_id':
-                    result = self.remove_stock_by_id(self.entry, result)
-                elif self.function_route == 'remove_stock_by_id':
-                    result = self.remove_member_by_id(self.entry, result)
-                elif self.function_route == 'remove_promo_by_id':
-                    result = self.remove_promo_by_id(self.entry, result)
-                elif self.function_route == 'remove_reward_by_id':
-                    result = self.remove_reward_by_id(self.entry, result)
-                elif self.function_route == 'remove_user_by_id':
-                    result = self.remove_user_by_id(self.entry, result)
+                if self.function_route == 'removeItemPriceById':
+                    result = self.removeItemPriceById(self.entry, result)
+                elif self.function_route == 'removeStockById':
+                    result = self.removeStockById(self.entry, result)
+                elif self.function_route == 'removeStockById':
+                    result = self.removeMemberById(self.entry, result)
+                elif self.function_route == 'removePromoById':
+                    result = self.removePromoById(self.entry, result)
+                elif self.function_route == 'removeRewardById':
+                    result = self.removeRewardById(self.entry, result)
+                elif self.function_route == 'removeUserById':
+                    result = self.removeUserById(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -57,7 +57,7 @@ class RemoveThread(QThread):
         print(f"{self.function_route} -> result_message: {result['message']}")
 
     # add function here
-    def remove_item_price_by_id(self, entry=None, result=None):
+    def removeItemPriceById(self, entry=None, result=None):
         try:
             itemPrice = ItemPrice.select().where(ItemPrice.Id == entry['itemPriceId'])
             
@@ -76,7 +76,7 @@ class RemoveThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def remove_stock_by_id(self, entry=None, result=None):
+    def removeStockById(self, entry=None, result=None):
         try:
             stock = Stock.select().where(Stock.Id == entry['id'])
             
@@ -95,7 +95,7 @@ class RemoveThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def remove_member_by_id(self, entry=None, result=None):
+    def removeMemberById(self, entry=None, result=None):
         try:
             member = Member.select().where(Member.Id == entry['id'])
             
@@ -114,7 +114,7 @@ class RemoveThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def remove_promo_by_id(self, entry=None, result=None):
+    def removePromoById(self, entry=None, result=None):
         try:
             promo = Promo.select().where(Promo.Id == entry['id'])
             
@@ -133,7 +133,7 @@ class RemoveThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def remove_reward_by_id(self, entry=None, result=None):
+    def removeRewardById(self, entry=None, result=None):
         try:
             reward = Reward.select().where(Reward.Id == entry['id'])
             
@@ -152,7 +152,7 @@ class RemoveThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def remove_user_by_id(self, entry=None, result=None):
+    def removeUserById(self, entry=None, result=None):
         try:
             user = User.select().where(User.Id == entry['id'])
             

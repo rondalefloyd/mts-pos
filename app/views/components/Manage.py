@@ -8,6 +8,8 @@ sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.config import *
 from app.views.templates.Manage_ui import Ui_MainWindowManage
 from app.views.components.Loading import Loading
+from app.views.components.EditCurrentUser import EditCurrentUser
+from app.views.components.EditCurrentOrganization import EditCurrentOrganization
 from app.views.components.ManageUser import ManageUser
 from app.views.components.ManageMember import ManageMember
 from app.views.components.ManagePromo import ManagePromo
@@ -27,7 +29,9 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
+        self.authData = authData
         self.userData = authData['user']
+        self.organizationData = authData['organization']
         self.currentThread = None
         self.activeThreads = []
         
@@ -54,6 +58,8 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.labelFullName.setText(f"{self.userData['fullName']}")
         self.labelMobileNumber.setText(f"{self.userData['mobileNumber']}")
         self.labelDatabaseSource.setText(f"test")
+        self.actionCurrentOrganization.setText(f"{self.organizationData['organizationName']}")
+        self.actionCurrentUser.setText(f"{self.userData['userName']}")
         
         self.actionSales.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(0))
         self.actionTransaction.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(1))
@@ -65,6 +71,9 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.actionUser.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(7))
         
         self.actionLogout.triggered.connect(self._onActionLogoutTriggered)
+        
+        self.actionCurrentOrganization.triggered.connect(self._onActionCurrentOrganizationTriggered)
+        self.actionCurrentUser.triggered.connect(self._onActionCurrentUserTriggered)
 
         self._onStackedWidgetManageSetCurrentIndex(0)
 
@@ -110,6 +119,26 @@ class Manage(Ui_MainWindowManage, QMainWindow):
                 self.manageUser.refresh()
                 
         self.menuManage.setTitle(menuManageTitle)
+
+    def _onActionCurrentOrganizationTriggered(self):
+        self.editCurrentOrganization = EditCurrentOrganization(self.authData)
+        self.editCurrentOrganization.exec()
+        self.windowEvent = self.editCurrentOrganization.windowEvent
+
+        if self.windowEvent == EVENT_START_LOGIN:
+            self.authData = None
+            self.close()
+            pass
+    
+    def _onActionCurrentUserTriggered(self):
+        self.editCurrentUser = EditCurrentUser(self.authData)
+        self.editCurrentUser.exec()
+        self.windowEvent = self.editCurrentUser.windowEvent
+
+        if self.windowEvent == EVENT_START_LOGIN:
+            self.authData = None
+            self.close()
+            pass
 
     def _onActionLogoutTriggered(self):
         confirm = QMessageBox.warning(self, 'Confirm', f"Logout {self.userData['userName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)

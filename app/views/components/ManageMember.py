@@ -74,7 +74,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
     def _onPushButtonAddClicked(self):
         self.loading.show()
-        self.currentThread = RegisterThread('register_member', {
+        self.currentThread = RegisterThread('registerMember', {
             'organizationName': self.comboBoxOrganizationName.currentText().upper(),
             'memberName': self.lineEditMemberName.text().upper(),
             'birthDate': self.dateEditBirthDate.text(),
@@ -100,7 +100,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_member_data_by_keyword_in_pagination', {
+        self.currentThread = FetchThread('fetchAllMemberDataByKeywordInPagination', {
             'organizationName': self.organizationData['organizationName'],
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
@@ -156,7 +156,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = RemoveThread('remove_member_by_id', {'id': data['id']})
+            self.currentThread = RemoveThread('removeMemberById', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)

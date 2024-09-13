@@ -85,7 +85,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self._populateLineEditDiscountRate()
     
     def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
-        self.fetchThread = FetchThread('fetch_all_item_related_data')
+        self.fetchThread = FetchThread('fetchAllItemRelatedData')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupFinished)
         self.fetchThread.start()
         
@@ -113,7 +113,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
     
     def _populateComboBoxPromoName(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_promo_data')
+        self.currentThread = FetchThread('fetchAllPromoData')
         self.currentThread.finished.connect(self._handlePopulateComboBoxPromoNameFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.finished.connect(self.loading.close)
@@ -132,7 +132,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
             
     def _populateLineEditDiscountRate(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_promo_data_by_promo_name', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
+        self.currentThread = FetchThread('fetchPromoDataByPromoName', {'promoName': f"{self.comboBoxPromoName.currentText()}"})
         self.currentThread.finished.connect(self._handlePopulateLineEditDiscountRateFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.finished.connect(self.loading.close)
@@ -163,7 +163,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.loading.show()
-        self.currentThread = EditThread('edit_item_price_related_data_by_id', {
+        self.currentThread = EditThread('editItemPriceRelatedDataById', {
             'itemPriceId': self.selectedData['itemPriceId'],
             'itemId': self.selectedData['itemId'],
             'itemTypeId': self.selectedData['itemTypeId'],

@@ -37,6 +37,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.tabWidgetOrder.clear()
         self.comboBoxBarcodeFilter.setVisible(False)
         self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
+        self.labelOrderName.setText(f"N/A")
         
         self.refresh()
         
@@ -63,16 +64,20 @@ class ManageSales(Ui_FormManageSales, QWidget):
             
             if confirm != QMessageBox.StandardButton.Yes:
                 return
-    
+            
         self.tabWidgetOrder.removeTab(index)
         self.activeOrder.pop(index)
+        
+        if len(self.activeOrder) <= 0:
+            self.labelOrderName.setText(f"N/A")
+            
         self._populateTableWidgetData()
 
     def _onLineEditBarcodeReturnPressed(self):
         orderType = self.activeOrder[self.tabWidgetOrder.currentIndex()]['type']
         
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_item_price_related_data_by_barcode_order_type', {
+        self.currentThread = FetchThread('fetchAllItemPriceRelatedDataByBarcodeOrderType', {
             'barcode': f"{self.lineEditBarcode.text()}",
             'orderType': f"{self.comboBoxBarcodeFilter.currentText().upper() if orderType == 'MIXED' else orderType.upper()}",
         })
@@ -138,7 +143,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_order_type_in_pagination', {
+        self.currentThread = FetchThread('fetchAllItemPriceRelatedDataByKeywordOrderTypeInPagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
             'orderType': f"{self.activeOrder[self.tabWidgetOrder.currentIndex()]['type'].upper() if len(self.activeOrder) > 0 else ''}",
@@ -354,7 +359,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.manageSales.lineEditBarcode.setFocus()
 
     def _populateComboBoxMemberName(self):
-        self.manageSales.currentThread = FetchThread('fetch_all_member_data')
+        self.manageSales.currentThread = FetchThread('fetchAllMemberData')
         self.manageSales.currentThread.finished.connect(self._handlePopulateComboBoxMemberNameFinished)
         self.manageSales.currentThread.finished.connect(self.manageSales._cleanupThread)
         self.manageSales.currentThread.start()
@@ -371,7 +376,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.comboBoxMemberName.clearEditText()
 
     def _onComboBoxMemberNameCurrentTextChanged(self):
-        self.manageSales.currentThread = FetchThread('fetch_member_data_by_member_name', {'memberName': f"{self.comboBoxMemberName.currentText()}"})
+        self.manageSales.currentThread = FetchThread('fetchMemberDataByMemberName', {'memberName': f"{self.comboBoxMemberName.currentText()}"})
         self.manageSales.currentThread.finished.connect(self._handleOnComboBoxMemberNameCurrentTextChangedFinished)
         self.manageSales.currentThread.finished.connect(self.manageSales._cleanupThread)
         self.manageSales.currentThread.start()
@@ -542,7 +547,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     'change': change,
                 }
             }
-            self.currentThread = PurchaseThread('purchase_item', self.entry)
+            self.currentThread = PurchaseThread('purchaseItem', self.entry)
             self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)
@@ -557,7 +562,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.loading = Loading()
         self.loading.labelMessage.setText(f"Printing receipt...")
         self.loading.show()
-        self.currentThread = PrintThread('print_receipt', self.entry)
+        self.currentThread = PrintThread('printReceipt', self.entry)
         self.currentThread.finished.connect(self._handlePrintReceiptFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.finished.connect(self.loading.close)

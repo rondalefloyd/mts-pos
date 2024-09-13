@@ -69,7 +69,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.loadData = LoadData(self.authData)
         self.loadData.show()
         self.loadData.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
-        self.currentThread = LoadThread('load_item', {
+        self.currentThread = LoadThread('loadItem', {
             'filePath': filePath,
             'replaceData': isReplaceData
         })
@@ -99,7 +99,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self._populateTableWidgetData()
 
     def _populateComboBoxItemTypeBrandSupplier(self):
-        self.fetchThread = FetchThread('fetch_all_item_related_data')
+        self.fetchThread = FetchThread('fetchAllItemRelatedData')
         self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierFinished)
         self.fetchThread.start()
         
@@ -146,7 +146,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
     def _onPushButtonAddClicked(self):
         self.loading.show()
-        self.currentThread = RegisterThread('register_item', {
+        self.currentThread = RegisterThread('registerItem', {
             'itemName': self.lineEditItemName.text().upper(),
             'barcode': self.lineEditBarcode.text(),
             'expireDate': self.dateEditExpireDate.text(),
@@ -176,7 +176,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_item_price_related_data_by_keyword_in_pagination', {
+        self.currentThread = FetchThread('fetchAllItemPriceRelatedDataByKeywordInPagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
@@ -239,7 +239,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = RemoveThread('remove_item_price_by_id', {'itemPriceId': data['itemPriceId']})
+            self.currentThread = RemoveThread('removeItemPriceById', {'itemPriceId': data['itemPriceId']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)

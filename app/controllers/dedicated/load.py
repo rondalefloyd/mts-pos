@@ -29,8 +29,8 @@ class LoadThread(QThread):
          
         try:
             with postgres_db:
-                if self.function_route == 'load_item':
-                    result = self.load_item(self.entry, result)
+                if self.function_route == 'loadItem':
+                    result = self.loadItem(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -53,7 +53,7 @@ class LoadThread(QThread):
         self.isActive = False  # Set the flag to stop the thread
         
     # add function here
-    def load_item(self, entry=None, result=None):
+    def loadItem(self, entry=None, result=None):
         # Load the CSV file using pandas
         if entry['replaceData'] is True:
             itemType = ItemType.delete().execute()

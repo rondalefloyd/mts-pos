@@ -47,7 +47,7 @@ class EditMember(Ui_DialogEditMember, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.loading.show()
-        self.currentThread = EditThread('edit_member_data_by_id', {
+        self.currentThread = EditThread('editMemberDataById', {
             'id': self.selectedData['id'],
             'memberName': self.lineEditMemberName.text().upper(),
             'birthDate': self.dateEditBirthDate.text(),

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogOrganizationConfig</class>
- <widget class="QDialog" name="DialogOrganizationConfig">
+ <class>DialogEditCurrentOrganization</class>
+ <widget class="QDialog" name="DialogEditCurrentOrganization">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>440</width>
-    <height>432</height>
+    <height>241</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Edit Organization Config</string>
+   <string>Edit Organization</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -38,7 +38,7 @@
         <x>0</x>
         <y>0</y>
         <width>420</width>
-        <height>362</height>
+        <height>171</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -119,9 +119,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonCreate">
+      <widget class="QPushButton" name="pushButtonSave">
        <property name="text">
-        <string>Create</string>
+        <string>Save</string>
        </property>
       </widget>
      </item>

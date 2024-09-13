@@ -27,8 +27,8 @@ class VoidThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'void_item_sold_data_by_id':
-                    result = self.void_item_sold_data_by_id(self.entry, result)
+                if self.function_route == 'voidItemSoldDataById':
+                    result = self.voidItemSoldDataById(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -47,7 +47,7 @@ class VoidThread(QThread):
         self.finished.emit(result)
         print(f"{self.function_route} -> result_message: {result['message']}")
         
-    def void_item_sold_data_by_id(self, entry=None, result=None):
+    def voidItemSoldDataById(self, entry=None, result=None):
         try:
             itemSold = ItemSold.select().where(
                 (ItemSold.Id == entry['id']) &

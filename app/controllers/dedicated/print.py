@@ -30,8 +30,8 @@ class PrintThread(QThread):
          
         try:
             with postgres_db:
-                if self.function_route == 'print_receipt':
-                    result = self.print_receipt(self.entry, result)
+                if self.function_route == 'printReceipt':
+                    result = self.printReceipt(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -54,7 +54,7 @@ class PrintThread(QThread):
         self.isActive = False  # Set the flag to stop the thread
         
     # add function here
-    def print_receipt(self, entry=None, result=None):
+    def printReceipt(self, entry=None, result=None):
         try:
             pythoncom.CoInitialize()
             # Load the DOCX template

@@ -27,40 +27,40 @@ class FetchThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'fetch_all_organization_data':
-                    result = self.fetch_all_organization_data(self.entry, result)
-                elif self.function_route == 'fetch_member_data_by_member_name':
-                    result = self.fetch_member_data_by_member_name(self.entry, result)
-                elif self.function_route == 'fetch_receipt_data_by_receipt_id':
-                    result = self.fetch_receipt_data_by_receipt_id(self.entry, result)
-                elif self.function_route == 'fetch_all_member_data':
-                    result = self.fetch_all_member_data(self.entry, result)
-                elif self.function_route == 'fetch_promo_data_by_promo_name':
-                    result = self.fetch_promo_data_by_promo_name(self.entry, result)
-                elif self.function_route == 'fetch_all_promo_data':
-                    result = self.fetch_all_promo_data(self.entry, result)
-                elif self.function_route == 'fetch_all_item_sold_data':
-                    result = self.fetch_all_item_sold_data(self.entry, result)
-                elif self.function_route == 'fetch_all_item_related_data':
-                    result = self.fetch_all_item_related_data(self.entry, result)
-                elif self.function_route == 'fetch_all_item_price_related_data_by_barcode_order_type':
-                    result = self.fetch_all_item_price_related_data_by_barcode_order_type(self.entry, result)
-                elif self.function_route == 'fetch_all_item_price_related_data_by_keyword_order_type_in_pagination':
-                    result = self.fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_stock_data_by_keyword_in_pagination':
-                    result = self.fetch_all_stock_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_item_price_related_data_by_keyword_in_pagination':
-                    result = self.fetch_all_item_price_related_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_member_data_by_keyword_in_pagination':
-                    result = self.fetch_all_member_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_promo_data_by_keyword_in_pagination':
-                    result = self.fetch_all_promo_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_reward_data_by_keyword_in_pagination':
-                    result = self.fetch_all_reward_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_user_data_by_keyword_in_pagination':
-                    result = self.fetch_all_user_data_by_keyword_in_pagination(self.entry, result)
-                elif self.function_route == 'fetch_all_receipt_data_by_keyword_in_pagination':
-                    result = self.fetch_all_receipt_data_by_keyword_in_pagination(self.entry, result)
+                if self.function_route == 'fetchAllOrganizationData':
+                    result = self.fetchAllOrganizationData(self.entry, result)
+                elif self.function_route == 'fetchMemberDataByMemberName':
+                    result = self.fetchMemberDataByMemberName(self.entry, result)
+                elif self.function_route == 'fetchReceiptDataByReceiptId':
+                    result = self.fetchReceiptDataByReceiptId(self.entry, result)
+                elif self.function_route == 'fetchAllMemberData':
+                    result = self.fetchAllMemberData(self.entry, result)
+                elif self.function_route == 'fetchPromoDataByPromoName':
+                    result = self.fetchPromoDataByPromoName(self.entry, result)
+                elif self.function_route == 'fetchAllPromoData':
+                    result = self.fetchAllPromoData(self.entry, result)
+                elif self.function_route == 'fetchAllItemSoldData':
+                    result = self.fetchAllItemSoldData(self.entry, result)
+                elif self.function_route == 'fetchAllItemRelatedData':
+                    result = self.fetchAllItemRelatedData(self.entry, result)
+                elif self.function_route == 'fetchAllItemPriceRelatedDataByBarcodeOrderType':
+                    result = self.fetchAllItemPriceRelatedDataByBarcodeOrderType(self.entry, result)
+                elif self.function_route == 'fetchAllItemPriceRelatedDataByKeywordOrderTypeInPagination':
+                    result = self.fetchAllItemPriceRelatedDataByKeywordOrderTypeInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllStockDataByKeywordInPagination':
+                    result = self.fetchAllStockDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllItemPriceRelatedDataByKeywordInPagination':
+                    result = self.fetchAllItemPriceRelatedDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllMemberDataByKeywordInPagination':
+                    result = self.fetchAllMemberDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllPromoDataByKeywordInPagination':
+                    result = self.fetchAllPromoDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllRewardDataByKeywordInPagination':
+                    result = self.fetchAllRewardDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllUserDataByKeywordInPagination':
+                    result = self.fetchAllUserDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllReceiptDataByKeywordInPagination':
+                    result = self.fetchAllReceiptDataByKeywordInPagination(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -80,7 +80,7 @@ class FetchThread(QThread):
         print(f"{self.function_route} -> result_message: {result['message']}")
 
     # add function here
-    def fetch_all_organization_data(self, entry=None, result=None):
+    def fetchAllOrganizationData(self, entry=None, result=None):
         try:
             organizations = Organization.select().order_by(Organization.UpdateTs.desc())
             
@@ -104,7 +104,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def fetch_promo_data_by_promo_name(self, entry=None, result=None):
+    def fetchPromoDataByPromoName(self, entry=None, result=None):
         try:
             promo = Promo.select().where(Promo.PromoName == entry['promoName']).order_by(Promo.UpdateTs.desc())
             
@@ -130,7 +130,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def fetch_member_data_by_member_name(self, entry=None, result=None):
+    def fetchMemberDataByMemberName(self, entry=None, result=None):
         try:
             member = Member.select().where(Member.MemberName == entry['memberName']).order_by(Member.UpdateTs.desc())
             
@@ -159,7 +159,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def fetch_receipt_data_by_receipt_id(self, entry=None, result=None):
+    def fetchReceiptDataByReceiptId(self, entry=None, result=None):
         try:
             receipt = Receipt.select().where(Receipt.Id == entry['receiptId'])
             
@@ -190,7 +190,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def fetch_all_promo_data(self, entry=None, result=None):
+    def fetchAllPromoData(self, entry=None, result=None):
         try:
             promos = Promo.select().order_by(Promo.UpdateTs.desc())
             
@@ -214,7 +214,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def fetch_all_item_sold_data(self, entry=None, result=None):
+    def fetchAllItemSoldData(self, entry=None, result=None):
         try:
             itemSolds = ItemSold.select().where(ItemSold.ReceiptId == entry['receiptId']).order_by(ItemSold.UpdateTs.desc())
             
@@ -243,7 +243,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
     
-    def fetch_all_member_data(self, entry=None, result=None):
+    def fetchAllMemberData(self, entry=None, result=None):
         try:
             members = Member.select().order_by(Member.UpdateTs.desc())
             
@@ -270,7 +270,7 @@ class FetchThread(QThread):
             return result
         
         
-    def fetch_all_item_related_data(self, entry=None, result=None):
+    def fetchAllItemRelatedData(self, entry=None, result=None):
         try:
             itemTypes = ItemType.select().order_by(ItemType.UpdateTs.desc())
             brands = Brand.select().order_by(Brand.UpdateTs.desc())
@@ -317,7 +317,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def fetch_all_item_price_related_data_by_barcode_order_type(self, entry=None, result=None):
+    def fetchAllItemPriceRelatedDataByBarcodeOrderType(self, entry=None, result=None):
         try:
             barcode = entry['barcode']
             orderType = entry['orderType']
@@ -399,7 +399,7 @@ class FetchThread(QThread):
             return result
         
         
-    def fetch_all_item_price_related_data_by_keyword_order_type_in_pagination(self, entry=None, result=None):
+    def fetchAllItemPriceRelatedDataByKeywordOrderTypeInPagination(self, entry=None, result=None):
         try:
             limit = 15
             offset = (entry['currentPage'] - 1) * limit
@@ -500,7 +500,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def fetch_all_item_price_related_data_by_keyword_in_pagination(self, entry=None, result=None):
+    def fetchAllItemPriceRelatedDataByKeywordInPagination(self, entry=None, result=None):
         try:
             limit = 15
             offset = (entry['currentPage'] - 1) * limit
@@ -580,7 +580,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def fetch_all_stock_data_by_keyword_in_pagination(self, entry=None, result=None):
+    def fetchAllStockDataByKeywordInPagination(self, entry=None, result=None):
         try:
             limit = 15
             offset = (entry['currentPage'] - 1) * limit
@@ -621,7 +621,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def fetch_all_member_data_by_keyword_in_pagination(self, entry=None, result=None):
+    def fetchAllMemberDataByKeywordInPagination(self, entry=None, result=None):
         try:
             limit = 15
             offset = (entry['currentPage'] - 1) * limit
@@ -661,7 +661,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def fetch_all_promo_data_by_keyword_in_pagination(self, entry=None, result=None):
+    def fetchAllPromoDataByKeywordInPagination(self, entry=None, result=None):
         try:
             limit = 15
             offset = (entry['currentPage'] - 1) * limit
@@ -695,7 +695,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def fetch_all_reward_data_by_keyword_in_pagination(self, entry=None, result=None):
+    def fetchAllRewardDataByKeywordInPagination(self, entry=None, result=None):
         try:
             limit = 15
             offset = (entry['currentPage'] - 1) * limit
@@ -731,7 +731,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
         
-    def fetch_all_user_data_by_keyword_in_pagination(self, entry=None, result=None):
+    def fetchAllUserDataByKeywordInPagination(self, entry=None, result=None):
         try:
             limit = 15
             offset = (entry['currentPage'] - 1) * limit
@@ -773,7 +773,7 @@ class FetchThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def fetch_all_receipt_data_by_keyword_in_pagination(self, entry=None, result=None):
+    def fetchAllReceiptDataByKeywordInPagination(self, entry=None, result=None):
         try:
             limit = 15
             offset = (entry['currentPage'] - 1) * limit

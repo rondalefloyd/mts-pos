@@ -53,7 +53,7 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_receipt_data_by_keyword_in_pagination', {
+        self.currentThread = FetchThread('fetchAllReceiptDataByKeywordInPagination', {
             'organizationName': self.organizationData['organizationName'],
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",

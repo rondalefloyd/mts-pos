@@ -33,7 +33,7 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = VoidThread('void_item_sold_data_by_id', {
+            self.currentThread = VoidThread('voidItemSoldDataById', {
                 'id': self.selectedData['id'],
                 'itemId': self.selectedData['itemId'],
                 'stockBypass': self.selectedData['stockBypass'],

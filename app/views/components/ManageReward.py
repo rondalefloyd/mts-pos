@@ -65,7 +65,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
         
     def _onPushButtonAddClicked(self):
         self.loading.show()
-        self.currentThread = RegisterThread('register_reward', {
+        self.currentThread = RegisterThread('registerReward', {
             'rewardName': self.lineEditRewardName.text().upper(),
             'points': self.lineEditPoints.text(),
             'target': self.lineEditTarget.text(),
@@ -88,7 +88,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetch_all_reward_data_by_keyword_in_pagination', {
+        self.currentThread = FetchThread('fetchAllRewardDataByKeywordInPagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
@@ -141,7 +141,7 @@ class ManageReward(Ui_FormManageReward, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = RemoveThread('remove_reward_by_id', {'id': data['id']})
+            self.currentThread = RemoveThread('removeRewardById', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)
