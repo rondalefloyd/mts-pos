@@ -32,6 +32,12 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.lineEditPrice.setValidator(billFormatValidator())
         self.comboBoxPromoName.setValidator(billFormatValidator())
 
+        self.dateEditEffectiveDate.setMinimumDate(QDate.currentDate())
+        self.dateEditExpireDate.setMinimumDate(QDate.currentDate().addDays(1))
+        self.dateEditStartDate.setMinimumDate(QDate.currentDate())
+        self.dateEditEndDate.setMinimumDate(QDate.currentDate().addDays(1))
+
+
         self.checkBoxTrackInventory.setDisabled(self.selectedData['stockId'] is not None)
         self.checkBoxTrackInventory.setChecked(self.selectedData['stockId'] is not None)
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
@@ -47,6 +53,7 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
         self._populateComboBoxItemTypeBrandSupplierSalesGroup()
         
+        self.dateEditStartDate.dateChanged.connect(self._onDateEditEndDateDateChanged)
         self.checkBoxApplyPromo.stateChanged.connect(self._onCheckBoxApplyPromoStateChanged)
         self.lineEditPrice.textChanged.connect(self._populateLineEditDiscountRate)
         self.comboBoxPromoName.currentTextChanged.connect(self._populateLineEditDiscountRate)
@@ -55,6 +62,9 @@ class EditItem(Ui_DialogEditItem, QDialog):
 
 
     # private methods
+    def _onDateEditEndDateDateChanged(self, date):
+        self.dateEditEndDate.setMinimumDate(date.addDays(1))
+    
     def _handleOnCheckBoxTrackInventoryStateChangedFinished(self, result):
         QMessageBox.information(self, 'Success', f"{result['message']}")
         

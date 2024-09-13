@@ -87,7 +87,7 @@ class EditThread(QThread):
                 itemPrice.ItemId = item.Id
                 itemPrice.Capital = entry['capital']
                 itemPrice.Price = entry['price']
-                itemPrice.EffectiveDate = datetime.strptime(entry['endDate'], '%Y-%m-%d') + timedelta(days=1)
+                itemPrice.EffectiveDate = datetime.strptime(entry['endDate'], '%Y-%m-%d')
                 itemPrice.UpdateTs = datetime.now()
                 itemPrice.save()
                 
