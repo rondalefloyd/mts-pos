@@ -1,0 +1,28 @@
+QWidget#FormManageActionButton QPushButton {
+    background-color: #ff0000;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+}
+
+QWidget#FormManageActionButton QPushButton:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+}
+/* TODO: fix this */
+QWidget#FormManageActionButton QPushButton#pushButtonDelete {
+    background-color: #ff0000;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+}
+
+QWidget#FormManageActionButton QPushButton#pushButtonDelete:hover {
+    background-color: white;
+    border: 2px solid #ff0000;
+    color: black;
+    border: 2px solid #4CAF50;
+}

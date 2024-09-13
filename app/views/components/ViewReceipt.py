@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
-from app.utils.config import *
+from app.utils.global_variables import *
 from app.views.templates.ViewReceipt_ui import Ui_DialogViewReceipt
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.VoidItemSold import VoidItemSold

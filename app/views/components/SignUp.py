@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.utils.config import *
+from app.utils.global_variables import *
 from app.views.templates.SignUp_ui import Ui_DialogSignUp
 from app.views.components.Loading import Loading
 from app.views.validator import *

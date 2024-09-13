@@ -8,7 +8,6 @@ sys.path.append(os.path.abspath('')) # required to change the default path
 from app.models.entities import User, Organization, UserSession
 from app.utils.databases import postgres_db
 
-
 class AuthenticateThread(QThread):
     finished = pyqtSignal(object)
     

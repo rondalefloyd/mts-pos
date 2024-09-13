@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
-from app.utils.config import *
+from app.utils.global_variables import *
 from app.views.templates.ManageMember_ui import Ui_FormManageMember
 from app.views.components.Loading import Loading
 from app.views.components.EditMember import EditMember

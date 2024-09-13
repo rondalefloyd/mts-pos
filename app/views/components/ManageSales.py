@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from datetime import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
-from app.utils.config import *
+from app.utils.global_variables import *
 from app.views.templates.ManageSales_ui import Ui_FormManageSales
 from app.views.templates.PreOrder_ui import Ui_FormPreOrder
 from app.views.templates.InOrder_ui import Ui_DialogInOrder

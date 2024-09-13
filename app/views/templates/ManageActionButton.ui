@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>417</width>
+    <width>498</width>
     <height>41</height>
    </rect>
   </property>
@@ -16,6 +16,12 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QPushButton" name="pushButtonEdit">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
       <string>Edit</string>
      </property>
@@ -23,6 +29,12 @@
    </item>
    <item>
     <widget class="QPushButton" name="pushButtonView">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
       <string>View</string>
      </property>
@@ -30,6 +42,12 @@
    </item>
    <item>
     <widget class="QPushButton" name="pushButtonDelete">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
       <string>Delete</string>
      </property>
@@ -37,6 +55,12 @@
    </item>
    <item>
     <widget class="QPushButton" name="pushButtonAdd">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
       <string>Add</string>
      </property>
@@ -44,6 +68,12 @@
    </item>
    <item>
     <widget class="QPushButton" name="pushButtonDiscount">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
       <string>Discount</string>
      </property>
@@ -51,6 +81,12 @@
    </item>
    <item>
     <widget class="QPushButton" name="pushButtonVoid">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
       <string>Void</string>
      </property>

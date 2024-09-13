@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.utils.databases import postgres_db
-from app.utils.config import *
+from app.utils.global_variables import *
 from app.views.components.Tester import Tester
 from app.views.components.Setup import Setup
 from app.views.components.SignUp import SignUp
@@ -28,8 +28,19 @@ def _startApp():
         
     app = QApplication(sys.argv)
     
-    with open(os.path.abspath('app/views/assets/styles/stylesheet.qss'), 'r') as stylesheet:
-        app.setStyleSheet(stylesheet.read())
+    qssFilePaths = [
+        os.path.abspath('app/views/assets/styles/common.qss'),
+        os.path.abspath('app/views/assets/styles/dedicated.qss'),
+    ]
+    
+    # Read and concatenate QSS files
+    styleSheet = ""
+    for filePath in qssFilePaths:
+        with open(filePath, 'r') as file:
+            styleSheet += file.read() + "\n"
+    
+    # Apply the concatenated QSS to the application
+    app.setStyleSheet(styleSheet)
     
     windowEvent = EVENT_START_LOGIN
     authData = None
@@ -66,9 +77,9 @@ if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
     
-# TODO: add method where the cursor is automatically being placed in the barcode scanner line edit and cash tender. also add method where pressing enter proceeds to the next step (apply to all components)
+# TODO: implement infra where theres a master and slave server (requires two devices)
+# TODO: add design to the UI
 # TODO: write a cleaner version of the managesales codes especially the data entries object etc.
-# TODO: add loading everytime a query is being executed
 # TODO: add populate combobox in the components that doesnt have it
 # TODO: check the variable names
 # TODO: set clear button enabled for all line edit

@@ -33,6 +33,7 @@ class Ui_FormManageStock(object):
         self.tableWidgetData.setAlternatingRowColors(True)
         self.tableWidgetData.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.tableWidgetData.setShowGrid(False)
         self.tableWidgetData.setGridStyle(QtCore.Qt.SolidLine)
         self.tableWidgetData.setObjectName("tableWidgetData")
         self.tableWidgetData.setColumnCount(6)

@@ -47,6 +47,7 @@ class Ui_DialogViewReceipt(object):
         self.tableWidgetData.setAlternatingRowColors(True)
         self.tableWidgetData.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.tableWidgetData.setShowGrid(False)
         self.tableWidgetData.setGridStyle(QtCore.Qt.SolidLine)
         self.tableWidgetData.setWordWrap(False)
         self.tableWidgetData.setObjectName("tableWidgetData")

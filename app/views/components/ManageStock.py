@@ -4,7 +4,7 @@ import logging
 from PyQt5.QtWidgets import QWidget, QMessageBox, QTableWidgetItem
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
-from app.utils.config import *
+from app.utils.global_variables import *
 from app.views.templates.ManageStock_ui import Ui_FormManageStock
 from app.views.components.Loading import Loading
 from app.views.components.EditStock import EditStock
