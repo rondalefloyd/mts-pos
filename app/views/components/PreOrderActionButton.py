@@ -11,4 +11,9 @@ class PreOrderActionButton(Ui_FormPreOrderActionButton, QWidget):
         super().__init__()
         self.setupUi(self)
         
+        self.pushButtonAddOne.setText("")
+        self.pushButtonAddExact.setText("")
+        self.pushButtonDeleteOne.setText("")
+        self.pushButtonDeleteAll.setText("")
+        
         self.setWindowFlags(Qt.FramelessWindowHint)

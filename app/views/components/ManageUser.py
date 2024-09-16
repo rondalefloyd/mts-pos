@@ -32,6 +32,9 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.lineEditFullName.setValidator(fullNameValidator())
         self.lineEditMobileNumber.setValidator(mobileNumberValidator())
         
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        
         self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)

@@ -27,6 +27,9 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        
         self._populateTableWidgetData()
         self._populateReceipt()
 
@@ -117,7 +120,6 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.cart = listData
         
         self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(len(listData))
         
         self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
         

@@ -60,10 +60,12 @@ QTableWidget {
     /* background: transparent; */
 }
 
+QTableWidget::item {
+    border-bottom: 1px solid #ccc;
+    padding: 0px 10px;
+}
+
 QHeaderView::section {
     padding: 4px;
 }
 
-QTableWidget::item {
-    border-right: 1px solid #ccc;
-}

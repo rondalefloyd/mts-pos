@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from PyQt5.QtWidgets import QWidget, QMessageBox, QTableWidgetItem
+from PyQt5.QtWidgets import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.global_variables import *
@@ -24,6 +24,9 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
         self.organizationData = authData['organization']
         self.currentThread = None
         self.activeThreads = []
+        
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         
         self.refresh()
         

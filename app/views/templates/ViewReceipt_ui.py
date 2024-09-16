@@ -74,7 +74,7 @@ class Ui_DialogViewReceipt(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidgetData.setHorizontalHeaderItem(6, item)
         self.tableWidgetData.horizontalHeader().setCascadingSectionResizes(False)
-        self.tableWidgetData.horizontalHeader().setStretchLastSection(True)
+        self.tableWidgetData.horizontalHeader().setStretchLastSection(False)
         self.tableWidgetData.verticalHeader().setVisible(False)
         self.tableWidgetData.verticalHeader().setCascadingSectionResizes(False)
         self.tableWidgetData.verticalHeader().setDefaultSectionSize(50)

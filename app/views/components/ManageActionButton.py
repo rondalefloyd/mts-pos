@@ -11,6 +11,13 @@ class ManageActionButton(Ui_FormManageActionButton, QWidget):
         super().__init__()
         self.setupUi(self)
         
+        self.pushButtonAdd.setText("")
+        self.pushButtonDelete.setText("")
+        self.pushButtonDiscount.setText("")
+        self.pushButtonEdit.setText("")
+        self.pushButtonView.setText("")
+        self.pushButtonVoid.setText("")
+        
         self.pushButtonAdd.setVisible(add)
         self.pushButtonDelete.setVisible(delete)
         self.pushButtonDiscount.setVisible(discount)

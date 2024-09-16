@@ -38,6 +38,8 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.dateEditEffectiveDate.setMinimumDate(QDate.currentDate())
         self.dateEditExpireDate.setMinimumDate(QDate.currentDate().addDays(1))
         
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
@@ -192,6 +194,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(len(listData))
+
         
         self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
         

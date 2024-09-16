@@ -38,6 +38,9 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.comboBoxBarcodeFilter.setVisible(False)
         self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
         self.labelOrderName.setText(f"N/A")
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         
         self.refresh()
         
@@ -293,14 +296,17 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText("0.00")
         self.labelTax.setText("0.00")
         self.labelGrandTotal.setText("0.00")
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+
+        self._populateComboBoxMemberName()
         
         self.comboBoxMemberName.currentTextChanged.connect(self._onComboBoxMemberNameCurrentTextChanged)
         self.pushButtonClear.clicked.connect(self._onPushButtonClearClicked)
         self.pushButtonDiscard.clicked.connect(self._onPushButtonDiscardClicked)
         self.pushButtonPark.clicked.connect(self.onPushButtonParkClicked)
         self.pushButtonPay.clicked.connect(self._onPushButtonPayClicked)
-        
-        self._populateComboBoxMemberName()
         
     def onPushButtonParkClicked(self):
         orderIndex = self.manageSales.tabWidgetOrder.currentIndex()
@@ -481,6 +487,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.labelCashShortageExcess.setText('0.00')
         self.labelPointsShortageExcess.setText('0.00')
         self.labelHybridShortageExcess.setText('0.00')
+        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
 
         self._populateTableWidgetData()
         self._populateSelectedMemberFields()
