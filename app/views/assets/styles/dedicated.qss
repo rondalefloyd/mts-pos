@@ -1,50 +1,111 @@
-QWidget#FormManageActionButton QPushButton {
-    background-color: #eee;
-    border: 2px solid #eee;
-    padding: 5px 5px;
+/* NOTE: ORDER OF THE FOLLOWING CODES ARE CRUCIAL */
+/* DEFAULT QPUSHBUTTON PROPERTIES */
+QPushButton {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    padding: 5px;
+    width: 70%;
+}
+QPushButton:hover { background-color: #eee; }
+
+/* CUSTOM PUSHBUTTON PROPERTIES */
+QPushButton#pushButtonDiscard,
+QPushButton#pushButtonClear {
+    background-color: #d60b00;
+    border: 2px solid #d60b00;
+    color: #fff;
+    padding: 5px;
+    width: 70%;
 }
 
-QWidget#FormManageActionButton QPushButton:hover {
-    background-color: #ccc;
+QPushButton#pushButtonDiscard:hover,
+QPushButton#pushButtonClear:hover { background-color: #8d0700; }
+
+QPushButton#pushButtonPark {
+    background-color: #ffd000;
+    border: 2px solid #ffd000;
+    color: #fff;
+    padding: 5px;
+    width: 70%;
 }
-QWidget#FormManageActionButton QPushButton#pushButtonAdd {
-    image: url("../mts-pos/app/views/assets/images/plus-solid.svg");
+
+QPushButton#pushButtonPark:hover { background-color: #bf9c00; }
+
+QPushButton#pushButtonPrint,
+QPushButton#pushButtonAdd,
+QPushButton#pushButtonSave,
+QPushButton#pushButtonCreate,
+QPushButton#pushButtonCash,
+QPushButton#pushButtonPay,
+QPushButton#pushButtonPayCash {
     background-color: #00bd48;
     border: 2px solid #00bd48;
+    color: #fff;
+    padding: 5px;
+    width: 70%;
+}
+
+QPushButton#pushButtonPrint:hover,
+QPushButton#pushButtonAdd:hover,
+QPushButton#pushButtonSave:hover,
+QPushButton#pushButtonCreate:hover,
+QPushButton#pushButtonCash:hover,
+QPushButton#pushButtonPay:hover,
+QPushButton#pushButtonPayCash:hover { background-color: #009238; }
+
+QPushButton#pushButtonNew,
+QPushButton#pushButtonFilter {
+    background-color: #0084ff;
+    border: 2px solid #0084ff;
+    color: #fff;
+    padding: 5px;
+    width: 70%;
+}
+
+QPushButton#pushButtonNew:hover,
+QPushButton#pushButtonFilter:hover { background-color: #006cd0; }
+
+/* MANAGE ACTION BUTTON */
+QWidget#FormManageActionButton QPushButton {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    padding: 5px;
+    width: 70%;
+}
+
+QWidget#FormManageActionButton QPushButton#pushButtonAdd {
+    background-color: #00bd48;
+    border: 2px solid #00bd48;
+    color: #fff;
 }
 QWidget#FormManageActionButton QPushButton#pushButtonDelete {
-    image: url("../mts-pos/app/views/assets/images/trash-solid.svg");
     background-color: #d60b00;
     border: 2px solid #d60b00;
+    color: #fff;
 }
 QWidget#FormManageActionButton QPushButton#pushButtonDiscount {
-    image: url("../mts-pos/app/views/assets/images/percent-solid.svg");
     background-color: #00bd48;
     border: 2px solid #00bd48;
-}
-QWidget#FormManageActionButton QPushButton#pushButtonEdit {
-    image: url("../mts-pos/app/views/assets/images/pen-solid.svg");
-}
-QWidget#FormManageActionButton QPushButton#pushButtonView {
-    image: url("../mts-pos/app/views/assets/images/eye-solid.svg");
+    color: #fff;
 }
 QWidget#FormManageActionButton QPushButton#pushButtonVoid {
-    image: url("../mts-pos/app/views/assets/images/circle-solid.svg");
     background-color: #d60b00;
     border: 2px solid #d60b00;
+    color: #fff;
 }
 
+QWidget#FormManageActionButton QPushButton:hover { background-color: #eee; }
 QWidget#FormManageActionButton QPushButton#pushButtonAdd:hover { background-color: #009238; }
 QWidget#FormManageActionButton QPushButton#pushButtonDelete:hover { background-color: #8d0700; }
 QWidget#FormManageActionButton QPushButton#pushButtonDiscount:hover { background-color: #009238; }
-QWidget#FormManageActionButton QPushButton#pushButtonEdit:hover { background-color: #ccc; }
-QWidget#FormManageActionButton QPushButton#pushButtonView:hover { background-color: #ccc; }
 QWidget#FormManageActionButton QPushButton#pushButtonVoid:hover { background-color: #8d0700; }
 
-
+/* PRE-ORDER BUTTON */
 QWidget#FormPreOrderActionButton QPushButton {
     border: 2px solid transparent;
-    padding: 5px 0px;
+    padding: 5px;
+    width: 20%;
+    height: 20%;
 }
 
 QWidget#FormPreOrderActionButton QPushButton#pushButtonAddExact {
