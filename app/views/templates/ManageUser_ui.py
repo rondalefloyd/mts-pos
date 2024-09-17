@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_FormManageUser(object):
     def setupUi(self, FormManageUser):
         FormManageUser.setObjectName("FormManageUser")
-        FormManageUser.resize(897, 629)
+        FormManageUser.resize(897, 486)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(FormManageUser)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -100,7 +100,7 @@ class Ui_FormManageUser(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 412, 560))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 412, 417))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.formLayout = QtWidgets.QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
@@ -150,7 +150,6 @@ class Ui_FormManageUser(object):
         self.formLayout.setWidget(6, QtWidgets.QFormLayout.LabelRole, self.label_7)
         self.comboBoxAccessLevel = QtWidgets.QComboBox(self.scrollAreaWidgetContents)
         self.comboBoxAccessLevel.setObjectName("comboBoxAccessLevel")
-        self.comboBoxAccessLevel.addItem("")
         self.comboBoxAccessLevel.addItem("")
         self.comboBoxAccessLevel.addItem("")
         self.formLayout.setWidget(6, QtWidgets.QFormLayout.FieldRole, self.comboBoxAccessLevel)
@@ -212,6 +211,5 @@ class Ui_FormManageUser(object):
         self.label_7.setText(_translate("FormManageUser", "Level"))
         self.comboBoxAccessLevel.setItemText(0, _translate("FormManageUser", "1"))
         self.comboBoxAccessLevel.setItemText(1, _translate("FormManageUser", "2"))
-        self.comboBoxAccessLevel.setItemText(2, _translate("FormManageUser", "3"))
         self.pushButtonClear.setText(_translate("FormManageUser", "Clear"))
         self.pushButtonAdd.setText(_translate("FormManageUser", "Add"))

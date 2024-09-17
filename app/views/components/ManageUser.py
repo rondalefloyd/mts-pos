@@ -8,6 +8,7 @@ sys.path.append(os.path.abspath('')) # required to change the default path
 from app.utils.global_variables import *
 from app.views.templates.ManageUser_ui import Ui_FormManageUser
 from app.views.components.Loading import Loading
+from app.views.components.EditUser import EditUser
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
@@ -77,7 +78,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
     def _onPushButtonAddClicked(self):
         self.loading.show()
         self.currentThread = RegisterThread('registerUser', {
-            'organizationName': self.comboBoxOrganizationName.currentText().upper(),
+            'organizationName': self.comboBoxOrganizationName.currentText(),
             'userName': self.lineEditUserName.text(),
             'accessCode': self.lineEditAccessCode.text(),
             'fullName': self.lineEditFullName.text().upper(),
@@ -124,7 +125,7 @@ class ManageUser(Ui_FormManageUser, QWidget):
         self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
         
         for i, data in enumerate(listData):
-            manageActionButton = ManageActionButton(delete=True)
+            manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['userName']}"),
                 QTableWidgetItem(f"{data['accessCode']}"),
@@ -144,11 +145,18 @@ class ManageUser(Ui_FormManageUser, QWidget):
             self.tableWidgetData.setItem(i, 6, tableItems[5])
             self.tableWidgetData.setItem(i, 7, tableItems[6])
         
+            manageActionButton.pushButtonEdit.clicked.connect(lambda _, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))
             
         self.labelPageIndicator.setText(f"{self.currentPage}/{self.totalPages}")
         self.pushButtonPrev.setEnabled(self.currentPage > 1)
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
+        pass
+    def _onPushButtonEditClicked(self, data):
+        self.editUser = EditUser(self.authData, data)
+        self.editUser.exec()
+        self._populateTableWidgetData()
+        print('--data:', data)
         pass
 
     def _onPushButtonDeleteClicked(self, data):

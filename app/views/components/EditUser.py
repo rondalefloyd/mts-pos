@@ -5,54 +5,49 @@ from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath('')) # required to change the default path
 from app.utils.global_variables import *
-from app.views.templates.SignUp_ui import Ui_DialogSignUp
+from app.views.templates.EditUser_ui import Ui_DialogEditUser
 from app.views.components.Loading import Loading
+from app.views.components.ManageActionButton import ManageActionButton
 from app.views.validator import *
-from app.controllers.dedicated.register import RegisterThread
-from app.controllers.dedicated.fetch import FetchThread
+from app.controllers.dedicated.edit import EditThread
 
 # class definition
-class SignUp(Ui_DialogSignUp, QDialog):
+class EditUser(Ui_DialogEditUser, QDialog):
     # initialization method (__init__)
-    def __init__(self):
+    def __init__(self, authData, selectedData):
         super().__init__()
         self.setupUi(self)
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
-        self.authData = None
+        self.organizationData = authData['organization']
+        self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditUserName.setValidator(nonSpaceTextFormatValidator())
+        self.lineEditUserName.setValidator(nonSpaceTextWithDigitFormatValidator())
         self.lineEditFullName.setValidator(fullNameValidator())
         self.lineEditMobileNumber.setValidator(mobileNumberValidator())
         
-        self._populateComboBoxOrganizationName()
-        
+        self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
+        self.lineEditUserName.setText(f"{self.selectedData['userName']}")
+        self.lineEditAccessCode.setText(f"{self.selectedData['accessCode']}")
+        self.lineEditFullName.setText(f"{self.selectedData['fullName']}")
+        self.dateEditBirthDate.setDate(QDate.fromString(f"{self.selectedData['birthDate']}", 'yyyy-MM-dd'))
+        self.lineEditMobileNumber.setText(f"{self.selectedData['mobileNumber']}")
+        self.comboBoxAccessLevel.setCurrentText(f"{self.selectedData['accessLevel']}")
+
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
-        self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
-    
+        self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)
+
     # private methods
-    def _populateComboBoxOrganizationName(self):
-        self.fetchThread = FetchThread('fetchAllOrganizationData')
-        self.fetchThread.finished.connect(self._handlePopulateComboBoxOrganizationNameFinished)
-        self.fetchThread.start()
-        
-    def _handlePopulateComboBoxOrganizationNameFinished(self, result):
-        self.comboBoxOrganizationName.clear()
-        for data in result['listData']:
-            self.comboBoxOrganizationName.addItem(f"{data['organizationName']}")
-            
     def _onPushButtonCancelClicked(self):
-        self.windowEvent = EVENT_START_LOGIN
         self.close()
-    
-    
-    def _onPushButtonCreateClicked(self):
+        
+    def _onPushButtonSaveClicked(self):
         self.loading.show()
-        self.currentThread = RegisterThread('registerUser', {
-            'organizationName': self.comboBoxOrganizationName.currentText(),
+        self.currentThread = EditThread('editUserDataById', {
+            'id': self.selectedData['id'],
             'userName': self.lineEditUserName.text(),
             'accessCode': self.lineEditAccessCode.text(),
             'fullName': self.lineEditFullName.text().upper(),
@@ -60,22 +55,24 @@ class SignUp(Ui_DialogSignUp, QDialog):
             'mobileNumber': self.lineEditMobileNumber.text(),
             'accessLevel': self.comboBoxAccessLevel.currentText(),
         })
-        self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedFinished)
+        
+        self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
         self.currentThread.finished.connect(self.loading.close)
         self.currentThread.start()
         self.activeThreads.append(self.currentThread)
-
-    def _handleOnPushButtonCreateClickedFinished(self, result):
+        
+    def _handleOnPushButtonSaveClickedFinished(self, result):
         if result['success'] is False:
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
         QMessageBox.information(self, 'Success', f"{result['message']}")
+        self.windowEvent = EVENT_START_LOGIN
         self.close()
         return
-
-
+        
+        
     def _cleanupThread(self):
         sender = self.sender()
         if sender in self.activeThreads:
@@ -91,9 +88,6 @@ class SignUp(Ui_DialogSignUp, QDialog):
                 thread.wait()
         
         self.activeThreads.clear()
-        
-        # Set the window event state to EVENT_START_LOGIN
-        self.windowEvent = EVENT_START_LOGIN
         
         event.accept() # for closing the window
         

@@ -259,6 +259,15 @@ class EditThread(QThread):
         
     def editUserDataById(self, entry=None, result=None):
         try:
+            user = User.select().where(
+                (User.Id != entry['id']) &
+                (User.UserName == entry['userName'])
+            )
+            
+            if user.exists():
+                result['message'] = 'User already exists'
+                return result
+            
             user = User.get_or_none(User.Id == entry['id'])
             user.UserName = entry['userName']
             user.AccessCode = entry['accessCode']

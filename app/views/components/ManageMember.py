@@ -25,6 +25,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
         self.mobileNumberValidator = QRegExpValidator(QRegExp(r'^\d{11}$'))
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
+        self.authData = authData
         self.organizationData = authData['organization']
         self.currentThread = None
         self.activeThreads = []
@@ -78,7 +79,7 @@ class ManageMember(Ui_FormManageMember, QWidget):
     def _onPushButtonAddClicked(self):
         self.loading.show()
         self.currentThread = RegisterThread('registerMember', {
-            'organizationName': self.comboBoxOrganizationName.currentText().upper(),
+            'organizationName': self.comboBoxOrganizationName.currentText(),
             'memberName': self.lineEditMemberName.text().upper(),
             'birthDate': self.dateEditBirthDate.text(),
             'address': self.lineEditAddress.text().upper(),

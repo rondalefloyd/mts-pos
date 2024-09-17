@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>897</width>
-    <height>629</height>
+    <height>486</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -214,7 +214,7 @@
            <x>0</x>
            <y>0</y>
            <width>412</width>
-           <height>560</height>
+           <height>417</height>
           </rect>
          </property>
          <layout class="QFormLayout" name="formLayout">
@@ -315,11 +315,6 @@
             <item>
              <property name="text">
               <string>2</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>3</string>
              </property>
             </item>
            </widget>

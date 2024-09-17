@@ -38,8 +38,8 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.comboBoxBarcodeFilter.setVisible(False)
         self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
         self.labelOrderName.setText(f"N/A")
+        
         self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         
         self.refresh()
@@ -309,12 +309,13 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.pushButtonPay.clicked.connect(self._onPushButtonPayClicked)
         
     def onPushButtonParkClicked(self):
+        orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart']
         orderIndex = self.manageSales.tabWidgetOrder.currentIndex()
         orderStatus = 2 if self.pushButtonPark.isChecked() else 1
         self.manageSales.activeOrder[orderIndex]['status'] = orderStatus
         
         self.pushButtonPark.setText('PARK' if orderStatus == 1 else 'UNPARK')
-        self.pushButtonPay.setEnabled(orderStatus == 1)
+        self.pushButtonPay.setEnabled(orderStatus == 1 and len(orderItem) > 0)
         self.comboBoxMemberName.setEnabled(orderStatus == 1)
         self.tableWidgetData.setEnabled(orderStatus == 1)
         self.manageSales.lineEditBarcode.setFocus()
