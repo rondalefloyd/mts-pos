@@ -14,9 +14,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_FormPreOrderActionButton(object):
     def setupUi(self, FormPreOrderActionButton):
         FormPreOrderActionButton.setObjectName("FormPreOrderActionButton")
-        FormPreOrderActionButton.resize(94, 79)
+        FormPreOrderActionButton.resize(169, 75)
         FormPreOrderActionButton.setMinimumSize(QtCore.QSize(0, 0))
         self.gridLayout = QtWidgets.QGridLayout(FormPreOrderActionButton)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setSpacing(1)
         self.gridLayout.setObjectName("gridLayout")
         self.pushButtonAddOne = QtWidgets.QPushButton(FormPreOrderActionButton)
