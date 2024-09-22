@@ -39,9 +39,6 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
         self.labelOrderName.setText(f"N/A")
         
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        
         self.refresh()
         
         self.lineEditBarcode.returnPressed.connect(self._onLineEditBarcodeReturnPressed)
@@ -296,9 +293,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText("0.00")
         self.labelTax.setText("0.00")
         self.labelGrandTotal.setText("0.00")
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-
+        
         self._populateComboBoxMemberName()
         
         self.comboBoxMemberName.currentTextChanged.connect(self._onComboBoxMemberNameCurrentTextChanged)
@@ -487,9 +482,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.labelCashShortageExcess.setText('0.00')
         self.labelPointsShortageExcess.setText('0.00')
         self.labelHybridShortageExcess.setText('0.00')
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-
+        
         self._populateTableWidgetData()
         self._populateSelectedMemberFields()
         self._populatePaymentEligibilityFields()

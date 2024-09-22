@@ -117,6 +117,7 @@ class Ui_FormManageSales(object):
         self.frameRegister.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.frameRegister.setObjectName("frameRegister")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frameRegister)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")

@@ -29,9 +29,6 @@ class ManageReward(Ui_FormManageReward, QWidget):
         self.lineEditPoints.setValidator(billFormatValidator())
         self.lineEditTarget.setValidator(billFormatValidator())
         
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        
         self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)

@@ -28,9 +28,6 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         self.lineEditPromoName.setValidator(withSpaceTextDigitFormatValidator())
         self.lineEditDiscountRate.setValidator(billFormatValidator())
         
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        
         self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)

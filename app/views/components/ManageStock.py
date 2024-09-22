@@ -24,9 +24,6 @@ class ManageStock(Ui_FormManageStock, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        
         self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)

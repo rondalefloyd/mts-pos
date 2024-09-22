@@ -38,8 +38,6 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.dateEditEffectiveDate.setMinimumDate(QDate.currentDate())
         self.dateEditExpireDate.setMinimumDate(QDate.currentDate().addDays(1))
         
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)

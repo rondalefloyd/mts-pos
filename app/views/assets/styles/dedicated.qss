@@ -166,17 +166,17 @@ QTableWidget::item:selected {
     color: #000;
 }
 QHeaderView::section {
-    min-width: 150px;
+    min-width: 0px;
 }
 
-QWidget#FormPreOrder QHeaderView::section {
+/* QWidget#FormPreOrder QHeaderView::section {
     min-width: 100px;
 }
 
 
 QWidget#DialogInOrder QHeaderView::section {
     min-width: 100px;
-}
+} */
 
 
 

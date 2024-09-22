@@ -27,9 +27,6 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        
         self._populateTableWidgetData()
         self._populateReceipt()
 
