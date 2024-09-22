@@ -31,6 +31,7 @@ class Ui_FormManageItem(object):
         self.tableWidgetData = QtWidgets.QTableWidget(FormManageItem)
         self.tableWidgetData.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidgetData.setAlternatingRowColors(True)
+        self.tableWidgetData.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidgetData.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setShowGrid(False)

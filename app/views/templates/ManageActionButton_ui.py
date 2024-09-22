@@ -14,10 +14,15 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_FormManageActionButton(object):
     def setupUi(self, FormManageActionButton):
         FormManageActionButton.setObjectName("FormManageActionButton")
-        FormManageActionButton.resize(473, 23)
+        FormManageActionButton.resize(485, 35)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(FormManageActionButton.sizePolicy().hasHeightForWidth())
+        FormManageActionButton.setSizePolicy(sizePolicy)
         self.horizontalLayout = QtWidgets.QHBoxLayout(FormManageActionButton)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setSpacing(1)
+        self.horizontalLayout.setContentsMargins(5, 5, 5, 5)
+        self.horizontalLayout.setSpacing(5)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.pushButtonEdit = QtWidgets.QPushButton(FormManageActionButton)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)

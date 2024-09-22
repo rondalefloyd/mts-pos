@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_FormManageReward(object):
     def setupUi(self, FormManageReward):
         FormManageReward.setObjectName("FormManageReward")
-        FormManageReward.resize(994, 629)
+        FormManageReward.resize(994, 662)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(FormManageReward)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -31,6 +31,7 @@ class Ui_FormManageReward(object):
         self.tableWidgetData = QtWidgets.QTableWidget(FormManageReward)
         self.tableWidgetData.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidgetData.setAlternatingRowColors(True)
+        self.tableWidgetData.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidgetData.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setShowGrid(False)
@@ -96,7 +97,7 @@ class Ui_FormManageReward(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 460, 560))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 460, 593))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.formLayout = QtWidgets.QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")

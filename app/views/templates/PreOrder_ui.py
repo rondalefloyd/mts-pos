@@ -56,6 +56,7 @@ class Ui_FormPreOrder(object):
         self.tableWidgetData = QtWidgets.QTableWidget(FormPreOrder)
         self.tableWidgetData.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidgetData.setAlternatingRowColors(True)
+        self.tableWidgetData.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidgetData.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setShowGrid(False)

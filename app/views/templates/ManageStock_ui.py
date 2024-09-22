@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_FormManageStock(object):
     def setupUi(self, FormManageStock):
         FormManageStock.setObjectName("FormManageStock")
-        FormManageStock.resize(994, 629)
+        FormManageStock.resize(994, 699)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(FormManageStock)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -31,6 +31,7 @@ class Ui_FormManageStock(object):
         self.tableWidgetData = QtWidgets.QTableWidget(FormManageStock)
         self.tableWidgetData.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidgetData.setAlternatingRowColors(True)
+        self.tableWidgetData.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidgetData.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.tableWidgetData.setShowGrid(False)
