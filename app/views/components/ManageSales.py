@@ -297,7 +297,6 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelTax.setText("0.00")
         self.labelGrandTotal.setText("0.00")
         self.tableWidgetData.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.tableWidgetData.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.tableWidgetData.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
 
         self._populateComboBoxMemberName()

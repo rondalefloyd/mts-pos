@@ -115,8 +115,8 @@ QWidget#FormManageActionButton QPushButton#pushButtonVoid:hover { background-col
 QWidget#FormPreOrderActionButton QPushButton {
     border: 1px solid transparent;
     padding: 5px;
-    width: 25%;
-    height: 15%;
+    max-width: 15px;
+    max-height: 15px;
 }
 
 QWidget#FormPreOrderActionButton QPushButton#pushButtonAddExact {
@@ -167,6 +167,15 @@ QTableWidget::item:selected {
 }
 QHeaderView::section {
     min-width: 150px;
+}
+
+QWidget#FormPreOrder QHeaderView::section {
+    min-width: 100px;
+}
+
+
+QWidget#DialogInOrder QHeaderView::section {
+    min-width: 100px;
 }
 
 
