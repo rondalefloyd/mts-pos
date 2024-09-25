@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
+    <width>764</width>
     <height>629</height>
    </rect>
   </property>
@@ -119,6 +119,12 @@
        <property name="wordWrap">
         <bool>false</bool>
        </property>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
        <attribute name="horizontalHeaderStretchLastSection">
         <bool>false</bool>
        </attribute>

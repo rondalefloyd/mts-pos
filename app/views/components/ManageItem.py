@@ -37,7 +37,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
         self.dateEditEffectiveDate.setMinimumDate(QDate.currentDate())
         self.dateEditExpireDate.setMinimumDate(QDate.currentDate().addDays(1))
-        
+               
         self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)

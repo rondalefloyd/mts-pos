@@ -41,6 +41,8 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self.refresh()
         
+        print(f"--objectName: {self.tableWidgetData.objectName()}")
+        
         self.lineEditBarcode.returnPressed.connect(self._onLineEditBarcodeReturnPressed)
         self.pushButtonAdd.clicked.connect(self._onLineEditBarcodeReturnPressed)
         self.tabWidgetOrder.tabCloseRequested.connect(self.onTabWidgetOrderTabCloseRequested)
@@ -180,10 +182,10 @@ class ManageSales(Ui_FormManageSales, QWidget):
                     QTableWidgetItem(f"{data['available']}"),
                     QTableWidgetItem(f"{data['promoName']}"),
                 ]
-                
                 self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
                 for j, tableitem in enumerate(tableItems):
-                    self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                    tableitem.setToolTip(tableitem.text())
+                    self.tableWidgetData.setItem(i, (j + 1), tableitem)
                     
                     if data['promoName'] is not None:
                         manageActionButton.pushButtonEdit.setVisible(False)
@@ -287,7 +289,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         
         self.manageSales: ManageSales = manageSales
         
-        self.tableWidgetData.clearContents()
+        self.tableWidgetOrderItem.clearContents()
         self.labelOrderType.setText(self.manageSales.comboBoxOrderType.currentText())
         self.labelSubtotal.setText("0.00")
         self.labelDiscount.setText("0.00")
@@ -311,14 +313,14 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.pushButtonPark.setText('PARK' if orderStatus == 1 else 'UNPARK')
         self.pushButtonPay.setEnabled(orderStatus == 1 and len(orderItem) > 0)
         self.comboBoxMemberName.setEnabled(orderStatus == 1)
-        self.tableWidgetData.setEnabled(orderStatus == 1)
+        self.tableWidgetOrderItem.setEnabled(orderStatus == 1)
         self.manageSales.lineEditBarcode.setFocus()
         
     def populateTableWidgetData(self):
         orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart']
         rowCount = len(orderItem)
-        self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(rowCount)
+        self.tableWidgetOrderItem.clearContents()
+        self.tableWidgetOrderItem.setRowCount(rowCount)
         self.pushButtonClear.setEnabled(rowCount > 0)
         self.pushButtonPay.setEnabled(rowCount > 0)
         
@@ -335,10 +337,10 @@ class PreOrder(Ui_FormPreOrder, QWidget):
                 QTableWidgetItem(f"{data['total']}"),
             ]
             
-            self.tableWidgetData.setCellWidget(i, 0, preOrderActionButton) 
+            self.tableWidgetOrderItem.setCellWidget(i, 0, preOrderActionButton) 
             
             for j, tableitem in enumerate(tableItems):
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetOrderItem.setItem(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
                     tableitem.setForeground(QColor(255, 0, 0))
@@ -631,8 +633,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
     def _populateTableWidgetData(self):
         orderCart = self.selectedOrder['cart']
         rowCount = len(orderCart)
-        self.tableWidgetData.clearContents()
-        self.tableWidgetData.setRowCount(rowCount)
+        self.tableWidgetOrderItem.clearContents()
+        self.tableWidgetOrderItem.setRowCount(rowCount)
         
         subtotal = 0.00
         discount = 0.00
@@ -649,10 +651,10 @@ class InOrder(Ui_DialogInOrder, QDialog):
                 QTableWidgetItem(f"{data['customDiscount']}"),
             ]
             
-            self.tableWidgetData.setCellWidget(i, 0, manageActionButton) 
+            self.tableWidgetOrderItem.setCellWidget(i, 0, manageActionButton) 
             
             for j, tableitem in enumerate(tableItems):
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetOrderItem.setItem(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
                     tableitem.setForeground(QColor(255, 0, 0))

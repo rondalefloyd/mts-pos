@@ -77,6 +77,7 @@ if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
     
+# TODO: fix qtablewidget items' auto sizing
 # TODO: implement infra where theres a master and slave server (requires two devices)
 # TODO: add design to the UI
 # TODO: write a cleaner version of the managesales codes especially the data entries object etc.
