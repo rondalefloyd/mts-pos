@@ -1,13 +1,13 @@
 # import
 import os, sys, json
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 
-sys.path.append(os.path.abspath('')) # required to change the default path
+sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.pyqt5.QtWidgets import *
+from app.utils.pyqt5.QtCore import *
+from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
-from app.views.validator import nonSpaceTextFormatValidator
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
 # class definition

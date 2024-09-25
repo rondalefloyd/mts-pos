@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:/Users/mimoy/Documents/GitHub/mts-pos/app/views/templates/generated\ManagePromo.ui'
+# Form implementation generated from reading ui file 'C:/Users/mimoy/Documents/GitHub/mts-pos/app/views/templates/generated\ManageBrand.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #

@@ -1,14 +1,14 @@
 import os, sys, logging, json 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.pyqt5.QtWidgets import *
+from app.utils.pyqt5.QtCore import *
+from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ViewReceipt_ui import Ui_DialogViewReceipt
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.VoidItemSold import VoidItemSold
 from app.views.components.Loading import Loading
-from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.void import VoidThread
 from app.controllers.dedicated.print import PrintThread

@@ -124,10 +124,21 @@
     <property name="title">
      <string>&lt;PageName&gt;</string>
     </property>
+    <widget class="QMenu" name="menuItem">
+     <property name="title">
+      <string>Product</string>
+     </property>
+     <addaction name="actionGeneral"/>
+     <addaction name="separator"/>
+     <addaction name="actionItem"/>
+     <addaction name="actionItemType"/>
+     <addaction name="actionBrand"/>
+     <addaction name="actionSupplier"/>
+    </widget>
     <addaction name="actionSales"/>
     <addaction name="actionTransaction"/>
     <addaction name="separator"/>
-    <addaction name="actionItem"/>
+    <addaction name="menuItem"/>
     <addaction name="actionStock"/>
     <addaction name="actionPromo"/>
     <addaction name="actionReward"/>
@@ -168,14 +179,6 @@
    </property>
    <property name="text">
     <string>Transaction</string>
-   </property>
-  </action>
-  <action name="actionItem">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Item</string>
    </property>
   </action>
   <action name="actionStock">
@@ -234,6 +237,31 @@
   <action name="actionCurrentUser">
    <property name="text">
     <string>&lt;UserName&gt;</string>
+   </property>
+  </action>
+  <action name="actionItem">
+   <property name="text">
+    <string>Item</string>
+   </property>
+  </action>
+  <action name="actionItemType">
+   <property name="text">
+    <string>ItemType</string>
+   </property>
+  </action>
+  <action name="actionBrand">
+   <property name="text">
+    <string>Brand</string>
+   </property>
+  </action>
+  <action name="actionSupplier">
+   <property name="text">
+    <string>Supplier</string>
+   </property>
+  </action>
+  <action name="actionGeneral">
+   <property name="text">
+    <string>General</string>
    </property>
   </action>
  </widget>

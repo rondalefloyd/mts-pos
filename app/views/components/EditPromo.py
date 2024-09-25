@@ -1,12 +1,12 @@
 import os, sys, logging
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.pyqt5.QtWidgets import *
+from app.utils.pyqt5.QtCore import *
+from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditPromo_ui import Ui_DialogEditPromo
 from app.views.components.Loading import Loading
-from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditPromo(Ui_DialogEditPromo, QDialog):

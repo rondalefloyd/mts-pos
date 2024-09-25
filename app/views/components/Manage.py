@@ -5,6 +5,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
+from app.utils.pyqt5.QtWidgets import *
+from app.utils.pyqt5.QtCore import *
+from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.Manage_ui import Ui_MainWindowManage
 from app.views.components.Loading import Loading
@@ -14,7 +17,7 @@ from app.views.components.ManageUser import ManageUser
 from app.views.components.ManageMember import ManageMember
 from app.views.components.ManagePromo import ManagePromo
 from app.views.components.ManageReward import ManageReward
-from app.views.components.ManageItem import ManageItem
+from app.views.components.ManageProduct import ManageProduct
 from app.views.components.ManageStock import ManageStock
 from app.views.components.ManageSales import ManageSales
 from app.views.components.ManageReceipt import ManageReceipt
@@ -39,7 +42,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.manageSales = ManageSales(authData)
         self.manageReceipt = ManageReceipt(authData)
         self.manageStock = ManageStock(authData)
-        self.manageItem = ManageItem(authData)
+        self.manageItem = ManageProduct(authData)
         self.managePromo = ManagePromo(authData)
         self.manageReward = ManageReward(authData)
         self.manageMember = ManageMember(authData)
@@ -63,7 +66,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         self.actionSales.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(0))
         self.actionTransaction.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(1))
-        self.actionItem.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(2))
+        self.actionGeneral.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(2))
         self.actionStock.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(3))
         self.actionPromo.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(4))
         self.actionReward.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(5))
@@ -83,7 +86,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         self.actionSales.setChecked(self.stackedWidgetManage.currentIndex() == 0)
         self.actionTransaction.setChecked(self.stackedWidgetManage.currentIndex() == 1)
-        self.actionItem.setChecked(self.stackedWidgetManage.currentIndex() == 2)
+        self.actionGeneral.setChecked(self.stackedWidgetManage.currentIndex() == 2)
         self.actionStock.setChecked(self.stackedWidgetManage.currentIndex() == 3)
         self.actionPromo.setChecked(self.stackedWidgetManage.currentIndex() == 4)
         self.actionReward.setChecked(self.stackedWidgetManage.currentIndex() == 5)
