@@ -21,10 +21,6 @@ class EditCurrentOrganization(Ui_DialogEditCurrentOrganization, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditOrganizationName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditAddress.setValidator(addressFormatValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
-
         self.lineEditTaxId.setText(f"{self.organizationData['taxId']}")
         self.lineEditOrganizationName.setText(f"{self.organizationData['organizationName']}")
         self.lineEditAddress.setText(f"{self.organizationData['address']}")

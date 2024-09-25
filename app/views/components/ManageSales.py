@@ -41,8 +41,6 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self.refresh()
         
-        print(f"--objectName: {self.tableWidgetData.objectName()}")
-        
         self.lineEditBarcode.returnPressed.connect(self._onLineEditBarcodeReturnPressed)
         self.pushButtonAdd.clicked.connect(self._onLineEditBarcodeReturnPressed)
         self.tabWidgetOrder.tabCloseRequested.connect(self.onTabWidgetOrderTabCloseRequested)
@@ -183,6 +181,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
                     QTableWidgetItem(f"{data['promoName']}"),
                 ]
                 self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
+                
                 for j, tableitem in enumerate(tableItems):
                     tableitem.setToolTip(tableitem.text())
                     self.tableWidgetData.setItem(i, (j + 1), tableitem)
@@ -340,6 +339,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             self.tableWidgetOrderItem.setCellWidget(i, 0, preOrderActionButton) 
             
             for j, tableitem in enumerate(tableItems):
+                tableitem.setToolTip(tableitem.text())
                 self.tableWidgetOrderItem.setItem(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
@@ -479,8 +479,6 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pointsPayment = 0.0
         self.hybridPayment = 0.0
 
-        self.lineEditCash.setValidator(billFormatValidator())
-
         self.labelCashShortageExcess.setText('0.00')
         self.labelPointsShortageExcess.setText('0.00')
         self.labelHybridShortageExcess.setText('0.00')
@@ -556,6 +554,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
+            
         self.lineEditCash.setFocus()
     
     def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
@@ -590,7 +589,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
 
         self.cashPayment = self.lineEditCash.text()
         self.cashPayment = self.cashPayment + key
-        state, _, _ = billFormatValidator().validate(self.cashPayment, 0)
+        state, _, _ = floatFormatValidator().validate(self.cashPayment, 0)
         
         if state == 2:
             self.lineEditCash.setText(self.cashPayment)
@@ -654,6 +653,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.tableWidgetOrderItem.setCellWidget(i, 0, manageActionButton) 
             
             for j, tableitem in enumerate(tableItems):
+                tableitem.setToolTip(tableitem.text())
                 self.tableWidgetOrderItem.setItem(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:

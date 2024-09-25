@@ -24,10 +24,6 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditUserName.setValidator(nonSpaceTextFormatValidator())
-        self.lineEditFullName.setValidator(fullNameValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
-        
         self._populateComboBoxOrganizationName()
         
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)

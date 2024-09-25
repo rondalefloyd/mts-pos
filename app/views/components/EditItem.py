@@ -23,15 +23,6 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditItemName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.comboBoxItemTypeName.setValidator(withSpaceTextDigitFormatValidator())
-        self.comboBoxBrandName.setValidator(withSpaceTextDigitFormatValidator())
-        self.comboBoxSupplierName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditCapital.setValidator(billFormatValidator())
-        self.lineEditPrice.setValidator(billFormatValidator())
-        self.comboBoxPromoName.setValidator(billFormatValidator())
-
         self.dateEditEffectiveDate.setMinimumDate(QDate.currentDate())
         self.dateEditExpireDate.setMinimumDate(QDate.currentDate().addDays(1))
         self.dateEditStartDate.setMinimumDate(QDate.currentDate())

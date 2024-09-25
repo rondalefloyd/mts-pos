@@ -23,11 +23,6 @@ class Setup(Ui_DialogSetup, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
-        self.lineEditOrganizationName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
-        self.lineEditAddress.setValidator(addressFormatValidator())
-        self.lineEditTaxId.setValidator(tinValidator())
-
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)
         

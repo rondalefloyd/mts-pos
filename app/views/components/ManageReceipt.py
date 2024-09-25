@@ -92,6 +92,7 @@ class ManageReceipt(Ui_FormManageReceipt, QWidget):
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
+                tableitem.setToolTip(tableitem.text())
                 self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonView.clicked.connect(lambda _, data=data: self._onPushButtonViewClicked(data))

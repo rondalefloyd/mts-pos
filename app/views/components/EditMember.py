@@ -25,11 +25,6 @@ class EditMember(Ui_DialogEditMember, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditMemberName.setValidator(withSpaceTextFormatValidator())
-        self.lineEditAddress.setValidator(addressFormatValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
-        self.lineEditPoints.setValidator(billFormatValidator())
-        
         self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
 
         self.lineEditMemberName.setText(f"{self.selectedData['memberName']}")

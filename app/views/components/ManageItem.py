@@ -26,15 +26,6 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditItemName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.comboBoxItemTypeName.setValidator(withSpaceTextDigitFormatValidator())
-        self.comboBoxBrandName.setValidator(withSpaceTextDigitFormatValidator())
-        self.comboBoxSupplierName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditCapital.setValidator(billFormatValidator())
-        self.lineEditRetailPrice.setValidator(billFormatValidator())
-        self.lineEditWholesalePrice.setValidator(billFormatValidator())
-        
         self.dateEditEffectiveDate.setMinimumDate(QDate.currentDate())
         self.dateEditExpireDate.setMinimumDate(QDate.currentDate().addDays(1))
                
@@ -217,6 +208,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
+                tableitem.setToolTip(tableitem.text())
                 self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:

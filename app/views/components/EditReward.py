@@ -21,10 +21,6 @@ class EditReward(Ui_DialogEditReward, QDialog):
         self.currentThread = None
         self.activeThreads = []
                 
-        self.lineEditRewardName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditPoints.setValidator(billFormatValidator)
-        self.lineEditTarget.setValidator(billFormatValidator)
-
         self.lineEditRewardName.setText(f"{self.selectedData['rewardName']}")
         self.lineEditPoints.setText(f"{self.selectedData['points']}")
         self.lineEditTarget.setText(f"{self.selectedData['target']}")

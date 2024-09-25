@@ -25,9 +25,6 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditPromoName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditDiscountRate.setValidator(billFormatValidator())
-        
         self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
@@ -115,10 +112,10 @@ class ManagePromo(Ui_FormManagePromo, QWidget):
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
-            self.tableWidgetData.setItem(i, 1, tableItems[0])
-            self.tableWidgetData.setItem(i, 2, tableItems[1])
-            self.tableWidgetData.setItem(i, 3, tableItems[2])
-            self.tableWidgetData.setItem(i, 4, tableItems[3])
+            
+            for j, tableitem in enumerate(tableItems):
+                tableitem.setToolTip(tableitem.text())
+                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))

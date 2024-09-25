@@ -84,6 +84,7 @@ class ManageStock(Ui_FormManageStock, QWidget):
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
+                tableitem.setToolTip(tableitem.text())
                 self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))

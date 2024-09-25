@@ -7,10 +7,10 @@ def tinValidator():
 def mobileNumberValidator():
     return QRegExpValidator(QRegExp(r'^\d{11}$'))
 
-def quantityFormatValidator():
+def intFormatValidator():
     return QIntValidator(0, 999999999)
 
-def billFormatValidator():
+def floatFormatValidator():
     return QDoubleValidator(0, 999999999, 2)
 
 def addressFormatValidator():

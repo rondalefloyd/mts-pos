@@ -23,7 +23,6 @@ class Login(Ui_DialogLogin, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditUserName.setValidator(nonSpaceTextFormatValidator())
         self.pushButtonAccessCodeVisibility.setText('Show')
         
         self.pushButtonSetup.clicked.connect(self._onPushButtonSetupClicked)

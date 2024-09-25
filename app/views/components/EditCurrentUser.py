@@ -21,10 +21,6 @@ class EditCurrentUser(Ui_DialogEditCurrentUser, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditUserName.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.lineEditFullName.setValidator(fullNameValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
-        
         self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
         self.lineEditUserName.setText(f"{self.userData['userName']}")
         self.lineEditAccessCode.setText(f"{self.userData['accessCode']}")

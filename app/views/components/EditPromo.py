@@ -21,9 +21,6 @@ class EditPromo(Ui_DialogEditPromo, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.lineEditPromoName.setValidator(withSpaceTextDigitFormatValidator())
-        self.lineEditDiscountRate.setValidator(billFormatValidator())
-        
         self.lineEditPromoName.setText(f"{self.selectedData['promoName']}")
         self.lineEditDiscountRate.setText(f"{self.selectedData['discountRate']}")
         self.lineEditDescription.setText(f"{self.selectedData['description']}")

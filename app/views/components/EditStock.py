@@ -21,9 +21,6 @@ class EditStock(Ui_DialogEditStock, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
-        self.lineEditOnHand.setValidator(billFormatValidator())
-        self.lineEditAvailable.setValidator(billFormatValidator())
-
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
         self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
         self.lineEditAvailable.setText(f"{self.selectedData['available']}")

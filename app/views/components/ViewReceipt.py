@@ -134,6 +134,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
+                tableitem.setToolTip(tableitem.text())
                 self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
         
                 if data['status'] is not None:
