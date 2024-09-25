@@ -154,7 +154,7 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         
     def _onPushButtonSaveClicked(self):
         self.loading.show()
-        self.currentThread = EditThread('editItemPriceRelatedDataById', {
+        self.currentThread = EditThread('editProductRelatedDataById', {
             'itemPriceId': self.selectedData['itemPriceId'],
             'itemId': self.selectedData['itemId'],
             'itemTypeId': self.selectedData['itemTypeId'],

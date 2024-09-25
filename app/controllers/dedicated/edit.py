@@ -27,8 +27,8 @@ class EditThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'editItemPriceRelatedDataById':
-                    result = self.editItemPriceRelatedDataById(self.entry, result)
+                if self.function_route == 'editProductRelatedDataById':
+                    result = self.editProductRelatedDataById(self.entry, result)
                 elif self.function_route == 'editMemberDataById':
                     result = self.editMemberDataById(self.entry, result)
                 elif self.function_route == 'editPromoDataById':
@@ -59,7 +59,7 @@ class EditThread(QThread):
         self.finished.emit(result)
         print(f"{self.function_route} -> result_message: {result['message']}")
         
-    def editItemPriceRelatedDataById(self, entry=None, result=None):
+    def editProductRelatedDataById(self, entry=None, result=None):
         try:
             itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
             brand = Brand.select().where(Brand.BrandName == entry['brandName'])

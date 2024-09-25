@@ -18,6 +18,10 @@ from app.views.components.ManageMember import ManageMember
 from app.views.components.ManagePromo import ManagePromo
 from app.views.components.ManageReward import ManageReward
 from app.views.components.ManageProduct import ManageProduct
+from app.views.components.ManageItem import ManageItem
+from app.views.components.ManageItemType import ManageItemType
+from app.views.components.ManageBrand import ManageBrand
+from app.views.components.ManageSupplier import ManageSupplier
 from app.views.components.ManageStock import ManageStock
 from app.views.components.ManageSales import ManageSales
 from app.views.components.ManageReceipt import ManageReceipt
@@ -42,7 +46,11 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.manageSales = ManageSales(authData)
         self.manageReceipt = ManageReceipt(authData)
         self.manageStock = ManageStock(authData)
-        self.manageItem = ManageProduct(authData)
+        self.manageProduct = ManageProduct(authData)
+        self.manageItem = ManageItem(authData)
+        self.manageItemType = ManageItemType(authData)
+        self.manageBrand = ManageBrand(authData)
+        self.manageSupplier = ManageSupplier(authData)
         self.managePromo = ManagePromo(authData)
         self.manageReward = ManageReward(authData)
         self.manageMember = ManageMember(authData)
@@ -51,12 +59,16 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         # Add widgets to the stacked widget
         self.stackedWidgetManage.insertWidget(0, self.manageSales)
         self.stackedWidgetManage.insertWidget(1, self.manageReceipt)
-        self.stackedWidgetManage.insertWidget(2, self.manageItem)
+        self.stackedWidgetManage.insertWidget(2, self.manageProduct)
         self.stackedWidgetManage.insertWidget(3, self.manageStock)
         self.stackedWidgetManage.insertWidget(4, self.managePromo)
         self.stackedWidgetManage.insertWidget(5, self.manageReward)
         self.stackedWidgetManage.insertWidget(6, self.manageMember)
         self.stackedWidgetManage.insertWidget(7, self.manageUser)
+        self.stackedWidgetManage.insertWidget(8, self.manageItem)
+        self.stackedWidgetManage.insertWidget(9, self.manageItemType)
+        self.stackedWidgetManage.insertWidget(10, self.manageBrand)
+        self.stackedWidgetManage.insertWidget(11, self.manageSupplier)
         
         self.labelFullName.setText(f"{self.userData['fullName']}")
         self.labelMobileNumber.setText(f"{self.userData['mobileNumber']}")
@@ -72,6 +84,10 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.actionReward.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(5))
         self.actionMember.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(6))
         self.actionUser.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(7))
+        self.actionItem.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(8))
+        self.actionItemType.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(9))
+        self.actionBrand.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(10))
+        self.actionSupplier.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(11))
         
         self.actionLogout.triggered.connect(self._onActionLogoutTriggered)
         
@@ -92,6 +108,10 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.actionReward.setChecked(self.stackedWidgetManage.currentIndex() == 5)
         self.actionMember.setChecked(self.stackedWidgetManage.currentIndex() == 6)
         self.actionUser.setChecked(self.stackedWidgetManage.currentIndex() == 7)
+        self.actionItem.setChecked(self.stackedWidgetManage.currentIndex() == 7)
+        self.actionItemType.setChecked(self.stackedWidgetManage.currentIndex() == 7)
+        self.actionBrand.setChecked(self.stackedWidgetManage.currentIndex() == 7)
+        self.actionSupplier.setChecked(self.stackedWidgetManage.currentIndex() == 7)
 
         menuManageTitle = 'Unavailable'
         
@@ -103,8 +123,8 @@ class Manage(Ui_MainWindowManage, QMainWindow):
                 menuManageTitle = 'Transaction'
                 self.manageReceipt.refresh()
             case 2:
-                menuManageTitle = 'Item'
-                self.manageItem.refresh()
+                menuManageTitle = 'General'
+                self.manageProduct.refresh()
             case 3:
                 menuManageTitle = 'Stock'
                 self.manageStock.refresh()
@@ -120,6 +140,18 @@ class Manage(Ui_MainWindowManage, QMainWindow):
             case 7:
                 menuManageTitle = 'User'
                 self.manageUser.refresh()
+            case 8:
+                menuManageTitle = 'Item'
+                # self.manageItem.refresh()
+            case 9:
+                menuManageTitle = 'ItemType'
+                # self.manageItemType.refresh()
+            case 10:
+                menuManageTitle = 'Brand'
+                # self.manageBrand.refresh()
+            case 11:
+                menuManageTitle = 'Supplier'
+                # self.manageSupplier.refresh()
                 
         self.menuManage.setTitle(menuManageTitle)
 

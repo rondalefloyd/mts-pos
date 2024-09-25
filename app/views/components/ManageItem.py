@@ -1,23 +1,22 @@
-import os, sys, logging, csv
+import os
+import sys
+import logging
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
 
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.pyqt5.QtWidgets import *
 from app.utils.pyqt5.QtCore import *
 from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
-from app.views.templates.ManageProduct_ui import Ui_FormManageProduct
+from app.views.templates.ManageItem_ui import Ui_FormManageItem
 from app.views.components.Loading import Loading
-from app.views.components.LoadData import LoadData
-from app.views.components.EditProduct import EditProduct
+from app.views.components.EditPromo import EditPromo
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
-from app.controllers.dedicated.load import LoadThread
 from app.controllers.dedicated.remove import RemoveThread
 
-class ManageProduct(Ui_FormManageProduct, QWidget):
+class ManageItem(Ui_FormManageItem, QWidget):
     def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
@@ -28,92 +27,19 @@ class ManageProduct(Ui_FormManageProduct, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        self.dateEditEffectiveDate.setMinimumDate(QDate.currentDate())
-        self.dateEditExpireDate.setMinimumDate(QDate.currentDate().addDays(1))
-               
-        self.refresh()
+        # self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
         self.pushButtonPrev.clicked.connect(self._onPushButtonPrevClicked)
         self.pushButtonNext.clicked.connect(self._onPushButtonNextClicked)
         self.pushButtonClear.clicked.connect(self._onPushButtonClearClicked)
         self.pushButtonAdd.clicked.connect(self._onPushButtonAddClicked)
-        self.pushButtonLoad.clicked.connect(self._onPushButtonLoadClicked)
 
     def refresh(self):
         self.currentPage = 1
         self.totalPages = 1
         
         self._populateTableWidgetData()
-        self._populateComboBoxItemTypeBrandSupplier()
-
-    def _onPushButtonLoadClicked(self):
-        filePath, _ = QFileDialog.getOpenFileName(self, 'Open CSV', '', 'CSV Files (*.csv);;All Files (*)')
-
-        if not filePath:
-            return  # No file selected, exit the function
-
-        # TODO: decide where to put load data (should be at the init or here)
-        confirm = QMessageBox.warning(self, 'Confirm', "Replace current data with new data?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        isReplaceData = False
-        if confirm == QMessageBox.StandardButton.Yes:
-            isReplaceData = True
-            
-        self.loadData = LoadData(self.authData)
-        self.loadData.show()
-        self.loadData.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
-        self.currentThread = LoadThread('loadItem', {
-            'filePath': filePath,
-            'replaceData': isReplaceData
-        })
-        self.currentThread.running.connect(self._handleOnPushButtonLoadClickedInProgress)
-        self.currentThread.finished.connect(self._handleOnPushButtonLoadClickedFinished)
-        self.currentThread.finished.connect(self._cleanupThread)
-        self.currentThread.finished.connect(self.loadData.close)
-        self.currentThread.start()
-        self.activeThreads.append(self.currentThread)
-        
-    def _onPushButtonCancelClicked(self):
-        # TODO: make sure the self.currentThread is the one being used here when executing LoadThread
-        self.currentThread.stop()  # Signal the thread to stop
-        
-    def _handleOnPushButtonLoadClickedInProgress(self, result):
-        self.loadData.progressBarLoad.setValue(result['currentDataCount'])
-        self.loadData.progressBarLoad.setMaximum(result['totalDataCount'])
-        self.loadData.labelDataRepresentation.setText(f"{result['dataRepresentation']}")
-        self.loadData.labelLoadPercentage.setText(f"{result['currentDataCount']}")
-        
-    def _handleOnPushButtonLoadClickedFinished(self, result):
-        if result['success'] is False:
-            QMessageBox.critical(self, 'Error', f"{result['message']}")
-            return
-            
-        QMessageBox.information(self, 'Success', f"{result['message']}")
-        self._populateTableWidgetData()
-
-    def _populateComboBoxItemTypeBrandSupplier(self):
-        self.fetchThread = FetchThread('fetchAllItemRelatedData')
-        self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierFinished)
-        self.fetchThread.start()
-        
-    def _handlePopulateComboBoxItemTypeBrandSupplierFinished(self, result):
-        self.comboBoxItemTypeName.clear()
-        self.comboBoxBrandName.clear()
-        self.comboBoxSupplierName.clear()
-        
-        listData = result['dictData']
-        
-        itemTypes = listData['itemTypes'] if 'itemTypes' in listData else []
-        brands = listData['brands'] if 'brands' in listData else []
-        suppliers = listData['suppliers'] if 'suppliers' in listData else []
-
-        for itemType in itemTypes:
-            self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
-        for brand in brands:
-            self.comboBoxBrandName.addItem(f"{brand['brandName']}")
-        for supplier in suppliers:
-            self.comboBoxSupplierName.addItem(f"{supplier['supplierName']}")
-            
 
     def _onPushButtonFilterClicked(self):
         self.currentPage = 1
@@ -132,25 +58,14 @@ class ManageProduct(Ui_FormManageProduct, QWidget):
     def _onPushButtonClearClicked(self):
         self.lineEditItemName.setText("")
         self.lineEditBarcode.setText("")
-        self.lineEditCapital.setText("")
-        self.lineEditRetailPrice.setText("")
-        self.lineEditWholesalePrice.setText("")
         pass
         
     def _onPushButtonAddClicked(self):
         self.loading.show()
-        self.currentThread = RegisterThread('registerProduct', {
+        self.currentThread = RegisterThread('registerItem', {
             'itemName': self.lineEditItemName.text().upper(),
             'barcode': self.lineEditBarcode.text(),
             'expireDate': self.dateEditExpireDate.text(),
-            'itemTypeName': self.comboBoxItemTypeName.currentText().upper(),
-            'brandName': self.comboBoxBrandName.currentText().upper(),
-            'supplierName': self.comboBoxSupplierName.currentText().upper(),
-            'capital': self.lineEditCapital.text(),
-            'retailPrice': self.lineEditRetailPrice.text(),
-            'wholesalePrice': self.lineEditWholesalePrice.text(),
-            'effectiveDate': self.dateEditEffectiveDate.text(),
-            'trackInventory': self.checkBoxTrackInventory.isChecked()
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -169,7 +84,7 @@ class ManageProduct(Ui_FormManageProduct, QWidget):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetchAllItemPriceRelatedDataByKeywordInPagination', {
+        self.currentThread = FetchThread('fetchAllPromoDataByKeywordInPagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
@@ -185,7 +100,6 @@ class ManageProduct(Ui_FormManageProduct, QWidget):
         
         self.tableWidgetData.clearContents()
         self.tableWidgetData.setRowCount(len(listData))
-
         
         self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
         
@@ -195,15 +109,6 @@ class ManageProduct(Ui_FormManageProduct, QWidget):
                 QTableWidgetItem(f"{data['itemName']}"),
                 QTableWidgetItem(f"{data['barcode']}"),
                 QTableWidgetItem(f"{data['expireDate']}"),
-                QTableWidgetItem(f"{data['itemTypeName']}"),
-                QTableWidgetItem(f"{data['brandName']}"),
-                QTableWidgetItem(f"{data['supplierName']}"),
-                QTableWidgetItem(f"{data['salesGroupName']}"),
-                QTableWidgetItem(f"{data['capital']}"),
-                QTableWidgetItem(f"{data['price']}"),
-                QTableWidgetItem(f"{data['discount']}"),
-                QTableWidgetItem(f"{data['effectiveDate']}"),
-                QTableWidgetItem(f"{data['promoName']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             
@@ -212,10 +117,6 @@ class ManageProduct(Ui_FormManageProduct, QWidget):
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
                 self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
-                
-                if data['promoName'] is not None:
-                    manageActionButton.pushButtonEdit.setVisible(False)
-                    tableitem.setForeground(QColor(255, 0, 0))
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))
@@ -225,8 +126,8 @@ class ManageProduct(Ui_FormManageProduct, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
-        self.editProduct = EditProduct(self.authData, data)
-        self.editProduct.exec()
+        self.editPromo = EditPromo(self.authData, data)
+        self.editPromo.exec()
         self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):
@@ -234,7 +135,7 @@ class ManageProduct(Ui_FormManageProduct, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = RemoveThread('removeItemPriceById', {'itemPriceId': data['itemPriceId']})
+            self.currentThread = RemoveThread('removePromoById', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)

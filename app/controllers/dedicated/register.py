@@ -27,8 +27,8 @@ class RegisterThread(QThread):
          
         try:
             with postgres_db:
-                if self.function_route == 'registerItem':
-                    result = self.registerItem(self.entry, result)
+                if self.function_route == 'registerProduct':
+                    result = self.registerProduct(self.entry, result)
                 elif self.function_route == 'registerMember':
                     result = self.registerMember(self.entry, result)
                 elif self.function_route == 'registerPromo':
@@ -58,7 +58,7 @@ class RegisterThread(QThread):
         print(f"{self.function_route} -> result_message: {result['message']}")
 
     # add function here
-    def registerItem(self, entry=None, result=None):
+    def registerProduct(self, entry=None, result=None):
         print('this is the register item')
         """This function is a special case. The coding structure might be different from the standard."""
         try:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormManagePromo</class>
- <widget class="QWidget" name="FormManagePromo">
+ <class>FormManageItem</class>
+ <widget class="QWidget" name="FormManageItem">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Manage promo</string>
+   <string>Manage item</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_4">
    <item>
@@ -93,17 +93,17 @@
        </column>
        <column>
         <property name="text">
-         <string>PromoName</string>
+         <string>ItemName</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>DiscountRate</string>
+         <string>Barcode</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Description</string>
+         <string>ExpireDate</string>
         </property>
        </column>
        <column>
@@ -209,22 +209,22 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Promo name</string>
+             <string>Item name</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="lineEditPromoName"/>
+           <widget class="QLineEdit" name="lineEditItemName"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Discount rate</string>
+             <string>Barcode</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEditDiscountRate">
+           <widget class="QLineEdit" name="lineEditBarcode">
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
@@ -233,12 +233,19 @@
           <item row="2" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Description</string>
+             <string>ExpireDate</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEditDescription"/>
+           <widget class="QDateEdit" name="dateEditExpireDate">
+            <property name="displayFormat">
+             <string>yyyy-MM-dd</string>
+            </property>
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
