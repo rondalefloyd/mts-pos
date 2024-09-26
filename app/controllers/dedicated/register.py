@@ -187,6 +187,92 @@ class RegisterThread(QThread):
             result['success'] = False
             result['message'] = f"An error occured: {exception}"
             return result
+                       
+    def registerItem(self, entry=None, result=None):
+        try:
+            item = Item.select().where(
+                (Item.Barcode == entry['barcode']) &
+                (Item.ItemTypeId == ItemType.get_or_none(ItemType.ItemTypeName == entry['itemTypeName']).Id) &
+                (Item.BrandId == Brand.get_or_none(Brand.BrandName == entry['brandName']).Id) &
+                (Item.SupplierId == Supplier.get_or_none(Supplier.SupplierName == entry['supplierName']).Id) &
+                (Item.SalesGroupId == SalesGroup.get_or_none(SalesGroup.SalesGroupName == entry['salesGroupName']).Id)
+            )
+            
+            if item.exists():
+                result['message'] = 'Item already exists'
+            
+            item = Item.create(
+                ItemName=entry['itemName'],
+                Barcode=entry['barcode'],
+                ExpireDate=entry['expireDate'],
+                ItemTypeId=ItemType.get_or_none(ItemType.ItemTypeName == entry['itemTypeName']).Id,
+                BrandId=Brand.get_or_none(Brand.BrandName == entry['brandName']).Id,
+                SupplierId=Supplier.get_or_none(Supplier.SupplierName == entry['supplierName']).Id,
+                SalesGroupId=SalesGroup.get_or_none(SalesGroup.SalesGroupName == entry['salesGroupName']).Id,
+            )
+            
+            result['success'] = True
+            result['message'] = 'Item added'
+            return result
+
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+               
+    def registerBrand(self, entry=None, result=None):
+        try:
+            brand = Brand.select().where((Brand.BrandName == entry['brandName']))
+            
+            if brand.exists():
+                result['message'] = 'Brand already exists'
+            
+            brand = Brand.create(BrandName=entry['brandName'])
+            
+            result['success'] = True
+            result['message'] = 'Brand added'
+            return result
+
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+                       
+    def registerItemType(self, entry=None, result=None):
+        try:
+            itemType = ItemType.select().where((ItemType.ItemTypeName == entry['itemTypeName']))
+            
+            if itemType.exists():
+                result['message'] = 'ItemType already exists'
+            
+            itemType = ItemType.create(ItemTypeName=entry['itemTypeName'])
+            
+            result['success'] = True
+            result['message'] = 'ItemType added'
+            return result
+
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+                       
+    def registerSupplier(self, entry=None, result=None):
+        try:
+            supplier = Supplier.select().where((Supplier.SupplierName == entry['supplierName']))
+            
+            if supplier.exists():
+                result['message'] = 'Supplier already exists'
+            
+            supplier = Supplier.create(SupplierName=entry['supplierName'])
+            
+            result['success'] = True
+            result['message'] = 'Supplier added'
+            return result
+
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
         
     def registerReward(self, entry=None, result=None):
         try:

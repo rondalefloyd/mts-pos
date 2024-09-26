@@ -91,16 +91,16 @@ class LoadThread(QThread):
                     result['message'] = 'Loading canceled'
                     return result
                 
-                itemName = row['ItemName'].upper() if not pd.isna(row['ItemName']) else None
-                barcode = row['Barcode'] if not pd.isna(row['Barcode']) else None
-                expireDate = row['ExpireDate'] if not pd.isna(row['ExpireDate']) else None
-                itemTypeName = row['ItemType'].upper() if not pd.isna(row['ItemType']) else None
-                brandName = row['Brand'].upper() if not pd.isna(row['Brand']) else None
-                supplierName = row['Supplier'].upper() if not pd.isna(row['Supplier']) else None
-                capital = row['Capital'] if not pd.isna(row['Capital']) else None
-                retailPrice = row['RetailPrice'] if not pd.isna(row['RetailPrice']) else None
-                wholesalePrice = row['WholesalePrice'] if not pd.isna(row['WholesalePrice']) else None
-                effectiveDate = row['EffectiveDate'] if not pd.isna(row['EffectiveDate']) else None
+                itemName = row['ItemName'].upper() if not pd.isna(row['ItemName']) else '_'
+                barcode = row['Barcode'] if not pd.isna(row['Barcode']) else '_'
+                expireDate = row['ExpireDate'] if not pd.isna(row['ExpireDate']) else datetime.strptime('9999-12-12', '%Y-%m-%d')
+                itemTypeName = row['ItemType'].upper() if not pd.isna(row['ItemType']) else '_'
+                brandName = row['Brand'].upper() if not pd.isna(row['Brand']) else '_'
+                supplierName = row['Supplier'].upper() if not pd.isna(row['Supplier']) else '_'
+                capital = row['Capital'] if not pd.isna(row['Capital']) else 0.0
+                retailPrice = row['RetailPrice'] if not pd.isna(row['RetailPrice']) else 0.0
+                wholesalePrice = row['WholesalePrice'] if not pd.isna(row['WholesalePrice']) else 0.0
+                effectiveDate = row['EffectiveDate'] if not pd.isna(row['EffectiveDate']) else datetime.now()
 
                 print('IMPORTING:', itemName, barcode, expireDate, itemTypeName, brandName, supplierName, capital, retailPrice, wholesalePrice, effectiveDate)
 

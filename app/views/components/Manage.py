@@ -142,16 +142,16 @@ class Manage(Ui_MainWindowManage, QMainWindow):
                 self.manageUser.refresh()
             case 8:
                 menuManageTitle = 'Item'
-                # self.manageItem.refresh()
+                self.manageItem.refresh()
             case 9:
                 menuManageTitle = 'ItemType'
-                # self.manageItemType.refresh()
+                self.manageItemType.refresh()
             case 10:
                 menuManageTitle = 'Brand'
-                # self.manageBrand.refresh()
+                self.manageBrand.refresh()
             case 11:
                 menuManageTitle = 'Supplier'
-                # self.manageSupplier.refresh()
+                self.manageSupplier.refresh()
                 
         self.menuManage.setTitle(menuManageTitle)
 

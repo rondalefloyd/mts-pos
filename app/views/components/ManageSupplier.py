@@ -10,7 +10,7 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ManageSupplier_ui import Ui_FormManageSupplier
 from app.views.components.Loading import Loading
-from app.views.components.EditPromo import EditPromo
+from app.views.components.EditSupplier import EditSupplier
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
@@ -27,7 +27,7 @@ class ManageSupplier(Ui_FormManageSupplier, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        # self.refresh()
+        self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
         self.pushButtonPrev.clicked.connect(self._onPushButtonPrevClicked)
@@ -79,7 +79,7 @@ class ManageSupplier(Ui_FormManageSupplier, QWidget):
         
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetchAllPromoDataByKeywordInPagination', {
+        self.currentThread = FetchThread('fetchAllSupplierDataByKeywordInPagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
@@ -119,8 +119,8 @@ class ManageSupplier(Ui_FormManageSupplier, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
-        self.editPromo = EditPromo(self.authData, data)
-        self.editPromo.exec()
+        self.editSupplier = EditSupplier(self.authData, data)
+        self.editSupplier.exec()
         self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):
@@ -128,7 +128,7 @@ class ManageSupplier(Ui_FormManageSupplier, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = RemoveThread('removePromoById', {'id': data['id']})
+            self.currentThread = RemoveThread('removeSupplierById', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)

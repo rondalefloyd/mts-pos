@@ -61,6 +61,15 @@ class FetchThread(QThread):
                     result = self.fetchAllUserDataByKeywordInPagination(self.entry, result)
                 elif self.function_route == 'fetchAllReceiptDataByKeywordInPagination':
                     result = self.fetchAllReceiptDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllItemDataByKeywordInPagination':
+                    result = self.fetchAllItemDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllBrandDataByKeywordInPagination':
+                    result = self.fetchAllBrandDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllItemTypeDataByKeywordInPagination':
+                    result = self.fetchAllItemTypeDataByKeywordInPagination(self.entry, result)
+                elif self.function_route == 'fetchAllSupplierDataByKeywordInPagination':
+                    result = self.fetchAllSupplierDataByKeywordInPagination(self.entry, result)
+                
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -686,6 +695,153 @@ class FetchThread(QThread):
                     'discountRate': promo.DiscountRate,
                     'description': promo.Description,
                     'updateTs': promo.UpdateTs,
+                })
+            
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+        
+    def fetchAllItemDataByKeywordInPagination(self, entry=None, result=None):
+        try:
+            limit = 15
+            offset = (entry['currentPage'] - 1) * limit
+            keyword = f"%{entry['keyword']}%"
+        
+            items = Item.select(
+                Item,
+                ItemType,
+                Brand,
+                Supplier,
+                SalesGroup,
+            ).join(ItemType, JOIN.LEFT_OUTER, on=(Item.ItemTypeId == ItemType.Id)
+            ).join(Brand, JOIN.LEFT_OUTER, on=(Item.BrandId == Brand.Id)
+            ).join(Supplier, JOIN.LEFT_OUTER, on=(Item.SupplierId == Supplier.Id)
+            ).join(SalesGroup, JOIN.LEFT_OUTER, on=(Item.SalesGroupId == SalesGroup.Id)
+            ).where(
+                (Item.ItemName.cast('TEXT').like(keyword)) |
+                (Item.Barcode.cast('TEXT').like(keyword)) |
+                (Item.ExpireDate.cast('TEXT').like(keyword)) |
+                (ItemType.ItemTypeName.cast('TEXT').like(keyword)) |
+                (Brand.BrandName.cast('TEXT').like(keyword)) |
+                (Supplier.SupplierName.cast('TEXT').like(keyword)) |
+                (SalesGroup.SalesGroupName.cast('TEXT').like(keyword)) |    
+                (Item.UpdateTs.cast('TEXT').like(keyword))
+            ).order_by(Item.UpdateTs.desc())
+            
+            totalCount = items.count()
+            paginatedItems = items.limit(limit).offset(offset)
+            
+            result['success'] = True
+            result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
+            for item in paginatedItems:
+                itemType = item.ItemTypeId
+                brand = item.BrandId
+                supplier = item.SupplierId
+                salesGroup = item.SalesGroupId
+                
+                result['listData'].append({
+                    'id': item.Id,
+                    'itemName': item.ItemName,
+                    'barcode': item.Barcode,
+                    'expireDate': item.ExpireDate,
+                    'itemTypeName': itemType.ItemTypeName,
+                    'brandName': brand.BrandName,
+                    'supplierName': supplier.SupplierName,
+                    'salesGroupName': salesGroup.SalesGroupName,
+                    'updateTs': item.UpdateTs,
+                })
+            
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+                
+    def fetchAllBrandDataByKeywordInPagination(self, entry=None, result=None):
+        try:
+            limit = 15
+            offset = (entry['currentPage'] - 1) * limit
+            keyword = f"%{entry['keyword']}%"
+            
+            brands = Brand.select().where(
+                (Brand.BrandName.cast('TEXT').like(keyword)) |
+                (Brand.UpdateTs.cast('TEXT').like(keyword))
+            ).order_by(Brand.UpdateTs.desc())
+            
+            totalCount = brands.count()
+            paginatedBrands = brands.limit(limit).offset(offset)
+            
+            result['success'] = True
+            result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
+            for brand in paginatedBrands:
+                result['listData'].append({
+                    'id': brand.Id,
+                    'brandName': brand.BrandName,
+                    'updateTs': brand.UpdateTs,
+                })
+            
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+        
+    def fetchAllItemTypeDataByKeywordInPagination(self, entry=None, result=None):
+        try:
+            limit = 15
+            offset = (entry['currentPage'] - 1) * limit
+            keyword = f"%{entry['keyword']}%"
+            
+            itemTypes = ItemType.select().where(
+                (ItemType.ItemTypeName.cast('TEXT').like(keyword)) |
+                (ItemType.UpdateTs.cast('TEXT').like(keyword))
+            ).order_by(ItemType.UpdateTs.desc())
+            
+            totalCount = itemTypes.count()
+            paginatedItemTypes = itemTypes.limit(limit).offset(offset)
+            
+            result['success'] = True
+            result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
+            for itemType in paginatedItemTypes:
+                result['listData'].append({
+                    'id': itemType.Id,
+                    'itemTypeName': itemType.ItemTypeName,
+                    'updateTs': itemType.UpdateTs,
+                })
+            
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+        
+    def fetchAllSupplierDataByKeywordInPagination(self, entry=None, result=None):
+        try:
+            limit = 15
+            offset = (entry['currentPage'] - 1) * limit
+            keyword = f"%{entry['keyword']}%"
+            
+            suppliers = Supplier.select().where(
+                (Supplier.SupplierName.cast('TEXT').like(keyword)) |
+                (Supplier.UpdateTs.cast('TEXT').like(keyword))
+            ).order_by(Supplier.UpdateTs.desc())
+            
+            totalCount = suppliers.count()
+            paginatedSuppliers = suppliers.limit(limit).offset(offset)
+            
+            result['success'] = True
+            result['dictData'] = {'totalPages': 1 if totalCount == 0 else math.ceil(totalCount / limit)}
+            for supplier in paginatedSuppliers:
+                result['listData'].append({
+                    'id': supplier.Id,
+                    'supplierName': supplier.SupplierName,
+                    'updateTs': supplier.UpdateTs,
                 })
             
             return result

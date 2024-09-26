@@ -7,6 +7,7 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditItem_ui import Ui_DialogEditItem
 from app.views.components.Loading import Loading
+from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.edit import EditThread
 
 class EditItem(Ui_DialogEditItem, QDialog):
@@ -31,6 +32,33 @@ class EditItem(Ui_DialogEditItem, QDialog):
     def _onPushButtonCancelClicked(self):
         self.close()
         
+    def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
+        self.fetchThread = FetchThread('fetchAllItemRelatedData')
+        self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupFinished)
+        self.fetchThread.start()
+        
+    def _handlePopulateComboBoxItemTypeBrandSupplierSalesGroupFinished(self, result):
+        self.comboBoxItemTypeName.clear()
+        self.comboBoxBrandName.clear()
+        self.comboBoxSupplierName.clear()
+        self.comboBoxSalesGroupName.clear()
+        
+        listData = result['dictData']
+        
+        itemTypes = listData['itemTypes'] if 'itemTypes' in listData else []
+        brands = listData['brands'] if 'brands' in listData else []
+        suppliers = listData['suppliers'] if 'suppliers' in listData else []
+        salesGroups = listData['salesGroups'] if 'salesGroups' in listData else []
+
+        for itemType in itemTypes:
+            self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
+        for brand in brands:
+            self.comboBoxBrandName.addItem(f"{brand['brandName']}")
+        for supplier in suppliers:
+            self.comboBoxSupplierName.addItem(f"{supplier['supplierName']}")
+        for salesGroup in salesGroups:
+            self.comboBoxSalesGroupName.addItem(f"{salesGroup['salesGroupName']}")
+        
     def _onPushButtonSaveClicked(self):
         self.loading.show()
         self.currentThread = EditThread('editItemDataById', {
@@ -38,6 +66,10 @@ class EditItem(Ui_DialogEditItem, QDialog):
             'itemName': self.lineEditItemName.text().upper(),
             'barcode': self.lineEditBarcode.text(),
             'expireDate': self.dateEditExpireDate.text(),
+            'itemTypeName': self.comboBoxItemTypeName.currentText().upper(),
+            'brandName': self.comboBoxBrandName.currentText().upper(),
+            'supplierName': self.comboBoxSupplierName.currentText().upper(),
+            'salesGroupName': self.comboBoxSalesGroupName.currentText().upper(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)

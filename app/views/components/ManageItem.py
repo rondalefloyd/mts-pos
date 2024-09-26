@@ -10,7 +10,7 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ManageItem_ui import Ui_FormManageItem
 from app.views.components.Loading import Loading
-from app.views.components.EditPromo import EditPromo
+from app.views.components.EditItem import EditItem
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
@@ -27,7 +27,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        # self.refresh()
+        self.refresh()
         
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
         self.pushButtonPrev.clicked.connect(self._onPushButtonPrevClicked)
@@ -66,6 +66,10 @@ class ManageItem(Ui_FormManageItem, QWidget):
             'itemName': self.lineEditItemName.text().upper(),
             'barcode': self.lineEditBarcode.text(),
             'expireDate': self.dateEditExpireDate.text(),
+            'itemTypeName': self.comboBoxItemTypeName.currentText().upper(),
+            'brandName': self.comboBoxBrandName.currentText().upper(),
+            'supplierName': self.comboBoxSupplierName.currentText().upper(),
+            'salesGroupName': self.comboBoxSalesGroupName.currentText().upper(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonAddClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)
@@ -82,9 +86,36 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self._populateTableWidgetData()
         return
         
+    def _populateComboBoxItemTypeBrandSupplierSalesGroup(self):
+        self.fetchThread = FetchThread('fetchAllItemRelatedData')
+        self.fetchThread.finished.connect(self._handlePopulateComboBoxItemTypeBrandSupplierSalesGroupFinished)
+        self.fetchThread.start()
+        
+    def _handlePopulateComboBoxItemTypeBrandSupplierSalesGroupFinished(self, result):
+        self.comboBoxItemTypeName.clear()
+        self.comboBoxBrandName.clear()
+        self.comboBoxSupplierName.clear()
+        self.comboBoxSalesGroupName.clear()
+        
+        listData = result['dictData']
+        
+        itemTypes = listData['itemTypes'] if 'itemTypes' in listData else []
+        brands = listData['brands'] if 'brands' in listData else []
+        suppliers = listData['suppliers'] if 'suppliers' in listData else []
+        salesGroups = listData['salesGroups'] if 'salesGroups' in listData else []
+
+        for itemType in itemTypes:
+            self.comboBoxItemTypeName.addItem(f"{itemType['itemTypeName']}")
+        for brand in brands:
+            self.comboBoxBrandName.addItem(f"{brand['brandName']}")
+        for supplier in suppliers:
+            self.comboBoxSupplierName.addItem(f"{supplier['supplierName']}")
+        for salesGroup in salesGroups:
+            self.comboBoxSalesGroupName.addItem(f"{salesGroup['salesGroupName']}")
+        
     def _populateTableWidgetData(self):
         self.loading.show()
-        self.currentThread = FetchThread('fetchAllPromoDataByKeywordInPagination', {
+        self.currentThread = FetchThread('fetchAllItemDataByKeywordInPagination', {
             'currentPage': self.currentPage,
             'keyword': f"{self.lineEditFilter.text().upper()}",
         })
@@ -109,6 +140,10 @@ class ManageItem(Ui_FormManageItem, QWidget):
                 QTableWidgetItem(f"{data['itemName']}"),
                 QTableWidgetItem(f"{data['barcode']}"),
                 QTableWidgetItem(f"{data['expireDate']}"),
+                QTableWidgetItem(f"{data['itemTypeName']}"),
+                QTableWidgetItem(f"{data['brandName']}"),
+                QTableWidgetItem(f"{data['supplierName']}"),
+                QTableWidgetItem(f"{data['salesGroupName']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             
@@ -126,8 +161,8 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
-        self.editPromo = EditPromo(self.authData, data)
-        self.editPromo.exec()
+        self.editItem = EditItem(self.authData, data)
+        self.editItem.exec()
         self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):
@@ -135,7 +170,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = RemoveThread('removePromoById', {'id': data['id']})
+            self.currentThread = RemoveThread('removeItemById', {'id': data['id']})
             self.currentThread.finished.connect(self._handleOnPushButtonDeleteClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)
