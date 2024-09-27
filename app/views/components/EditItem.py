@@ -26,6 +26,8 @@ class EditItem(Ui_DialogEditItem, QDialog):
         self.lineEditBarcode.setText(f"{self.selectedData['barcode']}")
         self.dateEditExpireDate.setDate(QDate.fromString(f"{self.selectedData['expireDate']}", 'yyyy-MM-dd'))
 
+        self._populateComboBoxItemTypeBrandSupplierSalesGroup()
+        
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)
 

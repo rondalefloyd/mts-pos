@@ -156,7 +156,7 @@ class Ui_FormManageItem(object):
         self.formLayout.setWidget(6, QtWidgets.QFormLayout.LabelRole, self.label_12)
         self.comboBoxSalesGroupName = QtWidgets.QComboBox(self.scrollAreaWidgetContents)
         self.comboBoxSalesGroupName.setEnabled(True)
-        self.comboBoxSalesGroupName.setEditable(True)
+        self.comboBoxSalesGroupName.setEditable(False)
         self.comboBoxSalesGroupName.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBoxSalesGroupName.setObjectName("comboBoxSalesGroupName")
         self.formLayout.setWidget(6, QtWidgets.QFormLayout.FieldRole, self.comboBoxSalesGroupName)

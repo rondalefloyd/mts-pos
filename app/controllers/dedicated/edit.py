@@ -33,6 +33,14 @@ class EditThread(QThread):
                     result = self.editMemberDataById(self.entry, result)
                 elif self.function_route == 'editPromoDataById':
                     result = self.editPromoDataById(self.entry, result)
+                elif self.function_route == 'editItemTypeDataById':
+                    result = self.editItemTypeDataById(self.entry, result)
+                elif self.function_route == 'editBrandDataById':
+                    result = self.editBrandDataById(self.entry, result)
+                elif self.function_route == 'editSupplierDataById':
+                    result = self.editSupplierDataById(self.entry, result)
+                elif self.function_route == 'editItemDataById':
+                    result = self.editItemDataById(self.entry, result)
                 elif self.function_route == 'editRewardDataById':
                     result = self.editRewardDataById(self.entry, result)
                 elif self.function_route == 'editStockDataById':
@@ -158,6 +166,7 @@ class EditThread(QThread):
             member.Address = entry['address']
             member.MobileNumber = entry['mobileNumber']
             member.Points = entry['points']
+            member.UpdateTs = datetime.now()
             member.save()
             
             result['success'] = True
@@ -184,10 +193,117 @@ class EditThread(QThread):
             promo.PromoName = entry['promoName']
             promo.DiscountRate = entry['discountRate']
             promo.Description = entry['description']
+            promo.UpdateTs = datetime.now()
             promo.save()
             
             result['success'] = True
             result['message'] = 'Promo updated'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+                
+    def editItemTypeDataById(self, entry=None, result=None):
+        try:
+            itemType = ItemType.select().where(
+                (ItemType.Id == entry['id']) &
+                (ItemType.ItemTypeName == entry['itemTypeName'])
+            )
+            
+            if itemType.exists():
+                result['message'] = 'ItemType already exists'
+                return result
+                
+            itemType = ItemType.get_or_none(ItemType.Id == entry['id'])
+            itemType.ItemTypeName = entry['itemTypeName']
+            itemType.UpdateTs = datetime.now()
+            itemType.save()
+            
+            result['success'] = True
+            result['message'] = 'ItemType updated'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+                
+    def editBrandDataById(self, entry=None, result=None):
+        try:
+            brand = Brand.select().where(
+                (Brand.Id == entry['id']) &
+                (Brand.BrandName == entry['brandName'])
+            )
+            
+            if brand.exists():
+                result['message'] = 'Brand already exists'
+                return result
+                
+            brand = Brand.get_or_none(Brand.Id == entry['id'])
+            brand.BrandName = entry['brandName']
+            brand.UpdateTs = datetime.now()
+            brand.save()
+            
+            result['success'] = True
+            result['message'] = 'Brand updated'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+                
+    def editSupplierDataById(self, entry=None, result=None):
+        try:
+            supplier = Supplier.select().where(
+                (Supplier.Id == entry['id']) &
+                (Supplier.SupplierName == entry['supplierName'])
+            )
+            
+            if supplier.exists():
+                result['message'] = 'Supplier already exists'
+                return result
+                
+            supplier = Supplier.get_or_none(Supplier.Id == entry['id'])
+            supplier.SupplierName = entry['supplierName']
+            supplier.UpdateTs = datetime.now()
+            supplier.save()
+            
+            result['success'] = True
+            result['message'] = 'Supplier updated'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+                
+    def editItemDataById(self, entry=None, result=None):
+        try:
+            item = Item.select().where(
+                (Item.Id == entry['id']) &
+                (Item.ItemName == entry['itemName']) &
+                (Item.SalesGroupId == SalesGroup.get(SalesGroup.SalesGroupName == entry['salesGroupName']).Id)
+            )
+            
+            if item.exists():
+                result['message'] = 'Item already exists'
+                return result
+                
+            item = Item.get_or_none(Item.Id == entry['id'])
+            item.ItemName = entry['itemName']
+            item.Barcode = entry['barcode']
+            item.ExpireDate = entry['expireDate']
+            item.ItemTypeId = ItemType.get(ItemType.ItemTypeName == entry['itemTypeName']).Id
+            item.BrandId = Brand.get(Brand.BrandName == entry['brandName']).Id
+            item.SupplierId = Supplier.get(Supplier.SupplierName == entry['supplierName']).Id
+            item.UpdateTs = datetime.now()
+            item.save()
+            
+            result['success'] = True
+            result['message'] = 'Item updated'
             return result
             
         except Exception as exception:
@@ -211,6 +327,7 @@ class EditThread(QThread):
             reward.Points = entry['points']
             reward.Target = entry['target']
             reward.Description = entry['description']
+            reward.UpdateTs = datetime.now()
             reward.save()
             
             result['success'] = True
@@ -227,6 +344,7 @@ class EditThread(QThread):
             stock = Stock.get_or_none(Stock.Id == entry['id'])
             stock.OnHand = entry['onHand']
             stock.Available = entry['available']
+            stock.UpdateTs = datetime.now()
             stock.save()
             
             result['success'] = True
@@ -246,6 +364,7 @@ class EditThread(QThread):
             organization.Address = entry['address']
             organization.MobileNumber = entry['mobileNumber']
             organization.AccessCode = entry['accessCode']
+            organization.UpdateTs = datetime.now()
             organization.save()
             
             result['success'] = True
@@ -275,6 +394,7 @@ class EditThread(QThread):
             user.BirthDate = entry['birthDate']
             user.MobileNumber = entry['mobileNumber']
             user.AccessLevel = entry['accessLevel']
+            user.UpdateTs = datetime.now()
             user.save()
             
             result['success'] = True

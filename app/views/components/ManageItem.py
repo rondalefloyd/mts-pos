@@ -28,7 +28,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.activeThreads = []
         
         self.refresh()
-        
+                
         self.pushButtonFilter.clicked.connect(self._onPushButtonFilterClicked)
         self.pushButtonPrev.clicked.connect(self._onPushButtonPrevClicked)
         self.pushButtonNext.clicked.connect(self._onPushButtonNextClicked)
@@ -40,6 +40,7 @@ class ManageItem(Ui_FormManageItem, QWidget):
         self.totalPages = 1
         
         self._populateTableWidgetData()
+        self._populateComboBoxItemTypeBrandSupplierSalesGroup()
 
     def _onPushButtonFilterClicked(self):
         self.currentPage = 1
