@@ -78,7 +78,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         self.actionSales.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(0))
         self.actionTransaction.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(1))
-        self.actionGeneral.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(2))
+        self.actionAll.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(2))
         self.actionStock.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(3))
         self.actionPromo.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(4))
         self.actionReward.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(5))
@@ -100,18 +100,18 @@ class Manage(Ui_MainWindowManage, QMainWindow):
     def _onStackedWidgetManageSetCurrentIndex(self, index):
         self.stackedWidgetManage.setCurrentIndex(index)
         
-        self.actionSales.setChecked(self.stackedWidgetManage.currentIndex() == 0)
-        self.actionTransaction.setChecked(self.stackedWidgetManage.currentIndex() == 1)
-        self.actionGeneral.setChecked(self.stackedWidgetManage.currentIndex() == 2)
-        self.actionStock.setChecked(self.stackedWidgetManage.currentIndex() == 3)
-        self.actionPromo.setChecked(self.stackedWidgetManage.currentIndex() == 4)
-        self.actionReward.setChecked(self.stackedWidgetManage.currentIndex() == 5)
-        self.actionMember.setChecked(self.stackedWidgetManage.currentIndex() == 6)
-        self.actionUser.setChecked(self.stackedWidgetManage.currentIndex() == 7)
-        self.actionItem.setChecked(self.stackedWidgetManage.currentIndex() == 7)
-        self.actionItemType.setChecked(self.stackedWidgetManage.currentIndex() == 7)
-        self.actionBrand.setChecked(self.stackedWidgetManage.currentIndex() == 7)
-        self.actionSupplier.setChecked(self.stackedWidgetManage.currentIndex() == 7)
+        self.actionSales.setChecked(index == 0)
+        self.actionTransaction.setChecked(index == 1)
+        self.actionAll.setChecked(index == 2)
+        self.actionStock.setChecked(index == 3)
+        self.actionPromo.setChecked(index == 4)
+        self.actionReward.setChecked(index == 5)
+        self.actionMember.setChecked(index == 6)
+        self.actionUser.setChecked(index == 7)
+        self.actionItem.setChecked(index == 8)
+        self.actionItemType.setChecked(index == 9)
+        self.actionBrand.setChecked(index == 10)
+        self.actionSupplier.setChecked(index == 11)
 
         menuManageTitle = 'Unavailable'
         
@@ -123,7 +123,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
                 menuManageTitle = 'Transaction'
                 self.manageReceipt.refresh()
             case 2:
-                menuManageTitle = 'General'
+                menuManageTitle = 'All'
                 self.manageProduct.refresh()
             case 3:
                 menuManageTitle = 'Stock'

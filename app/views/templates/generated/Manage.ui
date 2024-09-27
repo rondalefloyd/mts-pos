@@ -124,11 +124,11 @@
     <property name="title">
      <string>&lt;PageName&gt;</string>
     </property>
-    <widget class="QMenu" name="menuItem">
+    <widget class="QMenu" name="menuProduct">
      <property name="title">
       <string>Product</string>
      </property>
-     <addaction name="actionGeneral"/>
+     <addaction name="actionAll"/>
      <addaction name="separator"/>
      <addaction name="actionItem"/>
      <addaction name="actionItemType"/>
@@ -138,7 +138,7 @@
     <addaction name="actionSales"/>
     <addaction name="actionTransaction"/>
     <addaction name="separator"/>
-    <addaction name="menuItem"/>
+    <addaction name="menuProduct"/>
     <addaction name="actionStock"/>
     <addaction name="actionPromo"/>
     <addaction name="actionReward"/>
@@ -259,7 +259,7 @@
     <string>Supplier</string>
    </property>
   </action>
-  <action name="actionGeneral">
+  <action name="actionAll">
    <property name="text">
     <string>General</string>
    </property>
