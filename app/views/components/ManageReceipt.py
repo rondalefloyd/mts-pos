@@ -16,7 +16,7 @@ from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
-class ManageReceipt(Ui_FormManageReceipt, QWidget):
+class ManageReceipts(Ui_FormManageReceipt, QWidget):
     def __init__(self, authData):
         super().__init__()
         self.setupUi(self)

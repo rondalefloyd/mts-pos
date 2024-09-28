@@ -26,10 +26,10 @@ class AuthenticateThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'authenticate_user_by_user_name_access_code':
-                    result = self.authenticate_user_by_user_name_access_code(self.entry, result)
-                elif self.function_route == 'unauthenticate_user_by_id':
-                    result = self.unauthenticate_user_by_id(self.entry, result)
+                if self.function_route == 'authenticateUserByUserNameAccess_code':
+                    result = self.authenticateUserByUserNameAccess_code(self.entry, result)
+                elif self.function_route == 'unauthenticateUserById':
+                    result = self.unauthenticateUserById(self.entry, result)
                 else:
                     result['message'] = f"'{self.function_route}' is an invalid function..."
                         
@@ -48,7 +48,7 @@ class AuthenticateThread(QThread):
         self.finished.emit(result)
         print(f"{self.function_route} -> result_message: {result['message']}")
         
-    def authenticate_user_by_user_name_access_code(self, entry=None, result=None):
+    def authenticateUserByUserNameAccess_code(self, entry=None, result=None):
         try:
             user = User.select().where(
                 (User.UserName == entry['userName']) & 
@@ -105,7 +105,7 @@ class AuthenticateThread(QThread):
             result['message'] = f"An error occured: {exception}"
             return result
 
-    def unauthenticate_user_by_id(self, entry=None, result=None):
+    def unauthenticateUserById(self, entry=None, result=None):
         try:
             userSession = UserSession.select().where(UserSession.UserId == entry['id'])
             

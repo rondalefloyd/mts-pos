@@ -16,7 +16,7 @@ from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
-class ManageItemType(Ui_FormManageItemType, QWidget):
+class ManageItemTypes(Ui_FormManageItemType, QWidget):
     def __init__(self, authData):
         super().__init__()
         self.setupUi(self)

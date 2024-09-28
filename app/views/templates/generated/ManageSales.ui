@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>764</width>
+    <width>1033</width>
     <height>629</height>
    </rect>
   </property>
@@ -267,6 +267,9 @@
       </size>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -280,59 +283,64 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="labelOrderName">
-          <property name="text">
-           <string>&lt;OrderName&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBoxOrderType">
-          <item>
+       <widget class="QWidget" name="widget" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QLabel" name="labelOrderName">
            <property name="text">
-            <string>Retail</string>
+            <string>&lt;OrderName&gt;</string>
            </property>
-          </item>
-          <item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBoxOrderType">
+           <item>
+            <property name="text">
+             <string>Retail</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Wholesale</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Mixed</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonNew">
            <property name="text">
-            <string>Wholesale</string>
+            <string>New</string>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Mixed</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButtonNew">
-          <property name="text">
-           <string>New</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item>
        <widget class="QTabWidget" name="tabWidgetOrder">
         <property name="tabShape">
          <enum>QTabWidget::Rounded</enum>
+        </property>
+        <property name="currentIndex">
+         <number>1</number>
         </property>
         <property name="documentMode">
          <bool>false</bool>

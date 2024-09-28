@@ -17,7 +17,7 @@ from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.load import LoadThread
 from app.controllers.dedicated.remove import RemoveThread
 
-class ManageProduct(Ui_FormManageProduct, QWidget):
+class ManageProducts(Ui_FormManageProduct, QWidget):
     def __init__(self, authData):
         super().__init__()
         self.setupUi(self)

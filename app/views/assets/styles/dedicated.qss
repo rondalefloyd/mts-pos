@@ -183,11 +183,30 @@ QTableWidget#tableWidgetOrderItem::item:selected {
 
 
 
-
 QDateEdit,
 QComboBox,
 QCheckBox,
 QLineEdit {
     padding: 5px;
     width: 100%;
+}
+
+
+
+
+
+
+
+
+QWidget#widgetStatusBar {
+    background-color: #fff;
+}
+
+
+QFrame#frameRegister {
+    background-color: #fff;
+}
+
+QWidget#scrollAreaWidgetContents {
+    background-color: #fff;
 }

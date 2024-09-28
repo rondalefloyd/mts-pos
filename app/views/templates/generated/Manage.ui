@@ -15,6 +15,18 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QStackedWidget" name="stackedWidgetManage">
       <widget class="QWidget" name="pageSales"/>
@@ -28,86 +40,66 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>User:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelFullName">
-            <property name="text">
-             <string>&lt;FullName&gt;</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="Line" name="line">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Mobile number:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelMobileNumber">
-            <property name="text">
-             <string>&lt;MobileNumber&gt;</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QLabel" name="labelDatabaseSource">
-            <property name="text">
-             <string>&lt;DatabaseSouce&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QProgressBar" name="progressBarStorage">
-            <property name="value">
-             <number>24</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-     </layout>
+     <widget class="QWidget" name="widgetStatusBar" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>User:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelFullName">
+           <property name="text">
+            <string>&lt;FullName&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Mobile number:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelMobileNumber">
+           <property name="text">
+            <string>&lt;MobileNumber&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -124,27 +116,27 @@
     <property name="title">
      <string>&lt;PageName&gt;</string>
     </property>
-    <widget class="QMenu" name="menuProduct">
+    <widget class="QMenu" name="menuProducts">
      <property name="title">
-      <string>Product</string>
+      <string>Products</string>
      </property>
      <addaction name="actionAll"/>
      <addaction name="separator"/>
-     <addaction name="actionItem"/>
-     <addaction name="actionItemType"/>
-     <addaction name="actionBrand"/>
-     <addaction name="actionSupplier"/>
+     <addaction name="actionItems"/>
+     <addaction name="actionItemTypes"/>
+     <addaction name="actionBrands"/>
+     <addaction name="actionSuppliers"/>
     </widget>
     <addaction name="actionSales"/>
-    <addaction name="actionTransaction"/>
+    <addaction name="actionTransactions"/>
     <addaction name="separator"/>
-    <addaction name="menuProduct"/>
-    <addaction name="actionStock"/>
-    <addaction name="actionPromo"/>
-    <addaction name="actionReward"/>
-    <addaction name="actionMember"/>
+    <addaction name="menuProducts"/>
+    <addaction name="actionStocks"/>
+    <addaction name="actionPromos"/>
+    <addaction name="actionRewards"/>
+    <addaction name="actionMembers"/>
     <addaction name="separator"/>
-    <addaction name="actionUser"/>
+    <addaction name="actionUsers"/>
     <addaction name="separator"/>
     <addaction name="actionLogout"/>
    </widget>
@@ -170,47 +162,47 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Sale</string>
+    <string>Sales</string>
    </property>
   </action>
-  <action name="actionTransaction">
+  <action name="actionTransactions">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Transaction</string>
+    <string>Transactions</string>
    </property>
   </action>
-  <action name="actionStock">
+  <action name="actionStocks">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Stock</string>
+    <string>Stocks</string>
    </property>
   </action>
-  <action name="actionPromo">
+  <action name="actionPromos">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Promo</string>
+    <string>Promos</string>
    </property>
   </action>
-  <action name="actionReward">
+  <action name="actionRewards">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Reward</string>
+    <string>Rewards</string>
    </property>
   </action>
-  <action name="actionMember">
+  <action name="actionMembers">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Member</string>
+    <string>Members</string>
    </property>
   </action>
   <action name="actionLogout">
@@ -221,12 +213,12 @@
     <string>Logout</string>
    </property>
   </action>
-  <action name="actionUser">
+  <action name="actionUsers">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>User</string>
+    <string>Users</string>
    </property>
   </action>
   <action name="actionCurrentOrganization">
@@ -239,29 +231,44 @@
     <string>&lt;UserName&gt;</string>
    </property>
   </action>
-  <action name="actionItem">
+  <action name="actionItems">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Item</string>
+    <string>Items</string>
    </property>
   </action>
-  <action name="actionItemType">
+  <action name="actionItemTypes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>ItemType</string>
+    <string>Types</string>
    </property>
   </action>
-  <action name="actionBrand">
+  <action name="actionBrands">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Brand</string>
+    <string>Brands</string>
    </property>
   </action>
-  <action name="actionSupplier">
+  <action name="actionSuppliers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Supplier</string>
+    <string>Suppliers</string>
    </property>
   </action>
   <action name="actionAll">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>General</string>
+    <string>All</string>
    </property>
   </action>
  </widget>

@@ -13,18 +13,18 @@ from app.views.templates.Manage_ui import Ui_MainWindowManage
 from app.views.components.Loading import Loading
 from app.views.components.EditCurrentUser import EditCurrentUser
 from app.views.components.EditCurrentOrganization import EditCurrentOrganization
-from app.views.components.ManageUser import ManageUser
-from app.views.components.ManageMember import ManageMember
-from app.views.components.ManagePromo import ManagePromo
-from app.views.components.ManageReward import ManageReward
-from app.views.components.ManageProduct import ManageProduct
-from app.views.components.ManageItem import ManageItem
-from app.views.components.ManageItemType import ManageItemType
-from app.views.components.ManageBrand import ManageBrand
-from app.views.components.ManageSupplier import ManageSupplier
-from app.views.components.ManageStock import ManageStock
+from app.views.components.ManageUser import ManageUsers
+from app.views.components.ManageMember import ManageMembers
+from app.views.components.ManagePromo import ManagePromos
+from app.views.components.ManageReward import ManageRewards
+from app.views.components.ManageProduct import ManageProducts
+from app.views.components.ManageItem import ManageItems
+from app.views.components.ManageItemType import ManageItemTypes
+from app.views.components.ManageBrand import ManageBrands
+from app.views.components.ManageSupplier import ManageSuppliers
+from app.views.components.ManageStock import ManageStocks
 from app.views.components.ManageSales import ManageSales
-from app.views.components.ManageReceipt import ManageReceipt
+from app.views.components.ManageReceipt import ManageReceipts
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
 # class definition
@@ -44,50 +44,49 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         # Initialize widgets only once
         self.manageSales = ManageSales(authData)
-        self.manageReceipt = ManageReceipt(authData)
-        self.manageStock = ManageStock(authData)
-        self.manageProduct = ManageProduct(authData)
-        self.manageItem = ManageItem(authData)
-        self.manageItemType = ManageItemType(authData)
-        self.manageBrand = ManageBrand(authData)
-        self.manageSupplier = ManageSupplier(authData)
-        self.managePromo = ManagePromo(authData)
-        self.manageReward = ManageReward(authData)
-        self.manageMember = ManageMember(authData)
-        self.manageUser = ManageUser(authData)
+        self.manageReceipts = ManageReceipts(authData)
+        self.manageStocks = ManageStocks(authData)
+        self.manageProducts = ManageProducts(authData)
+        self.manageItems = ManageItems(authData)
+        self.manageItemTypes = ManageItemTypes(authData)
+        self.manageBrands = ManageBrands(authData)
+        self.manageSuppliers = ManageSuppliers(authData)
+        self.managePromos = ManagePromos(authData)
+        self.manageRewards = ManageRewards(authData)
+        self.manageMembers = ManageMembers(authData)
+        self.manageUsers = ManageUsers(authData)
         
         # Add widgets to the stacked widget
         self.stackedWidgetManage.insertWidget(0, self.manageSales)
-        self.stackedWidgetManage.insertWidget(1, self.manageReceipt)
-        self.stackedWidgetManage.insertWidget(2, self.manageProduct)
-        self.stackedWidgetManage.insertWidget(3, self.manageStock)
-        self.stackedWidgetManage.insertWidget(4, self.managePromo)
-        self.stackedWidgetManage.insertWidget(5, self.manageReward)
-        self.stackedWidgetManage.insertWidget(6, self.manageMember)
-        self.stackedWidgetManage.insertWidget(7, self.manageUser)
-        self.stackedWidgetManage.insertWidget(8, self.manageItem)
-        self.stackedWidgetManage.insertWidget(9, self.manageItemType)
-        self.stackedWidgetManage.insertWidget(10, self.manageBrand)
-        self.stackedWidgetManage.insertWidget(11, self.manageSupplier)
+        self.stackedWidgetManage.insertWidget(1, self.manageReceipts)
+        self.stackedWidgetManage.insertWidget(2, self.manageProducts)
+        self.stackedWidgetManage.insertWidget(3, self.manageStocks)
+        self.stackedWidgetManage.insertWidget(4, self.managePromos)
+        self.stackedWidgetManage.insertWidget(5, self.manageRewards)
+        self.stackedWidgetManage.insertWidget(6, self.manageMembers)
+        self.stackedWidgetManage.insertWidget(7, self.manageUsers)
+        self.stackedWidgetManage.insertWidget(8, self.manageItems)
+        self.stackedWidgetManage.insertWidget(9, self.manageItemTypes)
+        self.stackedWidgetManage.insertWidget(10, self.manageBrands)
+        self.stackedWidgetManage.insertWidget(11, self.manageSuppliers)
         
         self.labelFullName.setText(f"{self.userData['fullName']}")
         self.labelMobileNumber.setText(f"{self.userData['mobileNumber']}")
-        self.labelDatabaseSource.setText(f"test")
         self.actionCurrentOrganization.setText(f"{self.organizationData['organizationName']}")
         self.actionCurrentUser.setText(f"{self.userData['userName']}")
         
         self.actionSales.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(0))
-        self.actionTransaction.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(1))
+        self.actionTransactions.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(1))
         self.actionAll.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(2))
-        self.actionStock.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(3))
-        self.actionPromo.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(4))
-        self.actionReward.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(5))
-        self.actionMember.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(6))
-        self.actionUser.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(7))
-        self.actionItem.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(8))
-        self.actionItemType.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(9))
-        self.actionBrand.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(10))
-        self.actionSupplier.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(11))
+        self.actionStocks.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(3))
+        self.actionPromos.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(4))
+        self.actionRewards.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(5))
+        self.actionMembers.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(6))
+        self.actionUsers.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(7))
+        self.actionItems.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(8))
+        self.actionItemTypes.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(9))
+        self.actionBrands.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(10))
+        self.actionSuppliers.triggered.connect(lambda: self._onStackedWidgetManageSetCurrentIndex(11))
         
         self.actionLogout.triggered.connect(self._onActionLogoutTriggered)
         
@@ -101,17 +100,17 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.stackedWidgetManage.setCurrentIndex(index)
         
         self.actionSales.setChecked(index == 0)
-        self.actionTransaction.setChecked(index == 1)
+        self.actionTransactions.setChecked(index == 1)
         self.actionAll.setChecked(index == 2)
-        self.actionStock.setChecked(index == 3)
-        self.actionPromo.setChecked(index == 4)
-        self.actionReward.setChecked(index == 5)
-        self.actionMember.setChecked(index == 6)
-        self.actionUser.setChecked(index == 7)
-        self.actionItem.setChecked(index == 8)
-        self.actionItemType.setChecked(index == 9)
-        self.actionBrand.setChecked(index == 10)
-        self.actionSupplier.setChecked(index == 11)
+        self.actionStocks.setChecked(index == 3)
+        self.actionPromos.setChecked(index == 4)
+        self.actionRewards.setChecked(index == 5)
+        self.actionMembers.setChecked(index == 6)
+        self.actionUsers.setChecked(index == 7)
+        self.actionItems.setChecked(index == 8)
+        self.actionItemTypes.setChecked(index == 9)
+        self.actionBrands.setChecked(index == 10)
+        self.actionSuppliers.setChecked(index == 11)
 
         menuManageTitle = 'Unavailable'
         
@@ -120,38 +119,38 @@ class Manage(Ui_MainWindowManage, QMainWindow):
                 menuManageTitle = 'Sales'
                 self.manageSales.refresh()
             case 1:
-                menuManageTitle = 'Transaction'
-                self.manageReceipt.refresh()
+                menuManageTitle = 'Transactions'
+                self.manageReceipts.refresh()
             case 2:
-                menuManageTitle = 'All'
-                self.manageProduct.refresh()
+                menuManageTitle = 'Product: All'
+                self.manageProducts.refresh()
             case 3:
-                menuManageTitle = 'Stock'
-                self.manageStock.refresh()
+                menuManageTitle = 'Stocks'
+                self.manageStocks.refresh()
             case 4:
-                menuManageTitle = 'Promo'
-                self.managePromo.refresh()
+                menuManageTitle = 'Promos'
+                self.managePromos.refresh()
             case 5:
-                menuManageTitle = 'Reward'
-                self.manageReward.refresh()
+                menuManageTitle = 'Rewards'
+                self.manageRewards.refresh()
             case 6:
-                menuManageTitle = 'Member'
-                self.manageMember.refresh()
+                menuManageTitle = 'Members'
+                self.manageMembers.refresh()
             case 7:
-                menuManageTitle = 'User'
-                self.manageUser.refresh()
+                menuManageTitle = 'Users'
+                self.manageUsers.refresh()
             case 8:
-                menuManageTitle = 'Item'
-                self.manageItem.refresh()
+                menuManageTitle = 'Product: Items'
+                self.manageItems.refresh()
             case 9:
-                menuManageTitle = 'ItemType'
-                self.manageItemType.refresh()
+                menuManageTitle = 'Product: Types'
+                self.manageItemTypes.refresh()
             case 10:
-                menuManageTitle = 'Brand'
-                self.manageBrand.refresh()
+                menuManageTitle = 'Product: Brands'
+                self.manageBrands.refresh()
             case 11:
-                menuManageTitle = 'Supplier'
-                self.manageSupplier.refresh()
+                menuManageTitle = 'Product: Suppliers'
+                self.manageSuppliers.refresh()
                 
         self.menuManage.setTitle(menuManageTitle)
 
@@ -180,7 +179,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         
         if confirm == QMessageBox.StandardButton.Yes:
             self.loading.show()
-            self.currentThread = AuthenticateThread('unauthenticate_user_by_id', {'id': self.userData['id']})
+            self.currentThread = AuthenticateThread('unauthenticateUserById', {'id': self.userData['id']})
             self.currentThread.finished.connect(self._handleOnActionLogoutTriggeredFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)

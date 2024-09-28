@@ -18,7 +18,7 @@ from app.controllers.dedicated.register import RegisterThread
 from app.controllers.dedicated.remove import RemoveThread
 
 # class definition
-class ManageMember(Ui_FormManageMember, QWidget):
+class ManageMembers(Ui_FormManageMember, QWidget):
     # initialization method (__init__)
     def __init__(self, authData):
         super().__init__()
