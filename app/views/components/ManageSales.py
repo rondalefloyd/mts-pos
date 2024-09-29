@@ -602,7 +602,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         grandTotal = float(self.labelGrandTotal.text())
         
         self.cashPayment = self.lineEditCash.text()
-        self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0)
+        self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0) if self.cashPayment != '.' else 0.0
         cashShortageExcess = self.cashPayment - grandTotal
         
         self.labelCashPayment.setText(f"{self.cashPayment}")

@@ -213,13 +213,11 @@ QWidget#widgetStatusBar {
 QTabBar::tab {
     padding: 5px;
     min-width: 100px;
-}
-QTabBar::tab:!selected {
     border-right: 1px solid #dfdfdf;
 }
+
 QTabBar::tab:selected {
     background-color: #fdffcf;
-    border-right: 1px solid #fdffcf;
 }
 QTabWidget::pane {
     background-color: #fdffcf;

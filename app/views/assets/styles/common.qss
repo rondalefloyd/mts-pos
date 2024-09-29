@@ -1,6 +1,8 @@
 /* NOTE: ORDER OF THE FOLLOWING CODES ARE CRUCIAL */
 /* DEFAULT QPUSHBUTTON PROPERTIES */
-
+QWidget {
+    font-size: 10px;
+}
 
 QPushButton {
     background-color: #fff;
@@ -213,7 +215,7 @@ QWidget#widgetStatusBar {
 
 QFrame#frameRegister {
     background-color: #fff;
-    max-width: 350px;
+    max-width: 400px;
 }
 
 QWidget#scrollAreaWidgetContents {
