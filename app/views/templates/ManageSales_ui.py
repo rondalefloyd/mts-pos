@@ -112,11 +112,6 @@ class Ui_FormManageSales(object):
         self.horizontalLayout_2.addItem(spacerItem2)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout_6.addLayout(self.verticalLayout)
-        self.line = QtWidgets.QFrame(FormManageSales)
-        self.line.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.horizontalLayout_6.addWidget(self.line)
         self.frameRegister = QtWidgets.QFrame(FormManageSales)
         self.frameRegister.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.frameRegister.setObjectName("frameRegister")
@@ -158,7 +153,7 @@ class Ui_FormManageSales(object):
         self.horizontalLayout_6.addWidget(self.frameRegister)
 
         self.retranslateUi(FormManageSales)
-        self.tabWidgetOrder.setCurrentIndex(1)
+        self.tabWidgetOrder.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(FormManageSales)
 
     def retranslateUi(self, FormManageSales):

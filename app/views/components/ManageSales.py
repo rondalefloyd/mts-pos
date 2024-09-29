@@ -311,6 +311,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         orderStatus = 2 if self.pushButtonPark.isChecked() else 1
         self.manageSales.activeOrder[orderIndex]['status'] = orderStatus
         
+        self.pushButtonClear.setEnabled(orderStatus == 1)
         self.pushButtonPark.setText('PARK' if orderStatus == 1 else 'UNPARK')
         self.pushButtonPay.setEnabled(orderStatus == 1 and len(orderItem) > 0)
         self.comboBoxMemberName.setEnabled(orderStatus == 1)

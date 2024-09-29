@@ -6,6 +6,17 @@ import os, sys, logging
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.views.validator import *
 
+class QPushButton(QPushButton):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+        QTimer.singleShot(0, self._executeTask)
+
+    def _executeTask(self):
+        objectName = self.objectName()
+        
+        
+
 class QTableWidget(QTableWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
