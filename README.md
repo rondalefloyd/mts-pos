@@ -3,6 +3,7 @@
 # REQUIREMENTS
 1. To update the requirement list:
 ```pip freeze > requirements.txt```
+
 2. To install the requirements from the list:
 * ```pip install -r requirements.txt```
 
