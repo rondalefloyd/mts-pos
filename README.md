@@ -5,7 +5,12 @@
 ```pip freeze > requirements.txt```
 
 2. To install the requirements from the list:
-* ```pip install -r requirements.txt```
+```pip install -r requirements.txt```
+
+3. To make executable file, make sure to change the execution policy in order to activate 'venv'
+```Get-ExecutionPolicy```
+4. Run Windows Powershell as Admin
+```Set-ExecutionPolicy RemoteSigned```
 
 # STANDARDS
 1. Keep the object name of the widgets in camel casing.
