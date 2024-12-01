@@ -57,7 +57,7 @@ class Ui_DialogInOrder(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidgetOrderItem.setHorizontalHeaderItem(4, item)
         self.tableWidgetOrderItem.horizontalHeader().setCascadingSectionResizes(True)
-        self.tableWidgetOrderItem.horizontalHeader().setStretchLastSection(False)
+        self.tableWidgetOrderItem.horizontalHeader().setStretchLastSection(True)
         self.tableWidgetOrderItem.verticalHeader().setVisible(False)
         self.tableWidgetOrderItem.verticalHeader().setDefaultSectionSize(50)
         self.tableWidgetOrderItem.verticalHeader().setMinimumSectionSize(30)

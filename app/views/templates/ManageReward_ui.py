@@ -58,7 +58,7 @@ class Ui_FormManageReward(object):
         self.tableWidgetData.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidgetData.setHorizontalHeaderItem(5, item)
-        self.tableWidgetData.horizontalHeader().setStretchLastSection(False)
+        self.tableWidgetData.horizontalHeader().setStretchLastSection(True)
         self.tableWidgetData.verticalHeader().setVisible(False)
         self.tableWidgetData.verticalHeader().setDefaultSectionSize(50)
         self.tableWidgetData.verticalHeader().setMinimumSectionSize(30)

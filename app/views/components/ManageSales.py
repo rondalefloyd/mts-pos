@@ -380,6 +380,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText(f"{self.currencySymbol}{discount:.2f}")
         self.labelTax.setText(f"{self.currencySymbol}{tax:.2f}")
         self.labelGrandTotal.setText(f"{self.currencySymbol}{grandTotal:.2f}")
+        self.pushButtonPay.setText(f"Pay {self.currencySymbol}{grandTotal:.2f}")
         self.manageSales.lineEditBarcode.setFocus()
 
     def _populateCurrencySymbol(self):
@@ -398,6 +399,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText(f"{self.currencySymbol}0.00")
         self.labelTax.setText(f"{self.currencySymbol}0.00")
         self.labelGrandTotal.setText(f"{self.currencySymbol}0.00")
+        self.pushButtonPay.setText(f"Pay {self.currencySymbol}0.00")
         
         self.loading.close()
 

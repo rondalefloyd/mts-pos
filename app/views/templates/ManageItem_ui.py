@@ -64,7 +64,7 @@ class Ui_FormManageItem(object):
         self.tableWidgetData.setHorizontalHeaderItem(7, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidgetData.setHorizontalHeaderItem(8, item)
-        self.tableWidgetData.horizontalHeader().setStretchLastSection(False)
+        self.tableWidgetData.horizontalHeader().setStretchLastSection(True)
         self.tableWidgetData.verticalHeader().setVisible(False)
         self.tableWidgetData.verticalHeader().setDefaultSectionSize(50)
         self.tableWidgetData.verticalHeader().setMinimumSectionSize(30)

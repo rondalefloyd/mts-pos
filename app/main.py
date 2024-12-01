@@ -30,8 +30,9 @@ def _startApp():
     app = QApplication(sys.argv)
     
     qssFilePaths = [
-        # os.path.abspath('app/views/assets/styles/common.qss'),
+        # os.path.abspath('app/views/assets/styles/experimental.qss'),
         os.path.abspath('app/views/assets/styles/dedicated.qss'),
+        # add a qss if you want to apply a separate qss
     ]
     
     # Read and concatenate QSS files

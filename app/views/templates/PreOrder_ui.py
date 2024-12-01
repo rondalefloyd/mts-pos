@@ -155,6 +155,11 @@ class Ui_FormPreOrder(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.pushButtonPay = QtWidgets.QPushButton(FormPreOrder)
         self.pushButtonPay.setEnabled(False)
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setWeight(75)
+        self.pushButtonPay.setFont(font)
         self.pushButtonPay.setObjectName("pushButtonPay")
         self.verticalLayout.addWidget(self.pushButtonPay)
 
