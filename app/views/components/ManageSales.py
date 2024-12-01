@@ -597,13 +597,13 @@ class InOrder(Ui_DialogInOrder, QDialog):
         
         if paymentType == 'CASH':
             payment = self.cashPayment
-            change = float(self.labelCashShortageExcess.text())
+            change = float(self.labelCashShortageExcess.text().replace(self.currencySymbol, ''))
         if paymentType == 'POINTS':
             payment = self.pointsPayment
-            change = float(self.labelPointsShortageExcess.text())
+            change = float(self.labelPointsShortageExcess.text().replace(self.currencySymbol, ''))
         if paymentType == 'HYBRID':
             payment = self.hybridPayment
-            change = float(self.labelHybridShortageExcess.text())
+            change = float(self.labelHybridShortageExcess.text().replace(self.currencySymbol, ''))
             
         confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
@@ -628,7 +628,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     'subtotal': float(self.labelSubtotal.text().replace(self.currencySymbol, '')),
                     'discount': float(self.labelDiscount.text().replace(self.currencySymbol, '')),
                     'tax': float(self.labelTax.text().replace(self.currencySymbol, '')),
-                    'grandTotal': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')),
+                    'grandtotal': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')),
                     'paymentType': paymentType,
                     'payment': payment,
                     'change': change,
@@ -840,7 +840,7 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         billing = self.selectedOrder['billing']
         
         self.labelPayment.setText(f"{billing['payment']}")
-        self.labelGrandTotal.setText(f"{billing['grandTotal']}")
+        self.labelGrandTotal.setText(f"{billing['grandtotal']}")
         self.labelChange.setText(f"{billing['change']}")
         
 

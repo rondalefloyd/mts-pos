@@ -68,7 +68,7 @@ class VoidThread(QThread):
             
             receipt = Receipt.get_or_none(Receipt.Id == itemSold.ReceiptId)
             receipt.Billing['subtotal'] -= itemSold.Total
-            receipt.Billing['grandTotal'] = (receipt.Billing['subtotal'] + receipt.Billing['discount']) + receipt.Billing['tax']
+            receipt.Billing['grandtotal'] = (receipt.Billing['subtotal'] + receipt.Billing['discount']) + receipt.Billing['tax']
             # TODO: check if it deducts correctly #TOBETESTED
             receipt.Billing['change'] -= itemSold.Total
             receipt.save()

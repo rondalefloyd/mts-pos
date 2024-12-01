@@ -103,7 +103,7 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
                 QTableWidgetItem(f"{data['userName']}"),
                 QTableWidgetItem(f"{data['memberName']}"),
                 QTableWidgetItem(f"{data['dateValue']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['grandTotal']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['grandtotal']}"),
                 QTableWidgetItem(f"{self.currencySymbol}{data['billing']['payment']}"),
                 QTableWidgetItem(f"{self.currencySymbol}{data['billing']['change']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
