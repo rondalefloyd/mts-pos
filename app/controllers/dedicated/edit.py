@@ -151,15 +151,6 @@ class EditThread(QThread):
         
     def editMemberDataById(self, entry=None, result=None):
         try:
-            member = Member.select().where(
-                (Member.Id != entry['id']) &
-                (Member.MemberName == entry['memberName'])
-            )
-            
-            if member.exists():
-                result['message'] = 'Member already exists'
-                return result
-                
             member = Member.get_or_none(Member.Id == entry['id'])
             member.MemberName = entry['memberName']
             member.BirthDate = entry['birthDate']
@@ -180,15 +171,6 @@ class EditThread(QThread):
         
     def editPromoDataById(self, entry=None, result=None):
         try:
-            promo = Promo.select().where(
-                (Promo.Id == entry['id']) &
-                (Promo.PromoName == entry['promoName'])
-            )
-            
-            if promo.exists():
-                result['message'] = 'Promo already exists'
-                return result
-                
             promo = Promo.get_or_none(Promo.Id == entry['id'])
             promo.PromoName = entry['promoName']
             promo.DiscountRate = entry['discountRate']
@@ -207,15 +189,6 @@ class EditThread(QThread):
                 
     def editItemTypeDataById(self, entry=None, result=None):
         try:
-            itemType = ItemType.select().where(
-                (ItemType.Id == entry['id']) &
-                (ItemType.ItemTypeName == entry['itemTypeName'])
-            )
-            
-            if itemType.exists():
-                result['message'] = 'ItemType already exists'
-                return result
-                
             itemType = ItemType.get_or_none(ItemType.Id == entry['id'])
             itemType.ItemTypeName = entry['itemTypeName']
             itemType.UpdateTs = datetime.now()
@@ -232,15 +205,6 @@ class EditThread(QThread):
                 
     def editBrandDataById(self, entry=None, result=None):
         try:
-            brand = Brand.select().where(
-                (Brand.Id == entry['id']) &
-                (Brand.BrandName == entry['brandName'])
-            )
-            
-            if brand.exists():
-                result['message'] = 'Brand already exists'
-                return result
-                
             brand = Brand.get_or_none(Brand.Id == entry['id'])
             brand.BrandName = entry['brandName']
             brand.UpdateTs = datetime.now()
@@ -257,15 +221,6 @@ class EditThread(QThread):
                 
     def editSupplierDataById(self, entry=None, result=None):
         try:
-            supplier = Supplier.select().where(
-                (Supplier.Id == entry['id']) &
-                (Supplier.SupplierName == entry['supplierName'])
-            )
-            
-            if supplier.exists():
-                result['message'] = 'Supplier already exists'
-                return result
-                
             supplier = Supplier.get_or_none(Supplier.Id == entry['id'])
             supplier.SupplierName = entry['supplierName']
             supplier.UpdateTs = datetime.now()
@@ -282,16 +237,6 @@ class EditThread(QThread):
                 
     def editItemDataById(self, entry=None, result=None):
         try:
-            item = Item.select().where(
-                (Item.Id == entry['id']) &
-                (Item.ItemName == entry['itemName']) &
-                (Item.SalesGroupId == SalesGroup.get(SalesGroup.SalesGroupName == entry['salesGroupName']).Id)
-            )
-            
-            if item.exists():
-                result['message'] = 'Item already exists'
-                return result
-                
             item = Item.get_or_none(Item.Id == entry['id'])
             item.ItemName = entry['itemName']
             item.Barcode = entry['barcode']
@@ -313,15 +258,6 @@ class EditThread(QThread):
         
     def editRewardDataById(self, entry=None, result=None):
         try:
-            reward = Reward.select().where(
-                (Reward.Id == entry['id']) &
-                (Reward.RewardName == entry['rewardName'])
-            )
-            
-            if reward.exists():
-                result['message'] = 'Reward already exists'
-                return result
-                
             reward = Reward.get_or_none(Reward.Id == entry['id'])
             reward.RewardName = entry['rewardName']
             reward.Points = entry['points']
@@ -378,15 +314,6 @@ class EditThread(QThread):
         
     def editUserDataById(self, entry=None, result=None):
         try:
-            user = User.select().where(
-                (User.Id != entry['id']) &
-                (User.UserName == entry['userName'])
-            )
-            
-            if user.exists():
-                result['message'] = 'User already exists'
-                return result
-            
             user = User.get_or_none(User.Id == entry['id'])
             user.UserName = entry['userName']
             user.Password = entry['password']
