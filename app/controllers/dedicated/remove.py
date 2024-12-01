@@ -96,7 +96,7 @@ class RemoveThread(QThread):
             itemPrice = ItemPrice.get_or_none(ItemPrice.ItemId == entry['id'])
             
             if itemPrice is not None:
-                result['message'] = 'Item is being used. Remove the items that uses this first.'
+                result['message'] = 'Item is being used. Remove the prices that uses this first.'
                 return result
                 
             item = item.get_or_none().delete_instance()
@@ -238,7 +238,7 @@ class RemoveThread(QThread):
             itemPrice = ItemPrice.get_or_none(ItemPrice.PromoId == entry['id'])
             
             if itemPrice is not None:
-                result['message'] = 'Promo is being used. Remove the items that uses this first.'
+                result['message'] = 'Promo is being used. Remove the prices that uses this first.'
                 return result
             
             promo = promo.get_or_none().delete_instance()
