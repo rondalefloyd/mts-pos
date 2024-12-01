@@ -133,6 +133,11 @@
          <layout class="QFormLayout" name="formLayout">
           <item row="0" column="0">
            <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Subtotal</string>
             </property>
@@ -142,7 +147,7 @@
            <widget class="QLabel" name="labelSubtotal">
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>13</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -157,6 +162,11 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_2">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Discount</string>
             </property>
@@ -166,7 +176,7 @@
            <widget class="QLabel" name="labelDiscount">
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>13</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -181,6 +191,11 @@
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_3">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>VAT</string>
             </property>
@@ -190,7 +205,7 @@
            <widget class="QLabel" name="labelTax">
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>13</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -205,6 +220,11 @@
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_5">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Custom discount</string>
             </property>
@@ -214,7 +234,7 @@
            <widget class="QLabel" name="labelCustomDiscount">
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>13</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -229,8 +249,15 @@
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_4">
+            <property name="font">
+             <font>
+              <pointsize>20</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
-             <string>Grand total</string>
+             <string>Grandtotal</string>
             </property>
            </widget>
           </item>
@@ -238,13 +265,13 @@
            <widget class="QLabel" name="labelGrandTotal">
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>20</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
             <property name="text">
-             <string>&lt;GrandTotal&gt;</string>
+             <string>&lt;Grandtotal&gt;</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -606,6 +633,7 @@
               <widget class="QLabel" name="labelPointsShortageExcess">
                <property name="font">
                 <font>
+                 <pointsize>13</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -620,6 +648,11 @@
              </item>
              <item row="2" column="1">
               <widget class="QLabel" name="labelPointsPayment">
+               <property name="font">
+                <font>
+                 <pointsize>13</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>&lt;PointsPayment&gt;</string>
                </property>
@@ -630,6 +663,11 @@
              </item>
              <item row="3" column="1">
               <widget class="QLabel" name="labelHybridPayment">
+               <property name="font">
+                <font>
+                 <pointsize>13</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>&lt;HybridPayment&gt;</string>
                </property>
@@ -650,6 +688,11 @@
              </item>
              <item row="1" column="1">
               <widget class="QLabel" name="labelCashPayment">
+               <property name="font">
+                <font>
+                 <pointsize>13</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>&lt;CashPayment&gt;</string>
                </property>
@@ -672,6 +715,7 @@
               <widget class="QLabel" name="labelHybridShortageExcess">
                <property name="font">
                 <font>
+                 <pointsize>13</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -695,6 +739,7 @@
               <widget class="QLabel" name="labelCashShortageExcess">
                <property name="font">
                 <font>
+                 <pointsize>13</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>

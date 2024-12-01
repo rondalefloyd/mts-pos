@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>658</width>
-    <height>650</height>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Pre-Order</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
@@ -159,6 +159,11 @@
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Subtotal</string>
        </property>
@@ -168,7 +173,7 @@
       <widget class="QLabel" name="labelSubtotal">
        <property name="font">
         <font>
-         <pointsize>8</pointsize>
+         <pointsize>13</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -183,6 +188,11 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Discount</string>
        </property>
@@ -192,7 +202,7 @@
       <widget class="QLabel" name="labelDiscount">
        <property name="font">
         <font>
-         <pointsize>8</pointsize>
+         <pointsize>13</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -207,6 +217,11 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_3">
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>VAT</string>
        </property>
@@ -216,7 +231,7 @@
       <widget class="QLabel" name="labelTax">
        <property name="font">
         <font>
-         <pointsize>8</pointsize>
+         <pointsize>13</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -231,8 +246,15 @@
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
-        <string>Grand total</string>
+        <string>Grandtotal</string>
        </property>
       </widget>
      </item>
@@ -240,13 +262,13 @@
       <widget class="QLabel" name="labelGrandTotal">
        <property name="font">
         <font>
-         <pointsize>8</pointsize>
+         <pointsize>20</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
        <property name="text">
-        <string>&lt;GrandTotal&gt;</string>
+        <string>&lt;Grandtotal&gt;</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -274,17 +296,17 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonPay">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Pay</string>
-       </property>
-      </widget>
-     </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonPay">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Pay</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
