@@ -91,16 +91,6 @@
          </item>
         </layout>
        </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QCheckBox" name="checkBoxRememberMe">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, the login field will automatically populate with the credentials of the last user who chose to be remembered upon their next login.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>Remember me</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </widget>
@@ -152,7 +142,6 @@
   <tabstop>lineEditUserName</tabstop>
   <tabstop>lineEditPassword</tabstop>
   <tabstop>pushButtonPasswordVisibility</tabstop>
-  <tabstop>checkBoxRememberMe</tabstop>
  </tabstops>
  <resources/>
  <connections/>
