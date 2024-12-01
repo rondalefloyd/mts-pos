@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>878</width>
+    <width>962</width>
     <height>413</height>
    </rect>
   </property>
@@ -45,6 +45,11 @@
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0">
          <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Grand total</string>
           </property>
@@ -52,6 +57,11 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_2">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Payment</string>
           </property>
@@ -59,6 +69,13 @@
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <pointsize>30</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -68,7 +85,7 @@
          <widget class="QLabel" name="labelGrandTotal">
           <property name="font">
            <font>
-            <pointsize>8</pointsize>
+            <pointsize>15</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
@@ -85,7 +102,7 @@
          <widget class="QLabel" name="labelPayment">
           <property name="font">
            <font>
-            <pointsize>8</pointsize>
+            <pointsize>15</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
@@ -102,7 +119,7 @@
          <widget class="QLabel" name="labelChange">
           <property name="font">
            <font>
-            <pointsize>8</pointsize>
+            <pointsize>30</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>

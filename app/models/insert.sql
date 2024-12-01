@@ -22,7 +22,8 @@ INSERT INTO "POSConfig" ("OrganizationId", "Config") VALUES
     '{
         "color_scheme": "PROTO",
         "page_limit": 30,
-        "cloud_storage": 1
+        "cloud_storage": 1,
+        "currency_symbol": "₱"
     }'
 );
 

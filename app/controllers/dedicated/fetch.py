@@ -27,7 +27,9 @@ class FetchThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'fetchAllOrganizationData':
+                if self.function_route == 'fetchAllPOSConfigData':
+                    result = self.fetchAllPOSConfigData(self.entry, result)
+                elif self.function_route == 'fetchAllOrganizationData':
                     result = self.fetchAllOrganizationData(self.entry, result)
                 elif self.function_route == 'fetchMemberDataByMemberName':
                     result = self.fetchMemberDataByMemberName(self.entry, result)
@@ -89,6 +91,27 @@ class FetchThread(QThread):
         print(f"{self.function_route} -> result_message: {result['message']}")
 
     # add function here
+    def fetchAllPOSConfigData(self, entry=None, result=None):
+        try:
+            posConfigs = POSConfig.select().order_by(POSConfig.UpdateTs.desc())
+            
+            if not posConfigs.exists():
+                result['message'] = 'POSConfig does not exists'
+                return result
+            
+            result['success'] = True
+            for posConfig in posConfigs:
+                result['listData'].append({
+                    'organizationId': posConfig.OrganizationId,
+                    'config': posConfig.Config,
+                })
+            return result
+
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+
     def fetchAllOrganizationData(self, entry=None, result=None):
         try:
             organizations = Organization.select().order_by(Organization.UpdateTs.desc())

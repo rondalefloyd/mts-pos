@@ -33,6 +33,7 @@ class Manage(Ui_MainWindowManage, QMainWindow):
     def __init__(self, authData):
         super().__init__()
         self.setupUi(self)
+        self.showFullScreen()
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
