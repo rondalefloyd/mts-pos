@@ -19,6 +19,8 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.setupUi(self)
         
         self.loading = Loading()
+        
+        self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
         self.userData = authData['user']
@@ -27,11 +29,25 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
+        self._populateCurrencySymbol()
         self._populateTableWidgetData()
         self._populateReceipt()
 
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
         self.pushButtonPrint.clicked.connect(self._onPushButtonPrintClicked)
+
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        self.loading.close()
 
     def _onPushButtonPrintClicked(self):
         confirm = QMessageBox.warning(self, 'Confirm', f"Print receipt?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
@@ -94,12 +110,12 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.labelMobileNumber.setText(f"{dictData['mobileNumber']}")
         
         billing = dictData['billing']
-        self.labelSubtotal.setText(f"{billing['subtotal']}")
-        self.labelDiscount.setText(f"{billing['discount']}")
-        self.labelTax.setText(f"{billing['tax']}")
-        self.labelGrandTotal.setText(f"{billing['grandTotal']}")
-        self.labelAmount.setText(f"{billing['payment']}")
-        self.labelChange.setText(f"{billing['change']}")
+        self.labelSubtotal.setText(f"{self.currencySymbol}{billing['subtotal']}")
+        self.labelDiscount.setText(f"{self.currencySymbol}{billing['discount']}")
+        self.labelTax.setText(f"{self.currencySymbol}{billing['tax']}")
+        self.labelGrandTotal.setText(f"{self.currencySymbol}{billing['grandTotal']}")
+        self.labelAmount.setText(f"{self.currencySymbol}{billing['payment']}")
+        self.labelChange.setText(f"{self.currencySymbol}{billing['change']}")
         
     def _populateTableWidgetData(self):
         self.loading.show()
@@ -125,7 +141,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
             tableItems = [
                 QTableWidgetItem(f"{data['itemName']}"),
                 QTableWidgetItem(f"{data['quantity']}"),
-                QTableWidgetItem(f"{data['total']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['total']}"),
                 QTableWidgetItem(f"{data['voidReason']}"),
                 QTableWidgetItem(f"{data['status']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),

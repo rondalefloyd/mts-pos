@@ -22,6 +22,8 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
         self.setupUi(self)
         
         self.loading = Loading()
+        
+        self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
         self.organizationData = authData['organization']
@@ -38,7 +40,21 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
         self.currentPage = 1
         self.totalPages = 1
         
+        self._populateCurrencySymbol()
         self._populateTableWidgetData()
+
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        self.loading.close()
 
     def _onPushButtonFilterClicked(self):
         self.currentPage = 1
@@ -86,9 +102,9 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
                 QTableWidgetItem(f"{data['userName']}"),
                 QTableWidgetItem(f"{data['memberName']}"),
                 QTableWidgetItem(f"{data['dateValue']}"),
-                QTableWidgetItem(f"{data['billing']['grandTotal']}"),
-                QTableWidgetItem(f"{data['billing']['payment']}"),
-                QTableWidgetItem(f"{data['billing']['change']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['grandTotal']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['payment']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['change']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

@@ -23,6 +23,8 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
         self.setupUi(self)
         
         self.loading = Loading()
+        
+        self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
         self.currentThread = None
@@ -44,8 +46,22 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
         self.currentPage = 1
         self.totalPages = 1
         
+        self._populateCurrencySymbol()
         self._populateTableWidgetData()
         self._populateComboBoxItemTypeBrandSupplier()
+
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        self.loading.close()
 
     def _onPushButtonLoadClicked(self):
         filePath, _ = QFileDialog.getOpenFileName(self, 'Open CSV', '', 'CSV Files (*.csv);;All Files (*)')
@@ -199,9 +215,9 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
                 QTableWidgetItem(f"{data['brandName']}"),
                 QTableWidgetItem(f"{data['supplierName']}"),
                 QTableWidgetItem(f"{data['salesGroupName']}"),
-                QTableWidgetItem(f"{data['cost']}"),
-                QTableWidgetItem(f"{data['price']}"),
-                QTableWidgetItem(f"{data['discount']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['cost']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['price']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['discount']}"),
                 QTableWidgetItem(f"{data['effectiveDate']}"),
                 QTableWidgetItem(f"{data['promoName']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),

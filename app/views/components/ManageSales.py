@@ -56,6 +56,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.currentPage = 1
         self.totalPages = 1
         
+        self._populateCurrencySymbol()
         self._populateTableWidgetData()
 
     def onTabWidgetOrderTabCloseRequested(self, index, confirmation=True):
@@ -74,6 +75,19 @@ class ManageSales(Ui_FormManageSales, QWidget):
             self.labelOrderName.setText(f"N/A")
             
         self._populateTableWidgetData()
+
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        self.loading.close()
 
     def _onLineEditBarcodeReturnPressed(self):
         orderType = self.activeOrder[self.tabWidgetOrder.currentIndex()]['type']
@@ -112,7 +126,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
             'name': f"Order {self.orderNumber}", 
             'type': f"{self.comboBoxOrderType.currentText().upper()}",
             'cart': [], 
-            'widget': PreOrder(self),
+            'widget': PreOrder(self, self.authData),
             'status': 1,
             'member': None,
         })
@@ -178,7 +192,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
                     QTableWidgetItem(f"{data['itemName']}"),
                     QTableWidgetItem(f"{data['barcode']}"),
                     QTableWidgetItem(f"{data['brandName']}"),
-                    QTableWidgetItem(f"{data['price']}"),
+                    QTableWidgetItem(f"{self.currencySymbol}{data['price']}"),
                     QTableWidgetItem(f"{data['available']}"),
                     QTableWidgetItem(f"{data['promoName']}"),
                 ]
@@ -283,20 +297,24 @@ class ManageSales(Ui_FormManageSales, QWidget):
         print('closed...')
 
 class PreOrder(Ui_FormPreOrder, QWidget):
-    def __init__(self, manageSales):
+    def __init__(self, manageSales, authData):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.FramelessWindowHint)
         
         self.manageSales: ManageSales = manageSales
+        self.loading = Loading()
+        
+        self.currencySymbol = ''
+        self.windowEvent = EVENT_NO_EVENT
+        self.authData = authData
+        self.currentThread = None
+        self.activeThreads = []
         
         self.tableWidgetOrderItem.clearContents()
         self.labelOrderType.setText(self.manageSales.comboBoxOrderType.currentText())
-        self.labelSubtotal.setText("0.00")
-        self.labelDiscount.setText("0.00")
-        self.labelTax.setText("0.00")
-        self.labelGrandTotal.setText("0.00")
         
+        self._populateCurrencySymbol()    
         self._populateComboBoxMemberName()
         
         self.comboBoxMemberName.currentTextChanged.connect(self._onComboBoxMemberNameCurrentTextChanged)
@@ -336,7 +354,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             tableItems = [
                 QTableWidgetItem(f"{data['quantity']}"),
                 QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{data['total']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['total']}"),
             ]
             
             self.tableWidgetOrderItem.setCellWidget(i, 0, preOrderActionButton) 
@@ -358,11 +376,30 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             preOrderActionButton.pushButtonDeleteAll.clicked.connect(lambda _, index=i, orderItem=orderItem: self._onPushButtonDeleteAllClicked(index, orderItem))
             preOrderActionButton.pushButtonDeleteOne.clicked.connect(lambda _, index=i, orderItem=orderItem: self._onPushButtonDeleteOneClicked(index, orderItem))
             
-        self.labelSubtotal.setText(f"{subtotal:.2f}")
-        self.labelDiscount.setText(f"{discount:.2f}")
-        self.labelTax.setText(f"{tax:.2f}")
-        self.labelGrandTotal.setText(f"{grandTotal:.2f}")
+        self.labelSubtotal.setText(f"{self.currencySymbol}{subtotal:.2f}")
+        self.labelDiscount.setText(f"{self.currencySymbol}{discount:.2f}")
+        self.labelTax.setText(f"{self.currencySymbol}{tax:.2f}")
+        self.labelGrandTotal.setText(f"{self.currencySymbol}{grandTotal:.2f}")
         self.manageSales.lineEditBarcode.setFocus()
+
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        
+        self.labelSubtotal.setText(f"{self.currencySymbol}0.00")
+        self.labelDiscount.setText(f"{self.currencySymbol}0.00")
+        self.labelTax.setText(f"{self.currencySymbol}0.00")
+        self.labelGrandTotal.setText(f"{self.currencySymbol}0.00")
+        
+        self.loading.close()
 
     def _populateComboBoxMemberName(self):
         self.manageSales.currentThread = FetchThread('fetchAllMemberData')
@@ -461,6 +498,32 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             orderItem.pop(index)
             
         self.populateTableWidgetData()
+        
+    def _cleanupThread(self):
+        sender = self.sender()
+        if sender in self.activeThreads:
+            self.activeThreads.remove(sender)
+        self.currentThread = None
+        print('active threads:', self.activeThreads)
+
+    def closeEvent(self, event):
+        for thread in self.activeThreads:
+            if thread.isRunning():
+                thread.quit()
+                thread.wait()
+        
+        self.activeThreads.clear()
+        
+        event.accept() # for closing the window
+        
+        print('closed...')
+        
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+            return
+        
+        event.accept() # for pressing keys
      
 class InOrder(Ui_DialogInOrder, QDialog):
     def __init__(self, manageSales, authData, selectedOrder):
@@ -468,8 +531,9 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.setupUi(self)
         
         self.manageSales: ManageSales = manageSales
-        
         self.loading = Loading()
+        
+        self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
         self.organizationData = authData['organization']
         self.authData = authData
@@ -481,11 +545,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.cashPayment = 0.0
         self.pointsPayment = 0.0
         self.hybridPayment = 0.0
-
-        self.labelCashShortageExcess.setText('0.00')
-        self.labelPointsShortageExcess.setText('0.00')
-        self.labelHybridShortageExcess.setText('0.00')
         
+        self._populateCurrencySymbol()
         self._populateTableWidgetData()
         self._populateSelectedMemberFields()
         self._populatePaymentEligibilityFields()
@@ -507,6 +568,24 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pushButtonPayCash.clicked.connect(lambda: self._processOrder('CASH'))
         self.pushButtonPayPoints.clicked.connect(lambda: self._processOrder('POINTS'))
         self.pushButtonPayHybrid.clicked.connect(lambda: self._processOrder('HYBRID'))
+
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        
+        self.labelCashShortageExcess.setText(f'{self.currencySymbol}0.00')
+        self.labelPointsShortageExcess.setText(f'{self.currencySymbol}0.00')
+        self.labelHybridShortageExcess.setText(f'{self.currencySymbol}0.00')
+        
+        self.loading.close()
 
     def _processOrder(self, paymentType):
         payment = 0.0
@@ -605,8 +684,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0) if self.cashPayment != '.' else 0.0
         cashShortageExcess = self.cashPayment - grandTotal
         
-        self.labelCashPayment.setText(f"{self.cashPayment}")
-        self.labelCashShortageExcess.setText(f"{cashShortageExcess}")
+        self.labelCashPayment.setText(f"{self.currencySymbol}{self.cashPayment}")
+        self.labelCashShortageExcess.setText(f"{self.currencySymbol}{cashShortageExcess}")
         
         self.pushButtonPayCash.setEnabled(self.cashPayment >= grandTotal)
         
@@ -616,10 +695,10 @@ class InOrder(Ui_DialogInOrder, QDialog):
             pointsShortageExcess = self.pointsPayment - grandTotal
             hybridShortageExcess = self.hybridPayment - grandTotal
             
-            self.labelPointsPayment.setText(f"{self.pointsPayment}")
-            self.labelHybridPayment.setText(f"{self.hybridPayment}")
-            self.labelPointsShortageExcess.setText(f"{pointsShortageExcess}")
-            self.labelHybridShortageExcess.setText(f"{hybridShortageExcess}")
+            self.labelPointsPayment.setText(f"{self.currencySymbol}{self.pointsPayment}")
+            self.labelHybridPayment.setText(f"{self.currencySymbol}{self.hybridPayment}")
+            self.labelPointsShortageExcess.setText(f"{self.currencySymbol}{pointsShortageExcess}")
+            self.labelHybridShortageExcess.setText(f"{self.currencySymbol}{hybridShortageExcess}")
             
             self.pushButtonPayPoints.setEnabled(self.pointsPayment >= grandTotal)
             self.pushButtonPayHybrid.setEnabled(self.hybridPayment == grandTotal)
@@ -649,8 +728,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
             tableItems = [
                 QTableWidgetItem(f"{data['quantity']}"),
                 QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{data['total']}"),
-                QTableWidgetItem(f"{data['customDiscount']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['total']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['customDiscount']}"),
             ]
             
             self.tableWidgetOrderItem.setCellWidget(i, 0, manageActionButton) 
@@ -670,12 +749,12 @@ class InOrder(Ui_DialogInOrder, QDialog):
             
             manageActionButton.pushButtonDiscount.clicked.connect(lambda _, index=i, data=data: self._onPushButtonDiscountClicked(index, data))
             
-        self.labelSubtotal.setText(f"{subtotal:.2f}")
-        self.labelDiscount.setText(f"{discount:.2f}")
-        self.labelTax.setText(f"{tax:.2f}")
-        self.labelCustomDiscount.setText(f"{customDiscount:.2f}")
-        self.labelGrandTotal.setText(f"{grandTotal:.2f}")
-        self.lineEditCash.setText(f"{grandTotal:.2f}")
+        self.labelSubtotal.setText(f"{self.currencySymbol}{subtotal:.2f}")
+        self.labelDiscount.setText(f"{self.currencySymbol}{discount:.2f}")
+        self.labelTax.setText(f"{self.currencySymbol}{tax:.2f}")
+        self.labelCustomDiscount.setText(f"{self.currencySymbol}{customDiscount:.2f}")
+        self.labelGrandTotal.setText(f"{self.currencySymbol}{grandTotal:.2f}")
+        self.lineEditCash.setText(f"{self.currencySymbol}{grandTotal:.2f}")
         self.lineEditCash.setFocus()
 
     def _onPushButtonDiscountClicked(self, index, data):
@@ -725,17 +804,32 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.setupUi(self)
         
         self.manageSales: ManageSales = manageSales
-        
         self.loading = Loading()
+        
+        self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
         self.selectedOrder = selectedOrder
         self.currentThread = None
         self.activeThreads = []
 
+        self._populateCurrencySymbol()
         self._populatePostOrderSummary()
         
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
+
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        self.loading.close()
 
     def _populatePostOrderSummary(self):
         billing = self.selectedOrder['billing']

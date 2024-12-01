@@ -22,6 +22,8 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
         self.setupUi(self)
         
         self.loading = Loading()
+        
+        self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
         self.currentThread = None
@@ -39,8 +41,22 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
         self.currentPage = 1
         self.totalPages = 1
         
+        self._populateCurrencySymbol()
         self._populateTableWidgetData()
 
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        self.loading.close()
+        
     def _onPushButtonFilterClicked(self):
         self.currentPage = 1
         self._populateTableWidgetData()
@@ -108,7 +124,7 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['promoName']}"),
-                QTableWidgetItem(f"{data['discountRate']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['discountRate']}"),
                 QTableWidgetItem(f"{data['description']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]

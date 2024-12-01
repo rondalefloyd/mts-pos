@@ -26,6 +26,8 @@ class ManageMembers(Ui_FormManageMember, QWidget):
         
         self.mobileNumberValidator = QRegExpValidator(QRegExp(r'^\d{11}$'))
         self.loading = Loading()
+        
+        self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
         self.organizationData = authData['organization']
@@ -46,9 +48,24 @@ class ManageMembers(Ui_FormManageMember, QWidget):
         self.totalPages = 1
         
         self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
+        
+        self._populateCurrencySymbol()
         self._populateTableWidgetData()
 
     # private methods
+    def _populateCurrencySymbol(self):
+        self.loading.show()
+        self.currentThread = FetchThread('fetchPOSConfigDataByOrganizationId', {'organizationId': f"{self.authData['organization']['id']}"})
+        self.currentThread.finished.connect(self._handlePopulateCurrencySymbolFinished)
+        self.currentThread.finished.connect(self._cleanupThread)
+        self.currentThread.finished.connect(self.loading.close)
+        self.currentThread.start()
+        self.activeThreads.append(self.currentThread)
+        
+    def _handlePopulateCurrencySymbolFinished(self, result):
+        self.currencySymbol = result['dictData']['config']['currency_symbol']
+        self.loading.close()
+    
     def _onPushButtonFilterClicked(self):
         self.currentPage = 1
         self._populateTableWidgetData()
@@ -126,7 +143,7 @@ class ManageMembers(Ui_FormManageMember, QWidget):
                 QTableWidgetItem(f"{data['birthDate']}"),
                 QTableWidgetItem(f"{data['address']}"),
                 QTableWidgetItem(f"{data['mobileNumber']}"),
-                QTableWidgetItem(f"{data['points']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['points']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             
