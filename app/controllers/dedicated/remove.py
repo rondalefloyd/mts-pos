@@ -28,9 +28,15 @@ class RemoveThread(QThread):
             with postgres_db:
                 if self.function_route == 'removeItemPriceById':
                     result = self.removeItemPriceById(self.entry, result)
+                elif self.function_route == 'removeBrandById':
+                    result = self.removeBrandById(self.entry, result)
+                elif self.function_route == 'removeItemTypeById':
+                    result = self.removeItemTypeById(self.entry, result)
+                elif self.function_route == 'removeSupplierById':
+                    result = self.removeSupplierById(self.entry, result)
                 elif self.function_route == 'removeStockById':
                     result = self.removeStockById(self.entry, result)
-                elif self.function_route == 'removeStockById':
+                elif self.function_route == 'removeMemberById':
                     result = self.removeMemberById(self.entry, result)
                 elif self.function_route == 'removePromoById':
                     result = self.removePromoById(self.entry, result)
@@ -75,6 +81,64 @@ class RemoveThread(QThread):
             result['success'] = False
             result['message'] = f"An error occured: {exception}"
             return result
+        
+    def removeBrandById(self, entry=None, result=None):
+        try:
+            brand = Brand.select().where(Brand.Id == entry['id'])
+            
+            if not brand.exists():
+                result['message'] = 'Brand does not exists'
+                return
+            
+            brand = brand.get_or_none().delete_instance()
+            
+            result['success'] = True
+            result['message'] = 'Brand deleted'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+
+    def removeItemTypeById(self, entry=None, result=None):
+        try:
+            itemType = ItemType.select().where(ItemType.Id == entry['id'])
+            
+            if not itemType.exists():
+                result['message'] = 'ItemType does not exists'
+                return
+            
+            itemType = itemType.get_or_none().delete_instance()
+            
+            result['success'] = True
+            result['message'] = 'ItemType deleted'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+        
+    def removeSupplierById(self, entry=None, result=None):
+        try:
+            supplier = Supplier.select().where(Supplier.Id == entry['id'])
+            
+            if not supplier.exists():
+                result['message'] = 'Supplier does not exists'
+                return
+            
+            supplier = supplier.get_or_none().delete_instance()
+            
+            result['success'] = True
+            result['message'] = 'Supplier deleted'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+        
         
     def removeStockById(self, entry=None, result=None):
         try:
