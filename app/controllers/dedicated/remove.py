@@ -28,6 +28,8 @@ class RemoveThread(QThread):
             with postgres_db:
                 if self.function_route == 'removeItemPriceById':
                     result = self.removeItemPriceById(self.entry, result)
+                elif self.function_route == 'removeItemById':
+                    result = self.removeItemById(self.entry, result)
                 elif self.function_route == 'removeBrandById':
                     result = self.removeBrandById(self.entry, result)
                 elif self.function_route == 'removeItemTypeById':
@@ -75,6 +77,32 @@ class RemoveThread(QThread):
             
             result['success'] = True
             result['message'] = 'ItemPrice deleted'
+            return result
+            
+        except Exception as exception:
+            result['success'] = False
+            result['message'] = f"An error occured: {exception}"
+            return result
+        
+    def removeItemById(self, entry=None, result=None):
+        try:
+            item = Item.select().where(Item.Id == entry['id'])
+            
+            if not item.exists():
+                result['success'] = False
+                result['message'] = 'Item does not exists'
+                return result
+            
+            itemPrice = ItemPrice.get_or_none(ItemPrice.ItemId == entry['id'])
+            
+            if itemPrice is not None:
+                result['message'] = 'Item is being used. Remove the items that uses this first.'
+                return result
+                
+            item = item.get_or_none().delete_instance()
+            
+            result['success'] = True
+            result['message'] = 'Item deleted'
             return result
             
         except Exception as exception:
@@ -206,6 +234,12 @@ class RemoveThread(QThread):
             if not promo.exists():
                 result['message'] = 'Promo does not exists'
                 return
+            
+            itemPrice = ItemPrice.get_or_none(ItemPrice.PromoId == entry['id'])
+            
+            if itemPrice is not None:
+                result['message'] = 'Promo is being used. Remove the items that uses this first.'
+                return result
             
             promo = promo.get_or_none().delete_instance()
             
