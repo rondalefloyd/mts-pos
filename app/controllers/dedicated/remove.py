@@ -98,6 +98,12 @@ class RemoveThread(QThread):
             if itemPrice is not None:
                 result['message'] = 'Item is being used. Remove the prices that uses this first.'
                 return result
+            
+            itemSold = ItemSold.get_or_none(ItemSold.ItemId == entry['id'])
+                
+            if itemSold is not None:
+                result['message'] = 'Item is being used. Remove the transactions that uses this first.'
+                return result
                 
             item = item.get_or_none().delete_instance()
             
