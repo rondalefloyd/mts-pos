@@ -72,3 +72,15 @@ pip freeze > requirements.txt -> to collect all installed requirements/libraries
 pip install -r requirements.txt -> to install all collected requirements/libraries
 
 if new libraries were installed, always run 'pip freeze > requirements.txt' after to avoid conflicts for other venv
+
+
+pyqt5
+peewee
+Cython
+ipython
+dotenv
+pandas
+pywin32
+python-docx
+
+Python 3.12.6
