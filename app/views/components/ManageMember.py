@@ -81,9 +81,8 @@ class ManageMembers(Ui_FormManageMember, QWidget):
             self._populateTableWidgetData()
         
     def _onPushButtonClearClicked(self):
-        self.lineEditUserName.setText("")
-        self.lineEditPassword.setText("")
-        self.lineEditFullName.setText("")
+        self.lineEditMemberName.setText("")
+        self.lineEditAddress.setText("")
         self.lineEditMobileNumber.setText("")
         pass
         
