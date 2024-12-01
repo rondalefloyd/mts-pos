@@ -62,4 +62,13 @@
 └── setup.py
 ```
 
-# CREATE POSTGRESQL DB HOSTING IN ANDROID
+# NEW INSTRUCTIONS
+install 'Qt for Python' extension for easy compilation of ui files
+
+to setup device as the db server, run setup.py
+
+python -m venv venv -> to create virtual env
+pip freeze > requirements.txt -> to collect all installed requirements/libraries
+pip install -r requirements.txt -> to install all collected requirements/libraries
+
+if new libraries were installed, always run 'pip freeze > requirements.txt' after to avoid conflicts for other venv
