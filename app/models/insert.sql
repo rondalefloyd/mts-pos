@@ -33,7 +33,7 @@ INSERT INTO "User" ("OrganizationId", "UserName", "Password", "FullName", "Birth
 
 INSERT INTO "UserSession" ("UserId", "ActiveStatus") VALUES 
 ((SELECT "Id" FROM "User" WHERE "UserName" = 'admin'), 0);
-
+COMMIT
 
 
 -- MAKE SURE TO CHANGE THE ORGANIZATION NAME VALUE

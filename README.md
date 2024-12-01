@@ -84,3 +84,5 @@ pywin32
 python-docx
 
 Python 3.12.6
+
+all should be trust
