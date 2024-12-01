@@ -87,9 +87,16 @@ class RemoveThread(QThread):
             brand = Brand.select().where(Brand.Id == entry['id'])
             
             if not brand.exists():
+                result['success'] = False
                 result['message'] = 'Brand does not exists'
-                return
+                return result
             
+            item = Item.get_or_none(Item.BrandId == entry['id'])
+            
+            if item is not None:
+                result['message'] = 'Brand is being used. Remove the items that uses this first.'
+                return result
+                
             brand = brand.get_or_none().delete_instance()
             
             result['success'] = True
@@ -106,9 +113,16 @@ class RemoveThread(QThread):
             itemType = ItemType.select().where(ItemType.Id == entry['id'])
             
             if not itemType.exists():
+                result['success'] = False
                 result['message'] = 'ItemType does not exists'
                 return
             
+            item = Item.get_or_none(Item.ItemTypeId == entry['id'])
+            
+            if item is not None:
+                result['message'] = 'ItemType is being used. Remove the items that uses this first.'
+                return result
+                
             itemType = itemType.get_or_none().delete_instance()
             
             result['success'] = True
@@ -125,8 +139,15 @@ class RemoveThread(QThread):
             supplier = Supplier.select().where(Supplier.Id == entry['id'])
             
             if not supplier.exists():
+                result['success'] = False
                 result['message'] = 'Supplier does not exists'
                 return
+            
+            item = Item.get_or_none(Item.SupplierId == entry['id'])
+            
+            if item is not None:
+                result['message'] = 'Supplier is being used. Remove the items that uses this first.'
+                return result
             
             supplier = supplier.get_or_none().delete_instance()
             

@@ -137,6 +137,10 @@ class ManageItemTypes(Ui_FormManageItemType, QWidget):
             self.activeThreads.append(self.currentThread)
 
     def _handleOnPushButtonDeleteClickedFinished(self, result):
+        if result['success'] is False:
+            QMessageBox.critical(self, 'Error', f"{result['message']}")
+            return
+        
         QMessageBox.information(self, 'Success', f"{result['message']}")
         self.currentPage = 1
         self._populateTableWidgetData()
