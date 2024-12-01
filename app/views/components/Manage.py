@@ -11,6 +11,7 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.Manage_ui import Ui_MainWindowManage
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.views.components.EditCurrentUser import EditCurrentUser
 from app.views.components.EditCurrentOrganization import EditCurrentOrganization
 from app.views.components.ManageUser import ManageUsers

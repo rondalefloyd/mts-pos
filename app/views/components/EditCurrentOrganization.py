@@ -7,6 +7,7 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditCurrentOrganization_ui import Ui_DialogEditCurrentOrganization
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditCurrentOrganization(Ui_DialogEditCurrentOrganization, QDialog):
@@ -26,6 +27,10 @@ class EditCurrentOrganization(Ui_DialogEditCurrentOrganization, QDialog):
         self.lineEditAddress.setText(f"{self.organizationData['address']}")
         self.lineEditMobileNumber.setText(f"{self.organizationData['mobileNumber']}")
         self.lineEditPassword.setText(f"{self.organizationData['password']}")
+
+        self.lineEditPassword.setValidator(nonSpaceTextWithDigitFormatValidator())
+        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
+        self.lineEditTaxId.setValidator(intFormatValidator())
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)

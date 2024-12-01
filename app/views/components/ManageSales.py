@@ -16,6 +16,7 @@ from app.views.templates.PostOrder_ui import Ui_DialogPostOrder
 from app.views.components.PreOrderActionButton import PreOrderActionButton
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.views.components.LoadData import LoadData
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.purchase import PurchaseThread
@@ -38,7 +39,6 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self.tabWidgetOrder.clear()
         self.comboBoxBarcodeFilter.setVisible(False)
-        self.lineEditBarcode.setValidator(nonSpaceTextWithDigitFormatValidator())
         self.labelOrderName.setText(f"N/A")
         
         self.refresh()
@@ -547,6 +547,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.cashPayment = 0.0
         self.pointsPayment = 0.0
         self.hybridPayment = 0.0
+        
+        self.lineEditCash.setValidator(floatFormatValidator())
         
         self._populateCurrencySymbol()
         self._populateTableWidgetData()

@@ -7,6 +7,7 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditProduct_ui import Ui_DialogEditProduct
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.remove import RemoveThread
 from app.controllers.dedicated.edit import EditThread
@@ -28,7 +29,6 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         self.dateEditStartDate.setMinimumDate(QDate.currentDate())
         self.dateEditEndDate.setMinimumDate(QDate.currentDate().addDays(1))
 
-
         self.checkBoxTrackInventory.setDisabled(self.selectedData['stockId'] is not None)
         self.checkBoxTrackInventory.setChecked(self.selectedData['stockId'] is not None)
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
@@ -41,6 +41,9 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         self.lineEditDiscountRate.setText("0.0")
         self.lineEditDiscount.setText("0.0")
         self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
+
+        self.lineEditCost.setValidator(floatFormatValidator())
+        self.lineEditPrice.setValidator(floatFormatValidator())
 
         self._populateComboBoxItemTypeBrandSupplierSalesGroup()
         

@@ -7,6 +7,7 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditPromo_ui import Ui_DialogEditPromo
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditPromo(Ui_DialogEditPromo, QDialog):
@@ -24,6 +25,8 @@ class EditPromo(Ui_DialogEditPromo, QDialog):
         self.lineEditPromoName.setText(f"{self.selectedData['promoName']}")
         self.lineEditDiscountRate.setText(f"{self.selectedData['discountRate']}")
         self.lineEditDescription.setText(f"{self.selectedData['description']}")
+
+        self.lineEditDiscountRate.setValidator(floatFormatValidator())
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)

@@ -7,6 +7,7 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditCurrentUser_ui import Ui_DialogEditCurrentUser
 from app.views.components.Loading import Loading
+from app.views.validator import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditCurrentUser(Ui_DialogEditCurrentUser, QDialog):
@@ -28,6 +29,9 @@ class EditCurrentUser(Ui_DialogEditCurrentUser, QDialog):
         self.dateEditBirthDate.setDate(QDate.fromString(f"{self.userData['birthDate']}", 'yyyy-MM-dd'))
         self.lineEditMobileNumber.setText(f"{self.userData['mobileNumber']}")
         self.comboBoxAccessLevel.setCurrentText(f"{self.userData['accessLevel']}")
+
+        self.lineEditUserName.setValidator(nonSpaceTextWithDigitFormatValidator())
+        self.lineEditPassword.setValidator(nonSpaceTextWithDigitFormatValidator())
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)

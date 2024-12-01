@@ -11,7 +11,7 @@ def intFormatValidator():
     return QIntValidator(0, 999999999)
 
 def floatFormatValidator():
-    return QDoubleValidator(0, 999999999, 2)
+    return QRegExpValidator(QRegExp(r"^[0-9]*\.?[0-9]{0,2}$"))
 
 def addressFormatValidator():
     return QRegExpValidator(QRegExp(r'^[A-Za-z\s]+,\s[A-Za-z\s]+,\s[A-Za-z\s]+$'))
