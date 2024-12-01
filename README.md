@@ -18,7 +18,7 @@
 3. Naming conventions:
 * ```variables and functions should start in lowercase and in the form of camel case```
 * ```class should start in uppercase and in the form of camel case```
-* ```Always use the name 'accessCode' for naming variables that are named 'password'```
+* ```Always use the name 'password' for naming variables that are named 'password'```
 4. Do not perform nested if statements (if statements inside for loops are allowed).
 5. Try/except conventions:
 * ```Always add print statements when doing error handling to track errors easier.```

@@ -23,7 +23,7 @@ class EditCurrentUser(Ui_DialogEditCurrentUser, QDialog):
         
         self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
         self.lineEditUserName.setText(f"{self.userData['userName']}")
-        self.lineEditAccessCode.setText(f"{self.userData['accessCode']}")
+        self.lineEditPassword.setText(f"{self.userData['password']}")
         self.lineEditFullName.setText(f"{self.userData['fullName']}")
         self.dateEditBirthDate.setDate(QDate.fromString(f"{self.userData['birthDate']}", 'yyyy-MM-dd'))
         self.lineEditMobileNumber.setText(f"{self.userData['mobileNumber']}")
@@ -40,7 +40,7 @@ class EditCurrentUser(Ui_DialogEditCurrentUser, QDialog):
         self.currentThread = EditThread('editUserDataById', {
             'id': self.userData['id'],
             'userName': self.lineEditUserName.text(),
-            'accessCode': self.lineEditAccessCode.text(),
+            'password': self.lineEditPassword.text(),
             'fullName': self.lineEditFullName.text().upper(),
             'birthDate': self.dateEditBirthDate.text(),
             'mobileNumber': self.lineEditMobileNumber.text(),

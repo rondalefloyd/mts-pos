@@ -25,7 +25,7 @@ class EditCurrentOrganization(Ui_DialogEditCurrentOrganization, QDialog):
         self.lineEditOrganizationName.setText(f"{self.organizationData['organizationName']}")
         self.lineEditAddress.setText(f"{self.organizationData['address']}")
         self.lineEditMobileNumber.setText(f"{self.organizationData['mobileNumber']}")
-        self.lineEditAccessCode.setText(f"{self.organizationData['accessCode']}")
+        self.lineEditPassword.setText(f"{self.organizationData['password']}")
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)
@@ -41,7 +41,7 @@ class EditCurrentOrganization(Ui_DialogEditCurrentOrganization, QDialog):
             'organizationName': self.lineEditOrganizationName.text(),
             'address': self.lineEditAddress.text().upper(),
             'mobileNumber': self.lineEditMobileNumber.text(),
-            'accessCode': self.lineEditAccessCode.text(),
+            'password': self.lineEditPassword.text(),
         })
         
         self.currentThread.finished.connect(self._handleOnPushButtonSaveClickedFinished)

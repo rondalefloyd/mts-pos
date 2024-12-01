@@ -65,7 +65,7 @@ class ManageMembers(Ui_FormManageMember, QWidget):
         
     def _onPushButtonClearClicked(self):
         self.lineEditUserName.setText("")
-        self.lineEditAccessCode.setText("")
+        self.lineEditPassword.setText("")
         self.lineEditFullName.setText("")
         self.lineEditMobileNumber.setText("")
         pass

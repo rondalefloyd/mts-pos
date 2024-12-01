@@ -112,7 +112,7 @@ class RegisterThread(QThread):
                 
                 itemPrice = ItemPrice.create(
                     ItemId=item.Id,
-                    Capital=entry['capital'],
+                    Cost=entry['cost'],
                     Price=salesGroupEntry['salesGroupPrice'], 
                     EffectiveDate=entry['effectiveDate'],
                 )
@@ -307,7 +307,7 @@ class RegisterThread(QThread):
             user = User.select().where(
                 (User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
                 (User.UserName == entry['userName']) &
-                (User.AccessCode == entry['accessCode']) &
+                (User.Password == entry['password']) &
                 (User.FullName == entry['fullName']) &
                 (User.BirthDate == entry['birthDate']) &
                 (User.MobileNumber == entry['mobileNumber']) &
@@ -321,7 +321,7 @@ class RegisterThread(QThread):
             user = User.create(
                 OrganizationId=Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id,
                 UserName=entry['userName'],
-                AccessCode=entry['accessCode'],
+                Password=entry['password'],
                 FullName=entry['fullName'],
                 BirthDate=entry['birthDate'],
                 MobileNumber=entry['mobileNumber'],
@@ -350,7 +350,7 @@ class RegisterThread(QThread):
                 (Organization.OrganizationName == entry['organizationName']) &
                 (Organization.Address == entry['address']) &
                 (Organization.MobileNumber == entry['mobileNumber']) &
-                (Organization.AccessCode == entry['accessCode'])
+                (Organization.Password == entry['password'])
             )
             
             if organization.exists():
@@ -361,7 +361,7 @@ class RegisterThread(QThread):
                 OrganizationName=entry['organizationName'],
                 Address=entry['address'],
                 MobileNumber=entry['mobileNumber'],
-                AccessCode=entry['accessCode'],
+                Password=entry['password'],
             )
             
             result['success'] = True

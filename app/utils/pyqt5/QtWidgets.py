@@ -73,7 +73,7 @@ class QLineEdit(QLineEdit):
         
         
         if objectName in [
-            'lineEditCapital',
+            'lineEditCost',
             'lineEditPrice',
             'lineEditPoints',
             'lineEditDiscountRate',

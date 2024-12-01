@@ -104,7 +104,7 @@ class FetchThread(QThread):
                     'organizationName': organization.OrganizationName,
                     'address': organization.Address,
                     'mobileNumber': organization.MobileNumber,
-                    'accessCode': organization.AccessCode,
+                    'password': organization.Password,
                 })
             return result
 
@@ -574,7 +574,7 @@ class FetchThread(QThread):
                     'brandName': brand.BrandName,
                     'supplierName': supplier.SupplierName,
                     'salesGroupName': salesGroup.SalesGroupName,
-                    'capital': itemPrice.Capital,
+                    'cost': itemPrice.Cost,
                     'price': itemPrice.Price,
                     'discount': itemPrice.Discount,
                     'effectiveDate': itemPrice.EffectiveDate,
@@ -897,7 +897,7 @@ class FetchThread(QThread):
                 ((User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
                 (User.AccessLevel < 3)) &
                 ((User.UserName.cast('TEXT').like(keyword)) |
-                (User.AccessCode.cast('TEXT').like(keyword)) |
+                (User.Password.cast('TEXT').like(keyword)) |
                 (User.FullName.cast('TEXT').like(keyword)) |
                 (User.BirthDate.cast('TEXT').like(keyword)) |
                 (User.MobileNumber.cast('TEXT').like(keyword)) |
@@ -914,7 +914,7 @@ class FetchThread(QThread):
                 result['listData'].append({
                     'id': user.Id,
                     'userName': user.UserName,
-                    'accessCode': user.AccessCode,
+                    'password': user.Password,
                     'fullName': user.FullName,
                     'birthDate': user.BirthDate,
                     'mobileNumber': user.MobileNumber,

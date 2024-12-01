@@ -13,7 +13,7 @@ def organizationTable(metadata):
         Column('OrganizationName', String, default=None),
         Column('Address', String, default=None),
         Column('MobileNumber', String, default=None),
-        Column('AccessCode', String, default=None),
+        Column('Password', String, default=None),
         Column('UpdateTs', String, default=datetime.now()),
     )
 

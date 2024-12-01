@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\views\templates\generated\EditCurrentOrganization.ui'
+# Form implementation generated from reading ui file 'c:\Users\raccoondale\Documents\Personal\Git\mts-pos\app\views\templates\generated\EditCurrentOrganization.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -55,9 +55,9 @@ class Ui_DialogEditCurrentOrganization(object):
         self.label_5 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_5.setObjectName("label_5")
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.label_5)
-        self.lineEditAccessCode = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
-        self.lineEditAccessCode.setObjectName("lineEditAccessCode")
-        self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.lineEditAccessCode)
+        self.lineEditPassword = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditPassword.setObjectName("lineEditPassword")
+        self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.lineEditPassword)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout.addWidget(self.scrollArea)
         self.widgetConfirmationButton = QtWidgets.QWidget(DialogEditCurrentOrganization)

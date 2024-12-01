@@ -39,7 +39,7 @@ class Setup(Ui_DialogSetup, QDialog):
             'organizationName': self.lineEditOrganizationName.text(),
             'address': self.lineEditAddress.text().upper(),
             'mobileNumber': self.lineEditMobileNumber.text(),
-            'accessCode': self.lineEditAccessCode.text(),
+            'password': self.lineEditPassword.text(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonCreateClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)

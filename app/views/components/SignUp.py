@@ -50,7 +50,7 @@ class SignUp(Ui_DialogSignUp, QDialog):
         self.currentThread = RegisterThread('registerUser', {
             'organizationName': self.comboBoxOrganizationName.currentText(),
             'userName': self.lineEditUserName.text(),
-            'accessCode': self.lineEditAccessCode.text(),
+            'password': self.lineEditPassword.text(),
             'fullName': self.lineEditFullName.text().upper(),
             'birthDate': self.dateEditBirthDate.text(),
             'mobileNumber': self.lineEditMobileNumber.text(),

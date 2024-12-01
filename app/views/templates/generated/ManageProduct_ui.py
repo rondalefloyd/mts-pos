@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\views\templates\generated\ManageProduct.ui'
+# Form implementation generated from reading ui file 'c:\Users\raccoondale\Documents\Personal\Git\mts-pos\app\views\templates\generated\ManageProduct.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -177,10 +177,10 @@ class Ui_FormManageProduct(object):
         self.label_10 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_10.setObjectName("label_10")
         self.formLayout.setWidget(8, QtWidgets.QFormLayout.LabelRole, self.label_10)
-        self.lineEditCapital = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
-        self.lineEditCapital.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lineEditCapital.setObjectName("lineEditCapital")
-        self.formLayout.setWidget(8, QtWidgets.QFormLayout.FieldRole, self.lineEditCapital)
+        self.lineEditCost = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditCost.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lineEditCost.setObjectName("lineEditCost")
+        self.formLayout.setWidget(8, QtWidgets.QFormLayout.FieldRole, self.lineEditCost)
         self.label_8 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_8.setObjectName("label_8")
         self.formLayout.setWidget(9, QtWidgets.QFormLayout.LabelRole, self.label_8)
@@ -253,7 +253,7 @@ class Ui_FormManageProduct(object):
         item = self.tableWidgetData.horizontalHeaderItem(7)
         item.setText(_translate("FormManageProduct", "SalesGroupName"))
         item = self.tableWidgetData.horizontalHeaderItem(8)
-        item.setText(_translate("FormManageProduct", "Capital"))
+        item.setText(_translate("FormManageProduct", "Cost"))
         item = self.tableWidgetData.horizontalHeaderItem(9)
         item.setText(_translate("FormManageProduct", "Price"))
         item = self.tableWidgetData.horizontalHeaderItem(10)
@@ -275,7 +275,7 @@ class Ui_FormManageProduct(object):
         self.label_4.setText(_translate("FormManageProduct", "Type"))
         self.label_5.setText(_translate("FormManageProduct", "Brand"))
         self.label_6.setText(_translate("FormManageProduct", "Supplier"))
-        self.label_10.setText(_translate("FormManageProduct", "Capital"))
+        self.label_10.setText(_translate("FormManageProduct", "Cost"))
         self.label_8.setText(_translate("FormManageProduct", "Retail price"))
         self.label_11.setText(_translate("FormManageProduct", "Wholesale price"))
         self.label_7.setText(_translate("FormManageProduct", "Effective date"))

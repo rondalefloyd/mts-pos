@@ -30,7 +30,7 @@ CREATE TABLE "Organization" (
     "OrganizationName" VARCHAR(255), 
     "Address" VARCHAR(255), 
     "MobileNumber" VARCHAR(20), 
-    "AccessCode" VARCHAR(255), 
+    "Password" VARCHAR(255), 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE "Item" (
 CREATE TABLE "ItemPrice" (
     "Id" SERIAL PRIMARY KEY, 
     "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
-    "Capital" FLOAT, 
+    "Cost" FLOAT, 
     "Price" FLOAT, 
     "PromoId" INTEGER REFERENCES "Promo"("Id") ON DELETE CASCADE, 
     "Discount" FLOAT,
@@ -110,7 +110,7 @@ CREATE TABLE "User" (
     "Id" SERIAL PRIMARY KEY, 
     "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
     "UserName" VARCHAR(255), 
-    "AccessCode" VARCHAR(255), 
+    "Password" VARCHAR(255), 
     "FullName" VARCHAR(255), 
     "BirthDate" DATE, 
     "MobileNumber" VARCHAR(20), 

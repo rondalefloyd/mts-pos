@@ -34,7 +34,7 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         self.lineEditItemName.setText(f"{self.selectedData['itemName']}")
         self.lineEditBarcode.setText(f"{self.selectedData['barcode']}")
         self.dateEditExpireDate.setDate(QDate.fromString(f"{self.selectedData['expireDate']}", 'yyyy-MM-dd'))
-        self.lineEditCapital.setText(f"{self.selectedData['capital']}")
+        self.lineEditCost.setText(f"{self.selectedData['cost']}")
         self.lineEditPrice.setText(f"{self.selectedData['price']}")
         self.dateEditEffectiveDate.setDate(QDate.fromString(f"{self.selectedData['effectiveDate']}", 'yyyy-MM-dd'))
         self.comboBoxPromoName.setCurrentText("N/A")
@@ -171,7 +171,7 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
             'brandName': self.comboBoxBrandName.currentText().upper(),
             'supplierName': self.comboBoxSupplierName.currentText().upper(),
             'salesGroupName': self.comboBoxSalesGroupName.currentText().upper(),
-            'capital': self.lineEditCapital.text(),
+            'cost': self.lineEditCost.text(),
             'price': self.lineEditPrice.text(),
             'effectiveDate': self.dateEditEffectiveDate.text(),
             'promoName': self.comboBoxPromoName.currentText(),

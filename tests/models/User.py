@@ -11,7 +11,7 @@ def userTable(metadata):
         Column('Id', Integer, primary_key=True, autoincrement=True),
         Column('OrganizationId', Integer, default=None),
         Column('UserName', String, default=None),
-        Column('AccessCode', String, default=None),
+        Column('Password', String, default=None),
         Column('FullName', String, default=None),
         Column('BirthDate', String, default=None),
         Column('MobileNumber', String, default=None),

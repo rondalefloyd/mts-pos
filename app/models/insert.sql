@@ -12,7 +12,7 @@ SELECT
 FROM 
     generate_series('1980-01-01'::DATE, '3000-01-01'::DATE, '1 day'::INTERVAL) date;
 
-INSERT INTO "Organization" ("TaxId", "OrganizationName", "Address", "MobileNumber", "AccessCode") VALUES 
+INSERT INTO "Organization" ("TaxId", "OrganizationName", "Address", "MobileNumber", "Password") VALUES 
 ('123456', 'MTS INC.', 'ANABU 1C, IMUS, CAVITE', '09123456789', 'admin');
 
 -- MAKE SURE TO CHANGE THE ORGANIZATION NAME VALUE
@@ -27,7 +27,7 @@ INSERT INTO "POSConfig" ("OrganizationId", "Config") VALUES
 );
 
 -- MAKE SURE TO CHANGE THE ORGANIZATION NAME VALUE
-INSERT INTO "User" ("OrganizationId", "UserName", "AccessCode", "FullName", "BirthDate", "MobileNumber", "AccessLevel") VALUES 
+INSERT INTO "User" ("OrganizationId", "UserName", "Password", "FullName", "BirthDate", "MobileNumber", "AccessLevel") VALUES 
 ((SELECT "Id" FROM "Organization" WHERE "OrganizationName" = 'MTS INC.'), 'admin', 'admin', 'JUAN DELA CRUZ', '2000-01-01', '09123456789', 3);
 
 INSERT INTO "UserSession" ("UserId", "ActiveStatus") VALUES 

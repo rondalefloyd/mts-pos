@@ -48,9 +48,9 @@ class Ui_DialogSignUp(object):
         self.label_4 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_4.setObjectName("label_4")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_4)
-        self.lineEditAccessCode = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
-        self.lineEditAccessCode.setObjectName("lineEditAccessCode")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lineEditAccessCode)
+        self.lineEditPassword = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditPassword.setObjectName("lineEditPassword")
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lineEditPassword)
         self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label.setObjectName("label")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label)
@@ -101,8 +101,8 @@ class Ui_DialogSignUp(object):
         DialogSignUp.setTabOrder(self.lineEditFullName, self.dateEditBirthDate)
         DialogSignUp.setTabOrder(self.dateEditBirthDate, self.lineEditMobileNumber)
         DialogSignUp.setTabOrder(self.lineEditMobileNumber, self.lineEditUserName)
-        DialogSignUp.setTabOrder(self.lineEditUserName, self.lineEditAccessCode)
-        DialogSignUp.setTabOrder(self.lineEditAccessCode, self.comboBoxAccessLevel)
+        DialogSignUp.setTabOrder(self.lineEditUserName, self.lineEditPassword)
+        DialogSignUp.setTabOrder(self.lineEditPassword, self.comboBoxAccessLevel)
         DialogSignUp.setTabOrder(self.comboBoxAccessLevel, self.comboBoxOrganizationName)
 
     def retranslateUi(self, DialogSignUp):

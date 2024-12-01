@@ -23,18 +23,18 @@ class Login(Ui_DialogLogin, QDialog):
         self.currentThread = None
         self.activeThreads = []
         
-        self.pushButtonAccessCodeVisibility.setText('Show')
+        self.pushButtonPasswordVisibility.setText('Show')
         
         self.pushButtonSetup.clicked.connect(self._onPushButtonSetupClicked)
         self.pushButtonSignUp.clicked.connect(self._onPushButtonSignUpClicked)
         self.pushButtonLogin.clicked.connect(self._onPushButtonLoginClicked)
-        self.pushButtonAccessCodeVisibility.clicked.connect(self._onPushButtonAccessCodeVisibilityClicked)
+        self.pushButtonPasswordVisibility.clicked.connect(self._onPushButtonPasswordVisibilityClicked)
     
     # private methods
-    def _onPushButtonAccessCodeVisibilityClicked(self):
-        pushButtonAccessCodeVisibilityIsChecked = self.pushButtonAccessCodeVisibility.isChecked() is True
-        self.pushButtonAccessCodeVisibility.setText('Hide' if pushButtonAccessCodeVisibilityIsChecked else 'Show')
-        self.lineEditAccessCode.setEchoMode(QLineEdit.Normal if pushButtonAccessCodeVisibilityIsChecked else QLineEdit.Password)
+    def _onPushButtonPasswordVisibilityClicked(self):
+        pushButtonPasswordVisibilityIsChecked = self.pushButtonPasswordVisibility.isChecked() is True
+        self.pushButtonPasswordVisibility.setText('Hide' if pushButtonPasswordVisibilityIsChecked else 'Show')
+        self.lineEditPassword.setEchoMode(QLineEdit.Normal if pushButtonPasswordVisibilityIsChecked else QLineEdit.Password)
         
     def _onPushButtonSetupClicked(self):
         self.windowEvent = EVENT_START_SETUP
@@ -49,7 +49,7 @@ class Login(Ui_DialogLogin, QDialog):
         self.loading.show()
         self.currentThread = AuthenticateThread('authenticateUserByUserNameAccess_code', {
             'userName': self.lineEditUserName.text(),
-            'accessCode': self.lineEditAccessCode.text(),
+            'password': self.lineEditPassword.text(),
         })
         self.currentThread.finished.connect(self._handleOnPushButtonLoginClickedFinished)
         self.currentThread.finished.connect(self._cleanupThread)

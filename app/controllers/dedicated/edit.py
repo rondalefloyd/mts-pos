@@ -97,7 +97,7 @@ class EditThread(QThread):
             if entry['applyPromo'] is True and entry['promoId'] is None:
                 itemPrice = ItemPrice.get_or_none(ItemPrice.Id == entry['itemPriceId'])
                 itemPrice.ItemId = item.Id
-                itemPrice.Capital = entry['capital']
+                itemPrice.Cost = entry['cost']
                 itemPrice.Price = entry['price']
                 itemPrice.EffectiveDate = datetime.strptime(entry['endDate'], '%Y-%m-%d')
                 itemPrice.UpdateTs = datetime.now()
@@ -116,7 +116,7 @@ class EditThread(QThread):
                 
                 itemPrice = ItemPrice.create(
                     ItemId=item.Id,
-                    Capital=entry['capital'],
+                    Cost=entry['cost'],
                     Price=entry['newPrice'],
                     PromoId=Promo.get_or_none(Promo.PromoName == entry['promoName']).Id,
                     Discount=entry['discount'],
@@ -132,7 +132,7 @@ class EditThread(QThread):
                 
                 itemPrice = itemPrice.first()
                 itemPrice.ItemId = item.Id
-                itemPrice.Capital = entry['capital']
+                itemPrice.Cost = entry['cost']
                 itemPrice.Price = entry['price']
                 itemPrice.EffectiveDate = entry['effectiveDate']
                 itemPrice.save()
@@ -363,7 +363,7 @@ class EditThread(QThread):
             organization.OrganizationName = entry['organizationName']
             organization.Address = entry['address']
             organization.MobileNumber = entry['mobileNumber']
-            organization.AccessCode = entry['accessCode']
+            organization.Password = entry['password']
             organization.UpdateTs = datetime.now()
             organization.save()
             
@@ -389,7 +389,7 @@ class EditThread(QThread):
             
             user = User.get_or_none(User.Id == entry['id'])
             user.UserName = entry['userName']
-            user.AccessCode = entry['accessCode']
+            user.Password = entry['password']
             user.FullName = entry['fullName']
             user.BirthDate = entry['birthDate']
             user.MobileNumber = entry['mobileNumber']

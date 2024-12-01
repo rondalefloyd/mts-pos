@@ -132,7 +132,7 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
     def _onPushButtonClearClicked(self):
         self.lineEditItemName.setText("")
         self.lineEditBarcode.setText("")
-        self.lineEditCapital.setText("")
+        self.lineEditCost.setText("")
         self.lineEditRetailPrice.setText("")
         self.lineEditWholesalePrice.setText("")
         pass
@@ -146,7 +146,7 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
             'itemTypeName': self.comboBoxItemTypeName.currentText().upper(),
             'brandName': self.comboBoxBrandName.currentText().upper(),
             'supplierName': self.comboBoxSupplierName.currentText().upper(),
-            'capital': self.lineEditCapital.text(),
+            'cost': self.lineEditCost.text(),
             'retailPrice': self.lineEditRetailPrice.text(),
             'wholesalePrice': self.lineEditWholesalePrice.text(),
             'effectiveDate': self.dateEditEffectiveDate.text(),
@@ -199,7 +199,7 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
                 QTableWidgetItem(f"{data['brandName']}"),
                 QTableWidgetItem(f"{data['supplierName']}"),
                 QTableWidgetItem(f"{data['salesGroupName']}"),
-                QTableWidgetItem(f"{data['capital']}"),
+                QTableWidgetItem(f"{data['cost']}"),
                 QTableWidgetItem(f"{data['price']}"),
                 QTableWidgetItem(f"{data['discount']}"),
                 QTableWidgetItem(f"{data['effectiveDate']}"),

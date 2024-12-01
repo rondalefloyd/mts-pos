@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\mimoy\Documents\GitHub\mts-pos\app\views\templates\generated\EditProduct.ui'
+# Form implementation generated from reading ui file 'c:\Users\raccoondale\Documents\Personal\Git\mts-pos\app\views\templates\generated\EditProduct.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -99,10 +99,10 @@ class Ui_DialogEditProduct(object):
         self.label_10 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_10.setObjectName("label_10")
         self.formLayout.setWidget(9, QtWidgets.QFormLayout.LabelRole, self.label_10)
-        self.lineEditCapital = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
-        self.lineEditCapital.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lineEditCapital.setObjectName("lineEditCapital")
-        self.formLayout.setWidget(9, QtWidgets.QFormLayout.FieldRole, self.lineEditCapital)
+        self.lineEditCost = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
+        self.lineEditCost.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lineEditCost.setObjectName("lineEditCost")
+        self.formLayout.setWidget(9, QtWidgets.QFormLayout.FieldRole, self.lineEditCost)
         self.label_8 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_8.setObjectName("label_8")
         self.formLayout.setWidget(10, QtWidgets.QFormLayout.LabelRole, self.label_8)
@@ -212,7 +212,7 @@ class Ui_DialogEditProduct(object):
         self.label_5.setText(_translate("DialogEditProduct", "Brand"))
         self.label_9.setText(_translate("DialogEditProduct", "Supplier"))
         self.label_12.setText(_translate("DialogEditProduct", "Sale group"))
-        self.label_10.setText(_translate("DialogEditProduct", "Capital"))
+        self.label_10.setText(_translate("DialogEditProduct", "Cost"))
         self.label_8.setText(_translate("DialogEditProduct", "Price"))
         self.checkBoxApplyPromo.setText(_translate("DialogEditProduct", "Apply promo"))
         self.label_7.setText(_translate("DialogEditProduct", "Effective date"))

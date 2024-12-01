@@ -64,7 +64,7 @@ class ManageUsers(Ui_FormManageUser, QWidget):
         
     def _onPushButtonClearClicked(self):
         self.lineEditUserName.setText("")
-        self.lineEditAccessCode.setText("")
+        self.lineEditPassword.setText("")
         self.lineEditFullName.setText("")
         self.lineEditMobileNumber.setText("")
         pass
@@ -75,7 +75,7 @@ class ManageUsers(Ui_FormManageUser, QWidget):
         self.currentThread = RegisterThread('registerUser', {
             'organizationName': self.comboBoxOrganizationName.currentText(),
             'userName': self.lineEditUserName.text(),
-            'accessCode': self.lineEditAccessCode.text(),
+            'password': self.lineEditPassword.text(),
             'fullName': self.lineEditFullName.text().upper(),
             'birthDate': self.dateEditBirthDate.text(),
             'mobileNumber': self.lineEditMobileNumber.text(),
@@ -123,7 +123,7 @@ class ManageUsers(Ui_FormManageUser, QWidget):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['userName']}"),
-                QTableWidgetItem(f"{data['accessCode']}"),
+                QTableWidgetItem(f"{data['password']}"),
                 QTableWidgetItem(f"{data['fullName']}"),
                 QTableWidgetItem(f"{data['birthDate']}"),
                 QTableWidgetItem(f"{data['mobileNumber']}"),

@@ -28,7 +28,7 @@ class Organization(BaseModel):
     OrganizationName = CharField(max_length=255, null=True)
     Address = CharField(max_length=255, null=True)
     MobileNumber = CharField(max_length=20, null=True)
-    AccessCode = CharField(max_length=255, null=True)
+    Password = CharField(max_length=255, null=True)
     UpdateTs = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')], null=True)
 
     class Meta:
@@ -101,7 +101,7 @@ class Item(BaseModel):
 class ItemPrice(BaseModel):
     Id = AutoField()
     ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
-    Capital = FloatField(null=True)
+    Cost = FloatField(null=True)
     Price = FloatField(null=True)
     PromoId = ForeignKeyField(Promo, on_delete='CASCADE', column_name='PromoId', null=True)
     Discount = FloatField(null=True)
@@ -125,7 +125,7 @@ class User(BaseModel):
     Id = AutoField()
     OrganizationId = ForeignKeyField(Organization, on_delete='CASCADE', column_name='OrganizationId', null=True)
     UserName = CharField(max_length=255, null=False)
-    AccessCode = CharField(max_length=255, null=False)
+    Password = CharField(max_length=255, null=False)
     FullName = CharField(max_length=255, null=True)
     BirthDate = DateField(null=True)
     MobileNumber = CharField(max_length=20, null=True)

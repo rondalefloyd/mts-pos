@@ -67,7 +67,7 @@ class LoadThread(QThread):
 
         # Define the expected headers
         expectedHeaders = ['ItemName', 'Barcode', 'ExpireDate', 'ItemType', 'Brand', 'Supplier', 
-                            'Capital', 'RetailPrice', 'WholesalePrice', 'EffectiveDate']
+                            'Cost', 'RetailPrice', 'WholesalePrice', 'EffectiveDate']
         
         # Check if the CSV file contains the required headers
         if list(df.columns) != expectedHeaders:
@@ -97,12 +97,12 @@ class LoadThread(QThread):
                 itemTypeName = row['ItemType'].upper() if not pd.isna(row['ItemType']) else '_'
                 brandName = row['Brand'].upper() if not pd.isna(row['Brand']) else '_'
                 supplierName = row['Supplier'].upper() if not pd.isna(row['Supplier']) else '_'
-                capital = row['Capital'] if not pd.isna(row['Capital']) else 0.0
+                cost = row['Cost'] if not pd.isna(row['Cost']) else 0.0
                 retailPrice = row['RetailPrice'] if not pd.isna(row['RetailPrice']) else 0.0
                 wholesalePrice = row['WholesalePrice'] if not pd.isna(row['WholesalePrice']) else 0.0
                 effectiveDate = row['EffectiveDate'] if not pd.isna(row['EffectiveDate']) else datetime.now()
 
-                print('IMPORTING:', itemName, barcode, expireDate, itemTypeName, brandName, supplierName, capital, retailPrice, wholesalePrice, effectiveDate)
+                print('IMPORTING:', itemName, barcode, expireDate, itemTypeName, brandName, supplierName, cost, retailPrice, wholesalePrice, effectiveDate)
 
                 # TODO: write this in a better way by isolating it or something
                 itemType = ItemType.select().where(ItemType.ItemTypeName == itemTypeName)
@@ -154,7 +154,7 @@ class LoadThread(QThread):
                     
                     itemPrice = ItemPrice.create(
                         ItemId=item.Id,
-                        Capital=capital,
+                        Cost=cost,
                         Price=salesGroupEntry['salesGroupPrice'], 
                         EffectiveDate=effectiveDate,
                     )

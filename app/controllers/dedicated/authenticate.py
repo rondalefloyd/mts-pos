@@ -52,7 +52,7 @@ class AuthenticateThread(QThread):
         try:
             user = User.select().where(
                 (User.UserName == entry['userName']) & 
-                (User.AccessCode == entry['accessCode'])
+                (User.Password == entry['password'])
             )
             if not user.exists():
                 result['message'] = 'User does not exists'
@@ -82,7 +82,7 @@ class AuthenticateThread(QThread):
                     'id': user.Id,
                     'organizationId': user.OrganizationId,
                     'userName': user.UserName,
-                    'accessCode': user.AccessCode,
+                    'password': user.Password,
                     'fullName': user.FullName,
                     'birthDate': user.BirthDate,
                     'mobileNumber': user.MobileNumber,
@@ -94,7 +94,7 @@ class AuthenticateThread(QThread):
                     'organizationName': organization.OrganizationName,
                     'address': organization.Address,
                     'mobileNumber': organization.MobileNumber,
-                    'accessCode': organization.AccessCode,
+                    'password': organization.Password,
                 }
             }
             

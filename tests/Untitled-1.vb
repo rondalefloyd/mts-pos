@@ -9,7 +9,7 @@
                     B.Name,
                     S.Name,
                     SG.Name,
-                    PP.Capital,
+                    PP.Cost,
                     PP.Price,
                     PP.DiscountAmount,
                     PP.EffectiveDate,
@@ -33,7 +33,7 @@
                     PT.Name LIKE ? OR
                     B.Name LIKE ? OR
                     S.Name LIKE ? OR
-                    PP.Capital LIKE ? OR
+                    PP.Cost LIKE ? OR
                     PP.Price LIKE ? OR
                     PP.DiscountAmount LIKE ? OR
                     PM.PromoId LIKE ? OR
