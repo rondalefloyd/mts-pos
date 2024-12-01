@@ -158,7 +158,6 @@ CREATE TABLE "ItemSold" (
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
 CREATE TABLE "POSConfig" (
     "Id" SERIAL PRIMARY KEY, 
     "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 

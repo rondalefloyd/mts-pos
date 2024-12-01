@@ -623,10 +623,10 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     'widget': self.selectedOrder['widget'],
                 },
                 'billing': {
-                    'subtotal': float(self.labelSubtotal.text()),
-                    'discount': float(self.labelDiscount.text()),
-                    'tax': float(self.labelTax.text()),
-                    'grandTotal': float(self.labelGrandTotal.text()),
+                    'subtotal': float(self.labelSubtotal.text().replace(self.currencySymbol, '')),
+                    'discount': float(self.labelDiscount.text().replace(self.currencySymbol, '')),
+                    'tax': float(self.labelTax.text().replace(self.currencySymbol, '')),
+                    'grandTotal': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')),
                     'paymentType': paymentType,
                     'payment': payment,
                     'change': change,
@@ -680,9 +680,10 @@ class InOrder(Ui_DialogInOrder, QDialog):
 
     def _populatePaymentEligibilityFields(self):
         orderMember = self.selectedOrder['member']
-        grandTotal = float(self.labelGrandTotal.text())
+        grandTotal = float(self.labelGrandTotal.text().replace(self.currencySymbol, ''))
         
-        self.cashPayment = self.lineEditCash.text()
+        self.cashPayment = self.lineEditCash.text().replace(self.currencySymbol, '')
+        print('the self.cashPayment is :', self.cashPayment)
         self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0) if self.cashPayment != '.' else 0.0
         cashShortageExcess = self.cashPayment - grandTotal
         
