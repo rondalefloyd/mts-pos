@@ -67,6 +67,7 @@ class Setup(Ui_DialogSetup, QDialog):
     def restartPostgreSQL(self, directory):
         os.system(f'pg_ctl -D "{directory}" stop')
         os.system(f'pg_ctl -D "{directory}" start')
+        QMessageBox.information(self, "Success", "Done. Please double check the server if it's running at services.msc")
 
 
 if __name__ == "__main__":
