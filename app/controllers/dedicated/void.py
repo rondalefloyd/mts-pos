@@ -63,13 +63,9 @@ class VoidThread(QThread):
             itemSold.VoidStatus = 1
             itemSold.save()
             
-            # TODO: add stock by taking it from qty (depending on the condition if it got bypassed or not) #TOBETESTED
-            # TODO: change the computation of the summary (deduct the ones that are voided) #TOBETESTED
-            
             receipt = Receipt.get_or_none(Receipt.Id == itemSold.ReceiptId)
             receipt.Billing['subtotal'] -= itemSold.Total
             receipt.Billing['grandtotal'] = (receipt.Billing['subtotal'] + receipt.Billing['discount']) + receipt.Billing['tax']
-            # TODO: check if it deducts correctly #TOBETESTED
             receipt.Billing['change'] -= itemSold.Total
             receipt.save()
             
