@@ -111,11 +111,11 @@ class PrintThread(QThread):
             # Save the modified document
             receiptsDIR = f'C:/Users/{os.getlogin()}/Documents/POS/receipts'
             os.makedirs(receiptsDIR, exist_ok=True) 
-            output_path = os.path.abspath(f'{receiptsDIR}/output.docx')
+            output_path = os.path.abspath(f'{receiptsDIR}/{order['referenceId']}.docx')
             document.save(output_path)
             
             # Print the document (Windows-specific)
-            word = win32com.client.Dispatch("Word.Application")
+            word = win32com.client.DispatchEx("Word.Application")
             word.Visible = False
             doc = word.Documents.Open(output_path)
             doc.PrintOut()

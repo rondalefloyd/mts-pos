@@ -63,6 +63,7 @@ def _startApp():
             windowEvent = login.windowEvent
         elif windowEvent == EVENT_START_MANAGE:
             manage = Manage(authData)
+            manage.showFullScreen()
             manage.show()
             app.exec()
             authData = manage.authData
