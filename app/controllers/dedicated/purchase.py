@@ -102,9 +102,31 @@ class PurchaseThread(QThread):
 
                 if reward:
                     member = Member.get_or_none(Member.Id == entry['memberId'])
-                    member.Points = member.Points + reward.Points
-                    member.UpdateTs = datetime.now()
-                    member.save()
+                    
+                    grandtotal = float(billing['grandtotal'])
+
+                    # Process rewards based on available grandtotal
+                    while reward and grandtotal >= reward.Target:
+                        # Calculate how many times the reward can be applied
+                        rewardIteration = math.floor(grandtotal / reward.Target)
+
+                        # Add points for each reward iteration
+                        for i in range(rewardIteration):
+                            member.Points += reward.Points
+                            member.UpdateTs = datetime.now()
+                            member.save()
+
+                        # Deduct the reward target value from grandtotal
+                        grandtotal -= reward.Target * rewardIteration
+
+                        # Get the next lower reward, only if grandtotal is still greater than 0
+                        reward = Reward.select().where(Reward.Target <= grandtotal).order_by(Reward.Target.desc()).first()
+
+                else:
+                    logging.error("No reward found for grandtotal: %s", billing['grandtotal'])
+
+                        
+                    
                     
             result['success'] = True
             result['dictData'] = entry
