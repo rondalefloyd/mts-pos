@@ -121,10 +121,12 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
     def _onPushButtonNewClicked(self):
         self.orderNumber += 1
+        orderType = self.comboBoxOrderType.currentText().upper()
+        orderTypeInitial = 'R' if orderType == 'RETAIL' else 'W' if orderType == 'WHOLESALE' else 'M'
         
         self.activeOrder.append({
-            'name': f"Order {self.orderNumber}", 
-            'type': f"{self.comboBoxOrderType.currentText().upper()}",
+            'name': f"{orderTypeInitial} - Order {self.orderNumber}", 
+            'type': orderType,
             'cart': [], 
             'widget': PreOrder(self, self.authData),
             'status': 1,
@@ -135,7 +137,6 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self.tabWidgetOrder.addTab(
             self.activeOrder[orderIndex]['widget'], 
-            # QIcon('app/views/assets/')
             self.activeOrder[orderIndex]['name'],
         )
         
