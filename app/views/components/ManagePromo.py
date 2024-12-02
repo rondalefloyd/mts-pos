@@ -10,7 +10,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ManagePromo_ui import Ui_FormManagePromo
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.EditPromo import EditPromo
 from app.views.components.ManageActionButton import ManageActionButton
@@ -30,8 +29,6 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
         self.authData = authData
         self.currentThread = None
         self.activeThreads = []
-        
-        self.lineEditDiscountRate.setValidator(floatFormatValidator())
         
         self.refresh()
         

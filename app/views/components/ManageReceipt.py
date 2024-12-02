@@ -10,7 +10,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ManageReceipt_ui import Ui_FormManageReceipt
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.ViewReceipt import ViewReceipt

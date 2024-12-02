@@ -8,7 +8,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditUser_ui import Ui_DialogEditUser
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.edit import EditThread
@@ -34,10 +33,6 @@ class EditUser(Ui_DialogEditUser, QDialog):
         self.dateEditBirthDate.setDate(QDate.fromString(f"{self.selectedData['birthDate']}", 'yyyy-MM-dd'))
         self.lineEditMobileNumber.setText(f"{self.selectedData['mobileNumber']}")
         self.comboBoxAccessLevel.setCurrentText(f"{self.selectedData['accessLevel']}")
-
-        self.lineEditUserName.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.lineEditPassword.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)

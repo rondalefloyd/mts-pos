@@ -8,7 +8,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.Setup_ui import Ui_DialogSetup
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.controllers.dedicated.register import RegisterThread
 
@@ -24,10 +23,6 @@ class Setup(Ui_DialogSetup, QDialog):
         self.authData = None
         self.currentThread = None
         self.activeThreads = []
-
-        self.lineEditPassword.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
-        self.lineEditTaxId.setValidator(intFormatValidator())
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonCreate.clicked.connect(self._onPushButtonCreateClicked)

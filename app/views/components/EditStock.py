@@ -7,7 +7,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditStock_ui import Ui_DialogEditStock
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.controllers.dedicated.edit import EditThread
 
@@ -27,9 +26,6 @@ class EditStock(Ui_DialogEditStock, QDialog):
         self.comboBoxSalesGroupName.setCurrentText(f"{self.selectedData['salesGroupName']}")
         self.lineEditAvailable.setText(f"{self.selectedData['available']}")
         self.lineEditOnHand.setText(f"{self.selectedData['onHand']}")
-        
-        self.lineEditOnHand.setValidator(intFormatValidator())
-        self.lineEditAvailable.setValidator(intFormatValidator())
         
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)

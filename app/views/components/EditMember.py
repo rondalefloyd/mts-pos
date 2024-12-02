@@ -7,7 +7,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.EditMember_ui import Ui_DialogEditMember
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.edit import EditThread
@@ -33,9 +32,6 @@ class EditMember(Ui_DialogEditMember, QDialog):
         self.lineEditAddress.setText(f"{self.selectedData['address']}")
         self.lineEditMobileNumber.setText(f"{self.selectedData['mobileNumber']}")
         self.lineEditPoints.setText(f"{self.selectedData['points']}")
-
-        self.lineEditPoints.setValidator(floatFormatValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)

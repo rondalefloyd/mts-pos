@@ -8,7 +8,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.LoadData_ui import Ui_DialogLoadData
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 
 class LoadData(Ui_DialogLoadData, QDialog):

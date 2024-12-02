@@ -9,7 +9,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ManageProduct_ui import Ui_FormManageProduct
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.LoadData import LoadData
 from app.views.components.EditProduct import EditProduct
@@ -34,10 +33,6 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
         
         self.dateEditEffectiveDate.setMinimumDate(QDate.currentDate())
         self.dateEditExpireDate.setMinimumDate(QDate.currentDate().addDays(1))
-
-        self.lineEditCost.setValidator(floatFormatValidator())
-        self.lineEditRetailPrice.setValidator(floatFormatValidator())
-        self.lineEditWholesalePrice.setValidator(floatFormatValidator())
 
         self.refresh()
         

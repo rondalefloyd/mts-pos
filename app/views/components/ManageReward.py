@@ -9,7 +9,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ManageReward_ui import Ui_FormManageReward
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.EditReward import EditReward
 from app.views.components.ManageActionButton import ManageActionButton
@@ -30,9 +29,6 @@ class ManageRewards(Ui_FormManageReward, QWidget):
         self.authData = authData
         self.currentThread = None
         self.activeThreads = []
-                
-        self.lineEditPoints.setValidator(floatFormatValidator())
-        self.lineEditTarget.setValidator(floatFormatValidator())
                 
         self.refresh()
         

@@ -7,7 +7,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.VoidItemSold_ui import Ui_DialogVoidItemSold
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.void import VoidThread

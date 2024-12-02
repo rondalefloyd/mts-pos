@@ -11,7 +11,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ManageMember_ui import Ui_FormManageMember
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.EditMember import EditMember
 from app.views.components.ManageActionButton import ManageActionButton
@@ -26,7 +25,6 @@ class ManageMembers(Ui_FormManageMember, QWidget):
         super().__init__()
         self.setupUi(self)
         
-        self.mobileNumberValidator = QRegExpValidator(QRegExp(r'^\d{11}$'))
         self.loading = Loading()
         
         self.currencySymbol = ''
@@ -35,8 +33,6 @@ class ManageMembers(Ui_FormManageMember, QWidget):
         self.organizationData = authData['organization']
         self.currentThread = None
         self.activeThreads = []
-        
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
         
         self.refresh()
         

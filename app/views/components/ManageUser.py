@@ -11,7 +11,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.ManageUser_ui import Ui_FormManageUser
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.EditUser import EditUser
 from app.views.components.ManageActionButton import ManageActionButton
@@ -32,10 +31,6 @@ class ManageUsers(Ui_FormManageUser, QWidget):
         self.organizationData = authData['organization']
         self.currentThread = None
         self.activeThreads = []
-        
-        self.lineEditUserName.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.lineEditPassword.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.lineEditMobileNumber.setValidator(mobileNumberValidator())
         
         self.refresh()
         

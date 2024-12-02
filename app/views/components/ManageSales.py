@@ -16,7 +16,6 @@ from app.views.templates.PostOrder_ui import Ui_DialogPostOrder
 from app.views.components.PreOrderActionButton import PreOrderActionButton
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.views.components.LoadData import LoadData
 from app.controllers.dedicated.fetch import FetchThread
@@ -554,8 +553,6 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.cashPayment = 0.0
         self.pointsPayment = 0.0
         self.comboPayment = 0.0
-        
-        self.lineEditCash.setValidator(floatFormatValidator())
         
         self._populateCurrencySymbol()
         self._populateTableWidgetData()

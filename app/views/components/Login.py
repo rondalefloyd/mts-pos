@@ -8,7 +8,6 @@ from app.utils.pyqt5.QtGui import *
 from app.utils.global_variables import *
 from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
-from app.utils.helpers.validator import *
 from app.utils.helpers.formatter import *
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
@@ -26,9 +25,6 @@ class Login(Ui_DialogLogin, QDialog):
         self.activeThreads = []
         
         self.pushButtonPasswordVisibility.setText('Show')
-        
-        self.lineEditUserName.setValidator(nonSpaceTextWithDigitFormatValidator())
-        self.lineEditPassword.setValidator(nonSpaceTextWithDigitFormatValidator())
         
         self.pushButtonSetup.clicked.connect(self._onPushButtonSetupClicked)
         self.pushButtonSignUp.clicked.connect(self._onPushButtonSignUpClicked)
