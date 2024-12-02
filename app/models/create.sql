@@ -36,7 +36,7 @@ CREATE TABLE "Organization" (
 
 CREATE TABLE "Member" (
     "Id" SERIAL PRIMARY KEY, 
-    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE SET NULL, 
     "MemberName" VARCHAR(255), 
     "BirthDate" DATE, 
     "Address" VARCHAR(255), 
@@ -80,19 +80,19 @@ CREATE TABLE "Item" (
     "ItemName" VARCHAR(255), 
     "Barcode" VARCHAR(255), 
     "ExpireDate" DATE, 
-    "ItemTypeId" INTEGER REFERENCES "ItemType"("Id") ON DELETE CASCADE, 
-    "BrandId" INTEGER REFERENCES "Brand"("Id") ON DELETE CASCADE, 
-    "SalesGroupId" INTEGER REFERENCES "SalesGroup"("Id") ON DELETE CASCADE, 
-    "SupplierId" INTEGER REFERENCES "Supplier"("Id") ON DELETE CASCADE, 
+    "ItemTypeId" INTEGER REFERENCES "ItemType"("Id") ON DELETE SET NULL, 
+    "BrandId" INTEGER REFERENCES "Brand"("Id") ON DELETE SET NULL, 
+    "SalesGroupId" INTEGER REFERENCES "SalesGroup"("Id") ON DELETE SET NULL, 
+    "SupplierId" INTEGER REFERENCES "Supplier"("Id") ON DELETE SET NULL, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "ItemPrice" (
     "Id" SERIAL PRIMARY KEY, 
-    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
+    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE SET NULL, 
     "Cost" FLOAT, 
     "Price" FLOAT, 
-    "PromoId" INTEGER REFERENCES "Promo"("Id") ON DELETE CASCADE, 
+    "PromoId" INTEGER REFERENCES "Promo"("Id") ON DELETE SET NULL, 
     "Discount" FLOAT,
     "EffectiveDate" DATE,  
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -100,7 +100,7 @@ CREATE TABLE "ItemPrice" (
 
 CREATE TABLE "Stock" (
     "Id" SERIAL PRIMARY KEY, 
-    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
+    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE SET NULL, 
     "OnHand" INTEGER DEFAULT 0, 
     "Available" INTEGER DEFAULT 0, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -108,7 +108,7 @@ CREATE TABLE "Stock" (
 
 CREATE TABLE "User" (
     "Id" SERIAL PRIMARY KEY, 
-    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE SET NULL, 
     "UserName" VARCHAR(255), 
     "Password" VARCHAR(255), 
     "FullName" VARCHAR(255), 
@@ -120,7 +120,7 @@ CREATE TABLE "User" (
 
 CREATE TABLE "UserSession" (
     "Id" SERIAL PRIMARY KEY, 
-    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE CASCADE, 
+    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE SET NULL, 
     "ActiveStatus" INTEGER, 
     "LastLoginTs" TIMESTAMP, 
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -134,11 +134,11 @@ CREATE TABLE "OrderType" (
 
 CREATE TABLE "Receipt" (
     "Id" SERIAL PRIMARY KEY,  
-    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
-    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE CASCADE, 
-    "MemberId" INTEGER REFERENCES "Member"("Id") ON DELETE CASCADE, 
-    "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE CASCADE, 
-    "OrderTypeId" INTEGER REFERENCES "OrderType"("Id") ON DELETE CASCADE, 
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE SET NULL, 
+    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE SET NULL, 
+    "MemberId" INTEGER REFERENCES "Member"("Id") ON DELETE SET NULL, 
+    "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE SET NULL, 
+    "OrderTypeId" INTEGER REFERENCES "OrderType"("Id") ON DELETE SET NULL, 
     "ReferenceId" TEXT,
     "MachineId" TEXT,
     "OrderName" TEXT,
@@ -148,8 +148,8 @@ CREATE TABLE "Receipt" (
 
 CREATE TABLE "ItemSold" (
     "Id" SERIAL PRIMARY KEY, 
-    "ReceiptId" INTEGER REFERENCES "Receipt"("Id") ON DELETE CASCADE, 
-    "ItemId" INTEGER REFERENCES "Item"("Id") ON DELETE CASCADE, 
+    "ReceiptId" INTEGER REFERENCES "Receipt"("Id") ON DELETE SET NULL, 
+    "ItemPriceId" INTEGER REFERENCES "Item"("Id") ON DELETE SET NULL, 
     "Quantity" INTEGER, 
     "Total" FLOAT, 
     "VoidReason" VARCHAR(255), 
@@ -160,7 +160,7 @@ CREATE TABLE "ItemSold" (
 
 CREATE TABLE "POSConfig" (
     "Id" SERIAL PRIMARY KEY, 
-    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE CASCADE, 
+    "OrganizationId" INTEGER REFERENCES "Organization"("Id") ON DELETE SET NULL, 
     "Config" JSONB,
     "UpdateTs" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

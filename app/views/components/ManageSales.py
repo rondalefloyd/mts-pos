@@ -233,6 +233,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
             else:
                 return
         
+        itemPriceId = data['itemPriceId']
         itemId = data['itemId']
         itemName = data['itemName']
         promoName = data['promoName']
@@ -247,7 +248,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         isItemExist = False
         
         for item in orderItem:
-            if item['itemId'] != itemId:
+            if item['itemPriceId'] != itemPriceId:
                 continue
 
             if item['stockBypass'] == 0 and available is not None and item['quantity'] >= available:
@@ -265,6 +266,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         if not isItemExist:
             orderItem.append({
+                'itemPriceId': itemPriceId,
                 'itemId': itemId,
                 'price': price,
                 'discount': discount,

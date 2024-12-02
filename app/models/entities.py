@@ -187,7 +187,7 @@ class Receipt(BaseModel):
 class ItemSold(BaseModel):
     Id = AutoField()
     ReceiptId = ForeignKeyField(Receipt, on_delete='CASCADE', column_name='ReceiptId', null=True)
-    ItemId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemId', null=True)
+    ItemPriceId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemPriceId', null=True)
     Quantity = IntegerField(null=True)
     Total = FloatField(null=True)
     VoidReason = CharField(max_length=255, null=True)

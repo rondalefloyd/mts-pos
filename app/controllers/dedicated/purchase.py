@@ -79,7 +79,7 @@ class PurchaseThread(QThread):
             for item in order['cart']:
                 itemSold = ItemSold.create(
                     ReceiptId=receipt.Id,
-                    ItemId=item['itemId'],
+                    ItemPriceId=item['itemPriceId'],
                     Quantity=item['quantity'],
                     Total=item['total'],
                     StockBypass=item['stockBypass'],

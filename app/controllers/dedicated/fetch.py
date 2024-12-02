@@ -263,8 +263,8 @@ class FetchThread(QThread):
                 result['listData'].append({
                     'id': itemSold.Id,
                     'receiptId': itemSold.ReceiptId,
-                    'itemId': itemSold.ItemId,
-                    'itemName': Item.get_or_none(Item.Id == itemSold.ItemId).ItemName if itemSold.ItemId else None,
+                    'itemPriceId': itemSold.ItemPriceId,
+                    'itemName': Item.get_or_none(Item.Id == itemSold.ItemPriceId).ItemName if itemSold.ItemPriceId else None,
                     'quantity': itemSold.Quantity,
                     'total': itemSold.Total,
                     'voidReason': itemSold.VoidReason,

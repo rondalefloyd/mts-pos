@@ -134,6 +134,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.cart = listData
         
         self.tableWidgetData.clearContents()
+        self.tableWidgetData.setRowCount(len(listData))
         
         self.totalPages = dictData['totalPages'] if 'totalPages' in dictData else 1
         
