@@ -91,7 +91,16 @@ class PurchaseThread(QThread):
                     stock = stock.first()
                     stock.Available -= item['quantity']
                     stock.save()
+                    
+            if memberId is not None:
+                reward = (Reward.select().where(Reward.Target <= float(billing['grandtotal'])).order_by(Reward.Target.desc()).first())
 
+                if reward:
+                    member = Member.get_or_none(Member.Id == entry['memberId'])
+                    member.Points = member.Points + reward.Points
+                    member.UpdateTs = datetime.now()
+                    member.save()
+                    
             result['success'] = True
             result['dictData'] = entry
             result['message'] = 'Purchase added'
