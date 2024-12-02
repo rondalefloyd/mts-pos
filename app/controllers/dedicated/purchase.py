@@ -108,7 +108,7 @@ class PurchaseThread(QThread):
                     # Process rewards based on available grandtotal
                     while reward and grandtotal >= reward.Target:
                         # Calculate how many times the reward can be applied
-                        rewardIteration = math.floor(grandtotal / reward.Target)
+                        rewardIteration = math.floor(billing['cashPaid'] / reward.Target)
 
                         # Add points for each reward iteration
                         for i in range(rewardIteration):

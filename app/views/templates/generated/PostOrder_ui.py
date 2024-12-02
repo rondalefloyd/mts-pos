@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_DialogPostOrder(object):
     def setupUi(self, DialogPostOrder):
         DialogPostOrder.setObjectName("DialogPostOrder")
-        DialogPostOrder.resize(962, 413)
+        DialogPostOrder.resize(657, 319)
         DialogPostOrder.setModal(True)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(DialogPostOrder)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)

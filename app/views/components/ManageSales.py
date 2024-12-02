@@ -601,13 +601,13 @@ class InOrder(Ui_DialogInOrder, QDialog):
         
         if paymentType == 'CASH':
             payment = self.cashPayment
-            change = float(self.labelCashShortageExcess.text().replace(self.currencySymbol, ''))
+            change = float(self.labelCashShortageExcess.text())
         if paymentType == 'POINTS':
             payment = self.pointsPayment
-            change = float(self.labelPointsShortageExcess.text().replace(self.currencySymbol, ''))
+            change = float(self.labelPointsShortageExcess.text())
         if paymentType == 'HYBRID':
             payment = self.comboPayment
-            change = float(self.labelComboShortageExcess.text().replace(self.currencySymbol, ''))
+            change = float(self.labelComboShortageExcess.text())
             
         confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
@@ -629,12 +629,13 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     'widget': self.selectedOrder['widget'],
                 },
                 'billing': {
-                    'subtotal': float(self.labelSubtotal.text().replace(self.currencySymbol, '')),
-                    'discount': float(self.labelDiscount.text().replace(self.currencySymbol, '')),
-                    'tax': float(self.labelTax.text().replace(self.currencySymbol, '')),
-                    'grandtotal': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')),
+                    'subtotal': float(self.labelSubtotal.text()),
+                    'discount': float(self.labelDiscount.text()),
+                    'tax': float(self.labelTax.text()),
+                    'grandtotal': float(self.labelGrandTotal.text()),
                     'paymentType': paymentType,
-                    'pointsPaid': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')) - self.cashPayment,
+                    'cashPaid': self.cashPayment,
+                    'pointsPaid': float(self.labelGrandTotal.text()) - self.cashPayment,
                     'payment': payment,
                     'change': change,
                 }
@@ -687,9 +688,9 @@ class InOrder(Ui_DialogInOrder, QDialog):
 
     def _populatePaymentEligibilityFields(self):
         orderMember = self.selectedOrder['member']
-        grandTotal = float(self.labelGrandTotal.text().replace(self.currencySymbol, ''))
+        grandTotal = float(self.labelGrandTotal.text())
         
-        self.cashPayment = self.lineEditCash.text().replace(self.currencySymbol, '')
+        self.cashPayment = self.lineEditCash.text()
         self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0) if self.cashPayment != '.' else 0.0
         cashShortageExcess = self.cashPayment - grandTotal
         
@@ -827,6 +828,7 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
     def __init__(self, manageSales, authData, selectedOrder):
         super().__init__()
         self.setupUi(self)
+        self.setWindowFlags(Qt.FramelessWindowHint)
         
         self.manageSales: ManageSales = manageSales
         self.loading = Loading()
