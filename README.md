@@ -85,4 +85,10 @@ python-docx
 
 Python 3.12.6
 
-all should be trust
+all should be trust in pg_hba.conf
+
+when editing the ui, make sure to run converter.py when compiling the .ui files. run the command below:
+python app\views\templates\generated\converter.py  
+
+
+

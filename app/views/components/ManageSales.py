@@ -327,7 +327,11 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart']
         orderIndex = self.manageSales.tabWidgetOrder.currentIndex()
         orderStatus = 2 if self.pushButtonPark.isChecked() else 1
+        orderName = self.manageSales.tabWidgetOrder.tabText(orderIndex)
+        orderName = orderName.replace(" (P)", "") if orderStatus == 1 else f"{orderName} (P)"
         self.manageSales.activeOrder[orderIndex]['status'] = orderStatus
+        self.manageSales.tabWidgetOrder.setTabText(orderIndex, orderName)
+        self.manageSales.labelOrderName.setText(orderName)
         
         self.pushButtonClear.setEnabled(orderStatus == 1)
         self.pushButtonPark.setText('PARK' if orderStatus == 1 else 'UNPARK')

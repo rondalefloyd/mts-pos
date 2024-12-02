@@ -5,7 +5,7 @@
 QPushButton {
     background-color: #fff;
     border: 1px solid #d0d0d0;
-    padding: 5px;
+    padding: 10px;
     width: 100%;
 }
 QPushButton:hover { 
@@ -23,7 +23,7 @@ QPushButton#pushButtonDiscard {
     background-color: #d60b00;
     border: 1px solid #d60b00;
     color: #fff;
-    padding: 5px;
+    padding: 10px;
     width: 100%;
 }
 
@@ -33,7 +33,7 @@ QPushButton#pushButtonPark {
     background-color: #ffd000;
     border: 1px solid #ffd000;
     color: #fff;
-    padding: 5px;
+    padding: 10px;
     width: 100%;
 }
 QPushButton#pushButtonPark:hover { background-color: #bf9c00; }
@@ -49,7 +49,7 @@ QPushButton#pushButtonPayCash {
     background-color: #00bd48;
     border: 1px solid #00bd48;
     color: #fff;
-    padding: 5px;
+    padding: 10px;
     width: 100%;
 }
 QPushButton#pushButtonPrint:hover,
@@ -77,7 +77,7 @@ QPushButton#pushButtonFilter {
     background-color: #0084ff;
     border: 1px solid #0084ff;
     color: #fff;
-    padding: 5px;
+    padding: 10px;
     width: 100%;
 }
 QPushButton#pushButtonNew:hover,
@@ -119,9 +119,9 @@ QWidget#FormManageActionButton QPushButton#pushButtonVoid:hover { background-col
 /* PRE-ORDER BUTTON */
 QWidget#FormPreOrderActionButton QPushButton {
     border: 1px solid transparent;
-    padding: 5px;
-    max-width: 15px;
-    max-height: 15px;
+    padding: 3px;
+    width: 30px;
+    height: 25px;
 }
 
 QWidget#FormPreOrderActionButton QPushButton#pushButtonAddExact {
@@ -192,10 +192,14 @@ QDateEdit,
 QComboBox,
 QCheckBox,
 QLineEdit {
-    padding: 5px;
+    padding: 10px;
     width: 100%;
 }
 
+QLabel {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 
 
 
@@ -211,7 +215,7 @@ QWidget#widgetStatusBar {
 }
 
 QTabBar::tab {
-    padding: 5px;
+    padding: 10px;
     min-width: 100px;
     border-right: 1px solid #dfdfdf;
 }
