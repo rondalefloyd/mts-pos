@@ -38,9 +38,9 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         self.lineEditPrice.setText(f"{self.selectedData['price']}")
         self.dateEditEffectiveDate.setDate(QDate.fromString(f"{self.selectedData['effectiveDate']}", 'yyyy-MM-dd'))
         self.comboBoxPromoName.setCurrentText("N/A")
-        self.lineEditDiscountRate.setText("0.0")
-        self.lineEditDiscount.setText("0.0")
-        self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
+        self.lineEditDiscountRate.setText("0.00")
+        self.lineEditDiscount.setText("0.00")
+        self.lineEditNewPrice.setText(f"{billFormat('', self.selectedData['price'])}")
 
         self._populateComboBoxItemTypeBrandSupplierSalesGroup()
         
@@ -67,9 +67,9 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
 
         if self.checkBoxApplyPromo.isChecked() is False:
             self.comboBoxPromoName.setCurrentText("N/A")        
-            self.lineEditDiscountRate.setText("0.0")
-            self.lineEditDiscount.setText("0.0")
-            self.lineEditNewPrice.setText(f"{self.selectedData['price']}")
+            self.lineEditDiscountRate.setText("0.00")
+            self.lineEditDiscount.setText("0.00")
+            self.lineEditNewPrice.setText(f"{billFormat('', self.selectedData['price'])}")
             return
             
         self._populateComboBoxPromoName()
@@ -134,20 +134,20 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         dictData = result['dictData']
         discountRate = dictData['discountRate'] if 'discountRate' in dictData else 0
         
-        self.lineEditDiscountRate.setText(f"{0.0 if discountRate is None else discountRate}")
+        self.lineEditDiscountRate.setText(f"{billFormat('', 0.00 if discountRate is None else discountRate)}")
         
         price = float(self.lineEditPrice.text())
-        discountRate = float(self.lineEditDiscountRate.text()) / 100.0  
+        discountRate = float(self.lineEditDiscountRate.text()) / 100.00  
 
         discount = price * discountRate
         newPrice = price - discount
 
-        self.lineEditDiscount.setText(f"{billFormat(self.currencySymbol, discount)}")
-        self.lineEditNewPrice.setText(f"{billFormat(self.currencySymbol, newPrice)}")
+        self.lineEditDiscount.setText(f"{billFormat('', discount)}")
+        self.lineEditNewPrice.setText(f"{billFormat('', newPrice)}")
         
         if self.selectedData['promoName'] is not None:
             originalPrice = float(self.selectedData['price']) + float(self.lineEditDiscount.text())
-            self.lineEditPrice.setText(f"{originalPrice}")
+            self.lineEditPrice.setText(f"{billFormat('', originalPrice)}")
 
     def _onPushButtonCancelClicked(self):
         self.close()

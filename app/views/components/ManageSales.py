@@ -438,7 +438,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         dictData = result['dictData']
         points = dictData['points'] if 'points' in dictData else 0
         
-        self.lineEditPoints.setText(f"{billFormat(self.currencySymbol, points)}")
+        self.lineEditPoints.setText(f"{billFormat('', points)}")
         
         self.manageSales.activeOrder[orderIndex]['member'] = dictData if dictData else None
         
@@ -550,9 +550,9 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
-        self.cashPayment = 0.0
-        self.pointsPayment = 0.0
-        self.comboPayment = 0.0
+        self.cashPayment = 0.00
+        self.pointsPayment = 0.00
+        self.comboPayment = 0.00
         
         self._populateCurrencySymbol()
         self._populateTableWidgetData()
@@ -575,7 +575,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonPayCash.clicked.connect(lambda: self._processOrder('CASH'))
         self.pushButtonPayPoints.clicked.connect(lambda: self._processOrder('POINTS'))
-        self.pushButtonPayCombo.clicked.connect(lambda: self._processOrder('HYBRID'))
+        self.pushButtonPayCombo.clicked.connect(lambda: self._processOrder('COMBO'))
 
     def _populateCurrencySymbol(self):
         self.loading.show()
@@ -596,18 +596,18 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.loading.close()
 
     def _processOrder(self, paymentType):
-        payment = 0.0
-        change = 0.0
+        payment = 0.00
+        change = 0.00
         
         if paymentType == 'CASH':
             payment = self.cashPayment
-            change = float(self.labelCashShortageExcess.text())
+            change = float(self.labelCashShortageExcess.text().replace(self.currencySymbol, ''))
         if paymentType == 'POINTS':
             payment = self.pointsPayment
-            change = float(self.labelPointsShortageExcess.text())
-        if paymentType == 'HYBRID':
+            change = float(self.labelPointsShortageExcess.text().replace(self.currencySymbol, ''))
+        if paymentType == 'COMBO':
             payment = self.comboPayment
-            change = float(self.labelComboShortageExcess.text())
+            change = float(self.labelComboShortageExcess.text().replace(self.currencySymbol, ''))
             
         confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
@@ -670,7 +670,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         orderMember = self.selectedOrder['member']
         self.lineEditMemberName.setText(f"{orderMember['memberName']}" if orderMember else 'N/A')
         self.lineEditMobileNumber.setText(f"{orderMember['mobileNumber']}" if orderMember else 'N/A')
-        self.lineEditPoints.setText(f"{orderMember['points']}" if orderMember else 'N/A')
+        self.lineEditPoints.setText(f"{billFormat('', orderMember['points'])}" if orderMember else 'N/A')
 
     def _onPushButtonKeyClicked(self, key):
         self.lineEditCash.setFocus()
@@ -691,7 +691,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         grandTotal = float(self.labelGrandTotal.text())
         
         self.cashPayment = self.lineEditCash.text()
-        self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0) if self.cashPayment != '.' else 0.0
+        self.cashPayment = float(self.cashPayment if self.cashPayment else 0.00) if self.cashPayment != '.' else 0.00
         cashShortageExcess = self.cashPayment - grandTotal
         
         self.labelCashPayment.setText(f"{billFormat(self.currencySymbol, self.cashPayment)}")
@@ -804,7 +804,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
 
     def closeEvent(self, event):
         for data in self.selectedOrder['cart']:
-            data['customDiscount'] = 0.0
+            data['customDiscount'] = 0.00
         
         for thread in self.activeThreads:
             if thread.isRunning():
@@ -861,9 +861,9 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
     def _populatePostOrderSummary(self):
         billing = self.selectedOrder['billing']
         
-        self.labelPayment.setText(f"{billing['payment']}")
-        self.labelGrandTotal.setText(f"{billing['grandtotal']}")
-        self.labelChange.setText(f"{billing['change']}")
+        self.labelPayment.setText(f"{billFormat('', billing['payment'])}")
+        self.labelGrandTotal.setText(f"{billFormat('', billing['grandtotal'])}")
+        self.labelChange.setText(f"{billFormat('', billing['change'])}")
         
 
     def _onPushButtonCloseClicked(self):
