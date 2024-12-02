@@ -93,6 +93,11 @@ class PurchaseThread(QThread):
                     stock.save()
                     
             if memberId is not None:
+                member = Member.get_or_none(Member.Id == entry['memberId'])
+                member.Points = member.Points - float(billing['pointsPaid'])
+                member.UpdateTs = datetime.now()
+                member.save()
+                
                 reward = (Reward.select().where(Reward.Target <= float(billing['grandtotal'])).order_by(Reward.Target.desc()).first())
 
                 if reward:

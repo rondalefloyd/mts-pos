@@ -636,6 +636,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     'tax': float(self.labelTax.text().replace(self.currencySymbol, '')),
                     'grandtotal': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')),
                     'paymentType': paymentType,
+                    'pointsPaid': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')) - self.cashPayment,
                     'payment': payment,
                     'change': change,
                 }
