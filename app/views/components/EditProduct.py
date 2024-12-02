@@ -142,8 +142,8 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         discount = price * discountRate
         newPrice = price - discount
 
-        self.lineEditDiscount.setText(f"{billFormat(discount)}")
-        self.lineEditNewPrice.setText(f"{billFormat(newPrice)}")
+        self.lineEditDiscount.setText(f"{billFormat(self.currencySymbol, discount)}")
+        self.lineEditNewPrice.setText(f"{billFormat(self.currencySymbol, newPrice)}")
         
         if self.selectedData['promoName'] is not None:
             originalPrice = float(self.selectedData['price']) + float(self.lineEditDiscount.text())

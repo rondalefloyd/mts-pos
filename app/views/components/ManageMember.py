@@ -142,7 +142,7 @@ class ManageMembers(Ui_FormManageMember, QWidget):
                 QTableWidgetItem(f"{data['birthDate']}"),
                 QTableWidgetItem(f"{data['address']}"),
                 QTableWidgetItem(f"{data['mobileNumber']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['points'])}"),
+                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['points'])}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

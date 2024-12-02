@@ -194,7 +194,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
                     QTableWidgetItem(f"{data['itemName']}"),
                     QTableWidgetItem(f"{data['barcode']}"),
                     QTableWidgetItem(f"{data['brandName']}"),
-                    QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['price'])}"),
+                    QTableWidgetItem(f"{billFormat(self.currencySymbol, data['price'])}"),
                     QTableWidgetItem(f"{data['available']}"),
                     QTableWidgetItem(f"{data['promoName']}"),
                 ]
@@ -360,7 +360,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             tableItems = [
                 QTableWidgetItem(f"{data['quantity']}"),
                 QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['total'])}"),
+                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['total'])}"),
             ]
             
             self.tableWidgetOrderItem.setCellWidget(i, 0, preOrderActionButton) 
@@ -382,11 +382,11 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             preOrderActionButton.pushButtonDeleteAll.clicked.connect(lambda _, index=i, orderItem=orderItem: self._onPushButtonDeleteAllClicked(index, orderItem))
             preOrderActionButton.pushButtonDeleteOne.clicked.connect(lambda _, index=i, orderItem=orderItem: self._onPushButtonDeleteOneClicked(index, orderItem))
             
-        self.labelSubtotal.setText(f"{self.currencySymbol}{billFormat(subtotal)}")
-        self.labelDiscount.setText(f"{self.currencySymbol}{billFormat(discount)}")
-        self.labelTax.setText(f"{self.currencySymbol}{billFormat(tax)}")
-        self.labelGrandTotal.setText(f"{self.currencySymbol}{billFormat(grandTotal)}")
-        self.pushButtonPay.setText(f"Pay {self.currencySymbol}{billFormat(grandTotal)}")
+        self.labelSubtotal.setText(f"{billFormat(self.currencySymbol, subtotal)}")
+        self.labelDiscount.setText(f"{billFormat(self.currencySymbol, discount)}")
+        self.labelTax.setText(f"{billFormat(self.currencySymbol, tax)}")
+        self.labelGrandTotal.setText(f"{billFormat(self.currencySymbol, grandTotal)}")
+        self.pushButtonPay.setText(f"Pay {billFormat(self.currencySymbol, grandTotal)}")
         self.manageSales.lineEditBarcode.setFocus()
 
     def _populateCurrencySymbol(self):
@@ -401,11 +401,11 @@ class PreOrder(Ui_FormPreOrder, QWidget):
     def _handlePopulateCurrencySymbolFinished(self, result):
         self.currencySymbol = result['dictData']['config']['currency_symbol']
         
-        self.labelSubtotal.setText(f"{self.currencySymbol}0.00")
-        self.labelDiscount.setText(f"{self.currencySymbol}0.00")
-        self.labelTax.setText(f"{self.currencySymbol}0.00")
-        self.labelGrandTotal.setText(f"{self.currencySymbol}0.00")
-        self.pushButtonPay.setText(f"Pay {self.currencySymbol}0.00")
+        self.labelSubtotal.setText(f"0.00")
+        self.labelDiscount.setText(f"0.00")
+        self.labelTax.setText(f"0.00")
+        self.labelGrandTotal.setText(f"0.00")
+        self.pushButtonPay.setText(f"Pay 0.00")
         
         self.loading.close()
 
@@ -438,7 +438,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         dictData = result['dictData']
         points = dictData['points'] if 'points' in dictData else 0
         
-        self.lineEditPoints.setText(f"{billFormat(points)}")
+        self.lineEditPoints.setText(f"{billFormat(self.currencySymbol, points)}")
         
         self.manageSales.activeOrder[orderIndex]['member'] = dictData if dictData else None
         
@@ -589,9 +589,9 @@ class InOrder(Ui_DialogInOrder, QDialog):
     def _handlePopulateCurrencySymbolFinished(self, result):
         self.currencySymbol = result['dictData']['config']['currency_symbol']
         
-        self.labelCashShortageExcess.setText(f'{self.currencySymbol}0.00')
-        self.labelPointsShortageExcess.setText(f'{self.currencySymbol}0.00')
-        self.labelComboShortageExcess.setText(f'{self.currencySymbol}0.00')
+        self.labelCashShortageExcess.setText(f'0.00')
+        self.labelPointsShortageExcess.setText(f'0.00')
+        self.labelComboShortageExcess.setText(f'0.00')
         
         self.loading.close()
 
@@ -693,8 +693,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0) if self.cashPayment != '.' else 0.0
         cashShortageExcess = self.cashPayment - grandTotal
         
-        self.labelCashPayment.setText(f"{self.currencySymbol}{billFormat(self.cashPayment)}")
-        self.labelCashShortageExcess.setText(f"{self.currencySymbol}{billFormat(cashShortageExcess)}")
+        self.labelCashPayment.setText(f"{billFormat(self.currencySymbol, self.cashPayment)}")
+        self.labelCashShortageExcess.setText(f"{billFormat(self.currencySymbol, cashShortageExcess)}")
         
         self.pushButtonPayCash.setEnabled(self.cashPayment >= grandTotal)
         
@@ -714,11 +714,11 @@ class InOrder(Ui_DialogInOrder, QDialog):
             pointsShortageExcess = self.pointsPayment - grandTotal
             comboShortageExcess = self.comboPayment - grandTotal
             
-            self.labelPointsPayment.setText(f"{self.currencySymbol}{billFormat(self.pointsPayment)}")
-            self.labelComboCashPayment.setText(f"{self.currencySymbol}{billFormat(self.cashPayment)}")
-            self.labelComboPointsPayment.setText(f"{self.currencySymbol}{billFormat(comboPointsPayment)}")
-            self.labelPointsShortageExcess.setText(f"{self.currencySymbol}{billFormat(pointsShortageExcess)}")
-            self.labelComboShortageExcess.setText(f"{self.currencySymbol}{billFormat(comboShortageExcess)}")
+            self.labelPointsPayment.setText(f"{billFormat(self.currencySymbol, self.pointsPayment)}")
+            self.labelComboCashPayment.setText(f"{billFormat(self.currencySymbol, self.cashPayment)}")
+            self.labelComboPointsPayment.setText(f"{billFormat(self.currencySymbol, comboPointsPayment)}")
+            self.labelPointsShortageExcess.setText(f"{billFormat(self.currencySymbol, pointsShortageExcess)}")
+            self.labelComboShortageExcess.setText(f"{billFormat(self.currencySymbol, comboShortageExcess)}")
             
             self.pushButtonPayPoints.setEnabled(self.pointsPayment >= grandTotal)
             self.pushButtonPayCombo.setEnabled(self.comboPayment >= grandTotal)
@@ -753,8 +753,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
             tableItems = [
                 QTableWidgetItem(f"{data['quantity']}"),
                 QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['total'])}"),
-                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['customDiscount'])}"),
+                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['total'])}"),
+                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['customDiscount'])}"),
             ]
             
             self.tableWidgetOrderItem.setCellWidget(i, 0, manageActionButton) 
@@ -774,12 +774,12 @@ class InOrder(Ui_DialogInOrder, QDialog):
             
             manageActionButton.pushButtonDiscount.clicked.connect(lambda _, index=i, data=data: self._onPushButtonDiscountClicked(index, data))
             
-        self.labelSubtotal.setText(f"{self.currencySymbol}{billFormat(subtotal)}")
-        self.labelDiscount.setText(f"{self.currencySymbol}{billFormat(discount)}")
-        self.labelTax.setText(f"{self.currencySymbol}{billFormat(tax)}")
-        self.labelCustomDiscount.setText(f"{self.currencySymbol}{billFormat(customDiscount)}")
-        self.labelGrandTotal.setText(f"{self.currencySymbol}{billFormat(grandTotal)}")
-        self.lineEditCash.setText(f"{self.currencySymbol}{billFormat(grandTotal)}")
+        self.labelSubtotal.setText(f"{billFormat(self.currencySymbol, subtotal)}")
+        self.labelDiscount.setText(f"{billFormat(self.currencySymbol, discount)}")
+        self.labelTax.setText(f"{billFormat(self.currencySymbol, tax)}")
+        self.labelCustomDiscount.setText(f"{billFormat(self.currencySymbol, customDiscount)}")
+        self.labelGrandTotal.setText(f"{billFormat(self.currencySymbol, grandTotal)}")
+        self.lineEditCash.setText(f"{billFormat(self.currencySymbol, grandTotal)}")
         self.lineEditCash.setFocus()
 
     def _onPushButtonDiscountClicked(self, index, data):

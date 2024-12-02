@@ -126,8 +126,8 @@ class ManageRewards(Ui_FormManageReward, QWidget):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['rewardName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['points'])}"),
-                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['target'])}"),
+                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['points'])}"),
+                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['target'])}"),
                 QTableWidgetItem(f"{data['description']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
