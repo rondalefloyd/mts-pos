@@ -135,6 +135,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self.tabWidgetOrder.addTab(
             self.activeOrder[orderIndex]['widget'], 
+            # QIcon('app/views/assets/')
             self.activeOrder[orderIndex]['name'],
         )
         
