@@ -194,7 +194,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
                     QTableWidgetItem(f"{data['itemName']}"),
                     QTableWidgetItem(f"{data['barcode']}"),
                     QTableWidgetItem(f"{data['brandName']}"),
-                    QTableWidgetItem(f"{self.currencySymbol}{data['price']}"),
+                    QTableWidgetItem(f"{self.currencySymbol}{data['price']:.2f}"),
                     QTableWidgetItem(f"{data['available']}"),
                     QTableWidgetItem(f"{data['promoName']}"),
                 ]
@@ -360,7 +360,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             tableItems = [
                 QTableWidgetItem(f"{data['quantity']}"),
                 QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['total']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['total']:.2f}"),
             ]
             
             self.tableWidgetOrderItem.setCellWidget(i, 0, preOrderActionButton) 
@@ -755,8 +755,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
             tableItems = [
                 QTableWidgetItem(f"{data['quantity']}"),
                 QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['total']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['customDiscount']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['total']:.2f}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['customDiscount']:.2f}"),
             ]
             
             self.tableWidgetOrderItem.setCellWidget(i, 0, manageActionButton) 

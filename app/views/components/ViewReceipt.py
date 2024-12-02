@@ -111,12 +111,12 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.labelMobileNumber.setText(f"{dictData['mobileNumber']}")
         
         billing = dictData['billing']
-        self.labelSubtotal.setText(f"{self.currencySymbol}{billing['subtotal']}")
-        self.labelDiscount.setText(f"{self.currencySymbol}{billing['discount']}")
-        self.labelTax.setText(f"{self.currencySymbol}{billing['tax']}")
-        self.labelGrandTotal.setText(f"{self.currencySymbol}{billing['grandtotal']}")
-        self.labelAmount.setText(f"{self.currencySymbol}{billing['payment']}")
-        self.labelChange.setText(f"{self.currencySymbol}{billing['change']}")
+        self.labelSubtotal.setText(f"{self.currencySymbol}{billing['subtotal']:.2f}")
+        self.labelDiscount.setText(f"{self.currencySymbol}{billing['discount']:.2f}")
+        self.labelTax.setText(f"{self.currencySymbol}{billing['tax']:.2f}")
+        self.labelGrandTotal.setText(f"{self.currencySymbol}{billing['grandtotal']:.2f}")
+        self.labelAmount.setText(f"{self.currencySymbol}{billing['payment']:.2f}")
+        self.labelChange.setText(f"{self.currencySymbol}{billing['change']:.2f}")
         
     def _populateTableWidgetData(self):
         self.loading.show()
@@ -142,7 +142,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
             tableItems = [
                 QTableWidgetItem(f"{data['itemName']}"),
                 QTableWidgetItem(f"{data['quantity']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['total']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['total']:.2f}"),
                 QTableWidgetItem(f"{data['voidReason']}"),
                 QTableWidgetItem(f"{data['status']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),

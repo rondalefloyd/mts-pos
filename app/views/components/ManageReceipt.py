@@ -103,9 +103,9 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
                 QTableWidgetItem(f"{data['userName']}"),
                 QTableWidgetItem(f"{data['memberName']}"),
                 QTableWidgetItem(f"{data['dateValue']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['grandtotal']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['payment']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['change']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['grandtotal']:.2f}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['payment']:.2f}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['change']:.2f}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

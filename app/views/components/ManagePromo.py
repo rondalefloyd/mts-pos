@@ -127,7 +127,7 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['promoName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['discountRate']}"),
+                QTableWidgetItem(f"{self.currencySymbol}{data['discountRate']:.2f}"),
                 QTableWidgetItem(f"{data['description']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
