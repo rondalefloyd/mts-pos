@@ -94,36 +94,43 @@ class PurchaseThread(QThread):
                     
             if memberId is not None:
                 member = Member.get_or_none(Member.Id == entry['memberId'])
-                member.Points = member.Points - float(billing['pointsPaid'])
-                member.UpdateTs = datetime.now()
-                member.save()
-                
-                reward = (Reward.select().where(Reward.Target <= float(billing['grandtotal'])).order_by(Reward.Target.desc()).first())
+                if member:
+                    # Deduct points paid from the member's total points
+                    member.Points -= float(billing['pointsPaid'])
+                    member.UpdateTs = datetime.now()
+                    member.save()
 
-                if reward:
-                    member = Member.get_or_none(Member.Id == entry['memberId'])
-                    
-                    grandtotal = float(billing['grandtotal'])
+                    # Initialize cash paid
+                    cashPaid = float(billing['cashPaid'])
 
-                    # Process rewards based on available grandtotal
-                    while reward and grandtotal >= reward.Target:
+                    # Start processing rewards
+                    reward = (Reward.select()
+                            .where(Reward.Target <= cashPaid)
+                            .order_by(Reward.Target.desc())
+                            .first())
+
+                    while reward and cashPaid >= reward.Target:
                         # Calculate how many times the reward can be applied
-                        rewardIteration = math.floor(billing['cashPaid'] / reward.Target)
+                        rewardIteration = math.floor(cashPaid / reward.Target)
 
                         # Add points for each reward iteration
-                        for i in range(rewardIteration):
-                            member.Points += reward.Points
-                            member.UpdateTs = datetime.now()
-                            member.save()
+                        member.Points += reward.Points * rewardIteration
+                        member.UpdateTs = datetime.now()
+                        member.save()
 
-                        # Deduct the reward target value from grandtotal
-                        grandtotal -= reward.Target * rewardIteration
+                        # Deduct the value of applied rewards from the cashPaid
+                        cashPaid -= reward.Target * rewardIteration
 
-                        # Get the next lower reward, only if grandtotal is still greater than 0
-                        reward = Reward.select().where(Reward.Target <= grandtotal).order_by(Reward.Target.desc()).first()
-
+                        # Get the next reward tier that matches the remaining cashPaid
+                        reward = (Reward.select()
+                                .where(Reward.Target <= cashPaid)
+                                .order_by(Reward.Target.desc())
+                                .first())
                 else:
-                    logging.error("No reward found for grandtotal: %s", billing['grandtotal'])
+                    logging.error("Member not found for memberId: %s", memberId)
+            else:
+                logging.error("No memberId provided.")
+
 
                         
                     
