@@ -712,7 +712,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.labelHybridShortageExcess.setText(f"{self.currencySymbol}{hybridShortageExcess}")
             
             self.pushButtonPayPoints.setEnabled(self.pointsPayment >= grandTotal)
-            self.pushButtonPayHybrid.setEnabled(self.hybridPayment == grandTotal)
+            self.pushButtonPayHybrid.setEnabled(self.hybridPayment >= grandTotal)
             return
     
         self.labelPointsPayment.setText('N/A')
