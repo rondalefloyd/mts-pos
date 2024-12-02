@@ -552,7 +552,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
 
         self.cashPayment = 0.0
         self.pointsPayment = 0.0
-        self.hybridPayment = 0.0
+        self.comboPayment = 0.0
         
         self.lineEditCash.setValidator(floatFormatValidator())
         
@@ -577,7 +577,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonPayCash.clicked.connect(lambda: self._processOrder('CASH'))
         self.pushButtonPayPoints.clicked.connect(lambda: self._processOrder('POINTS'))
-        self.pushButtonPayHybrid.clicked.connect(lambda: self._processOrder('HYBRID'))
+        self.pushButtonPayCombo.clicked.connect(lambda: self._processOrder('HYBRID'))
 
     def _populateCurrencySymbol(self):
         self.loading.show()
@@ -593,7 +593,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         
         self.labelCashShortageExcess.setText(f'{self.currencySymbol}0.00')
         self.labelPointsShortageExcess.setText(f'{self.currencySymbol}0.00')
-        self.labelHybridShortageExcess.setText(f'{self.currencySymbol}0.00')
+        self.labelComboShortageExcess.setText(f'{self.currencySymbol}0.00')
         
         self.loading.close()
 
@@ -608,8 +608,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
             payment = self.pointsPayment
             change = float(self.labelPointsShortageExcess.text().replace(self.currencySymbol, ''))
         if paymentType == 'HYBRID':
-            payment = self.hybridPayment
-            change = float(self.labelHybridShortageExcess.text().replace(self.currencySymbol, ''))
+            payment = self.comboPayment
+            change = float(self.labelComboShortageExcess.text().replace(self.currencySymbol, ''))
             
         confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
@@ -642,7 +642,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
                 }
             }
             self.currentThread = PurchaseThread('purchaseItem', self.entry)
-            self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsHybridClickedFinished)
+            self.currentThread.finished.connect(self._handleOnPushButtonPayCashPointsComboClickedFinished)
             self.currentThread.finished.connect(self._cleanupThread)
             self.currentThread.finished.connect(self.loading.close)
             self.currentThread.start()
@@ -650,7 +650,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             
         self.lineEditCash.setFocus()
     
-    def _handleOnPushButtonPayCashPointsHybridClickedFinished(self, result):
+    def _handleOnPushButtonPayCashPointsComboClickedFinished(self, result):
         self.close()
         self.postOrder = PostOrder(self.manageSales, self.authData, result['dictData'])
         self.postOrder.show()
@@ -692,36 +692,51 @@ class InOrder(Ui_DialogInOrder, QDialog):
         grandTotal = float(self.labelGrandTotal.text().replace(self.currencySymbol, ''))
         
         self.cashPayment = self.lineEditCash.text().replace(self.currencySymbol, '')
-        print('the self.cashPayment is :', self.cashPayment)
         self.cashPayment = float(self.cashPayment if self.cashPayment else 0.0) if self.cashPayment != '.' else 0.0
         cashShortageExcess = self.cashPayment - grandTotal
         
-        self.labelCashPayment.setText(f"{self.currencySymbol}{self.cashPayment}")
-        self.labelCashShortageExcess.setText(f"{self.currencySymbol}{cashShortageExcess}")
+        self.labelCashPayment.setText(f"{self.currencySymbol}{self.cashPayment:.2f}")
+        self.labelCashShortageExcess.setText(f"{self.currencySymbol}{cashShortageExcess:.2f}")
         
         self.pushButtonPayCash.setEnabled(self.cashPayment >= grandTotal)
         
         if orderMember:
-            self.pointsPayment = orderMember['points']
-            self.hybridPayment = self.cashPayment + self.pointsPayment
-            pointsShortageExcess = self.pointsPayment - grandTotal
-            hybridShortageExcess = self.hybridPayment - grandTotal
+            self.labelPoints.show()
+            self.labelCombo.show()
+            self.labelPointsPayment.show()
+            self.labelComboCashPayment.show()
+            self.labelPlusSymbol.show()
+            self.labelComboPointsPayment.show()
+            self.labelPointsShortageExcess.show()
+            self.labelComboShortageExcess.show()
             
-            self.labelPointsPayment.setText(f"{self.currencySymbol}{self.pointsPayment}")
-            self.labelHybridPayment.setText(f"{self.currencySymbol}{self.hybridPayment}")
-            self.labelPointsShortageExcess.setText(f"{self.currencySymbol}{pointsShortageExcess}")
-            self.labelHybridShortageExcess.setText(f"{self.currencySymbol}{hybridShortageExcess}")
+            self.pointsPayment = orderMember['points']
+            comboPointsPayment = min(self.pointsPayment, (grandTotal - self.cashPayment))
+            self.comboPayment = self.cashPayment + comboPointsPayment
+            pointsShortageExcess = self.pointsPayment - grandTotal
+            comboShortageExcess = self.comboPayment - grandTotal
+            
+            self.labelPointsPayment.setText(f"{self.currencySymbol}{self.pointsPayment:.2f}")
+            self.labelComboCashPayment.setText(f"{self.currencySymbol}{self.cashPayment:.2f}")
+            self.labelComboPointsPayment.setText(f"{self.currencySymbol}{comboPointsPayment:.2f}")
+            self.labelPointsShortageExcess.setText(f"{self.currencySymbol}{pointsShortageExcess:.2f}")
+            self.labelComboShortageExcess.setText(f"{self.currencySymbol}{comboShortageExcess:.2f}")
             
             self.pushButtonPayPoints.setEnabled(self.pointsPayment >= grandTotal)
-            self.pushButtonPayHybrid.setEnabled(self.hybridPayment >= grandTotal)
+            self.pushButtonPayCombo.setEnabled(self.comboPayment >= grandTotal)
             return
     
-        self.labelPointsPayment.setText('N/A')
-        self.labelHybridPayment.setText('N/A')
-        self.labelPointsShortageExcess.setText('N/A')
-        self.labelHybridShortageExcess.setText('N/A')
+        self.labelPoints.hide()
+        self.labelCombo.hide()
+        self.labelPointsPayment.hide()
+        self.labelComboCashPayment.hide()
+        self.labelPlusSymbol.hide()
+        self.labelComboPointsPayment.hide()
+        self.labelPointsShortageExcess.hide()
+        self.labelComboShortageExcess.hide()
+        
         self.pushButtonPayPoints.setEnabled(False)
-        self.pushButtonPayHybrid.setEnabled(False)
+        self.pushButtonPayCombo.setEnabled(False)
 
     def _populateTableWidgetData(self):
         orderCart = self.selectedOrder['cart']
