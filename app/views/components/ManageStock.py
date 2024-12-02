@@ -116,7 +116,7 @@ class ManageStocks(Ui_FormManageStock, QWidget):
             self.activeThreads.append(self.currentThread)
 
     def _handleOnPushButtonDeleteClickedFinished(self, result):
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         self.currentPage = 1
         self._populateTableWidgetData()
 

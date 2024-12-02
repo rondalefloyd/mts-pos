@@ -29,6 +29,14 @@ class RegisterThread(QThread):
             with postgres_db:
                 if self.function_route == 'registerProduct':
                     result = self.registerProduct(self.entry, result)
+                elif self.function_route == 'registerItem':
+                    result = self.registerItem(self.entry, result)
+                elif self.function_route == 'registerBrand':
+                    result = self.registerBrand(self.entry, result)
+                elif self.function_route == 'registerItemType':
+                    result = self.registerItemType(self.entry, result)
+                elif self.function_route == 'registerSupplier':
+                    result = self.registerSupplier(self.entry, result)
                 elif self.function_route == 'registerMember':
                     result = self.registerMember(self.entry, result)
                 elif self.function_route == 'registerPromo':
@@ -62,6 +70,15 @@ class RegisterThread(QThread):
         print('this is the register item')
         """This function is a special case. The coding structure might be different from the standard."""
         try:
+            entry['itemName'] = entry['itemName'] if entry['itemName'] != '' else '-'
+            entry['barcode'] = entry['barcode'] if entry['barcode'] != '' else '-'
+            entry['itemTypeName'] = entry['itemTypeName'] if entry['itemTypeName'] != '' else '-'
+            entry['brandName'] = entry['brandName'] if entry['brandName'] != '' else '-'
+            entry['supplierName'] = entry['supplierName'] if entry['supplierName'] != '' else '-'
+            entry['cost'] = entry['cost'] if entry['cost'] != '' else '0'
+            entry['retailPrice'] = entry['retailPrice'] if entry['retailPrice'] != '' else '0'
+            entry['wholesalePrice'] = entry['wholesalePrice'] if entry['wholesalePrice'] != '' else '0'
+            
             itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
             brand = Brand.select().where(Brand.BrandName == entry['brandName'])
             supplier = Supplier.select().where(Supplier.SupplierName == entry['supplierName'])
@@ -131,6 +148,12 @@ class RegisterThread(QThread):
 
     def registerMember(self, entry=None, result=None):
         try:
+            entry['organizationName'] = entry['organizationName'] if entry['organizationName'] != '' else '-'
+            entry['memberName'] = entry['memberName'] if entry['memberName'] != '' else '-'
+            entry['address'] = entry['address'] if entry['address'] != '' else '-'
+            entry['mobileNumber'] = entry['mobileNumber'] if entry['mobileNumber'] != '' else '-'
+            entry['points'] = entry['points'] if entry['points'] != '' else '0'
+            
             member = Member.select().where(
                 (Member.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
                 (Member.MemberName == entry['memberName']) &
@@ -164,6 +187,10 @@ class RegisterThread(QThread):
         
     def registerPromo(self, entry=None, result=None):
         try:
+            entry['promoName'] = entry['promoName'] if entry['promoName'] != '' else '-'
+            entry['discountRate'] = entry['discountRate'] if entry['discountRate'] != '' else '0'
+            entry['description'] = entry['description'] if entry['description'] != '' else '-'
+            
             promo = Promo.select().where(
                 (Promo.PromoName == entry['promoName']) &
                 (Promo.DiscountRate == entry['discountRate']) &
@@ -190,6 +217,13 @@ class RegisterThread(QThread):
                        
     def registerItem(self, entry=None, result=None):
         try:
+            entry['itemName'] = entry['itemName'] if entry['itemName'] != '' else '-'
+            entry['barcode'] = entry['barcode'] if entry['barcode'] != '' else '-'
+            entry['itemTypeName'] = entry['itemTypeName'] if entry['itemTypeName'] != '' else '-'
+            entry['brandName'] = entry['brandName'] if entry['brandName'] != '' else '-'
+            entry['supplierName'] = entry['supplierName'] if entry['supplierName'] != '' else '-'
+            entry['salesGroupName'] = entry['salesGroupName'] if entry['salesGroupName'] != '' else '-'
+            
             item = Item.select().where(
                 (Item.Barcode == entry['barcode']) &
                 (Item.ItemTypeId == ItemType.get_or_none(ItemType.ItemTypeName == entry['itemTypeName']).Id) &
@@ -222,6 +256,8 @@ class RegisterThread(QThread):
                
     def registerBrand(self, entry=None, result=None):
         try:
+            entry['brandName'] = entry['brandName'] if entry['brandName'] != '' else '-'
+            
             brand = Brand.select().where((Brand.BrandName == entry['brandName']))
             
             if brand.exists():
@@ -240,6 +276,8 @@ class RegisterThread(QThread):
                        
     def registerItemType(self, entry=None, result=None):
         try:
+            entry['itemTypeName'] = entry['itemTypeName'] if entry['itemTypeName'] != '' else '-'
+            
             itemType = ItemType.select().where((ItemType.ItemTypeName == entry['itemTypeName']))
             
             if itemType.exists():
@@ -258,6 +296,8 @@ class RegisterThread(QThread):
                        
     def registerSupplier(self, entry=None, result=None):
         try:
+            entry['supplierName'] = entry['supplierName'] if entry['supplierName'] != '' else '-'
+            
             supplier = Supplier.select().where((Supplier.SupplierName == entry['supplierName']))
             
             if supplier.exists():
@@ -276,6 +316,11 @@ class RegisterThread(QThread):
         
     def registerReward(self, entry=None, result=None):
         try:
+            entry['rewardName'] = entry['rewardName'] if entry['rewardName'] != '' else '-'
+            entry['points'] = entry['points'] if entry['points'] != '' else '0'
+            entry['target'] = entry['target'] if entry['target'] != '' else '0'
+            entry['description'] = entry['description'] if entry['description'] != '' else '-'
+            
             reward = Reward.select().where(
                 (Reward.RewardName == entry['rewardName']) &
                 (Reward.Points == entry['points']) &
@@ -288,8 +333,8 @@ class RegisterThread(QThread):
             
             reward = Reward.create(
                 RewardName=entry['rewardName'],
-                Points=entry['points'],
-                Target=entry['target'],
+                Points=entry['points'] if entry['points'] != '' else 0,
+                Target=entry['target'] if entry['target'] != '' else 0,
                 Description=entry['description'],
             )
             
@@ -304,6 +349,11 @@ class RegisterThread(QThread):
         
     def registerUser(self, entry=None, result=None):
         try:
+            entry['userName'] = entry['userName'] if entry['userName'] != '' else '-'
+            entry['password'] = entry['password'] if entry['password'] != '' else '-'
+            entry['fullName'] = entry['fullName'] if entry['fullName'] != '' else '-'
+            entry['mobileNumber'] = entry['mobileNumber'] if entry['mobileNumber'] != '' else '-'
+            
             user = User.select().where(
                 (User.OrganizationId == Organization.get_or_none(Organization.OrganizationName == entry['organizationName']).Id) &
                 (User.UserName == entry['userName']) &
@@ -345,6 +395,11 @@ class RegisterThread(QThread):
         
     def registerOrganization(self, entry=None, result=None):
         try:
+            entry['taxId'] = entry['taxId'] if entry['taxId'] != '' else '-'
+            entry['organizationName'] = entry['organizationName'] if entry['organizationName'] != '' else '-'
+            entry['address'] = entry['address'] if entry['address'] != '' else '-'
+            entry['mobileNumber'] = entry['mobileNumber'] if entry['mobileNumber'] != '' else '-'
+
             organization = Organization.select().where(
                 (Organization.TaxId == entry['taxId']) &
                 (Organization.OrganizationName == entry['organizationName']) &

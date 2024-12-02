@@ -231,7 +231,7 @@ QTabWidget::pane {
 QFrame#frameRegister {
     border: 1px solid #dfdfdf;
     background-color: #fff;
-    max-width: 350px;
+    max-width: 400px;
 }
 
 QWidget#scrollAreaWidgetContents {

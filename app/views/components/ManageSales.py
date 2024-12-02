@@ -105,7 +105,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
 
     def _handleOnLineEditBarcodeReturnPressedFinished(self, result):
         if len(result['listData']) <= 0:
-            QMessageBox.information(self, 'Success', 'Item not found')
+            QMessageBox.information(self, 'Information', 'Item not found')
         
         for data in result['listData']:
             self._populateOrderItem(data)
@@ -663,7 +663,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.activeThreads.append(self.currentThread)
 
     def _handlePrintReceiptFinished(self, result):
-        QMessageBox.information(self, 'Success', f"Receipt printed")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
 
     def _populateSelectedMemberFields(self):
         orderMember = self.selectedOrder['member']

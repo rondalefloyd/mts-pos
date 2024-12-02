@@ -60,7 +60,7 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         self.dateEditEndDate.setMinimumDate(date.addDays(1))
     
     def _handleOnCheckBoxTrackInventoryStateChangedFinished(self, result):
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         
     def _onCheckBoxApplyPromoStateChanged(self):
         self.dateEditEffectiveDate.setEnabled(self.checkBoxApplyPromo.isChecked() is False)
@@ -180,7 +180,6 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
             'promoName': self.comboBoxPromoName.currentText(),
             'discountRate': self.lineEditDiscountRate.text(),
             'discount': self.lineEditDiscount.text(),
-            'price': self.lineEditPrice.text(),
             'newPrice': self.lineEditNewPrice.text(),
             'startDate': self.dateEditStartDate.text(),
             'endDate': self.dateEditEndDate.text(),
@@ -198,7 +197,7 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         self.close()
         return
         

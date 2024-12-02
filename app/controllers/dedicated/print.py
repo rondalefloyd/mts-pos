@@ -109,7 +109,9 @@ class PrintThread(QThread):
                             self.running.emit(dictData)
             
             # Save the modified document
-            output_path = os.path.abspath('app/utils/output.docx')
+            receiptsDIR = f'C:/Users/{os.getlogin()}/Documents/POS/receipts'
+            os.makedirs(receiptsDIR, exist_ok=True) 
+            output_path = os.path.abspath(f'{receiptsDIR}/output.docx')
             document.save(output_path)
             
             # Print the document (Windows-specific)
@@ -123,7 +125,7 @@ class PrintThread(QThread):
             pythoncom.CoInitialize()
             
             result['success'] = True
-            result['message'] = 'Receipt generated and sent to printer successfully'
+            result['message'] = f"Receipt generated and sent to printer successfully.\nReceipts can be found at: {receiptsDIR}"
             result['dictData'] = placeholders  # Optionally return the placeholders and their values
             return result
 

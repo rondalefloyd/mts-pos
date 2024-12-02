@@ -96,13 +96,13 @@ class RemoveThread(QThread):
             itemPrice = ItemPrice.get_or_none(ItemPrice.ItemId == entry['id'])
             
             if itemPrice is not None:
-                result['message'] = 'Item is being used. Remove the prices that uses this first.'
+                result['message'] = 'Unable to delete Item due to dependent Items'
                 return result
             
             itemSold = ItemSold.get_or_none(ItemSold.ItemId == entry['id'])
                 
             if itemSold is not None:
-                result['message'] = 'Item is being used. Remove the transactions that uses this first.'
+                result['message'] = 'Unable to delete Item due to dependent Items'
                 return result
                 
             item = item.get_or_none().delete_instance()
@@ -128,7 +128,7 @@ class RemoveThread(QThread):
             item = Item.get_or_none(Item.BrandId == entry['id'])
             
             if item is not None:
-                result['message'] = 'Brand is being used. Remove the items that uses this first.'
+                result['message'] = 'Unable to delete Brand due to dependent Items'
                 return result
                 
             brand = brand.get_or_none().delete_instance()
@@ -154,7 +154,7 @@ class RemoveThread(QThread):
             item = Item.get_or_none(Item.ItemTypeId == entry['id'])
             
             if item is not None:
-                result['message'] = 'ItemType is being used. Remove the items that uses this first.'
+                result['message'] = 'Unable to delete ItemType due to dependent Items'
                 return result
                 
             itemType = itemType.get_or_none().delete_instance()
@@ -180,7 +180,7 @@ class RemoveThread(QThread):
             item = Item.get_or_none(Item.SupplierId == entry['id'])
             
             if item is not None:
-                result['message'] = 'Supplier is being used. Remove the items that uses this first.'
+                result['message'] = 'Unable to delete Supplier due to dependent Items'
                 return result
             
             supplier = supplier.get_or_none().delete_instance()

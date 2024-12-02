@@ -13,3 +13,10 @@ class Loading(Ui_FormLoading, QDialog):
         self.setupUi(self)
         
         self.setWindowFlags(Qt.FramelessWindowHint)
+        
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            event.ignore()
+            return
+        
+        event.accept() # for pressing keys

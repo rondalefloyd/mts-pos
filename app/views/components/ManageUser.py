@@ -97,7 +97,7 @@ class ManageUsers(Ui_FormManageUser, QWidget):
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         self._populateTableWidgetData()
         return
         
@@ -169,7 +169,7 @@ class ManageUsers(Ui_FormManageUser, QWidget):
             self.activeThreads.append(self.currentThread)
 
     def _handleOnPushButtonDeleteClickedFinished(self, result):
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         self.currentPage = 1
         self._populateTableWidgetData()
 

@@ -69,6 +69,15 @@ class EditThread(QThread):
         
     def editProductRelatedDataById(self, entry=None, result=None):
         try:
+            entry['itemName'] = entry['itemName'] if entry['itemName'] != '' else '-'
+            entry['barcode'] = entry['barcode'] if entry['barcode'] != '' else '-'
+            entry['itemTypeName'] = entry['itemTypeName'] if entry['itemTypeName'] != '' else '-'
+            entry['brandName'] = entry['brandName'] if entry['brandName'] != '' else '-'
+            entry['supplierName'] = entry['supplierName'] if entry['supplierName'] != '' else '-'
+            entry['salesGroupName'] = entry['salesGroupName'] if entry['salesGroupName'] != '' else '-'
+            entry['cost'] = entry['cost'] if entry['cost'] != '' else '0'
+            entry['price'] = entry['price'] if entry['price'] != '' else '0'
+            
             itemType = ItemType.select().where(ItemType.ItemTypeName == entry['itemTypeName'])
             brand = Brand.select().where(Brand.BrandName == entry['brandName'])
             supplier = Supplier.select().where(Supplier.SupplierName == entry['supplierName'])
@@ -151,6 +160,11 @@ class EditThread(QThread):
         
     def editMemberDataById(self, entry=None, result=None):
         try:
+            entry['memberName'] = entry['memberName'] if entry['memberName'] != '' else '-'
+            entry['address'] = entry['address'] if entry['address'] != '' else '-'
+            entry['mobileNumber'] = entry['mobileNumber'] if entry['mobileNumber'] != '' else '-'
+            entry['points'] = entry['points'] if entry['points'] != '' else '0'
+            
             member = Member.get_or_none(Member.Id == entry['id'])
             member.MemberName = entry['memberName']
             member.BirthDate = entry['birthDate']
@@ -171,6 +185,10 @@ class EditThread(QThread):
         
     def editPromoDataById(self, entry=None, result=None):
         try:
+            entry['promoName'] = entry['promoName'] if entry['promoName'] != '' else '-'
+            entry['discountRate'] = entry['discountRate'] if entry['discountRate'] != '' else '0'
+            entry['description'] = entry['description'] if entry['description'] != '' else '-'
+            
             promo = Promo.get_or_none(Promo.Id == entry['id'])
             promo.PromoName = entry['promoName']
             promo.DiscountRate = entry['discountRate']
@@ -189,6 +207,8 @@ class EditThread(QThread):
                 
     def editItemTypeDataById(self, entry=None, result=None):
         try:
+            entry['itemTypeName'] = entry['itemTypeName'] if entry['itemTypeName'] != '' else '-'
+            
             itemType = ItemType.get_or_none(ItemType.Id == entry['id'])
             itemType.ItemTypeName = entry['itemTypeName']
             itemType.UpdateTs = datetime.now()
@@ -205,6 +225,8 @@ class EditThread(QThread):
                 
     def editBrandDataById(self, entry=None, result=None):
         try:
+            entry['brandName'] = entry['brandName'] if entry['brandName'] != '' else '-'
+            
             brand = Brand.get_or_none(Brand.Id == entry['id'])
             brand.BrandName = entry['brandName']
             brand.UpdateTs = datetime.now()
@@ -221,6 +243,8 @@ class EditThread(QThread):
                 
     def editSupplierDataById(self, entry=None, result=None):
         try:
+            entry['supplierName'] = entry['supplierName'] if entry['supplierName'] != '' else '-'
+            
             supplier = Supplier.get_or_none(Supplier.Id == entry['id'])
             supplier.SupplierName = entry['supplierName']
             supplier.UpdateTs = datetime.now()
@@ -237,6 +261,12 @@ class EditThread(QThread):
                 
     def editItemDataById(self, entry=None, result=None):
         try:
+            entry['itemName'] = entry['itemName'] if entry['itemName'] != '' else '-'
+            entry['barcode'] = entry['barcode'] if entry['barcode'] != '' else '-'
+            entry['itemTypeName'] = entry['itemTypeName'] if entry['itemTypeName'] != '' else '-'
+            entry['brandName'] = entry['brandName'] if entry['brandName'] != '' else '-'
+            entry['supplierName'] = entry['supplierName'] if entry['supplierName'] != '' else '-'
+            
             item = Item.get_or_none(Item.Id == entry['id'])
             item.ItemName = entry['itemName']
             item.Barcode = entry['barcode']
@@ -258,6 +288,11 @@ class EditThread(QThread):
         
     def editRewardDataById(self, entry=None, result=None):
         try:
+            entry['rewardName'] = entry['rewardName'] if entry['rewardName'] != '' else '-'
+            entry['points'] = entry['points'] if entry['points'] != '' else '0'
+            entry['target'] = entry['target'] if entry['target'] != '' else '0'
+            entry['description'] = entry['description'] if entry['description'] != '' else '-'
+            
             reward = Reward.get_or_none(Reward.Id == entry['id'])
             reward.RewardName = entry['rewardName']
             reward.Points = entry['points']
@@ -277,6 +312,9 @@ class EditThread(QThread):
 
     def editStockDataById(self, entry=None, result=None):
         try:
+            entry['onHand'] = entry['onHand'] if entry['onHand'] != '' else '0'
+            entry['available'] = entry['available'] if entry['available'] != '' else '0'
+            
             stock = Stock.get_or_none(Stock.Id == entry['id'])
             stock.OnHand = entry['onHand']
             stock.Available = entry['available']
@@ -294,6 +332,11 @@ class EditThread(QThread):
 
     def editOrganizationDataById(self, entry=None, result=None):
         try:
+            entry['taxId'] = entry['taxId'] if entry['taxId'] != '' else '-'
+            entry['organizationName'] = entry['organizationName'] if entry['organizationName'] != '' else '-'
+            entry['address'] = entry['address'] if entry['address'] != '' else '-'
+            entry['mobileNumber'] = entry['mobileNumber'] if entry['mobileNumber'] != '' else '-'
+            
             organization = Organization.get_or_none(Organization.Id == entry['id'])
             organization.TaxId = entry['taxId']
             organization.OrganizationName = entry['organizationName']
@@ -314,6 +357,10 @@ class EditThread(QThread):
         
     def editUserDataById(self, entry=None, result=None):
         try:
+            entry['userName'] = entry['userName'] if entry['userName'] != '' else '-'
+            entry['fullName'] = entry['fullName'] if entry['fullName'] != '' else '-'
+            entry['mobileNumber'] = entry['mobileNumber'] if entry['mobileNumber'] != '' else '-'
+            
             user = User.get_or_none(User.Id == entry['id'])
             user.UserName = entry['userName']
             user.Password = entry['password']

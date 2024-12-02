@@ -52,7 +52,7 @@ class VoidItemSold(Ui_DialogVoidItemSold, QDialog):
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         self.close()
         return
         

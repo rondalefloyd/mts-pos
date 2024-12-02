@@ -98,7 +98,7 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         self._populateTableWidgetData()
         return
         
@@ -167,7 +167,7 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
         
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         self.currentPage = 1
         self._populateTableWidgetData()
 

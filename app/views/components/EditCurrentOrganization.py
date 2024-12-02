@@ -60,7 +60,7 @@ class EditCurrentOrganization(Ui_DialogEditCurrentOrganization, QDialog):
             QMessageBox.critical(self, 'Error', f"{result['message']}")
             return
             
-        QMessageBox.information(self, 'Success', f"{result['message']}")
+        QMessageBox.information(self, 'Information', f"{result['message']}")
         self.windowEvent = EVENT_START_LOGIN
         self.close()
         return
