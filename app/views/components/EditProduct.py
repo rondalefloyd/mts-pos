@@ -8,6 +8,7 @@ from app.utils.global_variables import *
 from app.views.templates.EditProduct_ui import Ui_DialogEditProduct
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.controllers.dedicated.fetch import FetchThread
 from app.controllers.dedicated.remove import RemoveThread
 from app.controllers.dedicated.edit import EditThread
@@ -145,8 +146,8 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         discount = price * discountRate
         newPrice = price - discount
 
-        self.lineEditDiscount.setText(f"{discount:.2f}")
-        self.lineEditNewPrice.setText(f"{newPrice:.2f}")
+        self.lineEditDiscount.setText(f"{billFormat(discount)}")
+        self.lineEditNewPrice.setText(f"{billFormat(newPrice)}")
         
         if self.selectedData['promoName'] is not None:
             originalPrice = float(self.selectedData['price']) + float(self.lineEditDiscount.text())

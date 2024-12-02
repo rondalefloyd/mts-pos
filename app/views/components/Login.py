@@ -9,6 +9,7 @@ from app.utils.global_variables import *
 from app.views.templates.Login_ui import Ui_DialogLogin
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.controllers.dedicated.authenticate import AuthenticateThread
 
 # class definition

@@ -11,6 +11,7 @@ from app.utils.global_variables import *
 from app.views.templates.ManageReceipt_ui import Ui_FormManageReceipt
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.views.components.ManageActionButton import ManageActionButton
 from app.views.components.ViewReceipt import ViewReceipt
 from app.controllers.dedicated.fetch import FetchThread
@@ -103,9 +104,9 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
                 QTableWidgetItem(f"{data['userName']}"),
                 QTableWidgetItem(f"{data['memberName']}"),
                 QTableWidgetItem(f"{data['dateValue']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['grandtotal']:.2f}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['payment']:.2f}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['billing']['change']:.2f}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['billing']['grandtotal'])}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['billing']['payment'])}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['billing']['change'])}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

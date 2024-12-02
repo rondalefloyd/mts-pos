@@ -8,6 +8,7 @@ from app.utils.global_variables import *
 from app.views.templates.EditStock_ui import Ui_DialogEditStock
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditStock(Ui_DialogEditStock, QDialog):

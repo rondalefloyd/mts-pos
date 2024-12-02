@@ -11,6 +11,7 @@ from app.utils.global_variables import *
 from app.views.templates.ManagePromo_ui import Ui_FormManagePromo
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.views.components.EditPromo import EditPromo
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread
@@ -127,7 +128,7 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['promoName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['discountRate']:.2f}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['discountRate'])}"),
                 QTableWidgetItem(f"{data['description']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]

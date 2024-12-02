@@ -10,6 +10,7 @@ from app.utils.global_variables import *
 from app.views.templates.ManageProduct_ui import Ui_FormManageProduct
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.views.components.LoadData import LoadData
 from app.views.components.EditProduct import EditProduct
 from app.views.components.ManageActionButton import ManageActionButton
@@ -220,9 +221,9 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
                 QTableWidgetItem(f"{data['brandName']}"),
                 QTableWidgetItem(f"{data['supplierName']}"),
                 QTableWidgetItem(f"{data['salesGroupName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['cost']:.2f}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['price']:.2f}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['discount']:.2f}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['cost'])}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['price'])}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['discount'])}"),
                 QTableWidgetItem(f"{data['effectiveDate']}"),
                 QTableWidgetItem(f"{data['promoName']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),

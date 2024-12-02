@@ -8,6 +8,7 @@ from app.utils.global_variables import *
 from app.views.templates.EditSupplier_ui import Ui_DialogEditSupplier
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditSupplier(Ui_DialogEditSupplier, QDialog):

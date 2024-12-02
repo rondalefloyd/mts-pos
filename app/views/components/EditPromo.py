@@ -8,6 +8,7 @@ from app.utils.global_variables import *
 from app.views.templates.EditPromo_ui import Ui_DialogEditPromo
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.controllers.dedicated.edit import EditThread
 
 class EditPromo(Ui_DialogEditPromo, QDialog):

@@ -12,6 +12,7 @@ from app.utils.global_variables import *
 from app.views.templates.ManageMember_ui import Ui_FormManageMember
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.views.components.EditMember import EditMember
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread
@@ -145,7 +146,7 @@ class ManageMembers(Ui_FormManageMember, QWidget):
                 QTableWidgetItem(f"{data['birthDate']}"),
                 QTableWidgetItem(f"{data['address']}"),
                 QTableWidgetItem(f"{data['mobileNumber']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['points']:.2f}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['points'])}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
             

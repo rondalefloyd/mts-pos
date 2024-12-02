@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 import os, sys, logging
 sys.path.append(os.path.abspath(''))  # required to change the default path
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 
 class QPushButton(QPushButton):
     def __init__(self, parent=None):

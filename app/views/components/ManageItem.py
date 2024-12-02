@@ -11,6 +11,7 @@ from app.utils.global_variables import *
 from app.views.templates.ManageItem_ui import Ui_FormManageItem
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.views.components.EditItem import EditItem
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread

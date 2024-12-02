@@ -10,6 +10,7 @@ from app.utils.global_variables import *
 from app.views.templates.ManageReward_ui import Ui_FormManageReward
 from app.views.components.Loading import Loading
 from app.utils.helpers.validator import *
+from app.utils.helpers.formatter import *
 from app.views.components.EditReward import EditReward
 from app.views.components.ManageActionButton import ManageActionButton
 from app.controllers.dedicated.fetch import FetchThread
@@ -129,8 +130,8 @@ class ManageRewards(Ui_FormManageReward, QWidget):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
                 QTableWidgetItem(f"{data['rewardName']}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['points']:.2f}"),
-                QTableWidgetItem(f"{self.currencySymbol}{data['target']:.2f}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['points'])}"),
+                QTableWidgetItem(f"{self.currencySymbol}{billFormat(data['target'])}"),
                 QTableWidgetItem(f"{data['description']}"),
                 QTableWidgetItem(f"{data['updateTs']}"),
             ]
