@@ -843,7 +843,6 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.activeThreads = []
 
         self._populateCurrencySymbol()
-        self._populatePostOrderSummary()
         
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
 
@@ -858,15 +857,13 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         
     def _handlePopulateCurrencySymbolFinished(self, result):
         self.currencySymbol = result['dictData']['config']['currency_symbol']
-        self.loading.close()
-
-    def _populatePostOrderSummary(self):
+        
         billing = self.selectedOrder['billing']
+        self.labelPayment.setText(f"{billFormat(self.currencySymbol, billing['payment'])}")
+        self.labelGrandTotal.setText(f"{billFormat(self.currencySymbol, billing['grandtotal'])}")
+        self.labelChange.setText(f"{billFormat(self.currencySymbol, billing['change'])}")
         
-        self.labelPayment.setText(f"{billFormat('', billing['payment'])}")
-        self.labelGrandTotal.setText(f"{billFormat('', billing['grandtotal'])}")
-        self.labelChange.setText(f"{billFormat('', billing['change'])}")
-        
+        self.loading.close()
 
     def _onPushButtonCloseClicked(self):
         self.manageSales.onTabWidgetOrderTabCloseRequested(

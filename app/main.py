@@ -29,20 +29,7 @@ def _startApp():
         
     app = QApplication(sys.argv)
     
-    qssFilePaths = [
-        # os.path.abspath('app/views/assets/styles/experimental.qss'),
-        os.path.abspath('app/views/assets/styles/dedicated.qss'),
-        # add a qss if you want to apply a separate qss
-    ]
-    
-    # Read and concatenate QSS files
-    styleSheet = ""
-    for filePath in qssFilePaths:
-        with open(filePath, 'r') as file:
-            styleSheet += file.read() + "\n"
-    
-    # Apply the concatenated QSS to the application
-    app.setStyleSheet(styleSheet)
+    _setAppStyleSheet(app)
     
     windowEvent = EVENT_START_LOGIN
     authData = None
@@ -71,18 +58,20 @@ def _startApp():
         else:
             break
                 
-    print('app has stopped running')    
+    print('app has stopped running') 
+
+def _setAppStyleSheet(app):
+    qssFilePaths = [
+        os.path.abspath('app/views/assets/styles/dedicated.qss'),
+    ]
+    
+    styleSheet = ""
+    for filePath in qssFilePaths:
+        with open(filePath, 'r') as file:
+            styleSheet += file.read() + "\n"
+    
+    app.setStyleSheet(styleSheet)   
     
 if __name__ == "__main__":
     _checkDatabaseConnection()
     _startApp()
-    
-# TODO: fix qtablewidget items' auto sizing
-# TODO: implement infra where theres a master and slave server (requires two devices)
-# TODO: add design to the UI
-# TODO: write a cleaner version of the managesales codes especially the data entries object etc.
-# TODO: add populate combobox in the components that doesnt have it
-# TODO: check the variable names
-# TODO: set clear button enabled for all line edit
-# TODO: fix the sizes of the QTableWidgetItems in all table widgets
-# TODO: add peso sign in each bill formatted labels
