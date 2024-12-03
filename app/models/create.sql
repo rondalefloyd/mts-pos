@@ -151,6 +151,8 @@ CREATE TABLE "ItemSold" (
     "ReceiptId" INTEGER REFERENCES "Receipt"("Id") ON DELETE SET NULL, 
     "ItemPriceId" INTEGER REFERENCES "Item"("Id") ON DELETE SET NULL, 
     "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE SET NULL, 
+    "UserId" INTEGER REFERENCES "User"("Id") ON DELETE SET NULL, 
+    "MemberId" INTEGER REFERENCES "Member"("Id") ON DELETE SET NULL, 
     "Quantity" INTEGER, 
     "Total" FLOAT, 
     "VoidReason" VARCHAR(255), 

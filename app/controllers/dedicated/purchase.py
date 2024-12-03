@@ -81,6 +81,8 @@ class PurchaseThread(QThread):
                     ReceiptId=receipt.Id,
                     ItemPriceId=item['itemPriceId'],
                     DateId=dateId,
+                    UserId=userId,
+                    MemberId=memberId,
                     Quantity=item['quantity'],
                     Total=item['total'],
                     StockBypass=item['stockBypass'],

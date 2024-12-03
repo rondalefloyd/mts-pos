@@ -189,6 +189,8 @@ class ItemSold(BaseModel):
     ReceiptId = ForeignKeyField(Receipt, on_delete='CASCADE', column_name='ReceiptId', null=True)
     ItemPriceId = ForeignKeyField(Item, on_delete='CASCADE', column_name='ItemPriceId', null=True)
     DateId = ForeignKeyField(Date, on_delete='CASCADE', column_name='DateId', null=True)
+    UserId = ForeignKeyField(User, on_delete='CASCADE', column_name='UserId', null=True)
+    MemberId = ForeignKeyField(Member, on_delete='CASCADE', column_name='MemberId', null=True)
     Quantity = IntegerField(null=True)
     Total = FloatField(null=True)
     VoidReason = CharField(max_length=255, null=True)
