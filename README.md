@@ -62,7 +62,7 @@
 └── setup.py
 ```
 
-# NEW INSTRUCTIONS
+# HOW TO SETUP DEVELOPMENT
 install 'Qt for Python' extension for easy compilation of ui files
 
 to setup device as the db server, run setup.py
@@ -74,14 +74,7 @@ pip install -r requirements.txt -> to install all collected requirements/librari
 if new libraries were installed, always run 'pip freeze > requirements.txt' after to avoid conflicts for other venv
 
 
-pyqt5
-peewee
-Cython
-ipython
-dotenv
-pandas
-pywin32
-python-docx
+pyqt5 peewee python-dotenv pandas pywin32 python-docx
 
 Python 3.12.6
 
@@ -92,3 +85,17 @@ python app\views\templates\generated\converter.py
 
 
 
+
+# HOW TO SETUP SERVER:
+1. install Python v3.12.6 (or above)
+2. install PostgreSQL to create a database server
+3. install Google Drive desktop. Set it's drive letter to G:
+3. install MS Word (if not installed yet)
+3. clone the git repo of the application
+```git clone https://github.com/rondalefloyd/mts-pos.git```
+4. install the application's requirements
+```pip install -r requirements.txt```
+5. setup the .env and .env.development
+6. run setup.py (follow the instructions) located at:
+```app\dbsetup\setup.py```
+7. create a database backup automation by going to Task Scheduler and importing the budp.bat file.
