@@ -403,11 +403,11 @@ class PreOrder(Ui_FormPreOrder, QWidget):
     def _handlePopulateCurrencySymbolFinished(self, result):
         self.currencySymbol = result['dictData']['config']['currency_symbol']
         
-        self.labelSubtotal.setText(f"0.00")
-        self.labelDiscount.setText(f"0.00")
-        self.labelTax.setText(f"0.00")
-        self.labelGrandTotal.setText(f"0.00")
-        self.pushButtonPay.setText(f"Pay 0.00")
+        self.labelSubtotal.setText(f"{self.currencySymbol}0.00")
+        self.labelDiscount.setText(f"{self.currencySymbol}0.00")
+        self.labelTax.setText(f"{self.currencySymbol}0.00")
+        self.labelGrandTotal.setText(f"{self.currencySymbol}0.00")
+        self.pushButtonPay.setText(f"Pay {self.currencySymbol}0.00")
         
         self.loading.close()
 
@@ -562,20 +562,20 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pointsPayment = 0.00
         self.comboPayment = 0.00
         
-        self.labelSubtotal.setText(f'0.00')
-        self.labelDiscount.setText(f'0.00')
-        self.labelTax.setText(f'0.00')
-        self.labelCustomDiscount.setText(f'0.00')
-        self.labelGrandTotal.setText(f'0.00')
+        self.labelSubtotal.setText(f'{self.currencySymbol}0.00')
+        self.labelDiscount.setText(f'{self.currencySymbol}0.00')
+        self.labelTax.setText(f'{self.currencySymbol}0.00')
+        self.labelCustomDiscount.setText(f'{self.currencySymbol}0.00')
+        self.labelGrandTotal.setText(f'{self.currencySymbol}0.00')
         
-        self.labelCashPayment.setText(f'0.00')
-        self.labelPointsPayment.setText(f'0.00')
-        self.labelComboCashPayment.setText(f'0.00')
-        self.labelComboPointsPayment.setText(f'0.00')
+        self.labelCashPayment.setText(f'{self.currencySymbol}0.00')
+        self.labelPointsPayment.setText(f'{self.currencySymbol}0.00')
+        self.labelComboCashPayment.setText(f'{self.currencySymbol}0.00')
+        self.labelComboPointsPayment.setText(f'{self.currencySymbol}0.00')
         
-        self.labelCashShortageExcess.setText(f'0.00')
-        self.labelPointsShortageExcess.setText(f'0.00')
-        self.labelComboShortageExcess.setText(f'0.00')
+        self.labelCashShortageExcess.setText(f'{self.currencySymbol}0.00')
+        self.labelPointsShortageExcess.setText(f'{self.currencySymbol}0.00')
+        self.labelComboShortageExcess.setText(f'{self.currencySymbol}0.00')
         
         self._populateCurrencySymbol()
         self._populateSelectedMemberFields()
@@ -617,20 +617,33 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.loading.close()
 
     def _processOrder(self, paymentType):
+        subtotal = float(self.labelSubtotal.text().replace(self.currencySymbol, ''))
+        discount = float(self.labelDiscount.text().replace(self.currencySymbol, ''))
+        tax = float(self.labelTax.text().replace(self.currencySymbol, ''))
+        grandtotal = float(self.labelGrandTotal.text().replace(self.currencySymbol, ''))
+
+        cashPayment = 0.0
+        pointsPayment = 0.0
         payment = 0.00
         change = 0.00
         
         if paymentType == 'CASH':
+            cashPayment = self.cashPayment
             payment = self.cashPayment
             change = float(self.labelCashShortageExcess.text().replace(self.currencySymbol, ''))
+            confirm = QMessageBox.warning(self, 'Confirm', f"Cash amount tendered is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if paymentType == 'POINTS':
+            pointsPayment = self.pointsPayment
             payment = self.pointsPayment
             change = float(self.labelPointsShortageExcess.text().replace(self.currencySymbol, ''))
+            confirm = QMessageBox.warning(self, 'Confirm', f"Points amount tendered is <b>{grandtotal}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if paymentType == 'COMBO':
+            cashPayment = self.cashPayment
+            pointsPayment = float(self.labelGrandTotal.text().replace(self.currencySymbol, '')) - self.cashPayment
             payment = self.comboPayment
             change = float(self.labelComboShortageExcess.text().replace(self.currencySymbol, ''))
+            confirm = QMessageBox.warning(self, 'Confirm', f"Combo amount tendered is <b>{billFormat(self.currencySymbol, cashPayment)} (cash) + {billFormat(self.currencySymbol, pointsPayment)} (points)</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             
-        confirm = QMessageBox.warning(self, 'Confirm', f"Payment amount is <b>{payment}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if confirm == QMessageBox.StandardButton.Yes:
             orderMember = self.selectedOrder['member']
@@ -650,13 +663,13 @@ class InOrder(Ui_DialogInOrder, QDialog):
                     'widget': self.selectedOrder['widget'],
                 },
                 'billing': {
-                    'subtotal': float(self.labelSubtotal.text().replace(self.currencySymbol, '')),
-                    'discount': float(self.labelDiscount.text().replace(self.currencySymbol, '')),
-                    'tax': float(self.labelTax.text().replace(self.currencySymbol, '')),
-                    'grandtotal': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')),
+                    'subtotal': subtotal,
+                    'discount': discount,
+                    'tax': tax,
+                    'grandtotal': grandtotal,
                     'paymentType': paymentType,
-                    'cashPaid': self.cashPayment,
-                    'pointsPaid': float(self.labelGrandTotal.text().replace(self.currencySymbol, '')) - self.cashPayment,
+                    'cashPaid': cashPayment,
+                    'pointsPaid': pointsPayment,
                     'payment': payment,
                     'change': change,
                 }
@@ -730,7 +743,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.labelPointsShortageExcess.show()
             self.labelComboShortageExcess.show()
             
-            self.pointsPayment = orderMember['points']
+            self.pointsPayment = min(grandTotal, orderMember['points'])
             comboPointsPayment = min(self.pointsPayment, (grandTotal - self.cashPayment))
             self.comboPayment = self.cashPayment + comboPointsPayment
             pointsShortageExcess = self.pointsPayment - grandTotal
