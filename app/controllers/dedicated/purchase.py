@@ -80,6 +80,7 @@ class PurchaseThread(QThread):
                 itemSold = ItemSold.create(
                     ReceiptId=receipt.Id,
                     ItemPriceId=item['itemPriceId'],
+                    DateId=dateId,
                     Quantity=item['quantity'],
                     Total=item['total'],
                     StockBypass=item['stockBypass'],

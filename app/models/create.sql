@@ -150,6 +150,7 @@ CREATE TABLE "ItemSold" (
     "Id" SERIAL PRIMARY KEY, 
     "ReceiptId" INTEGER REFERENCES "Receipt"("Id") ON DELETE SET NULL, 
     "ItemPriceId" INTEGER REFERENCES "Item"("Id") ON DELETE SET NULL, 
+    "DateId" INTEGER REFERENCES "Date"("Id") ON DELETE SET NULL, 
     "Quantity" INTEGER, 
     "Total" FLOAT, 
     "VoidReason" VARCHAR(255), 
