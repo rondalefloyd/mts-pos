@@ -384,9 +384,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>6</string>
@@ -403,9 +410,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>5</string>
@@ -422,9 +436,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>9</string>
@@ -441,9 +462,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>7</string>
@@ -460,9 +488,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>8</string>
@@ -479,9 +514,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>2</string>
@@ -498,9 +540,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>3</string>
@@ -517,9 +566,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>4</string>
@@ -536,9 +592,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>1</string>
@@ -555,9 +618,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>Del</string>
@@ -574,9 +644,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>0</string>
@@ -593,9 +670,16 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>50</height>
+                   <width>100</width>
+                   <height>100</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="text">
                   <string>.</string>

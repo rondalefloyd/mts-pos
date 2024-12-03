@@ -20,18 +20,20 @@ class EditMember(Ui_DialogEditMember, QDialog):
         
         self.loading = Loading()
         self.windowEvent = EVENT_NO_EVENT
+        self.userData = authData['user']
         self.organizationData = authData['organization']
         self.selectedData = selectedData
         self.currentThread = None
         self.activeThreads = []
         
+        
         self.comboBoxOrganizationName.setCurrentText(f"{self.organizationData['organizationName']}")
-
         self.lineEditMemberName.setText(f"{self.selectedData['memberName']}")
         self.dateEditBirthDate.setDate(QDate.fromString(f"{self.selectedData['birthDate']}", 'yyyy-MM-dd'))
         self.lineEditAddress.setText(f"{self.selectedData['address']}")
         self.lineEditMobileNumber.setText(f"{self.selectedData['mobileNumber']}")
         self.lineEditPoints.setText(f"{self.selectedData['points']}")
+        self.lineEditPoints.setEnabled(self.userData['accessLevel'] >= 3)
 
         self.pushButtonCancel.clicked.connect(self._onPushButtonCancelClicked)
         self.pushButtonSave.clicked.connect(self._onPushButtonSaveClicked)

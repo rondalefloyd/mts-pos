@@ -26,8 +26,8 @@ class AuthenticateThread(QThread):
         
         try:
             with postgres_db:
-                if self.function_route == 'authenticateUserByUserNameAccess_code':
-                    result = self.authenticateUserByUserNameAccess_code(self.entry, result)
+                if self.function_route == 'authenticateUserByUserNameAccessCode':
+                    result = self.authenticateUserByUserNameAccessCode(self.entry, result)
                 elif self.function_route == 'unauthenticateUserById':
                     result = self.unauthenticateUserById(self.entry, result)
                 else:
@@ -48,7 +48,7 @@ class AuthenticateThread(QThread):
         self.finished.emit(result)
         print(f"{self.function_route} -> result_message: {result['message']}")
         
-    def authenticateUserByUserNameAccess_code(self, entry=None, result=None):
+    def authenticateUserByUserNameAccessCode(self, entry=None, result=None):
         try:
             user = User.select().where(
                 (User.UserName == entry['userName']) & 

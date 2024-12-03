@@ -58,6 +58,15 @@ class Manage(Ui_MainWindowManage, QMainWindow):
         self.manageUsers = ManageUsers(authData)
         
         # Add widgets to the stacked widget
+        self.actionSales.setVisible(self.userData['accessLevel'] >= 1)
+        self.actionTransactions.setVisible(self.userData['accessLevel'] >= 1)
+        self.menuProducts.menuAction().setVisible(self.userData['accessLevel'] >= 2)
+        self.actionStocks.setVisible(self.userData['accessLevel'] >= 3)
+        self.actionPromos.setVisible(self.userData['accessLevel'] >= 2)
+        self.actionRewards.setVisible(self.userData['accessLevel'] >= 3)
+        self.actionMembers.setVisible(self.userData['accessLevel'] >= 2)
+        self.actionUsers.setVisible(self.userData['accessLevel'] >= 3)
+        
         self.stackedWidgetManage.insertWidget(0, self.manageSales)
         self.stackedWidgetManage.insertWidget(1, self.manageReceipts)
         self.stackedWidgetManage.insertWidget(2, self.manageProducts)

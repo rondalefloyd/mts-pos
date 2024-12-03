@@ -757,6 +757,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             
             self.pushButtonPayPoints.setEnabled(self.pointsPayment >= grandTotal)
             self.pushButtonPayCombo.setEnabled(self.comboPayment >= grandTotal)
+            self.lineEditCash.selectAll()
             return
     
         self.labelPoints.hide()
@@ -770,6 +771,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         
         self.pushButtonPayPoints.setEnabled(False)
         self.pushButtonPayCombo.setEnabled(False)
+        self.lineEditCash.selectAll()
 
     def _populateTableWidgetData(self):
         orderCart = self.selectedOrder['cart']
