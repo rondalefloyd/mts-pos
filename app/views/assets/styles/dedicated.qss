@@ -196,6 +196,13 @@ QLineEdit {
     width: 100%;
 }
 
+QComboBox QAbstractItemView {
+    padding: 10px;
+}
+
+QComboBox QAbstractItemView::item {
+    padding: 10px;
+}
 QLabel {
     padding-top: 10px;
     padding-bottom: 10px;

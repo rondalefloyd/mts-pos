@@ -28,7 +28,12 @@ def _startApp():
     print('app has started running')
         
     app = QApplication(sys.argv)
-    
+    # TODO: use the fusion style and modify
+    # app.setStyle("Fusion")
+    # font = QFont()
+    # font.setPointSize(13)
+    # app.setFont(font)
+
     _setAppStyleSheet(app)
     
     windowEvent = EVENT_START_LOGIN
