@@ -99,8 +99,6 @@ class PurchaseThread(QThread):
                 member = Member.get_or_none(Member.Id == entry['memberId'])
                 if member:
                     # Deduct points paid from the member's total points
-                    print("look for billing['paymentType']:", billing['paymentType'])
-                    
                     if billing['paymentType'] == 'POINTS' or billing['paymentType'] == 'COMBO':
                         member.Points -= float(billing['payment']) if billing['paymentType'] == 'POINTS' else float(billing['pointsPaid'])
                         member.UpdateTs = datetime.now()
