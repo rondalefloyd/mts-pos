@@ -96,24 +96,23 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
         for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(view=True)
             tableItems = [
-                QTableWidgetItem(f"{data['referenceId']}"),
-                QTableWidgetItem(f"{data['machineId']}"),
-                QTableWidgetItem(f"{data['orderName']}"),
-                QTableWidgetItem(f"{data['orderTypeName']}"),
-                QTableWidgetItem(f"{data['userName']}"),
-                QTableWidgetItem(f"{data['memberName']}"),
-                QTableWidgetItem(f"{data['dateValue']}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['billing']['grandtotal'])}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['billing']['payment'])}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['billing']['change'])}"),
-                QTableWidgetItem(f"{data['updateTs']}"),
+                QLabel(objectName="tableItem", text=f"{data['orderName']}"),
+                QLabel(objectName="tableItem", text=f"{data['orderTypeName']}"),
+                QLabel(objectName="tableItem", text=f"{data['referenceId']}"),
+                QLabel(objectName="tableItem", text=f"{data['userName']}"),
+                QLabel(objectName="tableItem", text=f"{data['memberName']}"),
+                QLabel(objectName="tableItem", text=f"{data['dateValue']}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['billing']['grandtotal'])}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['billing']['payment'])}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['billing']['change'])}"),
+                QLabel(objectName="tableItem", text=f"{data['updateTs']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetData.setCellWidget(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonView.clicked.connect(lambda _, data=data: self._onPushButtonViewClicked(data))
             

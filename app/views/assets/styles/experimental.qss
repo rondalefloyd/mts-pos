@@ -8,10 +8,14 @@ QTableWidget::item {
     border-right: 1px solid #D3D3D3;
 }
 QTableWidget QHeaderView::section {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0px 10px;
 }
 
 QPushButton {
     text-transform: uppercase;
+}
+
+QLabel#tableItem {
+    text-align: right;
+    padding: 0px 10px;
 }

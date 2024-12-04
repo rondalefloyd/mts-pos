@@ -78,18 +78,18 @@ class ManageStocks(Ui_FormManageStock, QWidget):
         for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
-                QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{data['salesGroupName']}"),
-                QTableWidgetItem(f"{data['onHand']}"),
-                QTableWidgetItem(f"{data['available']}"),
-                QTableWidgetItem(f"{data['updateTs']}"),
+                QLabel(objectName="tableItem", text=f"{data['itemName']}"),
+                QLabel(objectName="tableItem", text=f"{data['salesGroupName']}"),
+                QLabel(objectName="tableItem", text=f"{data['onHand']}"),
+                QLabel(objectName="tableItem", text=f"{data['available']}"),
+                QLabel(objectName="tableItem", text=f"{data['updateTs']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetData.setCellWidget(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))

@@ -209,26 +209,26 @@ class ManageProducts(Ui_FormManageProduct, QWidget):
         for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
-                QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{data['barcode']}"),
-                QTableWidgetItem(f"{data['expireDate']}"),
-                QTableWidgetItem(f"{data['itemTypeName']}"),
-                QTableWidgetItem(f"{data['brandName']}"),
-                QTableWidgetItem(f"{data['supplierName']}"),
-                QTableWidgetItem(f"{data['salesGroupName']}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['cost'])}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['price'])}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['discount'])}"),
-                QTableWidgetItem(f"{data['effectiveDate']}"),
-                QTableWidgetItem(f"{data['promoName']}"),
-                QTableWidgetItem(f"{data['updateTs']}"),
+                QLabel(objectName="tableItem", text=f"{data['itemName']}"),
+                QLabel(objectName="tableItem", text=f"{data['barcode']}"),
+                QLabel(objectName="tableItem", text=f"{data['expireDate']}"),
+                QLabel(objectName="tableItem", text=f"{data['itemTypeName']}"),
+                QLabel(objectName="tableItem", text=f"{data['brandName']}"),
+                QLabel(objectName="tableItem", text=f"{data['supplierName']}"),
+                QLabel(objectName="tableItem", text=f"{data['salesGroupName']}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['cost'])}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['price'])}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['discount'])}"),
+                QLabel(objectName="tableItem", text=f"{data['effectiveDate']}"),
+                QLabel(objectName="tableItem", text=f"{data['promoName']}"),
+                QLabel(objectName="tableItem", text=f"{data['updateTs']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetData.setCellWidget(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
                     manageActionButton.pushButtonEdit.setVisible(False)

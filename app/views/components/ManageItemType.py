@@ -102,15 +102,15 @@ class ManageItemTypes(Ui_FormManageItemType, QWidget):
         for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
-                QTableWidgetItem(f"{data['itemTypeName']}"),
-                QTableWidgetItem(f"{data['updateTs']}"),
+                QLabel(objectName="tableItem", text=f"{data['itemTypeName']}"),
+                QLabel(objectName="tableItem", text=f"{data['updateTs']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetData.setCellWidget(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))

@@ -196,18 +196,18 @@ class ManageSales(Ui_FormManageSales, QWidget):
             for i, data in enumerate(listData):
                 manageActionButton = ManageActionButton(add=True)
                 tableItems = [
-                    QTableWidgetItem(f"{data['itemName']}"),
-                    QTableWidgetItem(f"{data['barcode']}"),
-                    QTableWidgetItem(f"{data['brandName']}"),
-                    QTableWidgetItem(f"{billFormat(self.currencySymbol, data['price'])}"),
-                    QTableWidgetItem(f"{data['available']}"),
-                    QTableWidgetItem(f"{data['promoName']}"),
+                    QLabel(objectName="tableItem", text=f"{data['itemName']}"),
+                    QLabel(objectName="tableItem", text=f"{data['barcode']}"),
+                    QLabel(objectName="tableItem", text=f"{data['brandName']}"),
+                    QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['price'])}"),
+                    QLabel(objectName="tableItem", text=f"{data['available']}"),
+                    QLabel(objectName="tableItem", text=f"{data['promoName']}"),
                 ]
                 self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
                 
                 for j, tableitem in enumerate(tableItems):
                     tableitem.setToolTip(tableitem.text())
-                    self.tableWidgetData.setItem(i, (j + 1), tableitem)
+                    self.tableWidgetData.setCellWidget(i, (j + 1), tableitem)
                     
                     if data['promoName'] is not None:
                         manageActionButton.pushButtonEdit.setVisible(False)
@@ -368,16 +368,16 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         for i, data in enumerate(orderItem):
             preOrderActionButton = PreOrderActionButton()
             tableItems = [
-                QTableWidgetItem(f"{data['quantity']}"),
-                QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['total'])}"),
+                QLabel(objectName="tableItem", text=f"{data['quantity']}"),
+                QLabel(objectName="tableItem", text=f"{data['itemName']}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['total'])}"),
             ]
             
             self.tableWidgetOrderItem.setCellWidget(i, 0, preOrderActionButton) 
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetOrderItem.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetOrderItem.setCellWidget(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
                     tableitem.setForeground(QColor(255, 0, 0))
@@ -796,17 +796,17 @@ class InOrder(Ui_DialogInOrder, QDialog):
         for i, data in enumerate(orderCart):
             manageActionButton = ManageActionButton(discount=True)
             tableItems = [
-                QTableWidgetItem(f"{data['quantity']}"),
-                QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['total'])}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['customDiscount'])}"),
+                QLabel(objectName="tableItem", text=f"{data['quantity']}"),
+                QLabel(objectName="tableItem", text=f"{data['itemName']}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['total'])}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['customDiscount'])}"),
             ]
             
             self.tableWidgetOrderItem.setCellWidget(i, 0, manageActionButton) 
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetOrderItem.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetOrderItem.setCellWidget(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
                     tableitem.setForeground(QColor(255, 0, 0))

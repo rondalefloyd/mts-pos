@@ -138,19 +138,19 @@ class ManageMembers(Ui_FormManageMember, QWidget):
         for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
-                QTableWidgetItem(f"{data['memberName']}"),
-                QTableWidgetItem(f"{data['birthDate']}"),
-                QTableWidgetItem(f"{data['address']}"),
-                QTableWidgetItem(f"{data['mobileNumber']}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['points'])}"),
-                QTableWidgetItem(f"{data['updateTs']}"),
+                QLabel(objectName="tableItem", text=f"{data['memberName']}"),
+                QLabel(objectName="tableItem", text=f"{data['birthDate']}"),
+                QLabel(objectName="tableItem", text=f"{data['address']}"),
+                QLabel(objectName="tableItem", text=f"{data['mobileNumber']}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['points'])}"),
+                QLabel(objectName="tableItem", text=f"{data['updateTs']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetData.setCellWidget(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _=i, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))

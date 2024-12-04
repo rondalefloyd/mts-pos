@@ -123,20 +123,20 @@ class ManageUsers(Ui_FormManageUser, QWidget):
         for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(edit=True, delete=True)
             tableItems = [
-                QTableWidgetItem(f"{data['userName']}"),
-                QTableWidgetItem(f"{data['password']}"),
-                QTableWidgetItem(f"{data['fullName']}"),
-                QTableWidgetItem(f"{data['birthDate']}"),
-                QTableWidgetItem(f"{data['mobileNumber']}"),
-                QTableWidgetItem(f"{data['accessLevel']}"),
-                QTableWidgetItem(f"{data['updateTs']}"),
+                QLabel(objectName="tableItem", text=f"{data['userName']}"),
+                QLabel(objectName="tableItem", text=f"{data['password']}"),
+                QLabel(objectName="tableItem", text=f"{data['fullName']}"),
+                QLabel(objectName="tableItem", text=f"{data['birthDate']}"),
+                QLabel(objectName="tableItem", text=f"{data['mobileNumber']}"),
+                QLabel(objectName="tableItem", text=f"{data['accessLevel']}"),
+                QLabel(objectName="tableItem", text=f"{data['updateTs']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
 
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetData.setCellWidget(i, (j + 1), tableItems[j])
         
             manageActionButton.pushButtonEdit.clicked.connect(lambda _, data=data: self._onPushButtonEditClicked(data))
             manageActionButton.pushButtonDelete.clicked.connect(lambda _, data=data: self._onPushButtonDeleteClicked(data))

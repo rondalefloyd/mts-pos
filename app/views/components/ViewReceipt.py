@@ -141,19 +141,19 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(void=True)
             tableItems = [
-                QTableWidgetItem(f"{data['itemName']}"),
-                QTableWidgetItem(f"{data['quantity']}"),
-                QTableWidgetItem(f"{billFormat(self.currencySymbol, data['total'])}"),
-                QTableWidgetItem(f"{data['voidReason']}"),
-                QTableWidgetItem(f"{data['status']}"),
-                QTableWidgetItem(f"{data['updateTs']}"),
+                QLabel(objectName="tableItem", text=f"{data['itemName']}"),
+                QLabel(objectName="tableItem", text=f"{data['quantity']}"),
+                QLabel(objectName="tableItem", text=f"{billFormat(self.currencySymbol, data['total'])}"),
+                QLabel(objectName="tableItem", text=f"{data['voidReason']}"),
+                QLabel(objectName="tableItem", text=f"{data['status']}"),
+                QLabel(objectName="tableItem", text=f"{data['updateTs']}"),
             ]
             
             self.tableWidgetData.setCellWidget(i, 0, manageActionButton)
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetData.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetData.setCellWidget(i, (j + 1), tableItems[j])
         
                 if data['status'] is not None:
                     manageActionButton.pushButtonVoid.setVisible(data['status'] != 1)

@@ -27,6 +27,7 @@ class QTableWidget(QTableWidget):
     def _executeTask(self):
         objectName = self.objectName()
         
+        self.horizontalHeader().setDefaultAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
         self.horizontalHeaderItem(0).setText("")
         self.horizontalHeader().setStretchLastSection(True)
         
@@ -35,7 +36,6 @@ class QTableWidget(QTableWidget):
             self.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         elif objectName in ['tableWidgetOrderItem']:
             self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-            self.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
             self.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
             pass
         
@@ -46,9 +46,25 @@ class QTableWidgetItem(QTableWidgetItem):
         QTimer.singleShot(0, self._executeTask)
 
     def _executeTask(self):
-        self.setTextAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
         pass
         
+        
+class QLabel(QLabel):
+    def __init__(self, parent=None, objectName="", text=""):
+        super().__init__(parent)
+        
+        self.setObjectName(objectName)
+        self.setText(text)
+        
+        QTimer.singleShot(0, self._executeTask)
+
+    def _executeTask(self):
+        objectName = self.objectName()
+        
+        if objectName in ['tableItem']:
+            # self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+            self.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
+        pass
         
         
 class QLineEdit(QLineEdit):
