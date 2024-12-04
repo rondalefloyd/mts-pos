@@ -58,6 +58,11 @@ class ManageSales(Ui_FormManageSales, QWidget):
         
         self._populateCurrencySymbol()
         self._populateTableWidgetData()
+        
+        if len(self.activeOrder):
+            orderIndex = self.tabWidgetOrder.currentIndex()
+            orderWidget: PreOrder = self.activeOrder[orderIndex]['widget']
+            orderWidget.refresh()
 
     def onTabWidgetOrderTabCloseRequested(self, index, confirmation=True):
         orderItem: list = self.activeOrder[self.tabWidgetOrder.currentIndex()]['cart']
@@ -318,14 +323,17 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.tableWidgetOrderItem.clearContents()
         self.labelOrderType.setText(self.manageSales.comboBoxOrderType.currentText())
         
-        self._populateCurrencySymbol()    
-        self._populateComboBoxMemberName()
+        self.refresh()
         
         self.comboBoxMemberName.currentTextChanged.connect(self._onComboBoxMemberNameCurrentTextChanged)
         self.pushButtonClear.clicked.connect(self._onPushButtonClearClicked)
         self.pushButtonDiscard.clicked.connect(self._onPushButtonDiscardClicked)
         self.pushButtonPark.clicked.connect(self.onPushButtonParkClicked)
         self.pushButtonPay.clicked.connect(self._onPushButtonPayClicked)
+
+    def refresh(self):
+        self._populateCurrencySymbol()    
+        self._populateComboBoxMemberName()
         
     def onPushButtonParkClicked(self):
         orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart']

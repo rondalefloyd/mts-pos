@@ -43,6 +43,7 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         self.lineEditNewPrice.setText(f"{billFormat('', self.selectedData['price'])}")
 
         self._populateComboBoxItemTypeBrandSupplierSalesGroup()
+        self._populateComboBoxPromoName()
         
         self.dateEditStartDate.dateChanged.connect(self._onDateEditEndDateDateChanged)
         self.checkBoxApplyPromo.stateChanged.connect(self._onCheckBoxApplyPromoStateChanged)
@@ -116,7 +117,9 @@ class EditProduct(Ui_DialogEditProduct, QDialog):
         
         listData = result['listData']
         
-        self.checkBoxApplyPromo.setDisabled(len(listData) <= 0)
+        self.checkBoxApplyPromo.setEnabled(len(listData) > 0)
+        
+        print('look for len(listData)', len(listData))
             
         for data in listData:
             self.comboBoxPromoName.addItem(f"{data['promoName']}")

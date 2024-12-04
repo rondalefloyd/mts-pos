@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_DialogViewReceipt(object):
     def setupUi(self, DialogViewReceipt):
         DialogViewReceipt.setObjectName("DialogViewReceipt")
-        DialogViewReceipt.resize(699, 793)
+        DialogViewReceipt.resize(699, 757)
         self.verticalLayout = QtWidgets.QVBoxLayout(DialogViewReceipt)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)

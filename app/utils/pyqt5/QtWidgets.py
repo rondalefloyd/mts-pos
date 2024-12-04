@@ -27,6 +27,9 @@ class QTableWidget(QTableWidget):
     def _executeTask(self):
         objectName = self.objectName()
         
+        self.horizontalHeaderItem(0).setText("")
+        self.horizontalHeader().setStretchLastSection(True)
+        
         if objectName in ['tableWidgetData']:
             self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
             self.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
@@ -35,6 +38,18 @@ class QTableWidget(QTableWidget):
             self.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
             self.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
             pass
+        
+class QTableWidgetItem(QTableWidgetItem):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+        QTimer.singleShot(0, self._executeTask)
+
+    def _executeTask(self):
+        self.setTextAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
+        pass
+        
+        
         
 class QLineEdit(QLineEdit):
     def __init__(self, parent=None):

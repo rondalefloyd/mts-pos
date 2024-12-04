@@ -1,8 +1,17 @@
-QPushButton,
-QLineEdit,
-QDateEdit,
-QComboBox,
-QLabel {
-    padding-top: 10px;
-    padding-bottom: 10px;
+
+* {
+    font-family: Calibri;
+    font-size: 13pt;
+}
+
+QTableWidget::item {
+    border-right: 1px solid #D3D3D3;
+}
+QTableWidget QHeaderView::section {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+QPushButton {
+    text-transform: uppercase;
 }

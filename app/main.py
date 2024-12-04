@@ -29,11 +29,6 @@ def _startApp():
         
     app = QApplication(sys.argv)
     # TODO: use the fusion style and modify
-    # app.setStyle("Fusion")
-    # font = QFont()
-    # font.setPointSize(13)
-    # app.setFont(font)
-
     _setAppStyleSheet(app)
     
     windowEvent = EVENT_START_LOGIN
@@ -65,9 +60,13 @@ def _startApp():
                 
     print('app has stopped running') 
 
-def _setAppStyleSheet(app):
+def _setAppStyleSheet(app:QApplication):
+    app.setWindowIcon(QIcon(os.path.abspath('app/views/assets/images/barcode-solid.svg')))
+    app.setStyle("Fusion")
+    
     qssFilePaths = [
-        os.path.abspath('app/views/assets/styles/dedicated.qss'),
+        # os.path.abspath('app/views/assets/styles/dedicated.qss'),
+        os.path.abspath('app/views/assets/styles/experimental.qss'),
     ]
     
     styleSheet = ""
