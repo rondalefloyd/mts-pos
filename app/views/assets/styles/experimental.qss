@@ -5,7 +5,8 @@
 }
 
 QTableWidget::item {
-    border-right: 1px solid #D3D3D3;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
 }
 QTableWidget QHeaderView::section {
     padding-left: 10px;
@@ -14,4 +15,21 @@ QTableWidget QHeaderView::section {
 
 QPushButton {
     text-transform: uppercase;
+}
+
+QMainWindow#MainWindowManage {
+    background-color: #0062ff;
+    color: #fff;
+}
+
+QMainWindow#MainWindowManage QLabel {
+    color: #fff;
+}
+
+QWidget#FormPreOrder QLabel {
+    color: #000;
+}
+
+QWidget#widgetStatusBar {
+    background-color: #0045b5;
 }

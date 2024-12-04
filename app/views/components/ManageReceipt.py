@@ -96,9 +96,8 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
         for i, data in enumerate(listData):
             manageActionButton = ManageActionButton(view=True)
             tableItems = [
-                QTableWidgetItem(f"{data['referenceId']}"),
-                QTableWidgetItem(f"{data['machineId']}"),
                 QTableWidgetItem(f"{data['orderName']}"),
+                QTableWidgetItem(f"{data['referenceId']}"),
                 QTableWidgetItem(f"{data['orderTypeName']}"),
                 QTableWidgetItem(f"{data['userName']}"),
                 QTableWidgetItem(f"{data['memberName']}"),

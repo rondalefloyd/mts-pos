@@ -93,17 +93,12 @@
        </column>
        <column>
         <property name="text">
-         <string>ReferenceId</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>MachineId</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
          <string>OrderName</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ReferenceId</string>
         </property>
        </column>
        <column>
