@@ -120,9 +120,11 @@ class ManageSuppliers(Ui_FormManageSupplier, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
+        self.setGraphicsEffect(QGraphicsBlurEffect())
         self.editSupplier = EditSupplier(self.authData, data)
         self.editSupplier.exec()
         self._populateTableWidgetData()
+        self.setGraphicsEffect(None)
 
     def _onPushButtonDeleteClicked(self, data):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['supplierName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)

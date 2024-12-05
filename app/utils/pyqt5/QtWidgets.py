@@ -15,8 +15,6 @@ class QPushButton(QPushButton):
 
     def _executeTask(self):
         objectName = self.objectName()
-        
-        
 
 class QTableWidget(QTableWidget):
     def __init__(self, parent=None):
@@ -28,15 +26,20 @@ class QTableWidget(QTableWidget):
         objectName = self.objectName()
         
         self.horizontalHeaderItem(0).setText("")
-        self.horizontalHeader().setStretchLastSection(True)
         
         if objectName in ['tableWidgetData']:
             self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
             self.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        elif objectName in ['tableWidgetOrderItem']:
+            self.horizontalHeader().setStretchLastSection(True)
+        elif objectName in ['tableWidgetPreOrderItem']:
             self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
             self.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
             self.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+            self.horizontalHeader().setStretchLastSection(True)
+        elif objectName in ['tableWidgetInOrderItem']:
+            self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+            self.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+            self.horizontalHeader().setStretchLastSection(True)
             pass
         
 class QTableWidgetItem(QTableWidgetItem):

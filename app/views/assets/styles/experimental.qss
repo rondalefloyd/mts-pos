@@ -30,3 +30,21 @@ QWidget#FormPreOrderActionButton QPushButton,
 QWidget#FormManageActionButton QPushButton {
     min-height: 0px;
 }
+
+QWidget#widgetBilling QLabel {
+    font-size: 20pt;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+QWidget#FormPreOrder QWidget#widgetBilling QLabel#labelGrandtotal,
+QWidget#FormPreOrder QWidget#widgetBilling QLabel#labelGrandtotalTitle,
+QDialog#DialogInOrder QWidget#widgetBilling QLabel#labelGrandtotal,
+QDialog#DialogInOrder QWidget#widgetBilling QLabel#labelGrandtotalTitle {
+    font-size: 30pt;
+}
+
+
+QFrame#frameOrder {
+    max-width: 800px;
+}

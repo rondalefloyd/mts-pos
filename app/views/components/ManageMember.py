@@ -160,8 +160,10 @@ class ManageMembers(Ui_FormManageMember, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
+        self.setGraphicsEffect(QGraphicsBlurEffect())
         self.editMember = EditMember(self.authData, data)
         self.editMember.exec()
+        self.setGraphicsEffect(None)
         self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):

@@ -114,7 +114,7 @@ class ViewReceipt(Ui_DialogViewReceipt, QDialog):
         self.labelSubtotal.setText(f"{billFormat(self.currencySymbol, billing['subtotal'])}")
         self.labelDiscount.setText(f"{billFormat(self.currencySymbol, billing['discount'])}")
         self.labelTax.setText(f"{billFormat(self.currencySymbol, billing['tax'])}")
-        self.labelGrandTotal.setText(f"{billFormat(self.currencySymbol, billing['grandtotal'])}")
+        self.labelGrandtotal.setText(f"{billFormat(self.currencySymbol, billing['grandtotal'])}")
         self.labelAmount.setText(f"{billFormat(self.currencySymbol, billing['payment'])}")
         self.labelChange.setText(f"{billFormat(self.currencySymbol, billing['change'])}")
         

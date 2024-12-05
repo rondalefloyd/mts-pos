@@ -120,8 +120,10 @@ class ManageBrands(Ui_FormManageBrand, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
+        self.setGraphicsEffect(QGraphicsBlurEffect())
         self.editBrand = EditBrand(self.authData, data)
         self.editBrand.exec()
+        self.setGraphicsEffect(None)
         self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):

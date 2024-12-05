@@ -146,10 +146,11 @@ class ManageUsers(Ui_FormManageUser, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
         pass
     def _onPushButtonEditClicked(self, data):
+        self.setGraphicsEffect(QGraphicsBlurEffect())
         self.editUser = EditUser(self.authData, data)
         self.editUser.exec()
         self._populateTableWidgetData()
-        print('--data:', data)
+        self.setGraphicsEffect(None)
         pass
 
     def _onPushButtonDeleteClicked(self, data):

@@ -144,8 +144,10 @@ class ManagePromos(Ui_FormManagePromo, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
+        self.setGraphicsEffect(QGraphicsBlurEffect())
         self.editPromo = EditPromo(self.authData, data)
         self.editPromo.exec()
+        self.setGraphicsEffect(None)
         self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):

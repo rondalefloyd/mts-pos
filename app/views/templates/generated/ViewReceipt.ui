@@ -257,7 +257,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLabel" name="labelGrandTotal">
+         <widget class="QLabel" name="labelGrandtotal">
           <property name="font">
            <font>
             <pointsize>8</pointsize>
@@ -266,7 +266,7 @@
            </font>
           </property>
           <property name="text">
-           <string>&lt;GrandTotal&gt;</string>
+           <string>&lt;Grandtotal&gt;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

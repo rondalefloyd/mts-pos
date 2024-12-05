@@ -120,8 +120,10 @@ class ManageItemTypes(Ui_FormManageItemType, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
+        self.setGraphicsEffect(QGraphicsBlurEffect())
         self.editItemType = EditItemType(self.authData, data)
         self.editItemType.exec()
+        self.setGraphicsEffect(None)
         self._populateTableWidgetData()
 
     def _onPushButtonDeleteClicked(self, data):

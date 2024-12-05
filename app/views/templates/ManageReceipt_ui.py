@@ -125,7 +125,7 @@ class Ui_FormManageReceipt(object):
         item = self.tableWidgetData.horizontalHeaderItem(6)
         item.setText(_translate("FormManageReceipt", "PurchaseDate"))
         item = self.tableWidgetData.horizontalHeaderItem(7)
-        item.setText(_translate("FormManageReceipt", "GrandTotal"))
+        item.setText(_translate("FormManageReceipt", "Grandtotal"))
         item = self.tableWidgetData.horizontalHeaderItem(8)
         item.setText(_translate("FormManageReceipt", "Payment"))
         item = self.tableWidgetData.horizontalHeaderItem(9)

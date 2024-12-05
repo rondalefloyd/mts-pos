@@ -334,7 +334,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.currentThread = None
         self.activeThreads = []
         
-        self.tableWidgetOrderItem.clearContents()
+        self.tableWidgetPreOrderItem.clearContents()
         self.labelOrderType.setText(self.manageSales.comboBoxOrderType.currentText())
         
         # shortcut key assignment
@@ -369,14 +369,14 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.pushButtonPark.setText(f'[{self.pushButtonParkShortcutKey}] Park' if orderStatus == 1 else f'[{self.pushButtonParkShortcutKey}] Unpark')
         self.pushButtonPay.setEnabled(orderStatus == 1 and len(orderItem) > 0)
         self.comboBoxMemberName.setEnabled(orderStatus == 1)
-        self.tableWidgetOrderItem.setEnabled(orderStatus == 1)
+        self.tableWidgetPreOrderItem.setEnabled(orderStatus == 1)
         self.manageSales.lineEditBarcode.setFocus()
         
     def populateTableWidgetData(self):
         orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart']
         rowCount = len(orderItem)
-        self.tableWidgetOrderItem.clearContents()
-        self.tableWidgetOrderItem.setRowCount(rowCount)
+        self.tableWidgetPreOrderItem.clearContents()
+        self.tableWidgetPreOrderItem.setRowCount(rowCount)
         self.pushButtonClear.setEnabled(rowCount > 0)
         self.pushButtonPay.setEnabled(rowCount > 0)
         
@@ -393,11 +393,11 @@ class PreOrder(Ui_FormPreOrder, QWidget):
                 QTableWidgetItem(f"{billFormat(self.currencySymbol, data['total'])}"),
             ]
             
-            self.tableWidgetOrderItem.setCellWidget(i, 0, preOrderActionButton) 
+            self.tableWidgetPreOrderItem.setCellWidget(i, 0, preOrderActionButton) 
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetOrderItem.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetPreOrderItem.setItem(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
                     tableitem.setForeground(QColor(255, 0, 0))
@@ -415,7 +415,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelSubtotal.setText(f"{billFormat(self.currencySymbol, subtotal)}")
         self.labelDiscount.setText(f"{billFormat(self.currencySymbol, discount)}")
         self.labelTax.setText(f"{billFormat(self.currencySymbol, tax)}")
-        self.labelGrandTotal.setText(f"{billFormat(self.currencySymbol, grandTotal)}")
+        self.labelGrandtotal.setText(f"{billFormat(self.currencySymbol, grandTotal)}")
         self.pushButtonPay.setText(f"[{self.pushButtonPayShortcutKey}] Pay {billFormat(self.currencySymbol, grandTotal)}")
         self.manageSales.lineEditBarcode.setFocus()
 
@@ -464,7 +464,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelSubtotal.setText(f"{self.currencySymbol}0.00")
         self.labelDiscount.setText(f"{self.currencySymbol}0.00")
         self.labelTax.setText(f"{self.currencySymbol}0.00")
-        self.labelGrandTotal.setText(f"{self.currencySymbol}0.00")
+        self.labelGrandtotal.setText(f"{self.currencySymbol}0.00")
         self.pushButtonPay.setText(f"[{self.pushButtonPayShortcutKey}] Pay {self.currencySymbol}0.00")
         
         self.loading.close()
@@ -519,7 +519,8 @@ class PreOrder(Ui_FormPreOrder, QWidget):
             self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()],
         )
         self.inOrder.exec()
-        self.manageSales.lineEditBarcode.setFocus()
+        
+        self.manageSales.lineEditBarcode.setFocus()       
                
     def _onPushButtonAddExactClicked(self, index, orderItem):
         item = orderItem[index]
@@ -597,9 +598,12 @@ class InOrder(Ui_DialogInOrder, QDialog):
     def __init__(self, manageSales, authData, selectedOrder):
         super().__init__()
         self.setupUi(self)
+        self.setWindowFlags(Qt.FramelessWindowHint)
         
         self.manageSales: ManageSales = manageSales
         self.loading = Loading()
+        
+        self.manageSales.setGraphicsEffect(QGraphicsBlurEffect())
         
         self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
@@ -620,11 +624,13 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pointsPayment = 0.00
         self.comboPayment = 0.00
         
+        self.lineEditCash.selectAll()
+        
         self.labelSubtotal.setText(f'{self.currencySymbol}0.00')
         self.labelDiscount.setText(f'{self.currencySymbol}0.00')
         self.labelTax.setText(f'{self.currencySymbol}0.00')
         self.labelCustomDiscount.setText(f'{self.currencySymbol}0.00')
-        self.labelGrandTotal.setText(f'{self.currencySymbol}0.00')
+        self.labelGrandtotal.setText(f'{self.currencySymbol}0.00')
         
         self.labelCashPayment.setText(f'{self.currencySymbol}0.00')
         self.labelPointsPayment.setText(f'{self.currencySymbol}0.00')
@@ -708,6 +714,8 @@ class InOrder(Ui_DialogInOrder, QDialog):
         
         self._populateTableWidgetData()
         self._populatePaymentEligibilityFields()
+        
+        self.lineEditCash.selectAll()
 
         self.lineEditCash.textChanged.connect(self._populatePaymentEligibilityFields)
         
@@ -717,7 +725,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         subtotal = float(self.labelSubtotal.text().replace(self.currencySymbol, ''))
         discount = float(self.labelDiscount.text().replace(self.currencySymbol, ''))
         tax = float(self.labelTax.text().replace(self.currencySymbol, ''))
-        grandtotal = float(self.labelGrandTotal.text().replace(self.currencySymbol, ''))
+        grandtotal = float(self.labelGrandtotal.text().replace(self.currencySymbol, ''))
 
         cashPayment = 0.0
         pointsPayment = 0.0
@@ -736,7 +744,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
             confirm = QMessageBox.warning(self, 'Confirm', f"Points amount tendered is <b>{grandtotal}</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if paymentType == 'COMBO':
             cashPayment = self.cashPayment
-            pointsPayment = float(self.labelGrandTotal.text().replace(self.currencySymbol, '')) - self.cashPayment
+            pointsPayment = float(self.labelGrandtotal.text().replace(self.currencySymbol, '')) - self.cashPayment
             payment = self.comboPayment
             change = float(self.labelComboShortageExcess.text().replace(self.currencySymbol, ''))
             confirm = QMessageBox.warning(self, 'Confirm', f"Combo amount tendered is <b>{billFormat(self.currencySymbol, cashPayment)} (cash) + {billFormat(self.currencySymbol, pointsPayment)} (points)</b>. Proceed?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
@@ -818,7 +826,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
 
     def _populatePaymentEligibilityFields(self):
         orderMember = self.selectedOrder['member']
-        grandTotal = float(self.labelGrandTotal.text().replace(self.currencySymbol, ''))
+        grandTotal = float(self.labelGrandtotal.text().replace(self.currencySymbol, ''))
         
         self.cashPayment = self.lineEditCash.text().replace(self.currencySymbol, '')
         self.cashPayment = float(self.cashPayment if self.cashPayment else 0.00) if self.cashPayment != '.' else 0.00
@@ -853,7 +861,6 @@ class InOrder(Ui_DialogInOrder, QDialog):
             
             self.pushButtonPayPoints.setEnabled(self.pointsPayment >= grandTotal)
             self.pushButtonPayCombo.setEnabled(self.comboPayment >= grandTotal)
-            self.lineEditCash.selectAll()
             return
     
         self.labelPoints.hide()
@@ -867,13 +874,12 @@ class InOrder(Ui_DialogInOrder, QDialog):
         
         self.pushButtonPayPoints.setEnabled(False)
         self.pushButtonPayCombo.setEnabled(False)
-        self.lineEditCash.selectAll()
 
     def _populateTableWidgetData(self):
         orderCart = self.selectedOrder['cart']
         rowCount = len(orderCart)
-        self.tableWidgetOrderItem.clearContents()
-        self.tableWidgetOrderItem.setRowCount(rowCount)
+        self.tableWidgetInOrderItem.clearContents()
+        self.tableWidgetInOrderItem.setRowCount(rowCount)
         
         self.subtotal = 0.00
         self.discount = 0.00
@@ -890,11 +896,11 @@ class InOrder(Ui_DialogInOrder, QDialog):
                 QTableWidgetItem(f"{billFormat(self.currencySymbol, data['customDiscount'])}"),
             ]
             
-            self.tableWidgetOrderItem.setCellWidget(i, 0, manageActionButton) 
+            self.tableWidgetInOrderItem.setCellWidget(i, 0, manageActionButton) 
             
             for j, tableitem in enumerate(tableItems):
                 tableitem.setToolTip(tableitem.text())
-                self.tableWidgetOrderItem.setItem(i, (j + 1), tableItems[j])
+                self.tableWidgetInOrderItem.setItem(i, (j + 1), tableItems[j])
                 
                 if data['promoName'] is not None:
                     tableitem.setForeground(QColor(255, 0, 0))
@@ -911,7 +917,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.labelDiscount.setText(f"{billFormat(self.currencySymbol, self.discount)}")
         self.labelTax.setText(f"{billFormat(self.currencySymbol, self.tax)}")
         self.labelCustomDiscount.setText(f"{billFormat(self.currencySymbol, self.customDiscount)}")
-        self.labelGrandTotal.setText(f"{billFormat(self.currencySymbol, self.grandTotal)}")
+        self.labelGrandtotal.setText(f"{billFormat(self.currencySymbol, self.grandTotal)}")
         self.lineEditCash.setText(f"{self.grandTotal}")
         self.lineEditCash.setFocus()
 
@@ -925,6 +931,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.lineEditCash.setFocus()
         
     def _onPushButtonCancelClicked(self):
+        self.manageSales.setGraphicsEffect(None)
         self.close()
 
     def _cleanupThread(self):
@@ -965,6 +972,8 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.manageSales: ManageSales = manageSales
         self.loading = Loading()
         
+        self.manageSales.setGraphicsEffect(QGraphicsBlurEffect())
+        
         self.currencySymbol = ''
         self.windowEvent = EVENT_NO_EVENT
         self.authData = authData
@@ -1004,7 +1013,7 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         
         billing = self.selectedOrder['billing']
         self.labelPayment.setText(f"{billFormat(self.currencySymbol, billing['payment'])}")
-        self.labelGrandTotal.setText(f"{billFormat(self.currencySymbol, billing['grandtotal'])}")
+        self.labelGrandtotal.setText(f"{billFormat(self.currencySymbol, billing['grandtotal'])}")
         self.labelChange.setText(f"{billFormat(self.currencySymbol, billing['change'])}")
         
         self.loading.close()
@@ -1014,6 +1023,7 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
             index=self.manageSales.tabWidgetOrder.currentIndex(),
             confirmation=False,
         )
+        self.manageSales.setGraphicsEffect(None)
         self.close()
 
     def _cleanupThread(self):

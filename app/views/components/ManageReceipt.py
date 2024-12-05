@@ -121,8 +121,10 @@ class ManageReceipts(Ui_FormManageReceipt, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonViewClicked(self, data):
+        self.setGraphicsEffect(QGraphicsBlurEffect())
         viewReceipt = ViewReceipt(self.authData, data)
         viewReceipt.exec()
+        self.setGraphicsEffect(None)
         self._populateTableWidgetData()
 
     def _cleanupThread(self):

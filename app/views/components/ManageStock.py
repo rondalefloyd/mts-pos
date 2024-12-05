@@ -99,9 +99,11 @@ class ManageStocks(Ui_FormManageStock, QWidget):
         self.pushButtonNext.setEnabled(self.currentPage < self.totalPages)
 
     def _onPushButtonEditClicked(self, data):
+        self.setGraphicsEffect(QGraphicsBlurEffect())
         self.editStock = EditStock(self.authData, data)
         self.editStock.exec()
         self._populateTableWidgetData()
+        self.setGraphicsEffect(None)
 
     def _onPushButtonDeleteClicked(self, data):
         confirm = QMessageBox.warning(self, 'Confirm', f"Delete {data['itemName']}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)

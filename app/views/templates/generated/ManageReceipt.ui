@@ -123,7 +123,7 @@
        </column>
        <column>
         <property name="text">
-         <string>GrandTotal</string>
+         <string>Grandtotal</string>
         </property>
        </column>
        <column>

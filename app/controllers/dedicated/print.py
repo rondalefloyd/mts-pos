@@ -81,7 +81,7 @@ class PrintThread(QThread):
                 '<Subtotal>': str(billing['subtotal']),
                 '<Discount>': str(billing['discount']),
                 '<Tax>': str(billing['tax']),
-                '<GrandTotal>': str(billing['grandtotal']),
+                '<Grandtotal>': str(billing['grandtotal']),
                 '<Payment>': str(billing['payment']),
                 '<PaymentType>': billing['paymentType'],
                 '<Change>': str(billing['change']),
