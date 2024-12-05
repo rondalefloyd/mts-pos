@@ -130,7 +130,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QFormLayout" name="formLayout">
+         <layout class="QFormLayout" name="formLayoutBilling">
           <item row="0" column="0">
            <widget class="QLabel" name="label">
             <property name="font">
@@ -346,7 +346,7 @@
               </layout>
              </item>
              <item>
-              <layout class="QGridLayout" name="gridLayout">
+              <layout class="QGridLayout" name="gridLayoutNumpad">
                <item row="1" column="2">
                 <widget class="QPushButton" name="pushButtonKeySix">
                  <property name="sizePolicy">
@@ -671,7 +671,7 @@
             </widget>
            </item>
            <item>
-            <layout class="QGridLayout" name="gridLayout_2">
+            <layout class="QGridLayout" name="gridLayoutPayment">
              <item row="3" column="0">
               <widget class="QLabel" name="labelCombo">
                <property name="text">
