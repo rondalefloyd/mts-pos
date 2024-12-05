@@ -66,20 +66,20 @@ QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteAll {
 }
 
 QWidget#FormPreOrderActionButton QPushButton#pushButtonAddOne {
-    image: url("../mts-pos/app/views/assets/images/square-pen-solid.svg");
-    background-color: #005cb3;
-}
-QWidget#FormPreOrderActionButton QPushButton#pushButtonAddExact {
     image: url("../mts-pos/app/views/assets/images/plus-solid.svg");
     background-color: #00ab41;
 }
-QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteOne {
-    image: url("../mts-pos/app/views/assets/images/square-xmark-solid.svg");
-    background-color: #ac0900;
+QWidget#FormPreOrderActionButton QPushButton#pushButtonAddExact {
+    image: url("../mts-pos/app/views/assets/images/square-pen-solid.svg");
+    background-color: #005cb3;
 }
-QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteAll {
+QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteOne {
     image: url("../mts-pos/app/views/assets/images/minus-solid.svg");
     background-color: #ab7700;
+}
+QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteAll {
+    image: url("../mts-pos/app/views/assets/images/square-xmark-solid.svg");
+    background-color: #ac0900;
 }
 
 
