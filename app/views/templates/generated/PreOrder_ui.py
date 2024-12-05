@@ -115,6 +115,7 @@ class Ui_FormPreOrder(object):
         self.pushButtonDiscard.setObjectName("pushButtonDiscard")
         self.horizontalLayout.addWidget(self.pushButtonDiscard)
         self.pushButtonPark = QtWidgets.QPushButton(FormPreOrder)
+        self.pushButtonPark.setCheckable(True)
         self.pushButtonPark.setObjectName("pushButtonPark")
         self.horizontalLayout.addWidget(self.pushButtonPark)
         self.verticalLayout.addLayout(self.horizontalLayout)

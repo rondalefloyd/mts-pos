@@ -41,6 +41,7 @@ class ManageSales(Ui_FormManageSales, QWidget):
         self.comboBoxBarcodeFilter.setVisible(False)
         self.labelOrderName.setText(f"N/A")
         
+        self._initializeShortcutKeys()
         self.refresh()
         
         self.lineEditBarcode.returnPressed.connect(self._onLineEditBarcodeReturnPressed)
@@ -80,6 +81,19 @@ class ManageSales(Ui_FormManageSales, QWidget):
             self.labelOrderName.setText(f"N/A")
             
         self._populateTableWidgetData()
+
+    def _initializeShortcutKeys(self):
+        self.pushButtonNewShortcutKey = 'F4'
+        
+        self.pushButtonNewShortcut = QShortcut(QKeySequence(self.pushButtonNewShortcutKey), self)
+        
+        self.pushButtonNew.setText(f"[{self.pushButtonNewShortcutKey}] New")
+        
+        self.pushButtonNewShortcut.activated.connect(self._onPushButtonNewShortcutActivated)
+
+    def _onPushButtonNewShortcutActivated(self):
+        if self.pushButtonNew.isEnabled():
+            self._onPushButtonNewClicked()
 
     def _populateCurrencySymbol(self):
         self.loading.show()
@@ -323,6 +337,8 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.tableWidgetOrderItem.clearContents()
         self.labelOrderType.setText(self.manageSales.comboBoxOrderType.currentText())
         
+        # shortcut key assignment
+        self._initializeShortcutKeys()
         self.refresh()
         
         self.comboBoxMemberName.currentTextChanged.connect(self._onComboBoxMemberNameCurrentTextChanged)
@@ -334,11 +350,15 @@ class PreOrder(Ui_FormPreOrder, QWidget):
     def refresh(self):
         self._populateCurrencySymbol()    
         self._populateComboBoxMemberName()
-        
+                
     def onPushButtonParkClicked(self):
+        print('your clicking this now')
         orderItem = self.manageSales.activeOrder[self.manageSales.tabWidgetOrder.currentIndex()]['cart']
         orderIndex = self.manageSales.tabWidgetOrder.currentIndex()
         orderStatus = 2 if self.pushButtonPark.isChecked() else 1
+        
+        print('look for orderStatus:', orderStatus)
+        
         orderName = self.manageSales.tabWidgetOrder.tabText(orderIndex)
         orderName = orderName.replace(" (P)", "") if orderStatus == 1 else f"{orderName} (P)"
         self.manageSales.activeOrder[orderIndex]['status'] = orderStatus
@@ -346,7 +366,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.manageSales.labelOrderName.setText(orderName)
         
         self.pushButtonClear.setEnabled(orderStatus == 1)
-        self.pushButtonPark.setText('PARK' if orderStatus == 1 else 'UNPARK')
+        self.pushButtonPark.setText(f'[{self.pushButtonParkShortcutKey}] Park' if orderStatus == 1 else f'[{self.pushButtonParkShortcutKey}] Unpark')
         self.pushButtonPay.setEnabled(orderStatus == 1 and len(orderItem) > 0)
         self.comboBoxMemberName.setEnabled(orderStatus == 1)
         self.tableWidgetOrderItem.setEnabled(orderStatus == 1)
@@ -396,8 +416,38 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText(f"{billFormat(self.currencySymbol, discount)}")
         self.labelTax.setText(f"{billFormat(self.currencySymbol, tax)}")
         self.labelGrandTotal.setText(f"{billFormat(self.currencySymbol, grandTotal)}")
-        self.pushButtonPay.setText(f"Pay {billFormat(self.currencySymbol, grandTotal)}")
+        self.pushButtonPay.setText(f"[{self.pushButtonPayShortcutKey}] Pay {billFormat(self.currencySymbol, grandTotal)}")
         self.manageSales.lineEditBarcode.setFocus()
+
+    def _initializeShortcutKeys(self):
+        self.pushButtonPayShortcutKey = 'F1'
+        self.pushButtonDiscardShortcutKey = 'F2'
+        self.pushButtonParkShortcutKey = 'F3'
+        
+        self.pushButtonPayShortcut = QShortcut(QKeySequence(self.pushButtonPayShortcutKey), self)
+        self.pushButtonDiscardShortcut = QShortcut(QKeySequence(self.pushButtonDiscardShortcutKey), self)
+        self.pushButtonParkShortcut = QShortcut(QKeySequence(self.pushButtonParkShortcutKey), self)
+        
+        self.pushButtonPay.setText(f"[{self.pushButtonPayShortcutKey}] Pay {self.currencySymbol}0.00")
+        self.pushButtonDiscard.setText(f"[{self.pushButtonDiscardShortcutKey}] Discard")
+        self.pushButtonPark.setText(f"[{self.pushButtonParkShortcutKey}] Park")
+        
+        self.pushButtonPayShortcut.activated.connect(self._onPushButtonPayShortcutActivated)
+        self.pushButtonDiscardShortcut.activated.connect(self._onPushButtonDiscardShortcutActivated)
+        self.pushButtonParkShortcut.activated.connect(self._onPushButtonParkShortcutActivated)
+
+    def _onPushButtonPayShortcutActivated(self):
+        if self.pushButtonPay.isEnabled():
+            self._onPushButtonPayClicked()
+            
+    def _onPushButtonDiscardShortcutActivated(self):
+        if self.pushButtonDiscard.isEnabled():
+            self._onPushButtonDiscardClicked()
+            
+    def _onPushButtonParkShortcutActivated(self):
+        self.pushButtonPark.setChecked(False if self.pushButtonPark.isChecked() else True)
+        if self.pushButtonPark.isEnabled():
+            self.onPushButtonParkClicked()
 
     def _populateCurrencySymbol(self):
         self.loading.show()
@@ -415,7 +465,7 @@ class PreOrder(Ui_FormPreOrder, QWidget):
         self.labelDiscount.setText(f"{self.currencySymbol}0.00")
         self.labelTax.setText(f"{self.currencySymbol}0.00")
         self.labelGrandTotal.setText(f"{self.currencySymbol}0.00")
-        self.pushButtonPay.setText(f"Pay {self.currencySymbol}0.00")
+        self.pushButtonPay.setText(f"[{self.pushButtonPayShortcutKey}] Pay {self.currencySymbol}0.00")
         
         self.loading.close()
 
@@ -585,6 +635,7 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.labelPointsShortageExcess.setText(f'{self.currencySymbol}0.00')
         self.labelComboShortageExcess.setText(f'{self.currencySymbol}0.00')
         
+        self._initializeShortcutKeys()
         self._populateCurrencySymbol()
         self._populateSelectedMemberFields()
 
@@ -604,6 +655,44 @@ class InOrder(Ui_DialogInOrder, QDialog):
         self.pushButtonPayCash.clicked.connect(lambda: self._processOrder('CASH'))
         self.pushButtonPayPoints.clicked.connect(lambda: self._processOrder('POINTS'))
         self.pushButtonPayCombo.clicked.connect(lambda: self._processOrder('COMBO'))
+
+    def _initializeShortcutKeys(self):
+        self.pushButtonPayCashShortcutKey = 'F1'
+        self.pushButtonPayPointsShortcutKey = 'F2'
+        self.pushButtonPayComboShortcutKey = 'F3'
+        self.pushButtonCancelShortcutKey = 'F4'
+        
+        self.pushButtonPayCashShortcut = QShortcut(QKeySequence(self.pushButtonPayCashShortcutKey), self)
+        self.pushButtonPayPointsShortcut = QShortcut(QKeySequence(self.pushButtonPayPointsShortcutKey), self)
+        self.pushButtonPayComboShortcut = QShortcut(QKeySequence(self.pushButtonPayComboShortcutKey), self)
+        self.pushButtonCancelShortcut = QShortcut(QKeySequence(self.pushButtonCancelShortcutKey), self)
+        
+        self.pushButtonPayCash.setText(f"[{self.pushButtonPayCashShortcutKey}] Cash")
+        self.pushButtonPayPoints.setText(f"[{self.pushButtonPayPointsShortcutKey}] Points")
+        self.pushButtonPayCombo.setText(f"[{self.pushButtonPayComboShortcutKey}] Combo")
+        self.pushButtonCancel.setText(f"[{self.pushButtonCancelShortcutKey}] Cancel")
+        
+        
+        self.pushButtonPayCashShortcut.activated.connect(self._onPushButtonPayCashShortcutActivated)
+        self.pushButtonPayPointsShortcut.activated.connect(self._onPushButtonPayPointsShortcutActivated)
+        self.pushButtonPayComboShortcut.activated.connect(self._onPushButtonPayComboShortcutActivated)
+        self.pushButtonCancelShortcut.activated.connect(self._onPushButtonCancelShortcutActivated)
+
+    def _onPushButtonPayCashShortcutActivated(self):
+        if self.pushButtonPayCash.isEnabled():
+            self._processOrder('CASH')
+            
+    def _onPushButtonPayPointsShortcutActivated(self):
+        if self.pushButtonPayPoints.isEnabled():
+            self._processOrder('POINTS')
+            
+    def _onPushButtonPayComboShortcutActivated(self):
+        if self.pushButtonPayCombo.isEnabled():
+            self._processOrder('COMBO')
+            
+    def _onPushButtonCancelShortcutActivated(self):
+        if self.pushButtonCancel.isEnabled():
+            self._onPushButtonCancelClicked()
 
     def _populateCurrencySymbol(self):
         self.loading.show()
@@ -689,7 +778,6 @@ class InOrder(Ui_DialogInOrder, QDialog):
             self.currentThread.start()
             self.activeThreads.append(self.currentThread)
             
-        self.lineEditCash.setFocus()
     
     def _handleOnPushButtonPayCashPointsComboClickedFinished(self, result):
         self.close()
@@ -884,9 +972,23 @@ class PostOrder(Ui_DialogPostOrder, QDialog):
         self.currentThread = None
         self.activeThreads = []
 
+        self._initializeShortcutKeys()
         self._populateCurrencySymbol()
         
         self.pushButtonClose.clicked.connect(self._onPushButtonCloseClicked)
+
+    def _initializeShortcutKeys(self):
+        self.pushButtonCloseShortcutKey = 'F1'
+        
+        self.pushButtonCloseShortcut = QShortcut(QKeySequence(self.pushButtonCloseShortcutKey), self)
+        
+        self.pushButtonClose.setText(f"[{self.pushButtonCloseShortcutKey}] Close")
+        
+        self.pushButtonCloseShortcut.activated.connect(self._onPushButtonCloseShortcutActivated)
+
+    def _onPushButtonCloseShortcutActivated(self):
+        if self.pushButtonClose.isEnabled():
+            self._onPushButtonCloseClicked()
 
     def _populateCurrencySymbol(self):
         self.loading.show()
