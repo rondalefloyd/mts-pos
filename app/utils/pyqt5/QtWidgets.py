@@ -15,6 +15,8 @@ class QPushButton(QPushButton):
 
     def _executeTask(self):
         objectName = self.objectName()
+        
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
 
 class QTableWidget(QTableWidget):
     def __init__(self, parent=None):

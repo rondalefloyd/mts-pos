@@ -437,7 +437,7 @@ class FetchThread(QThread):
         
     def fetchAllItemPriceRelatedDataByKeywordOrderTypeInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             orderType = entry['orderType']
@@ -538,7 +538,7 @@ class FetchThread(QThread):
 
     def fetchAllItemPriceRelatedDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -618,7 +618,7 @@ class FetchThread(QThread):
 
     def fetchAllStockDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -659,7 +659,7 @@ class FetchThread(QThread):
         
     def fetchAllMemberDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -699,7 +699,7 @@ class FetchThread(QThread):
         
     def fetchAllPromoDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -733,7 +733,7 @@ class FetchThread(QThread):
         
     def fetchAllItemDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
         
@@ -790,7 +790,7 @@ class FetchThread(QThread):
                 
     def fetchAllBrandDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -820,7 +820,7 @@ class FetchThread(QThread):
         
     def fetchAllItemTypeDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -850,7 +850,7 @@ class FetchThread(QThread):
         
     def fetchAllSupplierDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -880,7 +880,7 @@ class FetchThread(QThread):
         
     def fetchAllRewardDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -916,7 +916,7 @@ class FetchThread(QThread):
         
     def fetchAllUserDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             
@@ -958,7 +958,7 @@ class FetchThread(QThread):
 
     def fetchAllReceiptDataByKeywordInPagination(self, entry=None, result=None):
         try:
-            limit = 15
+            limit = 30
             offset = (entry['currentPage'] - 1) * limit
             keyword = f"%{entry['keyword']}%"
             

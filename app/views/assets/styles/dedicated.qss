@@ -52,7 +52,7 @@ QPushButton#pushButtonPayCash {
     padding: 10px;
     width: 100%;
 }
-QPushButton#pushButtonPrint:hover,
+QPushButton#pushButton#ffd000over,
 QPushButton#pushButtonAdd:hover,
 QPushButton#pushButtonSave:hover,
 QPushButton#pushButtonCreate:hover,

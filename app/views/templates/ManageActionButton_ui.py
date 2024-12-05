@@ -95,7 +95,7 @@ class Ui_FormManageActionButton(object):
         self.pushButtonEdit.setToolTip(_translate("FormManageActionButton", "<html><head/><body><p>Edit</p></body></html>"))
         self.pushButtonEdit.setText(_translate("FormManageActionButton", "Edit"))
         self.pushButtonDiscount.setToolTip(_translate("FormManageActionButton", "<html><head/><body><p>Discount</p></body></html>"))
-        self.pushButtonDiscount.setText(_translate("FormManageActionButton", "Discount"))
+        self.pushButtonDiscount.setText(_translate("FormManageActionButton", "Cut"))
         self.pushButtonView.setToolTip(_translate("FormManageActionButton", "<html><head/><body><p>View</p></body></html>"))
         self.pushButtonView.setText(_translate("FormManageActionButton", "View"))
         self.pushButtonDelete.setToolTip(_translate("FormManageActionButton", "<html><head/><body><p>Delete</p></body></html>"))

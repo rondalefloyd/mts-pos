@@ -23,12 +23,108 @@ QCheckBox {
 
 QPushButton {
     min-height: 34px;
+    font-weight: bold;
     text-transform: uppercase;
+}
+
+QPushButton#pushButtonNew {
+    background-color: #005cb3;
+    color: #fff;
+}
+
+QPushButton#pushButtonAdd {
+    background-color: #00ab41;
+    color: #fff;
+}
+
+QPushButton#pushButtonPayCash,
+QPushButton#pushButtonPayPoints,
+QPushButton#pushButtonPayCombo {
+    color: #fff;
+}
+
+QPushButton#pushButtonPayCash {
+    background-color: #00ab41;
+}
+QPushButton#pushButtonPayPoints {
+    background-color: #ab7700;
+}
+QPushButton#pushButtonPayCombo {
+    background-color: #005cb3;
 }
 
 QWidget#FormPreOrderActionButton QPushButton,
 QWidget#FormManageActionButton QPushButton {
     min-height: 0px;
+}
+
+QWidget#FormPreOrderActionButton QPushButton#pushButtonAddOne,
+QWidget#FormPreOrderActionButton QPushButton#pushButtonAddExact,
+QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteOne,
+QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteAll {
+    padding: 10px;
+}
+
+QWidget#FormPreOrderActionButton QPushButton#pushButtonAddOne {
+    image: url("../mts-pos/app/views/assets/images/square-pen-solid.svg");
+    background-color: #005cb3;
+}
+QWidget#FormPreOrderActionButton QPushButton#pushButtonAddExact {
+    image: url("../mts-pos/app/views/assets/images/plus-solid.svg");
+    background-color: #00ab41;
+}
+QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteOne {
+    image: url("../mts-pos/app/views/assets/images/square-xmark-solid.svg");
+    background-color: #ac0900;
+}
+QWidget#FormPreOrderActionButton QPushButton#pushButtonDeleteAll {
+    image: url("../mts-pos/app/views/assets/images/minus-solid.svg");
+    background-color: #ab7700;
+}
+
+
+QPushButton#pushButtonDiscard {
+    background-color: #ac0900;
+    color: #fff;
+}
+QPushButton#pushButtonPark {
+    background-color: #005cb3;
+    color: #fff;
+}
+QPushButton#pushButtonPay {
+    color: #fff;
+    background-color: #00ab41;
+    font-size: 30pt; 
+}
+
+
+
+
+QWidget#FormManageActionButton QPushButton#pushButtonEdit,
+QWidget#FormManageActionButton QPushButton#pushButtonView,
+QWidget#FormManageActionButton QPushButton#pushButtonAdd,
+QWidget#FormManageActionButton QPushButton#pushButtonDiscount,
+QWidget#FormManageActionButton QPushButton#pushButtonDelete,
+QWidget#FormManageActionButton QPushButton#pushButtonVoid {
+
+}
+
+QWidget#FormManageActionButton QPushButton#pushButtonAdd,
+QWidget#FormManageActionButton QPushButton#pushButtonDiscount,
+QWidget#FormManageActionButton QPushButton#pushButtonDelete,
+QWidget#FormManageActionButton QPushButton#pushButtonVoid {
+    color: #fff;
+}
+
+
+QWidget#FormManageActionButton QPushButton#pushButtonAdd,
+QWidget#FormManageActionButton QPushButton#pushButtonDiscount {
+    background-color: #00ab41;
+}
+
+QWidget#FormManageActionButton QPushButton#pushButtonDelete,
+QWidget#FormManageActionButton QPushButton#pushButtonVoid {
+    background-color: #ac0900;
 }
 
 QWidget#widgetBilling QLabel {
@@ -44,7 +140,31 @@ QDialog#DialogInOrder QWidget#widgetBilling QLabel#labelGrandtotalTitle {
     font-size: 30pt;
 }
 
+QWidget#widgetNumpad QPushButton {
+    font-size: 30pt;
+    height: 100px;
+    width: 100px;
 
+}
+
+QFrame#frameRegister {
+    max-width: 450px;
+}
 QFrame#frameOrder {
     max-width: 800px;
+}
+
+
+QMainWindow#MainWindowManage QMenuBar {
+    font-size: 15pt;
+    font-weight: bold
+}
+
+QMainWindow#MainWindowManage QWidget#widgetStatusBar {
+    background-color: #005cb3;
+}
+QMainWindow#MainWindowManage QWidget#widgetStatusBar QLabel {
+    color: #fff;
+    font-size: 15pt;
+    font-weight: bold
 }
