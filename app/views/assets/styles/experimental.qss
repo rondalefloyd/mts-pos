@@ -13,8 +13,59 @@ QTableWidget QHeaderView::section {
     padding-right: 10px;
 }
 
+QComboBox,
+QDateEdit,
+QLineEdit,
+QCheckBox {
+    background-color: #0045b5;
+    color: #fff;
+    padding: 5px;
+    min-height: 30px;
+}
+
 QPushButton {
+    background-color: #0045b5;
+    color: #fff;
+    min-height: 34px;
     text-transform: uppercase;
+}
+
+QWidget#FormPreOrderActionButton QPushButton,
+QWidget#FormManageActionButton QPushButton {
+    min-height: 0px;
+}
+
+QComboBox:disabled,
+QDateEdit:disabled,
+QLineEdit:disabled,
+QCheckBox:disabled,
+QPushButton:disabled {
+    background-color: #426fb8;
+    color: #a1ffffff;
+}
+
+
+QMainWindow QMenuBar,
+QFrame#frameRegister {
+    background-color: #3381ff;
+    color: #fff;
+}
+QScrollArea {
+    background-color: transparent;
+}
+QScrollArea QWidget#scrollAreaWidgetContents {
+    background-color: transparent;
+}
+
+
+QDialog,
+QMessageBox {
+    background-color: #0062ff;
+    color: #fff;
+}
+
+QDialog QLabel {
+    color: #fff;
 }
 
 QMainWindow#MainWindowManage {
